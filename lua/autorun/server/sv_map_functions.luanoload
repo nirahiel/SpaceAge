@@ -1,0 +1,67 @@
+local curmap = game.GetMap()
+MAP = {}
+if curmap == "sb_wuwgalaxy_fix" then
+	MAP.sb_wuwgalaxy_fix = {}
+	MAP.sb_wuwgalaxy_fix.Station = {}
+	MAP.sb_wuwgalaxy_fix.Station.Hangar = {}
+	MAP.sb_wuwgalaxy_fix.Station.Hangar.Door = {}
+	MAP.sb_wuwgalaxy_fix.Station.Hangar.Door.Open = function()
+		local btn = ents.FindInSphere(Vector(9220.00, 6399.50, 7057.50),0.3)
+		if type(btn) == "table" then btn = btn[1] end
+		btn:Fire("use","",0)
+	end
+	concommand.Add("MAP.sb_wuwgalaxy_fix.Station.Hangar.Door.Open",function(ply,_,_) if ply:IsSuperAdmin() then MAP.sb_wuwgalaxy_fix.Station.Hangar.Door.Open() end end)
+
+	MAP.sb_wuwgalaxy_fix.Station.Hangar.Door.Close = function()
+		local btn = ents.FindInSphere(Vector(9220.00, 6371.03, 7057.50),0.3)
+		if type(btn) == "table" then btn = btn[1] end
+		btn:Fire("use","",0)
+	end
+	concommand.Add("MAP.sb_wuwgalaxy_fix.Station.Hangar.Door.Close",function(ply,_,_) if ply:IsSuperAdmin() then MAP.sb_wuwgalaxy_fix.Station.Hangar.Door.Close() end end)
+
+	MAP.sb_wuwgalaxy_fix.Station.Hangar.ToggleLight = function()
+		local btn = ents.FindInSphere(Vector(8142.25, 4718.53, 7067.50),0.3)
+		if type(btn) == "table" then btn = btn[2] end
+		btn:Fire("use","",0)
+	end
+	concommand.Add("MAP.sb_wuwgalaxy_fix.Station.Hangar.ToggleLight",function(ply,_,_) if ply:IsSuperAdmin() then MAP.sb_wuwgalaxy_fix.Station.Hangar.ToggleLight() end end)
+
+	MAP.sb_wuwgalaxy_fix.Asteroid = {}
+	MAP.sb_wuwgalaxy_fix.Asteroid.Hangar = {}
+	MAP.sb_wuwgalaxy_fix.Asteroid.Hangar.Doors = {}
+	MAP.sb_wuwgalaxy_fix.Asteroid.Hangar.Doors.Open = function()
+		local L,R = ents.FindByName("Silo_L"), ents.FindByName("Silo_R")
+		if type(L) == "table" then L = L[1] end
+		if type(R) == "table" then R = R[1] end
+		L:Fire("open","",0)
+		R:Fire("open","",0)
+	end
+	concommand.Add("MAP.sb_wuwgalaxy_fix.Asteroid.Hangar.Doors.Open",function(ply,_,_) if ply:IsSuperAdmin() then MAP.sb_wuwgalaxy_fix.Asteroid.Hangar.Doors.Open() end end)
+
+	MAP.sb_wuwgalaxy_fix.Asteroid.Hangar.Doors.Close = function()
+		local L,R = ents.FindByName("Silo_L"), ents.FindByName("Silo_R")
+		if type(L) == "table" then L = L[1] end
+		if type(R) == "table" then R = R[1] end
+		L:Fire("close","",0)
+		R:Fire("close","",0)
+	end
+	concommand.Add("MAP.sb_wuwgalaxy_fix.Asteroid.Hangar.Doors.Close",function(ply,_,_) if ply:IsSuperAdmin() then MAP.sb_wuwgalaxy_fix.Asteroid.Hangar.Doors.Close() end end)
+
+	MAP.sb_wuwgalaxy_fix.Asteroid.Hangar.Doors.Lock = function()
+		local L,R = ents.FindByName("Silo_L"), ents.FindByName("Silo_R")
+		if type(L) == "table" then L = L[1] end
+		if type(R) == "table" then R = R[1] end
+		L:Fire("lock","",0)
+		R:Fire("lock","",0)
+	end
+	concommand.Add("MAP.sb_wuwgalaxy_fix.Asteroid.Hangar.Doors.Lock",function(ply,_,_) if ply:IsSuperAdmin() then MAP.sb_wuwgalaxy_fix.Asteroid.Hangar.Doors.Lock() end end)
+
+	MAP.sb_wuwgalaxy_fix.Asteroid.Hangar.Doors.Unlock = function()
+		local L,R = ents.FindByName("Silo_L"), ents.FindByName("Silo_R")
+		if type(L) == "table" then L = L[1] end
+		if type(R) == "table" then R = R[1] end
+		L:Fire("unlock","",0)
+		R:Fire("unlock","",0)
+	end
+	concommand.Add("MAP.sb_wuwgalaxy_fix.Asteroid.Hangar.Doors.Unlock",function(ply,_,_) if ply:IsSuperAdmin() then MAP.sb_wuwgalaxy_fix.Asteroid.Hangar.Doors.Unlock() end end)
+end

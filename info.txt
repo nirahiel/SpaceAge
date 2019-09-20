@@ -1,0 +1,10 @@
+"AddonInfo"
+{
+	"name"		"Spaceage"
+	"version"	"1.0"
+	"up_date"	""
+	"author_name"	"SpaceAge Team"
+	"author_email"	""
+	"author_url"	""
+	"info"		""
+}

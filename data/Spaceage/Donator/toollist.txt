@@ -1,0 +1,7 @@
+"Out"
+{
+"1" shuttle_stool
+"2" ol_stacker
+"3" smartwelder
+"4" rt_antinoclip
+}

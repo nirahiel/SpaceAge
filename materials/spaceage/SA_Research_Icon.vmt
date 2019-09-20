@@ -1,0 +1,9 @@
+"UnlitGeneric"
+{
+	"$basetexture" "spaceage/SA_Research_Icon"
+	"$ignorez"1
+	"$vertexcolor" 1
+	"$vertexalpha" 1
+	"$nolod" 1
+}
+

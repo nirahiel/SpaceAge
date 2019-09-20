@@ -1,0 +1,59 @@
+[IceField]
+Type = Ring
+Origin = 9174 9284 -8876
+InnerRadius = 6144
+OuterRadius = 7680
+Angle = 45 0 0 
+BlueIce = 0
+ClearIce = 8
+GlacialMass = 0
+WhiteGlaze = 0
+GlareCrust = 1
+DarkGlitter = 2
+Gelidus = 2
+Krystallos = 1
+
+[IceField]
+Type = Ring
+Origin = 5864 -3890 6480
+InnerRadius = 3064
+OuterRadius = 4096
+Angle = 0 0 -45 
+BlueIce = 8
+ClearIce = 0
+GlacialMass = 0
+WhiteGlaze = 0
+GlareCrust = 2
+DarkGlitter = 1
+Gelidus = 2
+Krystallos = 1
+
+[IceField]
+Type = Ring
+Origin = -8840 -9114 228
+InnerRadius = 4608
+OuterRadius = 5632
+Angle = -45 0 0 
+BlueIce = 0
+ClearIce = 0
+GlacialMass = 8
+WhiteGlaze = 0
+GlareCrust = 2
+DarkGlitter = 0
+Gelidus = 1
+Krystallos = 1
+
+[IceField]
+Type = Ring
+Origin = -1564 -6796 10432
+InnerRadius = 3064
+OuterRadius = 4096
+Angle = 0 0 45
+BlueIce = 0
+ClearIce = 0
+GlacialMass = 0
+WhiteGlaze = 8
+GlareCrust = 1
+DarkGlitter = 2
+Gelidus = 2
+Krystallos = 1

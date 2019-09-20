@@ -1,0 +1,105 @@
+
+local OldByName = ents.FindByName
+local OldByModel = ents.FindByModel
+local OldByClass = ents.FindByClass
+local OldInBox = ents.FindInBox
+local OldInCone = ents.FindInCone
+local OldInSphere = ents.FindInSphere
+local OldAll = ents.GetAll
+local OldIndex = ents.GetByIndex
+
+
+local function CanDetect(ent)
+	if not (ValidEntity(ent)) then return false end
+	
+	if (ent.IsIceroid) then
+		return false
+	end
+	
+	return true
+end
+
+function ents.FindByName(...)
+	local Res = OldByName(...)
+	local NewTable = {}
+	for k,v in pairs(Res) do
+		if (CanDetect(v)) then
+			table.insert(NewTable,v)
+		end
+	end
+	return NewTable
+end
+
+function ents.FindByModel(...)
+	local Res = OldByModel(...)
+	local NewTable = {}
+	for k,v in pairs(Res) do
+		if (CanDetect(v)) then
+			table.insert(NewTable,v)
+		end
+	end
+	return NewTable
+end
+
+function ents.FindByClass(...)
+	local Res = OldByClass(...)
+	local NewTable = {}
+	for k,v in pairs(Res) do
+		if (CanDetect(v)) then
+			table.insert(NewTable,v)
+		end
+	end
+	return NewTable
+end
+
+function ents.FindInBox(...)
+	local Res = OldInBox(...)
+	local NewTable = {}
+	for k,v in pairs(Res) do
+		if (CanDetect(v)) then
+			table.insert(NewTable,v)
+		end
+	end
+	return NewTable
+end
+
+function ents.FindInCone(...)
+	local Res = OldInCone(...)
+	local NewTable = {}
+	for k,v in pairs(Res) do
+		if (CanDetect(v)) then
+			table.insert(NewTable,v)
+		end
+	end
+	return NewTable
+end
+
+function ents.FindInSphere(...)
+	local Res = OldInSphere(...)
+	local NewTable = {}
+	for k,v in pairs(Res) do
+		if (CanDetect(v)) then
+			table.insert(NewTable,v)
+		end
+	end
+	return NewTable
+end
+
+function ents.GetAll()
+	local Res = OldAll()
+	local NewTable = {}
+	for k,v in pairs(Res) do
+		if (CanDetect(v)) then
+			table.insert(NewTable,v)
+		end
+	end
+	return NewTable
+end
+
+function ents.GetByIndex(...)
+	local Res = OldIndex(...)
+	if (CanDetect(Res)) then
+		return Res
+	end
+	return
+end
