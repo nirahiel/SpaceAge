@@ -3,14 +3,17 @@ local data, isok, merror
 local FactionCache = {}
 local FactionCacheStarted = false
 
-require( "gatekeeper" )
-local function SA_GK_PlayerCheck(name, pass, sid, ip)
+local function SA_GK_PlayerCheck(sid64, ip, svPassword, pass, name)
 	local deny = false
-	if (not sid) then
+
+	if not sid64 then
 		return {false, "Sorry, internal error (Error 0x0)"}
 	end
+
 	local sa_faction_only = GetConVar("sa_faction_only")
 	if(sa_faction_only:GetBool()) then
+		local sid = util.SteamIDFrom64(sid64)
+
 		if SA.FactionCacheStarted == true and FactionCache[sid] ~= true then
 			deny = true
 		end
@@ -19,7 +22,7 @@ local function SA_GK_PlayerCheck(name, pass, sid, ip)
 		end
 	end
 end
-hook.Add("PlayerPasswordAuth", "SA_GK_PlayerCheck", SA_GK_PlayerCheck)
+hook.Add("CheckPassword", "SA_GK_PlayerCheck", SA_GK_PlayerCheck)
 
 local function RefreshCacheDone(data, isok, err)
 	table.Empty(FactionCache)
