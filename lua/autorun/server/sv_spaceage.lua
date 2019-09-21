@@ -299,7 +299,7 @@ local function LoadRes(data, isok, merror, ply, sid)
 	
 	ply:SetNWInt("Score",ply.TotalCredits)
 
-	/*local mt = ply.miningtheory
+	--[[local mt = ply.miningtheory
 	ply:SetNWInt("LaserMK",mt)
 	local tmp = 0
 	if mt == 0 then
@@ -340,13 +340,13 @@ local function LoadRes(data, isok, merror, ply, sid)
 	ply:SetNWInt("IcePSLV",ply.iceproductmod)
 	
 	mt = nil
-	tmp = nil*/
+	tmp = nil]]
 
 	if ply.devlimit <= 0 then ply.devlimit = 1 end
 	
 	if not ply.Level then ply.Level = 0 end
 	
-	timer.Simple(10,function()
+	timer.Simple(1,function()
 		if not (ply and ply.IsValid and ply:IsValid()) then return end
 		ply.MayBePoked = true
 		SA_Send_AllInfos(ply)
