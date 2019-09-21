@@ -379,7 +379,7 @@ end
 hook.Add("PlayerInitialSpawn", "SpaceageLoad", SA_InitSpawn)
 
 
-function SA_SaveUser(ply,isautosave)
+function SA_SaveUser(ply, isautosave)
 	if (isautosave == "spaceage_autosaver") then
 		ply:SetNWInt("spaceage_save_int",GetConVarNumber("spaceage_autosave_time") * 60)
 		ply:SetNWInt("spaceage_last_saved",CurTime())
@@ -420,7 +420,8 @@ local function SA_SaveAllUsers()
 		timer.Adjust("SA_Autosave", GetConVarNumber("spaceage_autosave_time") * 60, 0, SA_SaveAllUsers)
 		MySQL:Query('UPDATE factions AS f SET f.score = (SELECT Round(Avg(p.score)) FROM players AS p WHERE p.groupname = f.name) WHERE f.name != "noload"', SaveDone)
 		for k,v in ipairs(player.GetHumans()) do
-			timer.Simple(k, SA_SaveUser, v, "spaceage_autosaver")
+			local p = v
+			timer.Simple(k, function() SA_SaveUser(p, "spaceage_autosaver") end)
 		end
 		SA_SaveAllPlanets()
 	end
