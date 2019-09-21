@@ -298,6 +298,7 @@ local function LoadRes(data, isok, merror, ply, sid)
 	ply:SetNWBool("isleader",ply.IsLeader)
 	
 	ply:SetNWInt("Score",ply.TotalCredits)
+
 	/*local mt = ply.miningtheory
 	ply:SetNWInt("LaserMK",mt)
 	local tmp = 0
@@ -360,6 +361,7 @@ local function LoadRes(data, isok, merror, ply, sid)
 				end
 			end
 		end
+		ply:ChatPrint("Spawn limitations disengaged. Happy travels.")
 	end)
 	ply:SetNWBool("isloaded",true)
 	if ply.Loaded then

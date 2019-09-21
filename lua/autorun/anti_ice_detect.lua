@@ -1,5 +1,5 @@
 if (SERVER) then
-	AddCSLuaFile("Anti-Ice-Detect.lua")
+	AddCSLuaFile("anti_ice_detect.lua")
 elseif (CLIENT) then
 	local FBM = ents.FindByModel
 	function ents.FindByModel(str)

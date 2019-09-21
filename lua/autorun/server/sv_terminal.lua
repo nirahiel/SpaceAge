@@ -6,6 +6,7 @@ AddCSLuaFile( "autorun/client/cl_sa_terminal_goodie.lua" )
 
 AddCSLuaFile( "autorun/SA_Goodies.lua" )
 
+require("supernet")
 --require("random")
 
 local HASH = math.random(1000000,9999999)
@@ -315,7 +316,7 @@ end
 function SA_UpdateInfo(ply,CanPass)
 	--This will prevent it from updating if multiple terminal commands are executed in the same tick.
 	if type(CanPass) == "string" or type(CanPass) == "table" or not (CanPass) then
-		timer.Create("SA_UpdateTerminalInfo_Delay",0.03,1,SA_UpdateInfo,ply,true)
+		timer.Create("SA_UpdateTerminalInfo_Delay",0.03,1, function() SA_UpdateInfo(ply, true) end)
 		return
 	end
 	
@@ -380,19 +381,18 @@ function SA_UpdateInfo(ply,CanPass)
 	end
 	
 	ply.SendingTermUp = true
-	net.Start("TerminalUpdate")
-		net.WriteTable(ResTabl)
-		net.WriteInt(math.floor(ply.Capacity))
-		net.WriteInt(math.floor(ply.MaxCap))
-		net.WriteTable(PermStorage)
-		net.WriteTable(ShipStorage)
-		net.WriteTable(BuyPriceTable)
-		net.WriteTable(ResTabl2)
-		net.WriteBool(SA_CanReset(ply))
-		net.WriteInt(ply.devlimit)
-		net.WriteTable(DevVars)
-	net.Send(ply)
-	SA_InfoSent(ply) -- TODO: This?
+	supernet.Send(ply, "TerminalUpdate", {
+		ResTabl,
+		math.floor(ply.Capacity),
+		math.floor(ply.MaxCap),
+		PermStorage,
+		ShipStorage,
+		BuyPriceTable,
+		ResTabl2,
+		SA_CanReset(ply),
+		ply.devlimit,
+		DevVars,
+	}, function() SA_InfoSent(ply) end)
 end
 concommand.Add("TerminalUpdate",SA_UpdateInfo)
 
@@ -403,10 +403,7 @@ local function SA_UpdateGoodies(data, isok, merror, ply)
 	for _,v in pairs(data) do
 		ply.Goodies[v["id"]] = SA_GoodieTbl[v["intid"]]
 	end
-	net.Start("GoodieUpdate")
-		net.WriteTable(data)
-	net.Send(ply)
-	ply.SendingGoodieUp = false
+	supernet.Send(ply, "GoodieUpdate", data, function() ply.SendingGoodieUp = false end)
 end
 
 local function SA_RequestUpdateGoodies(ply)

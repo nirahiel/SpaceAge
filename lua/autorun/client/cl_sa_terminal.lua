@@ -4,6 +4,8 @@ include("cl_sa_terminal_resource.lua")
 include("cl_sa_terminal_goodie.lua")
 TERMLOADER = nil
 
+require("supernet")
+
 SA_TermDraggedElement = nil
 if not SA_FactionData then SA_FactionData = {} end
 if not SA_StatsList then SA_StatsList = {} end
@@ -683,9 +685,7 @@ function SA_RefreshApplications()
 	end
 end
 
-local function SA_RefreshGoodiesRecv(len, ply)
-	local decoded = net.ReadTable()
-
+local function SA_RefreshGoodiesRecv(ply, decoded)
 	SA_Term_GoodieList:Clear()
 	local goodie
 	for _,v in pairs(decoded) do
@@ -695,7 +695,7 @@ local function SA_RefreshGoodiesRecv(len, ply)
 		SA_Term_GoodieList:AddItem(goodie)
 	end
 end
-net.Receive("GoodieUpdate", SA_RefreshGoodiesRecv)
+supernet.Hook("GoodieUpdate", SA_RefreshGoodiesRecv)
 
 function SA_RefreshGoodies()
 	RunConsoleCommand("GoodiesUpdate")
@@ -738,17 +738,17 @@ local function sa_term_update1(msg)
 end
 usermessage.Hook("TerminalUpdate1", sa_term_update1) 
 
-local function sa_term_update(len, ply)
-	local ResTabl = net.ReadTable()
-	local capacity = net.ReadInt()
-	local maxcap = net.ReadInt()
-	local PermStorage = net.ReadTable()
-	local ShipStorage = net.ReadTable()
-	local BuyPriceTable = net.ReadTable()
-	local ResTabl2 = net.ReadTable()
-	local canReset = net.ReadBool()
-	local lv = net.ReadInt()
-	local devVars = net.ReadTable()
+local function sa_term_update(ply, tbl)
+	local ResTabl = tbl[1]
+	local capacity = tbl[2]
+	local maxcap = tbl[3]
+	local PermStorage = tbl[4]
+	local ShipStorage = tbl[5]
+	local BuyPriceTable = tbl[6]
+	local ResTabl2 = tbl[7]
+	local canReset = tbl[8]
+	local lv = tbl[9]
+	local devVars = tbl[10]
 
 	if lv >= 5 then canReset = false end
 	SA_DevLimitLevel = lv
@@ -807,7 +807,7 @@ local function sa_term_update(len, ply)
 	local Researches = SA_GetResearch()
 	local ResearchGroups = SA_GetResearchGroups()
 	
-	for k,v in pairs(ResTab12) do
+	for k,v in pairs(ResTabl2) do
 		local resname = v[1]
 		local rank = v[2]
 		local group = v[3]
@@ -845,7 +845,7 @@ local function sa_term_update(len, ply)
 		SA_Max_Roid_Count:SetText(devVars[3])
 	end
 end
-net.Receive("TerminalUpdate", sa_term_update)
+supernet.Hook("TerminalUpdate", sa_term_update)
 
 local function SetHash(msg)
 	HASH = msg:ReadLong()
