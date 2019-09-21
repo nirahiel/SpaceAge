@@ -18,9 +18,8 @@ function ENT:Draw()
 end
 
 function ENT:DrawLaser()
-	local color = self:GetNetworkedColor("c");
-	local width = color.a;
-	color.a = 255;
+	local color = self:GetNetworkedColor("c")
+	local width = self:GetNetworkedInt("w")
 	local width2 = width/2
 	local ang = self:GetAngles()
 	local up = ang:Up()

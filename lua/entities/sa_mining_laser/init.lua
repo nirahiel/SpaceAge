@@ -48,7 +48,8 @@ function ENT:CalcVars(ply)
 	self.yield = math.floor((50 + (level * 6.25)) * miningmod)*2
 	self.beamlength = 2000
 
-	self:SetNetworkedColor("c",Color(255,255 - math.floor(level * 0.85),0,10 + math.floor(level / 10)));
+	self:SetNetworkedInt("w", 10 + math.floor(level / 10))
+	self:SetNetworkedColor("c", Color(255, 255 - math.floor(level * 0.85), 0))
 end
 
 function ENT:TurnOn()

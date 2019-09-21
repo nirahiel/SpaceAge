@@ -630,16 +630,13 @@ function DestroyConstraints( Ent1, Ent2, Bone1, Bone2, cType )
 	foundConstraint:Remove()
 	foundConstraint = nil
 	
-	if ( cType == "NoCollide" ) then
-		--MakeCollide( Phys1, Phys2 )
-	end
-	
 	return true
 end
 
 local bor = bit.bor
-local brshift = bit.rshift
+local blshift = bit.lshift
 local ENT = FindMetaTable("Entity")
-function ENT:SetNetworkedColor(name,c)
-    self:SetNetworkedInt(name, bor(c.r, brshift(c.g, 8), brshift(c.b, 16), brshift(c.a, 24)))
+function ENT:SetNetworkedColor(name, c)
+	local n = bor(c.r, blshift(c.g, 8), blshift(c.b, 16), 255)
+    self:SetNetworkedInt(name, n)
 end

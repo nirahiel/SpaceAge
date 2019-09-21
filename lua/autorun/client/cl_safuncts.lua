@@ -7,6 +7,6 @@ local function band255(int)
 end
 
 function ENT:GetNetworkedColor(name)
-	local int = self:GetNetworkedInt(name);
-	return Color(band255(brshift(int, 0)), band255(brshift(int, 8)), band255(brshift(int, 16)), band255(brshift(int, 24)))
+	local int = self:GetNetworkedInt(name)
+	return Color(band255(brshift(int, 0)), band255(brshift(int, 8)), band255(brshift(int, 16)), 255)
 end
