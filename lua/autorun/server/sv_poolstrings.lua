@@ -1,0 +1,6 @@
+util.AddNetworkString("sa_doapplyfaction")
+util.AddNetworkString("sa_addapp")
+util.AddNetworkString("sa_doaddapp")
+util.AddNetworkString("sa_dosetappdata")
+util.AddNetworkString("TerminalUpdate")
+util.AddNetworkString("GoodieUpdate")

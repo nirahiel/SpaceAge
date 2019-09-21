@@ -53,11 +53,11 @@ function TOOL:RightClick(tr)
 	if not owner.Dev then owner:ChatPrint("You are not authorized to use this.") return false end
 	local output = util.TableToKeyValues(owner.Autospawner2List)
 	--local removelist = owner.Autospawner2List
-	if not file.IsDir("Spaceage/Autospawn2") then
-		file.CreateDir("Spaceage/Autospawn2")
+	if not file.IsDir("spaceage/autospawn2") then
+		file.CreateDir("spaceage/autospawn2")
 	end
 	local mapname = string.lower(game.GetMap())
-	local filename = "Spaceage/Autospawn2/"..mapname..".txt"
+	local filename = "spaceage/autospawn2/"..mapname..".txt"
 	if file.Exists(filename, "DATA") then
 		local oldfile = file.Read(filename)
 		local olddata = util.KeyValuesToTable(oldfile)

@@ -208,7 +208,7 @@ end
 timer.Create("SA_PlanetBackfall", 50, 0, SA_PlanetRestore)
 
 function SA_SaveAllPlanets()
-	local dirname = "Spaceage/planetsave/"..string.lower(game.GetMap()).."/"
+	local dirname = "spaceage/planetsave/"..string.lower(game.GetMap()).."/"
 	if not file.Exists(dirname, "DATA") then
 		file.CreateDir(dirname)
 	end
@@ -224,7 +224,7 @@ concommand.Add("RestartEnvironment",function(ply)
 	if ply.Level < 3 then return end
 	for k,v in pairs(SA_MyPlanets) do
 		local envname = string.lower(v.sbenvironment.name)
-		local filename = "Spaceage/planetsave/"..string.lower(game:GetMap()).."/"..envname.."_default.txt"
+		local filename = "spaceage/planetsave/"..string.lower(game:GetMap()).."/"..envname.."_default.txt"
 		if file.Exists(filename, "DATA") then
 			local envfile = file.Read(filename)
 			local envdata = util.KeyValuesToTable(envfile)

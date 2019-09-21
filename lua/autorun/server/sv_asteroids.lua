@@ -38,7 +38,7 @@ end
 
 local function CreateAsteroids(cnt,noamount)
 	local Afield = {}
-	local filename = "Spaceage/Asteroids/"..game.GetMap()..".txt"
+	local filename = "spaceage/asteroids/"..game.GetMap()..".txt"
 	local roids
 	if file.Exists(filename, "DATA") then
 		roids = util.KeyValuesToTable(file.Read(filename))

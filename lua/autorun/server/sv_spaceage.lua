@@ -437,7 +437,7 @@ local function SA_Autospawner(ply)
 			end
 		end
 		local mapname = game.GetMap()
-		local filename = "Spaceage/Autospawn/"..mapname..".txt"
+		local filename = "spaceage/autospawn/"..mapname..".txt"
 		if file.Exists(filename, "DATA") then
 			for k,v in pairs(util.KeyValuesToTable(file.Read(filename))) do
 				local spawn = ents.Create("prop_physics")
@@ -456,7 +456,7 @@ local function SA_Autospawner(ply)
 			end
 		end
 		
-		local filename = "Spaceage/Autospawn2/"..mapname..".txt"
+		local filename = "spaceage/autospawn2/"..mapname..".txt"
 		if file.Exists(filename, "DATA") then
 			for k,v in pairs(util.KeyValuesToTable(file.Read(filename))) do
 				local spawn = ents.Create(v["class"])
@@ -506,7 +506,7 @@ function SA_IsProtectedProp(ent)
 	return false
 end
 
-local SA_Don_Toollist = util.KeyValuesToTable(file.Read("Spaceage/Donator/toollist.txt"))
+local SA_Don_Toollist = util.KeyValuesToTable(file.Read("spaceage/donator/toollist.txt"))
 
 local function SA_DonatorCanTool(ply,tr,mode)
 	for k,v in pairs(SA_Don_Toollist) do
