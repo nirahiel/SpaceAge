@@ -7,6 +7,8 @@ local function hidehud(name)
 end
 hook.Add("HUDShouldDraw", "hidehud", hidehud)
 
+local HUDFont = "Default"
+
 SA_HUDBlink = true
 timer.Create("SA_HUDBlink",0.5,0,function() SA_HUDBlink = not SA_HUDBlink end)
 
@@ -67,13 +69,13 @@ function SA_CustomHUDPaint()
 	if PlRelX > 1 then PlRelX = 1 end
 	local PlHeightX = math.Max(PlRelX * HeightMul, 4)
 	draw.RoundedBox(4, ScW - 70, (ScH - Inset) - PlHeightX, 40, PlHeightX, HUDHealth)
-	draw.SimpleText(LocalPlayer():Health(), "ScoreboardText", ScW - 50, ScH - 38, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+	draw.SimpleText(LocalPlayer():Health(), HUDFont, ScW - 50, ScH - 38, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 	if(LocalPlayer():Armor() > 0) then
 		local PlRelX = LocalPlayer():Armor() / 100
 		if PlRelX > 1 then PlRelX = 1 end
 		local PlHeightX = math.Max(PlRelX * HeightMul, 4)	
 		draw.RoundedBox(2, ScW - 70, (ScH - Inset) - PlHeightX, 10, PlHeightX, HUDArmor)
-		draw.SimpleText(LocalPlayer():Armor(), "ScoreboardText", ScW - 50, ScH - 54, HUDArmor, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+		draw.SimpleText(LocalPlayer():Armor(), HUDFont, ScW - 50, ScH - 54, HUDArmor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 	end
 	--END OF HEALTH AND ARMOR
 	
@@ -97,23 +99,24 @@ function SA_CustomHUDPaint()
 		end
 	end
 	if primAmmo > 0 or secAmmo > 0 or primAmmoX > 0 then
-		draw.SimpleText(primAmmo, "ScoreboardText", ScW - 112, ScH - 38, HUDAmmo1, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+		draw.SimpleText(primAmmo, HUDFont, ScW - 112, ScH - 38, HUDAmmo1, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 	end
 	if secAmmo > 0 then
-		draw.SimpleText(secAmmo, "ScoreboardText", ScW - 112, ScH - 54, HUDAmmo2, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+		draw.SimpleText(secAmmo, HUDFont, ScW - 112, ScH - 54, HUDAmmo2, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 	end
 	--END OF AMMO
 	
-	/*GlobalTemp_Max = 600
+	GlobalTemp_Min = 0
+	GlobalTemp_Max = 600
 	FairTemp_Min = 283
 	FairTemp_Max = 308
 	ls_habitat = 0
 	ls_air = 0
-	ls_tmp = 0
+	ls_tmp = GlobalTemp_Min
 	ls_coolant = 0
-	ls_energy = 0*/
+	ls_energy = 0
 
-	local ls_current_unhabitable;
+	local ls_current_unhabitable
 	if LocalPlayer():WaterLevel() > 2 then
 		ls_current_unhabitable = true
 	elseif ls_habitat < 5 then
@@ -143,18 +146,18 @@ function SA_CustomHUDPaint()
 		local hotTemp = Color(255,0,0,255)
 		local goodTemp = Color(0,255,0,255)
 		
-		local XMinX = (ScW - 408) / 2
-		draw.RoundedBox(4, XMinX - 16, ScH - 120, 440, 100, HUDGrey)
+		local XMinX = (ScW - 388) / 2
+		draw.RoundedBox(4, XMinX - 26, ScH - 120, 440, 100, HUDGrey)
 		
 		local Perc = math.Clamp(FairTemp_Mid / GlobalTemp_Max, 0, 1)
-		local Wid = Perc * 380
+		local Wid = Perc * 390
 		draw.RoundedBox(4, (ScW - 390) / 2, ScH - 90, Wid, 40, coolTemp)
-		draw.RoundedBox(4, Wid + XMinX, ScH - 90, 400 - Wid, 40, hotTemp)
+		draw.RoundedBox(4, Wid + XMinX, ScH - 90, 390 - Wid, 40, hotTemp)
 
 		local Perc = math.Clamp(FairTemp_Min / GlobalTemp_Max, 0, 1)
-		local Wid = Perc * 380
+		local Wid = Perc * 390
 		local Perc2 = math.Clamp(FairTemp_Max / GlobalTemp_Max, 0, 1)
-		local Wid2 = math.Clamp(Perc2 - Perc, 0, 1) * 380
+		local Wid2 = math.Clamp(Perc2 - Perc, 0, 1) * 390
 		
 		surface.SetDrawColor(goodTemp)
 		surface.DrawRect(XMinX + Wid, ScH - 90, Wid2, 40)
@@ -164,7 +167,7 @@ function SA_CustomHUDPaint()
 		surface.SetDrawColor(255,255,255,255)
 		
 		local Perc = math.Clamp(ls_tmp / GlobalTemp_Max, 0, 1)
-		local Wid = Perc * 380
+		local Wid = Perc * 390
 		local XWidX = XMinX + Wid
 		
 		surface.DrawTexturedRect(XWidX - 8, ScH - 98, 16, 16)
@@ -172,10 +175,10 @@ function SA_CustomHUDPaint()
 		local xMyTemp = goodTemp
 		if ls_tmp < FairTemp_Min then xMyTemp = coolTemp
 		elseif ls_tmp > FairTemp_Max then xMyTemp = hotTemp end
-		draw.SimpleText(tostring(ls_tmp)..tempUnit, "ScoreboardText", XWidX, ScH - 115, xMyTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_BOTTOM)
+		draw.SimpleText(tostring(ls_tmp)..tempUnit, HUDFont, XWidX, ScH - 115, xMyTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 		
-		draw.SimpleText("0"..tempUnit, "ScoreboardText", XMinX + 8, ScH - 45, coolTemp, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
-		draw.SimpleText(tostring(GlobalTemp_Max)..tempUnit, "ScoreboardText", (XMinX + 400), ScH - 45, hotTemp, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
+		draw.SimpleText(tostring(GlobalTemp_Min)..tempUnit, HUDFont, XMinX + 8, ScH - 45, coolTemp, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+		draw.SimpleText(tostring(GlobalTemp_Max)..tempUnit, HUDFont, (XMinX + 400), ScH - 45, hotTemp, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
 	end
 	--END OF TEMPERATURE
 	
@@ -205,7 +208,7 @@ function DrawLSBar(BarNum,CaptionX,Value,ScH,ScW,ColBack,ColText)
 	local XMinX = (ScW - BarWid) / 2
 	
 	draw.RoundedBox(4, XMinX, Hei, BarWid, BarHei, ColBack)
-	draw.SimpleText(Caption, "ScoreboardText", XMinX + 8, Hei + (BarHei / 2), ColText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+	draw.SimpleText(Caption, HUDFont, XMinX + 8, Hei + (BarHei / 2), ColText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 	
 	local Perc = Value / 4000
 	
@@ -215,10 +218,10 @@ function DrawLSBar(BarNum,CaptionX,Value,ScH,ScW,ColBack,ColText)
 		local XWid = (BarWid - 154)  * Perc
 		XWid = math.Max(XWid,4)
 		draw.RoundedBox(4, XMinX + 150, Hei + 4, XWid, BarHei - 8, ValCol)
-		draw.SimpleText(tostring(Perc*100).." %", "ScoreboardText", XMinX + 70, Hei + (BarHei / 2), ValCol, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+		draw.SimpleText(tostring(Perc*100).." %", HUDFont, XMinX + 70, Hei + (BarHei / 2), ValCol, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 	else
 		if not SA_HUDBlink then ValCol = Color(0,0,0,0) end
-		draw.SimpleText("EMPTY", "ScoreboardText", XMinX + 70, Hei + (BarHei / 2), ValCol, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+		draw.SimpleText("EMPTY", HUDFont, XMinX + 70, Hei + (BarHei / 2), ValCol, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 	end
 end
 
