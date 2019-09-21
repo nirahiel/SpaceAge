@@ -1,25 +1,24 @@
 local data, isok, merror
 
 local FactionCache = {}
-local FactionCacheStarted = false
 
 local function SA_GK_PlayerCheck(sid64, ip, svPassword, pass, name)
-	local deny = false
-
-	if not sid64 then
-		return {false, "Sorry, internal error (Error 0x0)"}
+	if svPassword ~= "" and pass ~= svPassword then
+		return false, "Wrong password"
 	end
 
 	local sa_faction_only = GetConVar("sa_faction_only")
-	if(sa_faction_only:GetBool()) then
-		local sid = util.SteamIDFrom64(sid64)
+	if not sa_faction_only:GetBool() then
+		return
+	end
 
-		if SA.FactionCacheStarted == true and FactionCache[sid] ~= true then
-			deny = true
-		end
-		if deny then
-			return {false, "You don't meet the requirements for this server!"}
-		end
+	if not sid64 then
+		return false, "Sorry, internal error (Error 0x0)"
+	end
+
+	local sid = util.SteamIDFrom64(sid64)
+	if not FactionCache[sid] then
+		return false, "You don't meet the requirements for this server!"
 	end
 end
 hook.Add("CheckPassword", "SA_GK_PlayerCheck", SA_GK_PlayerCheck)
