@@ -83,7 +83,7 @@ end
 
 hook.Add("Initialize","MapCleanInitialize",function()
 	local map = game.GetMap()
-	if map:lower() == "sb_forlorn_sb3_r2l" then
+	if map:lower() == "sb_forlorn_sb3_r2l" or map:lower() == "sb_forlorn_sb3_r3" then
 		timer.Simple(5,function()
 			for k, v in pairs(ents.FindByClass("func_breakable")) do
 				v:Remove()
@@ -344,7 +344,7 @@ local function LoadRes(data, isok, merror, ply, sid)
 
 	if ply.devlimit <= 0 then ply.devlimit = 1 end
 	
-	if not ply.Level then ply.Level = 0 end
+	--if not ply.Level then ply.Level = 0 end
 	
 	timer.Simple(1,function()
 		if not (ply and ply.IsValid and ply:IsValid()) then return end
@@ -497,7 +497,7 @@ local function SA_Autospawner(ply)
 	end
 end
 timer.Simple(1, SA_Autospawner)
-concommand.Add("NewAutospawn",function(ply) if ply.Level >= 3 then SA_Autospawner(ply) end end)
+concommand.Add("NewAutospawn",function(ply) if ply:GetLevel() >= 3 then SA_Autospawner(ply) end end)
 
 function SA_IsProtectedProp(ent)
 	for k,v in pairs(WorldClasses) do

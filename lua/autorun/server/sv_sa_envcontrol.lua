@@ -221,7 +221,7 @@ function SA_SaveAllPlanets()
 end
 
 concommand.Add("RestartEnvironment",function(ply)
-	if ply.Level < 3 then return end
+	if ply:GetLevel() < 3 then return end
 	for k,v in pairs(SA_MyPlanets) do
 		local envname = string.lower(v.sbenvironment.name)
 		local filename = "spaceage/planetsave/"..string.lower(game:GetMap()).."/"..envname.."_default.txt"
@@ -239,7 +239,7 @@ concommand.Add("RestartEnvironment",function(ply)
 end)
 
 concommand.Add("PrintEnvironment",function(ply)
-	if ply.Level < 3 then return end
+	if ply:GetLevel() < 3 then return end
 	local env = CAF.GetAddon("Spacebuild").FindClosestPlanet(ply:GetPos(), false)
 	local name = env:GetEnvironmentName()
 	local pos = env:GetPos()

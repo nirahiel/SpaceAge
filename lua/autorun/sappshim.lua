@@ -18,6 +18,19 @@ function SAPPShim.PlyCanPerform(ply, ent)
 end
 
 local PlayerMeta = FindMetaTable("Player")
-function PlayerMeta:IsVIP(self)
-	return false
+function PlayerMeta:IsVIP()
+	return self.donator
+end
+
+function PlayerMeta:GetLevel()
+	if self:IsSuperAdmin() then
+		return 3
+	end
+	if self:IsAdmin() then
+		return 2
+	end
+	if self:IsVIP() then
+		return 1
+	end
+	return 0
 end

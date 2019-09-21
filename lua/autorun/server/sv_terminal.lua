@@ -376,7 +376,7 @@ function SA_UpdateInfo(ply,CanPass)
 	end
 	
 	local DevVars = {0,0,0}
-	if ply.Level >= 3 then
+	if ply:GetLevel() >= 3 then
 		DevVars = {SA_MaxCrystalCount,SA_CrystalRadius,SA_Max_Roid_Count}
 	end
 	

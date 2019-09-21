@@ -158,7 +158,7 @@ end
 
 
 concommand.Add("RespawnCrystals",function(ply)
-	if ply.Level < 3 then return end
+	if ply:GetLevel() < 3 then return end
 	local tempMax = SA_MaxCrystalCount
 	SA_MaxCrystalCount = 0
 	for k,v in pairs(ents.FindByClass("sa_crystal")) do

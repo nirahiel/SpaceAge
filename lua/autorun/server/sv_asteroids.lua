@@ -61,7 +61,7 @@ timer.Simple(5,function() CreateAsteroids(0) end)
 
 
 concommand.Add("RespawnAsteroids",function(ply)
-	if ply.Level < 3 then return end
+	if ply:GetLevel() < 3 then return end
 	for k,v in pairs(ents.FindByClass("sa_roid")) do
 		v.RespOnRemove = false
 		v:Remove()
