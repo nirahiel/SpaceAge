@@ -1,5 +1,3 @@
-require("datastream")
-
 AppPanel = null
 AppFaction = ""
 
@@ -14,18 +12,24 @@ SAppFact = "Major Miners"
 
 CSelID = ""
 
-function SA_DoSetAppData( handler, id, encoded, decoded ) 
-	SAppFact = decoded[1]
-	SAppText = decoded[2]
+function SA_DoSetAppData(len, ply)
+	SAppFact = net.ReadString()
+	SAppText = net.ReadString()
 	if SA_AppBasePanel then SA_RefreshApplications() end
 end
-datastream2.Hook("sa_dosetappdata",SA_DoSetAppData)
+net.Receive("sa_dosetappdata",SA_DoSetAppData)
 
-function SA_DoAddApp( handler, id, encoded, decoded ) 
-	AppTable[decoded[1]] = {decoded[2],decoded[3],decoded[4],AddCommasToInt(decoded[5])}
+function SA_DoAddApp(len, ply)
+	local steamid = net.ReadString()
+	local name = net.ReadString()
+	local text = net.ReadString()
+	local playtime = net.ReadString()
+	local score = net.ReadString()
+
+	AppTable[steamid] = {name, text, playtime, AddCommasToInt(score)}
 	if SA_AppBasePanel then SA_RefreshApplications() end
 end
-datastream2.Hook("sa_doaddapp",SA_DoAddApp)
+net.Receive("sa_doaddapp",SA_DoAddApp)
 
 function SA_DoDelApp( um ) 
 	AppTable[um:ReadString()] = nil
@@ -185,5 +189,8 @@ function CloseApply()
 end
 
 function DoApply()
-	datastream2.StreamToServer("sa_doapplyfaction",{SAppText,SAppFact})
+	net.Start("sa_doapplyfaction")
+		net.WriteString(SAppText)
+		net.WriteString(SAppFact)
+	net.SendToServer()
 end

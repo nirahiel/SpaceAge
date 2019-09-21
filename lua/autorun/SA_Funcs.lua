@@ -22,3 +22,7 @@ end
 function SA_FormatTime(time)
 	return "" .. time
 end
+
+function ValidEntity(ent)
+	return ent and ent:IsValid()
+end

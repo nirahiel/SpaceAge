@@ -1,8 +1,7 @@
 local data, isok, merror
 
-require("datastream")
-require ( "mysql" )
-AddCSLuaFile( "autorun/client/cl_sa_application.lua" )
+require ("mysql")
+AddCSLuaFile("autorun/client/cl_sa_application.lua")
 
 SA_FactionData = {}
 
@@ -211,8 +210,14 @@ local function DoApplyFactionResRes(data, isok, merror, ply, ffid, pltimexx)
 				table.insert(toPlayers,v)
 			end
 		end
-	end  
-	datastream2.StreamToClients(toPlayers,"sa_doaddapp",{ply:SteamID(),ply:GetName(),sat,pltimexx,ply.TotalCredits})
+	end
+	net.Start("so_addapp")
+		net.WriteString(ply:SteamID())
+		net.WriteString(ply:GetName())
+		net.WriteString(sat)
+		net.WriteString(pltimexx)
+		net.WriteInt(ply.TotalCredits)
+	net.Send(toPlayers)
 	ply:SendLua("CloseApply()")
 end
 
@@ -224,9 +229,9 @@ local function DoApplyFactionRes(data, isok, merror, ply, steamid, plname, ffid,
 	end
 end
 
-local function SA_DoApplyFaction(ply, handler, id, encoded, decoded) 
-	local forfaction = decoded[2]
-	local sat = decoded[1]
+local function SA_DoApplyFaction(len, ply) 
+	local sat = net.ReadString()
+	local forfaction = net.ReadString()
 	satx = MySQL:Escape(sat)
 	local ffid = 0
 	for k, v in pairs(SA_Factions) do
@@ -256,7 +261,7 @@ local function SA_DoApplyFaction(ply, handler, id, encoded, decoded)
 	local cscore = MySQL:Escape(ply.TotalCredits)
 	MySQL:Query("SELECT steamid FROM applications WHERE steamid = '"..steamid.."'", DoApplyFactionRes, ply, steamid, plname, ffid, satx, cscore, pltimex)
 end
-datastream2.Hook("sa_doapplyfaction",SA_DoApplyFaction)
+net.Receive("sa_doapplyfaction",SA_DoApplyFaction)
 --FA.RegisterDataStream("sa_doapplyfaction",0)
 
 local function DoAcceptPlayerResRes(data, isok, merror, ply)

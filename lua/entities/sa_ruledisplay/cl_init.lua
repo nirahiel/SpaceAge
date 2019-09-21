@@ -1,8 +1,8 @@
 include( "shared.lua" )
 
-surface.CreateFont( "Trebuchet18", 200, 700, true, false, "rulesTitle" )
-surface.CreateFont( "Trebuchet18", 75, 700, true, false, "rulesFont" )
-surface.CreateFont( "Trebuchet18", 50, 700, true, false, "rulesSmallFont" )
+surface.CreateFont("rulesTitle", { font = "Trebuchet18", size = 200, weight = 700, antialias = true, shadow = false})
+surface.CreateFont("rulesFont", { font = "Trebuchet18", size = 75, weight = 700, antialias = true, shadow = false})
+surface.CreateFont("rulesSmallFont", { font = "Trebuchet18", size = 50, weight = 700, antialias = true, shadow = false})
 
 ENT.Rules = {
 	"Treat fellow players with the same respect as treating admins.",

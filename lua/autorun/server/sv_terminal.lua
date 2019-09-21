@@ -6,9 +6,7 @@ AddCSLuaFile( "autorun/client/cl_sa_terminal_goodie.lua" )
 
 AddCSLuaFile( "autorun/SA_Goodies.lua" )
 
-require("datastream")
-
-require("random")
+--require("random")
 
 local HASH = math.random(1000000,9999999)
 
@@ -51,18 +49,6 @@ AddResourcePrice("Strontium Clathrates",9000)
 AddResourcePrice("Nitrogen Isotopes",2700)
 AddResourcePrice("Oxygen Isotopes",2610)
 AddResourcePrice("Liquid Ozone",5400)
-
-//PM :D
-for k, v in pairs(SA_PM.Ref.Types) do
-	local Price = v.Price
-	local Name = v.Name
-	AddResourcePrice(Name, Price)
-end
-/*AddResourcePrice("Copper",100)
-AddResourcePrice("Iron",2500)
-AddResourcePrice("Gold",3000)
-AddResourcePrice("Platinum",4500)
-AddResourcePrice("Cut Diamonds",7000)*/
 
 
 local function AddResourceBuyPrice(res,price)
@@ -394,7 +380,10 @@ function SA_UpdateInfo(ply,CanPass)
 	end
 	
 	ply.SendingTermUp = true
-	datastream2.StreamToClients(ply,"TerminalUpdate",{ResTabl,math.floor(ply.Capacity),math.floor(ply.MaxCap),PermStorage,ShipStorage,BuyPriceTable,ResTabl2,SA_CanReset(ply),ply.devlimit,DevVars},function() SA_InfoSent(ply) end)
+	net.Start("TerminalUpdate")
+		net.WriteTable({ResTabl,math.floor(ply.Capacity),math.floor(ply.MaxCap),PermStorage,ShipStorage,BuyPriceTable,ResTabl2,SA_CanReset(ply),ply.devlimit,DevVars})
+	net.Send(ply)
+	SA_InfoSent(ply) -- TODO: This?
 end
 concommand.Add("TerminalUpdate",SA_UpdateInfo)
 
@@ -405,7 +394,10 @@ local function SA_UpdateGoodies(data, isok, merror, ply)
 	for _,v in pairs(data) do
 		ply.Goodies[v["id"]] = SA_GoodieTbl[v["intid"]]
 	end
-	datastream2.StreamToClients(ply,"GoodieUpdate",data,function() ply.SendingGoodieUp = false end)
+	net.Start("GoodieUpdate")
+		net.WriteTable(data)
+	net.Send(ply)
+	ply.SendingGoodieUp = false
 end
 
 local function SA_RequestUpdateGoodies(ply)

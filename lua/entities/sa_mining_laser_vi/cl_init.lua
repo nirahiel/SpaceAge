@@ -49,9 +49,15 @@ function ENT:Draw()
 	end
 end
 
+local brshift = bit.rshift
+local band = bit.band
+local function band255(int)
+	return band(int, 255)
+end
+
 function ENT:GetNetworkedColor(name)
 	local int = self:GetNetworkedInt(name);
-	return Color((int >> 0) & 255, (int >> 8) & 255, (int >> 16) & 255, (int >> 24) & 255);
+	return Color(band255(brshift(int, 0)), band255(brshift(int, 8)), band255(brshift(int, 16)), band255(brshift(int, 24)))
 end
 
 function ENT:DrawLaser()

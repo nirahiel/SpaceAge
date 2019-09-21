@@ -1,7 +1,6 @@
 local data, isok, merror
 
-require( "mysql" )
-require("datastream")
+require("mysql")
 require("glon")
 
 AddCSLuaFile("autorun/client/cl_sa_hud.lua")
@@ -62,7 +61,13 @@ end
 local function LeaderRes(data, isok, merror, ply)
 	if (isok) then
 		for k, v in pairs(data) do
-			datastream2.StreamToClients(ply,"sa_doaddapp",{v['steamid'],v['name'],v['text'],v['playtime'],v['score']})
+			net.Start("sa_doaddapp")
+				net.WriteString(v['steamid'])
+				net.WriteString(v['name'])
+				net.WriteString(v['text'])
+				net.WriteString(v['playtime'])
+				net.WriteInt(v['score'])
+			net.Send(ply)
 		end
 	else
 		ply:ChatPrint(merror)
@@ -97,7 +102,10 @@ local function NonLeaderRes(data, isok, merror, ply)
 			appfact = SA_Factions[ffid][1]
 			apptext = data[1]['text']
 		end
-		datastream2.StreamToClients(ply,"sa_dosetappdata",{appfact,apptext})
+		net.Start("sa_dosetappdata")
+			net.WriteString(appfact)
+			net.WriteString(apptext)
+		net.Send(ply)
 	end
 end
 

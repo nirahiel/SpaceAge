@@ -1,5 +1,3 @@
-require("datastream")
-
 TERMLOADER = true
 include("cl_sa_terminal_research.lua")
 include("cl_sa_terminal_resource.lua")
@@ -21,11 +19,11 @@ local ScrX = surface.ScreenWidth()
 local ScrY = surface.ScreenHeight()
 local HASH = 0
 
-local function sa_new_stats( handler, id, encoded, decoded )
-	SA_StatsList = decoded
+local function sa_new_stats(len, ply)
+	SA_StatsList = net.ReadTable()
 	SA_RefreshStatsList()
 end
-datastream2.Hook("sa_newstats", sa_new_stats) 
+net.Receive("sa_newstats", sa_new_stats) 
 
 local function SA_RecvFactionData( um )
 	local fn = um:ReadString()
@@ -685,7 +683,9 @@ function SA_RefreshApplications()
 	end
 end
 
-local function SA_RefreshGoodiesRecv(handler, id, encoded, decoded)
+local function SA_RefreshGoodiesRecv(len, ply)
+	local decoded = net.ReadTable()
+
 	SA_Term_GoodieList:Clear()
 	local goodie
 	for _,v in pairs(decoded) do
@@ -695,7 +695,7 @@ local function SA_RefreshGoodiesRecv(handler, id, encoded, decoded)
 		SA_Term_GoodieList:AddItem(goodie)
 	end
 end
-datastream2.Hook("GoodieUpdate", SA_RefreshGoodiesRecv)
+net.Receive("GoodieUpdate", SA_RefreshGoodiesRecv)
 
 function SA_RefreshGoodies()
 	RunConsoleCommand("GoodiesUpdate")
@@ -730,7 +730,7 @@ function CleanString(str)
 	return cleaned
 end
 
-local function sa_term_update1( msg )
+local function sa_term_update1(msg)
 	term_info.orecount = AddCommasToInt(msg:ReadLong())
 	term_info.tempore = AddCommasToInt(msg:ReadLong())
 	--SA_Term_Refinery:GetLine(1):SetValue(2,term_info.orecount)
@@ -738,7 +738,10 @@ local function sa_term_update1( msg )
 end
 usermessage.Hook("TerminalUpdate1", sa_term_update1) 
 
-local function sa_term_update(handler, id, encoded, decoded )
+local function sa_term_update(len, ply)
+	-- TODO: Make this less of a table
+	local decoded = net.ReadTable()
+
 	local lv = decoded[9]
 	if lv >= 5 then decoded[8] = false end
 	SA_DevLimitLevel = lv
@@ -838,7 +841,7 @@ local function sa_term_update(handler, id, encoded, decoded )
 		SA_Max_Roid_Count:SetText(tmp[3])
 	end
 end
-datastream2.Hook("TerminalUpdate", sa_term_update)
+net.Receive("TerminalUpdate", sa_term_update)
 
 local function SetHash(msg)
 	HASH = msg:ReadLong()
