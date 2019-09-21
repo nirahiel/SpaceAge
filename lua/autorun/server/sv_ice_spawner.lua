@@ -113,7 +113,7 @@ local function AM_Spawn_Ice(tbl)
 end
 
 timer.Simple(1, function()
-	local ini = INIParser:new("Asteroid_Mining/Asteroidspawner_maps/"..game.GetMap()..".txt")
+	local ini = INIParser:new("asteroid_mining/asteroidspawner_maps/"..game.GetMap()..".txt")
 	if (ini) then
 		AM_Spawn_Ice(ini.IceField or {})
 	end
