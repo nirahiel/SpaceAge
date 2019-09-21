@@ -41,7 +41,7 @@ usermessage.Hook("SA_FactionData", SA_RecvFactionData)
 function SA_RefreshStatsList(isAuto)
 	if isAuto then timer.Simple(30, function() SA_RefreshStatsList(true) end) end
 	if not SA_Term_StatList then return end
-	SA_Term_StatList:OpenURL("http://stats.spaceage.eu/?ingame=1&rand="..tostring(CurTime()))
+	SA_Term_StatList:OpenURL("https://stats.spaceage.online/?ingame=1&rand="..tostring(CurTime()))
 end
 
 function CreateTerminalGUI()
