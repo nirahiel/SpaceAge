@@ -3,7 +3,7 @@ if SERVER then
 end
 
 local Researches = {}
-local ResearchGroups = {"Asteroid Mining","Tiberium Mining","Ice Mining", "Planetary Mining", "Miscellaneous"}
+local ResearchGroups = {"Asteroid Mining","Tiberium Mining","Ice Mining", "Miscellaneous"}
 local ResearchIcons = {}
 
 function SA_GetResearch()
@@ -98,23 +98,7 @@ SA_AddResearch(	"rta_device","Miscellaneous","Remote Terminal Access",2,"rta",50
 SA_AddResearch(	"ice_refinery","Ice Mining","Ice Refineries",2,"icerefinerymod",750000000,150,"Allows using better ice refineries.","none",{},1,{})
 SA_AddResearch(	"ice_laser","Ice Mining","Ice Lasers",2,"icelasermod",1000000000,150,"Allows using better ice lasers.","none",{},2,{})
 SA_AddResearch(	"ice_storage","Ice Mining","Ice Storages",4,"icerawmod",300000000,150,"Allows using better raw Ice Storages.","none",{},3,{})
-SA_AddResearch(	"ice_product_storage","Ice Mining","Ice Product Storages",6,"iceproductmod",300000000,150,"Allows using better ice product storages.","none",{},4,{})		
-
-// PM :D
-
-SA_AddResearch(	"sa_planetmining_drill_depth","Planetary Mining","Max Drill Depth",45,"pmdrillshafts",150000000,10,"Allows for deaper drilling.","none",{},1,{})
-SA_AddResearch(	"sa_planetmining_drill_speed","Planetary Mining","Drill Speed",50,"pmdrillspeed",100000000,5,"Allows faster drilling. (0.03 each time)","none",{},2,{})
-SA_AddResearch(	"sa_planetmining_drill_efficiency","Planetary Mining","Drill Efficiency",50,"pmdrilleff",120000000,5,"Allows more efficient drilling. (0.1 each time)","none",{},3,{})
-SA_AddResearch(	"sa_planetmining_drill_reliability","Planetary Mining","Drill Reliability",50,"pmdrillreliab",200000000,5,"Allows more a more reliable drill. (-5% each time)","none",{},4,{})
-SA_AddResearch(	"sa_planetmining_ref_speed","Planetary Mining","Refinery Level",2,"pmrefspeed",3000000000,100,"Allows for better and faster refineries.","none",{},5,{})
-
-SA_AddResearch(	"sa_planetmining_storage","Planetary Mining","Raw Storages",4,"pmrawlevel",1000000000,100,"Allows using better PM Raw Storages.","none",{},6,{})
-SA_AddResearch(	"sa_planetmining_storage_product","Planetary Mining","Product Storages",4,"pmprodlevel",1000000000,100,"Allows using better PM Product Storages.","none",{},7,{})
-//SA_AddResearch(	"sa_planetmining_ode_res","Planetary Mining","ODE Resolution",2,"pmoderes",5000000000,100,"Allows for a higher resolution screen.","none",{},8,{})
-SA_AddResearch(	"sa_planetmining_ode_speed","Planetary Mining","ODE Scan Speed",60,"pmodespeed",300000000,5,"Decreases max scan time. (-2 sec each time)","none",{},8,{})
-SA_AddResearch(	"sa_planetmining_ode_range","Planetary Mining","ODE Scan Range",32,"pmoderange",300000000,5,"Allows for a broader scan.","none",{},9,{})
-SA_AddResearch(	"sa_planetmining_ode_battery","Planetary Mining","ODE Energy Cost",5,"pmodebattery",100000000,15,"Decreases the energy usage of the ODE. (-5% each time)","none",{},10,{})
-
+SA_AddResearch(	"ice_product_storage","Ice Mining","Ice Product Storages",6,"iceproductmod",300000000,150,"Allows using better ice product storages.","none",{},4,{})
 
 for k,v in pairs(ResearchIcons) do
 	resource.AddFile("materials/spaceage/"..k..".vmt")

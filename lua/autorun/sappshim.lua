@@ -15,3 +15,8 @@ end
 function SAPPShim.PlyCanPerform(ply, ent)
 	return true
 end
+
+local PlayerMeta = FindMetaTable("Player")
+function PlayerMeta:IsVIP(self)
+	return false
+end

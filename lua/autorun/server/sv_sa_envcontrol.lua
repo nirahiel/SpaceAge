@@ -158,15 +158,15 @@ local function InitHabitablePlanets()
 			v.sbenvironment.pressure = 1
 			v.sbenvironment.atmosphere = 1
 			print('Protecting planet "'..v.sbenvironment.name..'"!')
-		elseif envname != "no name" then
+		elseif envname ~= "no name" then
 			local filename = dirname..envname
 			SA_DefEnvsA[envname] = v.sbenvironment.air
 			SA_DefEnvs[envname] = v.sbenvironment
-			if file.Exists(filename.."_default.txt") == false then
+			if file.Exists(filename.."_default.txt", "DATA") == false then
 				local output = util.TableToKeyValues(v.sbenvironment)
 				file.Write(filename.."_default.txt",output)
 			end
-			if file.Exists(filename..".txt") then
+			if file.Exists(filename..".txt", "DATA") then
 				local envfile = file.Read(filename..".txt")
 				local envdata = util.KeyValuesToTable(envfile)
 				envdata.bloom = v.sbenvironment.bloom
@@ -209,7 +209,7 @@ timer.Create("SA_PlanetBackfall", 50, 0, SA_PlanetRestore)
 
 function SA_SaveAllPlanets()
 	local dirname = "Spaceage/planetsave/"..string.lower(game.GetMap()).."/"
-	if not file.Exists(dirname) then
+	if not file.Exists(dirname, "DATA") then
 		file.CreateDir(dirname)
 	end
 	for k,v in pairs(SA_MyPlanets) do
@@ -225,7 +225,7 @@ concommand.Add("RestartEnvironment",function(ply)
 	for k,v in pairs(SA_MyPlanets) do
 		local envname = string.lower(v.sbenvironment.name)
 		local filename = "Spaceage/planetsave/"..string.lower(game:GetMap()).."/"..envname.."_default.txt"
-		if file.Exists(filename) then
+		if file.Exists(filename, "DATA") then
 			local envfile = file.Read(filename)
 			local envdata = util.KeyValuesToTable(envfile)
 			envdata.bloom = v.sbenvironment.bloom

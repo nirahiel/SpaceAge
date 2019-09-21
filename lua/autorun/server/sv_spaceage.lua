@@ -1,7 +1,13 @@
 local data, isok, merror
 
-require("mysql")
-require("glon")
+--require("glon")
+local function glon_encode(tbl)
+	return util.TableToJSON(tbl)
+end
+local function glon_decode(str)
+	return util.JSONToTable(str)
+end
+
 
 AddCSLuaFile("autorun/client/cl_sa_hud.lua")
 
@@ -42,7 +48,8 @@ CreateConVar( "sa_pirating", "1", { FCVAR_NOTIFY, FCVAR_REPLICATED } )
 CreateConVar("sa_faction_only", "0", { FCVAR_NOTIFY } )
 local sa_faction_only = GetConVar("sa_faction_only")
 
-function _R.Player:AssignFaction(name)
+local PlayerMeta = FindMetaTable("Player")
+function PlayerMeta:AssignFaction(name)
 	if name then self.UserGroup = name end
 	if not self.UserGroup then self.UserGroup = "freelancer" end
 	if self.UserGroup == "alliance" and self.allyuntil < os.time() then self.UserGroup = "freelancer" end
@@ -147,19 +154,6 @@ local function LoadFailed(ply)
 	ply.icerefinerymod = 0
 	ply.icelasermod = 0
 	
-	// PM :D
-	ply.pmdrillspeed = 0
-	ply.pmdrilleff = 0
-	ply.pmdrillshafts = 0
-	ply.pmdrillreliab = 0
-	ply.pmrefspeed = 0
-	ply.pmrawlevel = 0
-	ply.pmprodlevel = 0
-	//ply.pmoderes = 0
-	ply.pmodespeed = 0
-	ply.pmoderange = 0
-	ply.pmodebattery = 0
-	
 	ply.devlimit = 1
 	ply.allyuntil = 0
 	
@@ -216,30 +210,16 @@ local function LoadRes(data, isok, merror, ply, sid)
 			ply.icerefinerymod = tonumber(data[1]["icerefinerymod"])
 			ply.icelasermod = tonumber(data[1]["icelasermod"])
 			
-			// PM :D
-			ply.pmdrillspeed = tonumber(data[1]["pmdrillspeed"])
-			ply.pmdrilleff = tonumber(data[1]["pmdrilleff"])
-			ply.pmdrillshafts = tonumber(data[1]["pmdrillshafts"])
-			ply.pmdrillreliab = tonumber(data[1]["pmdrillreliab"])
-			ply.pmrefspeed = tonumber(data[1]["pmrefspeed"])
-			ply.pmrawlevel = tonumber(data[1]["pmrawlevel"])
-			ply.pmprodlevel = tonumber(data[1]["pmprodlevel"])
-			//ply.pmoderes = tonumber(data[1]["pmoderes"])
-			ply.pmodespeed = tonumber(data[1]["pmodespeed"])
-			ply.pmoderange = tonumber(data[1]["pmoderange"])
-			ply.pmodebattery = tonumber(data[1]["pmodebattery"])
-			//print("[DEBUG] ply.pmodebattery = "..ply.pmodebattery)
-			
 			ply.devlimit = tonumber(data[1]["devlimit"])
 			
 			ply.allyuntil = tonumber(data[1]["allyuntil"])
 			
 			local tbl = {}
 			if data[1]["stationres"] then
-				if not pcall(function() tbl = glon.decode(data[1]["stationres"]) end) then
+				if not pcall(function() tbl = glon_decode(data[1]["stationres"]) end) then
 					pcall(function()
 						tbl = util.KeyValuesToTable(data[1]["stationres"])
-						MySQL:Query("UPDATE players SET stationres = '"..MySQL:Escape(glon.encode(tbl)).."' WHERE steamid = '"..sid.."'", function() end)
+						MySQL:Query("UPDATE players SET stationres = '"..MySQL:Escape(glon_encode(tbl)).."' WHERE steamid = '"..sid.."'", function() end)
 					end)
 				end
 			end
@@ -287,19 +267,6 @@ local function LoadRes(data, isok, merror, ply, sid)
 				ply.iceproductmod = 0
 				ply.icerefinerymod = 0
 				ply.icelasermod = 0
-				
-				// PM :D
-				ply.pmdrillspeed = 0
-				ply.pmdrilleff = 0
-				ply.pmdrillshafts = 0
-				ply.pmdrillreliab = 0
-				ply.pmrefspeed = 0
-				ply.pmrawlevel = 0
-				ply.pmprodlevel = 0
-				//ply.pmoderes = 0
-				ply.pmodespeed = 0
-				ply.pmoderange = 0
-				ply.pmodebattery = 0
 				
 				ply.allyuntil = 0
 				
@@ -430,7 +397,7 @@ function SA_SaveUser(ply,isautosave)
 		--local miningrange = ply.miningbeam
 		local oremod = ply.oremod
 		local fighterenergy = ply.fighterenergy 
-		local perm = MySQL:Escape(glon.encode(GetPermStorage(ply)))
+		local perm = MySQL:Escape(glon_encode(GetPermStorage(ply)))
 		local name = MySQL:Escape(ply:Name())
 		
 		if ply.devlimit <= 0 then ply.devlimit = 1 end
@@ -439,7 +406,7 @@ function SA_SaveUser(ply,isautosave)
 			isleader = 1
 		end
 		if username == false then return end
-		MySQL:Query("UPDATE players SET credits='"..credits.."', name='"..name.."',score='"..totalcred.."', groupname='"..group.."', isleader='"..isleader.."', capacity='"..cap.."', miningyield='"..miningyield.."', miningenergy='"..miningenergy.."', oremod='"..oremod.."', stationres='"..perm.."', fighterenergy='"..fighterenergy.."', miningyield_ii='"..ply.miningyield_ii.."', miningyield_iii='"..ply.miningyield_iii.."', miningyield_iv='"..ply.miningyield_iv.."', miningyield_v='"..ply.miningyield_v.."', miningyield_vi='"..ply.miningyield_vi.."', miningtheory='"..ply.miningtheory.."', rtadevice='"..ply.rta.."', oremod_ii='"..ply.oremod_ii.."', oremanage='"..ply.oremanage.."', gcombat = '"..ply.gcombat.."', oremod_iii='"..ply.oremod_iii.."', oremod_iv='"..ply.oremod_iv.."', oremod_v='"..ply.oremod_v.."', hdpower = '"..ply.hdpower.."', tiberiummod = '"..ply.tiberiummod.."', tiberiumyield = '"..ply.tiberiumyield.."', icelasermod = '"..ply.icelasermod.."', icerawmod = '"..ply.icerawmod.."', icerefinerymod = '"..ply.icerefinerymod.."', iceproductmod = '"..ply.iceproductmod.."', tibdrillmod = '"..ply.tibdrillmod.."', tibstoragemod = '"..ply.tibstoragemod.."', tiberiumyield_ii = '"..ply.tiberiumyield_ii.."', tiberiummod_ii = '"..ply.tiberiummod_ii.."', pmdrillspeed = '"..ply.pmdrillspeed.."', pmdrilleff = '"..ply.pmdrilleff.."', pmdrillshafts = '"..ply.pmdrillshafts.."', pmrefspeed = '"..ply.pmrefspeed.."', pmrawlevel = '"..ply.pmrawlevel.."', pmprodlevel = '"..ply.pmprodlevel.."', pmodespeed = '"..ply.pmodespeed.."', pmoderange = '"..ply.pmoderange.."', pmodebattery = '"..ply.pmodebattery.."', devlimit = '"..ply.devlimit.."', allyuntil = '"..ply.allyuntil.."' WHERE steamid='"..sid.."'", SaveDone)
+		MySQL:Query("UPDATE players SET credits='"..credits.."', name='"..name.."',score='"..totalcred.."', groupname='"..group.."', isleader='"..isleader.."', capacity='"..cap.."', miningyield='"..miningyield.."', miningenergy='"..miningenergy.."', oremod='"..oremod.."', stationres='"..perm.."', fighterenergy='"..fighterenergy.."', miningyield_ii='"..ply.miningyield_ii.."', miningyield_iii='"..ply.miningyield_iii.."', miningyield_iv='"..ply.miningyield_iv.."', miningyield_v='"..ply.miningyield_v.."', miningyield_vi='"..ply.miningyield_vi.."', miningtheory='"..ply.miningtheory.."', rtadevice='"..ply.rta.."', oremod_ii='"..ply.oremod_ii.."', oremanage='"..ply.oremanage.."', gcombat = '"..ply.gcombat.."', oremod_iii='"..ply.oremod_iii.."', oremod_iv='"..ply.oremod_iv.."', oremod_v='"..ply.oremod_v.."', hdpower = '"..ply.hdpower.."', tiberiummod = '"..ply.tiberiummod.."', tiberiumyield = '"..ply.tiberiumyield.."', icelasermod = '"..ply.icelasermod.."', icerawmod = '"..ply.icerawmod.."', icerefinerymod = '"..ply.icerefinerymod.."', iceproductmod = '"..ply.iceproductmod.."', tibdrillmod = '"..ply.tibdrillmod.."', tibstoragemod = '"..ply.tibstoragemod.."', tiberiumyield_ii = '"..ply.tiberiumyield_ii.."', tiberiummod_ii = '"..ply.tiberiummod_ii.."', devlimit = '"..ply.devlimit.."', allyuntil = '"..ply.allyuntil.."' WHERE steamid='"..sid.."'", SaveDone)
 	else
 		return false
 	end
@@ -471,7 +438,7 @@ local function SA_Autospawner(ply)
 		end
 		local mapname = game.GetMap()
 		local filename = "Spaceage/Autospawn/"..mapname..".txt"
-		if file.Exists(filename) then
+		if file.Exists(filename, "DATA") then
 			for k,v in pairs(util.KeyValuesToTable(file.Read(filename))) do
 				local spawn = ents.Create("prop_physics")
 				spawn:SetModel(v["model"])
@@ -490,7 +457,7 @@ local function SA_Autospawner(ply)
 		end
 		
 		local filename = "Spaceage/Autospawn2/"..mapname..".txt"
-		if file.Exists(filename) then
+		if file.Exists(filename, "DATA") then
 			for k,v in pairs(util.KeyValuesToTable( file.Read(filename))) do
 				local spawn = ents.Create(v["class"])
 				spawn:SetPos(Vector(v["x"],v["y"],v["z"]))

@@ -80,13 +80,13 @@ function PANEL:UpdatePlayerData()
 	if (!self.Player) then return end
 	if ( !self.Player:IsValid() ) then return end
 	
-	self:SetInfo( 2, "Website:", self.Player:GetWebsite() )
+	--[[ self:SetInfo( 2, "Website:", self.Player:GetWebsite() )
 	self:SetInfo( 2, "Location:", self.Player:GetLocation() )
 	self:SetInfo( 2, "Email:", self.Player:GetEmail() )
 	self:SetInfo( 2, "GTalk:", self.Player:GetGTalk() )
 	self:SetInfo( 2, "MSN:", self.Player:GetMSN() )
 	self:SetInfo( 2, "AIM:", self.Player:GetAIM() )
-	self:SetInfo( 2, "XFire:", self.Player:GetXFire() )
+	self:SetInfo( 2, "XFire:", self.Player:GetXFire() ) ]]
 	
 	/*self:SetInfo(1, "Tiberium Drills:","Level "..self.Player:GetNWInt("TibDLV"))
 	self:SetInfo(1, "Tib Storages:","Level "..self.Player:GetNWInt("TibSLV"))

@@ -2,9 +2,9 @@
 include( "player_row.lua" )
 include( "player_frame.lua" )
 
-surface.CreateFont( "coolvetica", 32, 500, true, false, "SA_ScoreboardHeader" )
-surface.CreateFont( "coolvetica", 22, 500, true, false, "SA_ScoreboardSubtitle" )
-surface.CreateFont( "neuropol", 60,800, false, true, "SA_ScoreboardLogo" )
+surface.CreateFont("SA_ScoreboardHeader", { font = "coolvetica", size = 32, weight = 500, antialias = true, shadow = false})
+surface.CreateFont("SA_ScoreboardSubtitle", { font = "coolvetica", size = 22, weight = 500, antialias = true, shadow = false})
+surface.CreateFont("SA_ScoreboardLogo", { font = "coolvetica", size = 60, weight = 800, antialias = false, shadow = true})
 
 local texGradient 	= surface.GetTextureID( "gui/center_gradient" )
 local texGradientDown = surface.GetTextureID( "gui/gradient_down" )
@@ -15,10 +15,10 @@ function PANEL:Init()
 
 	SCOREBOARD = self
 
-	self.Hostname = vgui.Create( "Label", self )
+	self.Hostname = vgui.Create( "DLabel", self )
 	self.Hostname:SetText( GetGlobalString( "ServerName" ) )
 	
-	self.Description = vgui.Create( "Label", self )
+	self.Description = vgui.Create( "DLabel", self )
 	self.Description:SetText( GAMEMODE.Name .. " - " .. GAMEMODE.Author )
 	
 	self.PlayerFrame = vgui.Create( "SA_PlayerFrame", self )
@@ -27,12 +27,12 @@ function PANEL:Init()
 
 	self:UpdateScoreboard()
 	
-	timer.Create( "ScoreboardUpdater", 1, 0, self.UpdateScoreboard, self )
+	timer.Create( "ScoreboardUpdater", 1, 0, function() self:UpdateScoreboard() end, self )
 	
-	self.lblPing = vgui.Create( "Label", self )
+	self.lblPing = vgui.Create( "DLabel", self )
 	self.lblPing:SetText( "Ping" )
 	
-	self.lblScore = vgui.Create( "Label", self )
+	self.lblScore = vgui.Create( "DLabel", self )
 	self.lblScore:SetText( "Score" )
 	
 end

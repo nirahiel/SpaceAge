@@ -13,7 +13,7 @@ SA_Term_StationCap = 0
 SA_Term_StationMax = 0
 SA_DevLimitLevel = 1
 
-surface.CreateFont( "Arial", 36, 700, true, false, "ServerHUDFontS" )
+surface.CreateFont("ServerHUDFontS", { font = "Arial", size = 36, weight = 700, antialias = true, shadow = false})
 
 local ScrX = surface.ScreenWidth()
 local ScrY = surface.ScreenHeight()
@@ -55,7 +55,7 @@ function CreateTerminalGUI()
 	SA_TermDraggedElement = nil
 
 	local Researches = SA_GetResearch()
-	local font = "MenuLarge"
+	local font = "DermaLarge"
 	surface.SetFont(font)
 	local BasePanel = vgui.Create( "DFrame" )
 	local x = ScrX / 2
@@ -77,10 +77,10 @@ function CreateTerminalGUI()
 					RunConsoleCommand( "CloseTerminal" )
 				end
 				
-				local NodeSelect = vgui.Create( "DMultiChoice", BasePanel )
+				local NodeSelect = vgui.Create( "DComboBox", BasePanel )
 				NodeSelect:SetPos(25,665)
 				NodeSelect:SetSize(120,20)
-				NodeSelect:SetEditable(false)
+				--NodeSelect:SetEditable(false)
 				
 				local function UpdateNodeSelect(data)
 					NodeSelect:Clear()
@@ -259,7 +259,7 @@ function CreateTerminalGUI()
 		draw.SimpleText("Temporary / Market",font,150,90,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
 		draw.RoundedBox(4,280,75,230,30,Color(50,50,50,255))
 		draw.SimpleText("Station",font,395,82,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
-		draw.SimpleText("("..tostring(SA_Term_StationCap).." / "..tostring(SA_Term_StationMax)..")","Trebuchet12",395,97,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
+		draw.SimpleText("("..tostring(SA_Term_StationCap).." / "..tostring(SA_Term_StationMax)..")","Trebuchet18",395,97,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
 		draw.RoundedBox(4,525,75,230,30,Color(50,50,50,255))
 		draw.SimpleText("Ship / Selected Node",font,640,90,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)		
 	end
@@ -409,8 +409,8 @@ function CreateTerminalGUI()
 		ApplyText:SetEditable(false)	
 	end
 	
-	local SelFCombo = vgui.Create("DMultiChoice", ApplicationTab)
-	SelFCombo:SetEditable(false)
+	local SelFCombo = vgui.Create("DComboBox", ApplicationTab)
+	--SelFCombo:SetEditable(false)
 	SelFCombo:SetPos(15,60)
 	SelFCombo:SetSize(ApplicationTab:GetWide() - 40, 20)
 

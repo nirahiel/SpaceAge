@@ -51,7 +51,7 @@ function PANEL:DoCommand( ply )
 	RunConsoleCommand("fa", "kick", ply:Name(), "(Reason not given)")
 end
 
-vgui.Register( "SA_PlayerKickButton", PANEL, "SpawnMenuAdminButton" )
+vgui.Register( "SA_PlayerKickButton", PANEL, "SA_SpawnMenuAdminButton" )
 
 
 
@@ -67,7 +67,7 @@ function PANEL:DoCommand( ply )
 	RunConsoleCommand("fa", "ban", ply:Name(), 0, "(Reason not given)")
 end
 
-vgui.Register( "SA_PlayerPermBanButton", PANEL, "SpawnMenuAdminButton" )
+vgui.Register( "SA_PlayerPermBanButton", PANEL, "SA_SpawnMenuAdminButton" )
 
 
 
@@ -83,6 +83,6 @@ function PANEL:DoCommand( ply )
 	RunConsoleCommand("fa", "ban", ply:Name(), 60, "(Reason not given)")
 end
 
-vgui.Register( "SA_PlayerBanButton", PANEL, "SpawnMenuAdminButton" )
+vgui.Register( "SA_PlayerBanButton", PANEL, "SA_SpawnMenuAdminButton" )
 
 

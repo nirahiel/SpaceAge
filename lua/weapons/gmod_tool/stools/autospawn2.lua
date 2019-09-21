@@ -58,7 +58,7 @@ function TOOL:RightClick(tr)
 	end
 	local mapname = string.lower(game.GetMap())
 	local filename = "Spaceage/Autospawn2/"..mapname..".txt"
-	if file.Exists(filename) then
+	if file.Exists(filename, "DATA") then
 		local oldfile = file.Read(filename)
 		local olddata = util.KeyValuesToTable(oldfile)
 		for k,v in pairs(olddata) do

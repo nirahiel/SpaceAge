@@ -1,7 +1,7 @@
 
 include( "player_infocard.lua" )
 
-surface.CreateFont( "coolvetica", 20, 500, true, false, "SA_ScoreboardPlayerName" )
+surface.CreateFont("SA_ScoreboardPlayerName", { font = "coolvetica", size = 20, weight = 500, antialias = true, shadow = false})
 
 local texGradient = surface.GetTextureID( "gui/center_gradient" )
 
@@ -123,10 +123,10 @@ function PANEL:Init()
 	
 	self.infoCard	= vgui.Create( "SA_ScorePlayerInfoCard", self )
 	
-	self.lblName 	= vgui.Create( "Label", self )
-	self.lblScore 	= vgui.Create( "Label", self )
-	--self.lblTC	 	= vgui.Create( "Label", self )
-	self.lblPing 	= vgui.Create( "Label", self )
+	self.lblName 	= vgui.Create( "DLabel", self )
+	self.lblScore 	= vgui.Create( "DLabel", self )
+	--self.lblTC	 	= vgui.Create( "DLabel", self )
+	self.lblPing 	= vgui.Create( "DLabel", self )
 	
 	// If you don't do this it'll block your clicks
 	self.lblName:SetMouseInputEnabled( false )

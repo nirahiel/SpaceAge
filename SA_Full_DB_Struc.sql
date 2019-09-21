@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `applications` (
   `playtime` varchar(255) NOT NULL,
   PRIMARY KEY (`name`),
   KEY `steamid` (`steamid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `chat` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `chat` (
   `time` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `time` (`time`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `factionmodels` (
   `modelid` int(255) NOT NULL AUTO_INCREMENT,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `factionmodels` (
   `factionid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`modelid`),
   UNIQUE KEY `model` (`model`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `factions` (
   `name` text NOT NULL,
@@ -32,14 +32,14 @@ CREATE TABLE IF NOT EXISTS `factions` (
   `score` bigint(20) NOT NULL,
   `buyscore` bigint(20) NOT NULL,
   PRIMARY KEY (`name`(20))
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `goodies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `steamid` varchar(64) NOT NULL,
   `intid` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `lastips` (
   `ip` varchar(16) NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `lastips` (
   `time` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`ip`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `log` (
   `logid` bigint(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -58,17 +58,17 @@ CREATE TABLE IF NOT EXISTS `log` (
   `time` int(11) unsigned NOT NULL,
   `message` longtext NOT NULL,
   PRIMARY KEY (`logid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `lotteries` (
   `lid` int(10) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `news` (
   `time` int(11) NOT NULL,
   `content` text NOT NULL,
   PRIMARY KEY (`time`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `paidinvoices` (
   `id` int(255) NOT NULL AUTO_INCREMENT,
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `paidinvoices` (
   `Amount` float unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `txn_id` (`txn_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `players` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `players` (
   `allyuntil` int(11) DEFAULT '0',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `steamid` (`steamid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sa_players` (
   `pid` int(11) NOT NULL AUTO_INCREMENT,
@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `sa_players` (
   `allyuntil` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`pid`),
   UNIQUE KEY `steamid` (`steamid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sa_playerxresearch` (
   `pid` int(11) NOT NULL,
@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `sa_playerxresearch` (
   `value` int(11) NOT NULL,
   PRIMARY KEY (`pid`,`name`),
   KEY `pid` (`pid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sb_admins` (
   `aid` int(6) NOT NULL AUTO_INCREMENT,
@@ -164,14 +164,14 @@ CREATE TABLE IF NOT EXISTS `sb_admins` (
   `lastvisit` int(11) DEFAULT NULL,
   PRIMARY KEY (`aid`),
   UNIQUE KEY `user` (`user`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sb_admins_servers_groups` (
   `admin_id` int(10) NOT NULL,
   `group_id` int(10) NOT NULL,
   `srv_group_id` int(10) NOT NULL,
   `server_id` int(10) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sb_banlog` (
   `sid` int(6) NOT NULL,
@@ -179,7 +179,7 @@ CREATE TABLE IF NOT EXISTS `sb_banlog` (
   `name` varchar(128) NOT NULL,
   `bid` int(6) NOT NULL,
   PRIMARY KEY (`sid`,`time`,`bid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sb_bans` (
   `bid` int(6) NOT NULL AUTO_INCREMENT,
@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `sb_bans` (
   KEY `sid` (`sid`),
   FULLTEXT KEY `reason` (`reason`),
   FULLTEXT KEY `authid_2` (`authid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sb_comments` (
   `cid` int(6) NOT NULL AUTO_INCREMENT,
@@ -217,7 +217,7 @@ CREATE TABLE IF NOT EXISTS `sb_comments` (
   `edittime` int(11) DEFAULT NULL,
   KEY `cid` (`cid`),
   FULLTEXT KEY `commenttxt` (`commenttxt`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sb_demos` (
   `demid` int(6) NOT NULL,
@@ -225,7 +225,7 @@ CREATE TABLE IF NOT EXISTS `sb_demos` (
   `filename` varchar(128) NOT NULL,
   `origname` varchar(128) NOT NULL,
   PRIMARY KEY (`demid`,`demtype`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sb_groups` (
   `gid` int(6) NOT NULL AUTO_INCREMENT,
@@ -233,7 +233,7 @@ CREATE TABLE IF NOT EXISTS `sb_groups` (
   `name` varchar(128) NOT NULL DEFAULT 'unnamed',
   `flags` int(10) NOT NULL,
   PRIMARY KEY (`gid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sb_log` (
   `lid` int(11) NOT NULL AUTO_INCREMENT,
@@ -246,7 +246,7 @@ CREATE TABLE IF NOT EXISTS `sb_log` (
   `host` text NOT NULL,
   `created` int(11) NOT NULL,
   PRIMARY KEY (`lid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sb_mods` (
   `mid` int(11) NOT NULL AUTO_INCREMENT,
@@ -255,7 +255,7 @@ CREATE TABLE IF NOT EXISTS `sb_mods` (
   `modfolder` varchar(64) NOT NULL,
   `enabled` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`mid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sb_protests` (
   `pid` int(6) NOT NULL AUTO_INCREMENT,
@@ -268,7 +268,7 @@ CREATE TABLE IF NOT EXISTS `sb_protests` (
   `pip` varchar(64) NOT NULL,
   PRIMARY KEY (`pid`),
   KEY `bid` (`bid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sb_servers` (
   `sid` int(6) NOT NULL AUTO_INCREMENT,
@@ -279,19 +279,19 @@ CREATE TABLE IF NOT EXISTS `sb_servers` (
   `enabled` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`sid`),
   UNIQUE KEY `ip` (`ip`,`port`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sb_servers_groups` (
   `server_id` int(10) NOT NULL,
   `group_id` int(10) NOT NULL,
   PRIMARY KEY (`server_id`,`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sb_settings` (
   `setting` varchar(128) NOT NULL,
   `value` text NOT NULL,
   UNIQUE KEY `setting` (`setting`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sb_srvgroups` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -300,7 +300,7 @@ CREATE TABLE IF NOT EXISTS `sb_srvgroups` (
   `name` varchar(120) NOT NULL,
   `groups_immune` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sb_submissions` (
   `subid` int(6) NOT NULL AUTO_INCREMENT,
@@ -317,7 +317,7 @@ CREATE TABLE IF NOT EXISTS `sb_submissions` (
   `archivedby` int(11) DEFAULT NULL,
   `server` tinyint(3) DEFAULT NULL,
   PRIMARY KEY (`subid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `userdata` (
   `id` int(50) unsigned NOT NULL AUTO_INCREMENT,
@@ -340,4 +340,4 @@ CREATE TABLE IF NOT EXISTS `userdata` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `steamid` (`steamid`),
   FULLTEXT KEY `name` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;

@@ -40,7 +40,7 @@ local function CreateAsteroids(cnt,noamount)
 	local Afield = {}
 	local filename = "Spaceage/Asteroids/"..game.GetMap()..".txt"
 	local roids
-	if file.Exists(filename) then
+	if file.Exists(filename, "DATA") then
 		roids = util.KeyValuesToTable(file.Read(filename))
 		Afield.x, Afield.y, Afield.z, Afield.radius, Afield.num = roids["x"], roids["y"], roids["z"], roids["radius"], roids["amount"]
 	else

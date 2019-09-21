@@ -68,7 +68,7 @@ function INIParser:new(file_,no_autotrim)
 		end
 		return self[n]; -- Returns self or the nodes if directly indexed
 	end
-	if(file.Exists(file_)) then
+	if(file.Exists(file_, "DATA")) then
 		obj.file = file_;
 		obj.notrim = no_autotrim;
 		obj.content = file.Read(file_); -- Saves raw content of the file

@@ -9,7 +9,7 @@ PANEL.MaterialName = "exclamation"
 ---------------------------------------------------------*/
 function PANEL:Init()
 
-	self.Label = vgui.Create( "Label", self )
+	self.Label = vgui.Create( "DLabel", self )
 	self:ApplySchemeSettings()
 	
 end
@@ -31,7 +31,7 @@ end
 ---------------------------------------------------------*/
 function PANEL:ApplySchemeSettings()
 	
-	self.Label:SetFont( "DefaultSmall" )
+	self.Label:SetFont( "Default" )
 	self.Label:SetFGColor( 0, 0, 0, 150 )
 	self.Label:SetMouseInputEnabled( false )
 

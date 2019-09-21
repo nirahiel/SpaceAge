@@ -1,6 +1,5 @@
 local data, isok, merror
 
-require ("mysql")
 AddCSLuaFile("autorun/client/cl_sa_application.lua")
 
 SA_FactionData = {}
