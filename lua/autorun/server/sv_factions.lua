@@ -210,7 +210,7 @@ local function DoApplyFactionResRes(data, isok, merror, ply, ffid, pltimexx)
 			end
 		end
 	end
-	net.Start("so_addapp")
+	net.Start("sa_addapp")
 		net.WriteString(ply:SteamID())
 		net.WriteString(ply:GetName())
 		net.WriteString(sat)

@@ -52,10 +52,6 @@ function ENT:CalcVars(ply)
 	self:SetNetworkedColor("c",Color(0,math.floor(level * 0.85),255,40 + math.floor(level / 10)));
 end
 
-function ENT:SetNetworkedColor(name,c)
-    self:SetNetworkedInt(name,c.r | (c.g << 8) | (c.b << 16) | (c.a << 24));
-end
-
 function ENT:TurnOn()
 	if (self.Active == 0) then
 		self.Active = 1

@@ -124,7 +124,7 @@ function RemoveIntersecting(ent,ignoClasses) --ignoClass IS AND MUST ALWAYS BE A
 	table.insert(ignoClasses,"predicted_viewmodel")
 	for k,v in pairs(ents.FindInBox(minPos,maxPos)) do
 		local eClass = v:GetClass()
-		if v != ent and (not table.HasValue(ignoClasses,eClass)) and (not (v:IsWeapon() or v:IsPlayer() or v:IsNPC())) and v:EntIndex() > 0 then
+		if v ~= ent and (not table.HasValue(ignoClasses,eClass)) and (not (v:IsWeapon() or v:IsPlayer() or v:IsNPC())) and v:EntIndex() > 0 then
 			local eCG = v:GetCollisionGroup()
 			if (eCG == COLLISION_GROUP_WORLD and (not v.Autospawned)) or eClass == "sa_crystal" then
 				v:Remove()
@@ -356,13 +356,13 @@ function TFormerPushAtmo(terent,resName,atmoname,amount)
 				terair.h = 0
 			end
 		end
-		if atmoname != "co2" and neededAm > 0 and (terair.co2 / terair.max) > 0.80 then
+		if atmoname ~= "co2" and neededAm > 0 and (terair.co2 / terair.max) > 0.80 then
 			if terair.co2 > neededAm then
 				terair.co2 = terair.co2 - neededAm
 				neededAm = 0
 			end
 		end
-		if atmoname != "o2" and neededAm > 0 and (terair.o2 / terair.max) > 0.10 then
+		if atmoname ~= "o2" and neededAm > 0 and (terair.o2 / terair.max) > 0.10 then
 			if terair.o2 > neededAm then
 				terair.o2 = terair.o2 - neededAm
 				neededAm = 0
@@ -379,7 +379,7 @@ function TFormerSpazzOut(terent,forcekill)
 	local SB = CAF.GetAddon("Spacebuild")
 	if terent.FinalSpazzed or terent.environment.IsProtected or (not terent.environment:IsPlanet()) or terent.environment == SB.GetSpace() then return end
 	local energy = RD.GetResourceAmount(terent, "energy")
-	if terent.State != -1 then
+	if terent.State ~= -1 then
 		local o2 = RD.GetResourceAmount(terent, "oxygen")
 		local co2 = RD.GetResourceAmount(terent, "carbon dioxide")
 		local dm = RD.GetResourceAmount(terent, "dark matter")
@@ -602,7 +602,7 @@ function DestroyConstraints( Ent1, Ent2, Bone1, Bone2, cType )
 	if ( Phys1 == Phys2 ) then return false end
 	
 	if ( !Ent1:GetTable().Constraints && !Ent2:GetTable().Constraints ) then return end
-	if ( !Ent1:GetTable().Constraints ) then // If our Ent1 is the world, we can't get a constraint table, so switch the entities and look through them that way
+	if ( !Ent1:GetTable().Constraints ) then -- If our Ent1 is the world, we can't get a constraint table, so switch the entities and look through them that way
 		local thirdEnt
 		thirdEnt = Ent1
 		Ent1 = Ent2
@@ -614,13 +614,13 @@ function DestroyConstraints( Ent1, Ent2, Bone1, Bone2, cType )
 	// really take into account choosing the world first
 	for k, v in pairs( Ent1:GetTable().Constraints ) do
  
-		if ( v:IsValid() ) then // Continues if it finds a valid constraint
+		if ( v:IsValid() ) then -- Continues if it finds a valid constraint
 	
-			local CTab = v:GetTable() // Variableizes all of the attributes of the individual constraint
+			local CTab = v:GetTable() -- Variableizes all of the attributes of the individual constraint
  
 			if ( CTab.Type == cType && CTab.Ent1 == Ent1 && CTab.Ent2 == Ent2 && CTab.Bone1 == Bone1 && CTab.Bone2 == Bone2 ) ||  ( CTab.Type == cType && CTab.Ent1 == Ent2 && CTab.Ent2 == Ent1 && CTab.Bone1 == Bone2 && CTab.Bone2 == Bone1 ) then
 
-				foundConstraint = v // We've found the constraint we want to destroy
+				foundConstraint = v -- We've found the constraint we want to destroy
 				
 			end
 		end
@@ -635,4 +635,11 @@ function DestroyConstraints( Ent1, Ent2, Bone1, Bone2, cType )
 	end
 	
 	return true
+end
+
+local bor = bit.bor
+local brshift = bit.rshift
+local ENT = FindMetaTable("Entity")
+function ENT:SetNetworkedColor(name,c)
+    self:SetNetworkedInt(name, bor(c.r, brshift(c.g, 8), brshift(c.b, 16), brshift(c.a, 24)))
 end

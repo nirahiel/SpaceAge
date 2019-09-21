@@ -42,10 +42,10 @@ local function SetupConvars(name)
 end
 SetupConvars("spaceage_autosave")
 SetupConvars("spaceage_autosave_time")
-SetupConvars("spaceage_autospawner")
+CreateConVar("spaceage_autospawner", "1")
 SetupConvars("friendlyfire")
-CreateConVar( "sa_pirating", "1", { FCVAR_NOTIFY, FCVAR_REPLICATED } )
-CreateConVar("sa_faction_only", "0", { FCVAR_NOTIFY } )
+CreateConVar("sa_pirating", "1", { FCVAR_NOTIFY, FCVAR_REPLICATED })
+CreateConVar("sa_faction_only", "0", { FCVAR_NOTIFY })
 local sa_faction_only = GetConVar("sa_faction_only")
 
 local PlayerMeta = FindMetaTable("Player")
@@ -458,8 +458,13 @@ local function SA_Autospawner(ply)
 		
 		local filename = "Spaceage/Autospawn2/"..mapname..".txt"
 		if file.Exists(filename, "DATA") then
-			for k,v in pairs(util.KeyValuesToTable( file.Read(filename))) do
+			for k,v in pairs(util.KeyValuesToTable(file.Read(filename))) do
 				local spawn = ents.Create(v["class"])
+				if not ValidEntity(spawn) then
+					print("Could not create: " .. v["class"])
+					continue
+				end
+
 				spawn:SetPos(Vector(v["x"],v["y"],v["z"]))
 				spawn:SetAngles(Angle(v["pit"],v["yaw"],v["rol"]))
 				if v["model"] then

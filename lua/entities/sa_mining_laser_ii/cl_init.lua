@@ -17,11 +17,6 @@ function ENT:Draw()
 	end
 end
 
-function ENT:GetNetworkedColor(name)
-	local int = self:GetNetworkedInt(name);
-	return Color((int >> 0) & 255, (int >> 8) & 255, (int >> 16) & 255, (int >> 24) & 255);
-end
-
 function ENT:DrawLaser()
 	local color = self:GetNetworkedColor("c");
 	local width = color.a;
