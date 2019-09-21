@@ -47,7 +47,7 @@ function InitSATeleporters()
 			tele:SetPos(v[1])
 			tele:SetAngles(v[2])
 			tele.TeleKey = ke
-			FA.PP.MakeOwner(tele)
+			SAPPShim.MakeOwner(tele)
 			tele.Autospawned = true
 			tele.CDSIgnore = true
 			tele:Spawn()

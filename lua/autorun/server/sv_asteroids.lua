@@ -33,7 +33,7 @@ local function SpawnAsteroid(model, pos, size)
 	asteroid.CDSIgnore = true
 	asteroid.health = size * 3
 	asteroid.maxhealth = size * 3
-	FA.PP.MakeOwner(asteroid)
+	SAPPShim.MakeOwner(asteroid)
 end
 
 local function CreateAsteroids(cnt,noamount)

@@ -14,3 +14,11 @@ function AddCommasToInt(str)
 	end
 	return string.reverse(ret)
 end
+
+function SA_GetPlayerByName(name)
+	return nil
+end
+
+function SA_FormatTime(time)
+	return "" .. time
+end

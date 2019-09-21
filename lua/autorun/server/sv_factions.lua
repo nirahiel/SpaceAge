@@ -257,7 +257,7 @@ local function SA_DoApplyFaction(ply, handler, id, encoded, decoded)
 	MySQL:Query("SELECT steamid FROM applications WHERE steamid = '"..steamid.."'", DoApplyFactionRes, ply, steamid, plname, ffid, satx, cscore, pltimex)
 end
 datastream2.Hook("sa_doapplyfaction",SA_DoApplyFaction)
-FA.RegisterDataStream("sa_doapplyfaction",0)
+--FA.RegisterDataStream("sa_doapplyfaction",0)
 
 local function DoAcceptPlayerResRes(data, isok, merror, ply)
 	ply:SendLua("CloseApply()")
@@ -326,7 +326,7 @@ end
 concommand.Add("DoDenyPlayer",SA_DoDenyPlayer)
 
 function SA_GiveCreditsByName(ply,name,amt)
-	v = FA.GetPlayerByName(name,nil)
+	v = SA_GetPlayerByName(name,nil)
 	if v then
 		return SA_GiveCredits(ply,v,amt)
 	end

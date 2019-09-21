@@ -51,7 +51,7 @@ function ENT:Think()
 	for k,v in pairs(self.TouchTable) do
 		if v.IsTiberiumStorage then
 			RD.Unlink(v)
-			local ply = FA.PP.GetOwner(v)
+			local ply = SAPPShim.GetOwner(v)
 			if ply and ply:IsValid() and ply:IsPlayer() then
 				local am = RD.GetResourceAmount( v, "tiberium" )
 				local taken = 10000

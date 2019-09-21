@@ -22,7 +22,7 @@ function ENT:Initialize()
 	self.UpdateEnts = CurTime()
 	self.MainSpawnedBy = NULL
 	
-	FA.PP.MakeOwner(self)
+	SAPPShim.MakeOwner(self)
 	self.Autospawned = true
 	self.CDSIgnore = true
 end
@@ -33,7 +33,7 @@ end
 
 function ENT:Think()
 	if self:IsValid() then
-		if not FA.PP.IsWorldEnt(self) then
+		if not SAPPShim.IsWorldEnt(self) then
 			self:Remove()
 			return
 		end

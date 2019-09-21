@@ -469,7 +469,7 @@ local function SA_Autospawner(ply)
 				spawn:SetModel(v["model"])
 				spawn:SetPos(Vector(v["x"],v["y"],v["z"]))
 				spawn:SetAngles(Angle(v["pit"],v["yaw"],v["rol"]))
-				FA.PP.MakeOwner(spawn)
+				SAPPShim.MakeOwner(spawn)
 				spawn:Spawn()
 				local phys = spawn:GetPhysicsObject()
 				if phys then
@@ -490,7 +490,7 @@ local function SA_Autospawner(ply)
 				if v["model"] then
 					spawn:SetModel(v["model"])
 				end
-				FA.PP.MakeOwner(spawn)
+				SAPPShim.MakeOwner(spawn)
 				spawn:Spawn()
 				local phys = spawn:GetPhysicsObject()
 				if phys and phys:IsValid() then

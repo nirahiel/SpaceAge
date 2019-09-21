@@ -180,7 +180,7 @@ local function SA_SelectNode(ply,cmd,args)
 	local NetID = tonumber(args[1])
 	if not (NetID) then return end
 	for k,v in pairs(ents.FindByClass("resource_node")) do
-		if (FA.PP.GetOwner(v) == ply) then
+		if (SAPPShim.GetOwner(v) == ply) then
 			if (NetID == v:GetNetworkedInt("netid")) then
 				ply.SelectedNode = v
 				SA_UpdateInfo(ply)
@@ -194,7 +194,7 @@ concommand.Add("Terminal_SelectNode",SA_SelectNode)
 local function SA_SelectedNode(ply)
 	--Use the node the player selected.
 	if (ValidEntity(ply.SelectedNode)) then
-		if (FA.PP.GetOwner(ply.SelectedNode) == ply) then
+		if (SAPPShim.GetOwner(ply.SelectedNode) == ply) then
 			local dist = StationPos:Distance(ply.SelectedNode:GetPos())
 			if (dist < StationSize) then
 				if (ply.SelectedNode:GetClass() == "resource_node") then
@@ -206,7 +206,7 @@ local function SA_SelectedNode(ply)
 	
 	--No Specific node, select first in range.
 	for k,v in pairs(ents.FindByClass("resource_node")) do
-		if (FA.PP.GetOwner(v) == ply) then
+		if (SAPPShim.GetOwner(v) == ply) then
 			if (StationPos:Distance(v:GetPos()) < StationSize) then
 				return v
 			end
@@ -220,7 +220,7 @@ local function SA_UpdateNodeSelection(ply)
 	
 	local Nodes = {}
 	for k,v in pairs(ents.FindByClass("resource_node")) do
-		if (FA.PP.GetOwner(v) == ply) then
+		if (SAPPShim.GetOwner(v) == ply) then
 			if (StationPos:Distance(v:GetPos()) < StationSize) then
 				local NetID = v:GetNetworkedInt("netid")
 				table.insert(Nodes,NetID)
@@ -427,7 +427,7 @@ local function SA_UseGoodie(ply,cmd,args)
 	
 	goodie.func(ply)
 	
-	FA.MySQL.SavePlayer(ply)
+	--FA.MySQL.SavePlayer(ply)
 	SA_SaveUser(ply)
 	
 	MySQL:Query("DELETE FROM goodies WHERE id='"..MySQL:Escape(id).."'",function() SA_RequestUpdateGoodies(ply) end)
@@ -738,7 +738,7 @@ local function SA_Research(ply, cmd, args)
 		local retro = Research["classes"]
 		for l,b in pairs(retro) do
 			for k,v in pairs(ents.FindByClass(b)) do
-				if (FA.PP.GetOwner(v) == ply) then
+				if (SAPPShim.GetOwner(v) == ply) then
 					v:CalcVars(ply)
 				end
 			end

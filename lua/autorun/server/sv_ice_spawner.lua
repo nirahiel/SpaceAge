@@ -43,7 +43,7 @@ function Spawn_Roid(Type,data)
 	ent:Spawn()
 	ent:Activate()
 	ent.Autospawned = true
-	FA.PP.MakeOwner(ent)
+	SAPPShim.MakeOwner(ent)
 	return ent
 end
 
