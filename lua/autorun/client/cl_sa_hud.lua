@@ -199,8 +199,8 @@ function SA_CustomHUDPaint()
 		elseif ls_tmp > FairTemp_Max then xMyTemp = hotTemp end
 		draw.SimpleText(tostring(ls_tmp)..tempUnit, HUDFont, XWidX, ScH - 115, xMyTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 		
-		draw.SimpleText(tostring(GlobalTemp_Min)..tempUnit, HUDFont, XMinX + 8, ScH - 45, coolTemp, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-		draw.SimpleText(tostring(GlobalTemp_Max)..tempUnit, HUDFont, (XMinX + 400), ScH - 45, hotTemp, TEXT_ALIGN_RIGHT, TEXT_ALIGN_TOP)
+		draw.SimpleText(tostring(GlobalTemp_Min)..tempUnit, HUDFont, XMinX, ScH - 45, coolTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+		draw.SimpleText(tostring(GlobalTemp_Max)..tempUnit, HUDFont, (XMinX + 390), ScH - 45, hotTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 	end
 	--END OF TEMPERATURE
 	
