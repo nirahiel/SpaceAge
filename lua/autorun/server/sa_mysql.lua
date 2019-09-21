@@ -1,7 +1,9 @@
 require("mysqloolib")
 
 MySQL = {}
-local db = mysqloo.CreateDatabase("127.0.0.1", "spaceage", "spaceage", "spaceage")
+
+local config = util.JSONToTable(file.Read("spaceage/config/mysql.txt"))
+local db = mysqloo.CreateDatabase(config.hostname, config.username, config.password, config.database)
 
 -- (data, isok, merror, ply, sid)
 local function makecb(cb, ...)
