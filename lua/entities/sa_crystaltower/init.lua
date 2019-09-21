@@ -84,7 +84,8 @@ end
 function ENT:SpawnCrystal(auto)
 	if not self then return end
 	if auto then
-		timer.Simple(math.random(1,10),function() self:SpawnCrystal(true) end)
+		local ctal = self
+		timer.Simple(math.random(1,10),function() ctal:SpawnCrystal(true) end)
 	end
 	if self.crystalCount >= SA_MaxCrystalCount then return end
 	

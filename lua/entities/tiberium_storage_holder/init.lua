@@ -63,7 +63,7 @@ function ENT:StartTouch(ent)
 	if (!ent.IsTiberiumStorage) then return end
 	local eOwner = SAPPShim.GetOwner(ent)
 	if not (eOwner and eOwner:IsValid() and eOwner:IsPlayer()) then return end
-	if self.Active == 1 and SAPPShim.PlyCanPerform(eOwner,ent) then
+	if self.Active == 1 and SAPPShim.PlyCanPerform(eOwner,self) then
 		local attachPlace = FindFreeAttachPlace(ent,self)
 		if not attachPlace then return end
 		if not AttachStorage(ent,self,attachPlace) then return end
