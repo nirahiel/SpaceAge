@@ -1,7 +1,7 @@
 require("mysqloolib")
 
 MySQL = {}
-local db = mysqloo.CreateDatabase("localhost", "spaceage", "spaceage", "spaceage")
+local db = mysqloo.CreateDatabase("127.0.0.1", "spaceage", "spaceage", "spaceage")
 
 -- (data, isok, merror, ply, sid)
 local function makecb(cb, ...)
