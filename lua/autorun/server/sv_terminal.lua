@@ -381,7 +381,16 @@ function SA_UpdateInfo(ply,CanPass)
 	
 	ply.SendingTermUp = true
 	net.Start("TerminalUpdate")
-		net.WriteTable({ResTabl,math.floor(ply.Capacity),math.floor(ply.MaxCap),PermStorage,ShipStorage,BuyPriceTable,ResTabl2,SA_CanReset(ply),ply.devlimit,DevVars})
+		net.WriteTable(ResTabl)
+		net.WriteInt(math.floor(ply.Capacity))
+		net.WriteInt(math.floor(ply.MaxCap))
+		net.WriteTable(PermStorage)
+		net.WriteTable(ShipStorage)
+		net.WriteTable(BuyPriceTable)
+		net.WriteTable(ResTabl2)
+		net.WriteBool(SA_CanReset(ply))
+		net.WriteInt(ply.devlimit)
+		net.WriteTable(DevVars)
 	net.Send(ply)
 	SA_InfoSent(ply) -- TODO: This?
 end

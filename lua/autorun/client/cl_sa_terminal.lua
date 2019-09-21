@@ -739,22 +739,29 @@ end
 usermessage.Hook("TerminalUpdate1", sa_term_update1) 
 
 local function sa_term_update(len, ply)
-	-- TODO: Make this less of a table
-	local decoded = net.ReadTable()
+	local ResTabl = net.ReadTable()
+	local capacity = net.ReadInt()
+	local maxcap = net.ReadInt()
+	local PermStorage = net.ReadTable()
+	local ShipStorage = net.ReadTable()
+	local BuyPriceTable = net.ReadTable()
+	local ResTabl2 = net.ReadTable()
+	local canReset = net.ReadBool()
+	local lv = net.ReadInt()
+	local devVars = net.ReadTable()
 
-	local lv = decoded[9]
-	if lv >= 5 then decoded[8] = false end
+	if lv >= 5 then canReset = false end
 	SA_DevLimitLevel = lv
 	
 	if SA_UpgradeLevelButton then 	
-		SA_UpgradeLevelButton:SetDisabled(!decoded[8])
+		SA_UpgradeLevelButton:SetDisabled(not canReset)
 		SA_UpgradeLevelButton:SetText("Advance Level (current: "..tostring(lv).." / 5) [Price: "..AddCommasToInt(5000000000 * (lv * lv)).."]")
 	end
 
 
 	SA_Term_TempStorage:Clear()
 	SA_Term_MarketSell:Clear()
-	for k,v in pairs(decoded[1]) do
+	for k,v in pairs(ResTabl) do
 		local name = CleanString(k)
 		local value = AddCommasToInt(v[1])
 		local price = v[2]
@@ -767,12 +774,10 @@ local function sa_term_update(len, ply)
 	end
 	
 	SA_Term_PermStorage:Clear()
-	local capacity = AddCommasToInt(decoded[2])
-	local maxcap = AddCommasToInt(decoded[3])
-	SA_Term_StationCap = capacity
-	SA_Term_StationMax = maxcap
+	SA_Term_StationCap = AddCommasToInt(capacity)
+	SA_Term_StationMax = AddCommasToInt(maxcap)
 
-	for k,v in pairs(decoded[4]) do
+	for k,v in pairs(PermStorage) do
 		local name = CleanString(tostring(k))
 		local item = vgui.Create("SA_Terminal_Resource")
 		item:SetSize(220,42)
@@ -781,7 +786,7 @@ local function sa_term_update(len, ply)
 		SA_Term_PermStorage:AddItem(item)
 	end
 	SA_Term_ShipStorage:Clear()
-	for k,v in pairs(decoded[5]) do
+	for k,v in pairs(ShipStorage) do
 		local name = CleanString(k)
 		if math.floor(v.value) > 0 and math.floor(v.maxvalue) > 0 then
 			local item = vgui.Create("SA_Terminal_Resource")
@@ -793,7 +798,7 @@ local function sa_term_update(len, ply)
 	end
 	
 	SA_Term_MarketBuy:Clear()
-	for k,v in pairs(decoded[6]) do
+	for k,v in pairs(BuyPriceTable) do
 		local name = CleanString(v[1])
 		local price = v[2]
 		SA_Term_MarketBuy:AddLine(name,price)
@@ -802,7 +807,7 @@ local function sa_term_update(len, ply)
 	local Researches = SA_GetResearch()
 	local ResearchGroups = SA_GetResearchGroups()
 	
-	for k,v in pairs(decoded[7]) do
+	for k,v in pairs(ResTab12) do
 		local resname = v[1]
 		local rank = v[2]
 		local group = v[3]
@@ -834,11 +839,10 @@ local function sa_term_update(len, ply)
 		end
 	end
 	
-	local tmp = decoded[10]
 	if SA_MaxCrystalCount and SA_CrystalRadius and SA_Max_Roid_Count then
-		SA_MaxCrystalCount:SetText(tmp[1])
-		SA_CrystalRadius:SetText(tmp[2])
-		SA_Max_Roid_Count:SetText(tmp[3])
+		SA_MaxCrystalCount:SetText(devVars[1])
+		SA_CrystalRadius:SetText(devVars[2])
+		SA_Max_Roid_Count:SetText(devVars[3])
 	end
 end
 net.Receive("TerminalUpdate", sa_term_update)
