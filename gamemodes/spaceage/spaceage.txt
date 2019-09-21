@@ -1,0 +1,7 @@
+"spaceage"
+{
+	"base"		"base"
+	"title"		"SpaceAge"
+	"maps"		"^sb_"
+	"menusystem"	"1"
+}
