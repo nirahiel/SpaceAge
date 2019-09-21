@@ -623,7 +623,7 @@ function CreateTerminalGUI()
 	BasePanel:MakePopup()
 	BasePanel:SetVisible(false)
 end
-timer.Create("RecreateTermGUI", 0, 0, CreateTerminalGUI)
+timer.Create("RecreateTermGUI", 1, 0, CreateTerminalGUI)
 
 local SA_ErrorText = ""
 local SA_ErrorAlpha = 0
