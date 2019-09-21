@@ -7,6 +7,40 @@ local function hidehud(name)
 end
 hook.Add("HUDShouldDraw", "hidehud", hidehud)
 
+local GlobalTemp_Min = 0
+local GlobalTemp_Max = 600
+local FairTemp_Min = 283
+local FairTemp_Max = 308
+local ls_habitat = 0
+local ls_air = 0
+local ls_tmp = 0
+local ls_coolant = 0
+local ls_energy = 0
+
+local function LS_umsg_hook1( um )
+	ls_habitat = um:ReadFloat()
+	ls_air = um:ReadShort()
+	ls_tmp = um:ReadShort()
+	ls_coolant = um:ReadShort()
+	ls_energy = um:ReadShort()
+end
+
+local function LS_umsg_hook2( um )
+	ls_air = um:ReadShort()
+end
+
+local function CheckHookIn()
+	if not ConVarExists("LS_Display_HUD") then
+		return
+	end
+	RunConsoleCommand("LS_Display_HUD", "0")
+	usermessage.Hook("LS_umsg1", LS_umsg_hook1)
+	usermessage.Hook("LS_umsg2", LS_umsg_hook2)
+	timer.Destroy("SA_CheckHUDHookIn")
+	print("SA HUD loaded...")
+end
+timer.Create("SA_CheckHUDHookIn", 1, 0, CheckHookIn)
+
 local HUDFont = "Default"
 
 SA_HUDBlink = true
@@ -105,21 +139,9 @@ function SA_CustomHUDPaint()
 		draw.SimpleText(secAmmo, HUDFont, ScW - 112, ScH - 54, HUDAmmo2, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 	end
 	--END OF AMMO
-	
-	GlobalTemp_Min = 0
-	GlobalTemp_Max = 600
-	FairTemp_Min = 283
-	FairTemp_Max = 308
-	ls_habitat = 0
-	ls_air = 0
-	ls_tmp = GlobalTemp_Min
-	ls_coolant = 0
-	ls_energy = 0
 
 	local ls_current_unhabitable
-	if LocalPlayer():WaterLevel() > 2 then
-		ls_current_unhabitable = true
-	elseif ls_habitat < 5 then
+	if ls_habitat < 5 then
 		ls_current_unhabitable = true
 	else
 		if ls_tmp <= 0 then
