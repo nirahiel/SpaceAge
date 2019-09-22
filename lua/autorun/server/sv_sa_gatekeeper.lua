@@ -40,5 +40,5 @@ local function RefreshCache()
 	end
 	Msg("Loading gatekeeper cache...\n")
 end
-timer.Create("FactionCacheRefresh", 60, 0, RefreshCache)
-timer.Create("FirstFactionCacheRefresh", 0.01, 1, RefreshCache)
+timer.Create("SA_FactionCacheRefresh", 60, 0, RefreshCache)
+timer.Create("SA_FirstFactionCacheRefresh", 0.01, 1, RefreshCache)

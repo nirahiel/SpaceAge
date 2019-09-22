@@ -1,9 +1,4 @@
 - Remove GLua syntax (! for not, // and /**/ comments)
 - Refactor to use no globals for:
-	autorun/server/
-		sv_safuncts.lua
-		sv_spaceage.lua
-		sv_terminal.lua
 	entities/
 		everything!
-- Refactor to prefix all hooks, timers with SA_

@@ -91,7 +91,7 @@ local function CreateTerminalGUI()
 	if not LocalPlayer():GetNWBool("isloaded") then
 		return
 	end
-	timer.Destroy("RecreateTermGUI")
+	timer.Destroy("SA_RecreateTermGUI")
 	if SA_Term_GUI and SA_Term_GUI.Close then
 		SA_Term_GUI:SetDeleteOnClose(true)
 		SA_Term_GUI:Close()
@@ -667,7 +667,7 @@ local function CreateTerminalGUI()
 	BasePanel:MakePopup()
 	BasePanel:SetVisible(false)
 end
-timer.Create("RecreateTermGUI", 1, 0, CreateTerminalGUI)
+timer.Create("SA_RecreateTermGUI", 1, 0, CreateTerminalGUI)
 
 local function SA_DrawTerminalError()
 	if (SA_ErrorAlpha > 0) then

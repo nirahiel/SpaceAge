@@ -86,7 +86,7 @@ function ENT:Think()
 		self:DrawShadow(false)
 		self:SetNoDraw(true)
 	end
-	timer.Create("KeepUpAtmosphere",60,0,function() self:RefreshAtmo() end)
+	timer.Create("SA_KeepUpAtmosphere", 60, 1, function() self:RefreshAtmo() end)
 end
 
 function ENT:AcceptInput(name, activator, caller)
@@ -124,10 +124,10 @@ function ENT:SetOpen(val,norefresh)
 end
 
 function ENT:SetFully(val,norefresh)
-	if (val == 0) then
+	if val == 0 then
 		self:SetOpen(0,true)
 		self.fullyclosed = 1
-	elseif (val == 1) then
+	elseif val == 1 then
 		self:SetOpen(1,true)
 		self.fullyopen = 1
 	else
@@ -140,10 +140,10 @@ function ENT:SetFully(val,norefresh)
 end
 
 function ENT:SetBlocked(val)
-	if(val == self.blocked) then return end
-	if(val == 0) then
+	if val == self.blocked then return end
+	if val == 0 then
 		self.blocked = 0
-	elseif(val == 1) then
+	elseif val == 1 then
 		self.blocked = 1
 	else
 		return
@@ -152,10 +152,10 @@ end
 
 function ENT:RefreshAtmo()
 	local env = self.environment
-	if !env then return end
-	if (self.isopen ~= 0) then
+	if not env then return end
+	if self.isopen ~= 0 then
 		SA.Planets.MakeSpace(env)
-	elseif (self.fullyclosed ~= 0) then
-		Sa.Planets.MakeHabitable(env)
+	elseif self.fullyclosed ~= 0 then
+		SA.Planets.MakeHabitable(env)
 	end
 end

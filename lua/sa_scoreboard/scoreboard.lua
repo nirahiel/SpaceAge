@@ -27,7 +27,7 @@ function PANEL:Init()
 
 	self:UpdateScoreboard()
 	
-	timer.Create( "ScoreboardUpdater", 1, 0, function() self:UpdateScoreboard() end, self )
+	timer.Create("SA_ScoreboardUpdater", 1, 0, function() self:UpdateScoreboard() end)
 	
 	self.lblPing = vgui.Create( "DLabel", self )
 	self.lblPing:SetText( "Ping" )
@@ -39,11 +39,9 @@ end
 
 
 function PANEL:AddPlayerRow( ply )
-
 	local button = vgui.Create( "SA_ScorePlayerRow", self.PlayerFrame:GetCanvas() )
 	button:SetPlayer( ply )
 	self.PlayerRows[ ply ] = button
-
 end
 
 function PANEL:GetPlayerRow( ply )
@@ -164,7 +162,7 @@ function PANEL:UpdateScoreboard( force )
 		
 	end
 	
-	// Always invalidate the layout so the order gets updated
+	-- Always invalidate the layout so the order gets updated
 	self:InvalidateLayout()
 
 end
