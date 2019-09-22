@@ -7,6 +7,7 @@ if SERVER then
 	AddCSLuaFile("sa_scoreboard/player_row.lua")
 	AddCSLuaFile("sa_scoreboard/scoreboard.lua")
 	AddCSLuaFile("sa_scoreboard/vote_button.lua")
+	resource.AddFile("resources/fonts/neuropol.ttf")
 else
 	include("sa_scoreboard/scoreboard.lua")
 
