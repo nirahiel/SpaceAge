@@ -4,4 +4,6 @@
 		sv_safuncts.lua
 		sv_spaceage.lua
 		sv_terminal.lua
+	entities/
+		everything!
 - Refactor to prefix all commands and Net with SA_
