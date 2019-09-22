@@ -11,7 +11,7 @@ local function SA_JoinFaction(ply,txt)
 		ply.IsLeader = false
 		ply:Spawn()
 		ply.InvitedTo = false
-		SA_Send_Main(ply)
+		SA.SendCreditsScore(ply)
 		for k,v in pairs(player.GetAll()) do
 			if v.TeamIndex == ply.TeamIndex then
 				v:AddHint(ply:Name().." has joined the faction!",NOTIFY_GENERIC,5)
@@ -31,7 +31,7 @@ local function SA_InviteToFaction(ply,txt)
 			v.InvitedTo = ply.TeamIndex
 			ply:AddHint("Invited "..v:Name().." to your faction.",NOTIFY_GENERIC,5)
 			v:AddHint("You have been invited to join "..SA.Factions.Table[v.InvitedTo][1].." type [join to accept the invitation.",NOTIFY_GENERIC,5)
-			SA_Send_Main(v)
+			SA.SendCreditsScore(v)
 		else
 			ply:AddHint("No players match the name given.",NOTIFY_ERROR,5)
 		end
@@ -54,7 +54,7 @@ local function SA_KickFaction(ply,txt)
 				v.UserGroup = "freelancer"
 				v.IsLeader = false
 				v:Spawn()
-				SA_Send_Main(v)
+				SA.SendCreditsScore(v)
 			else
 				ply:AddHint("You may only kick players out of your own faction.", NOTIFY_ERROR, 5)
 			end
@@ -77,7 +77,7 @@ local function SA_LeaveFaction(ply,txt)
 	ply.UserGroup = "freelancer"
 	ply.IsLeader = false	
 	ply:Spawn()
-	SA_Send_Main(ply)
+	SA.SendCreditsScore(ply)
 end
 SA_RegisterChatCommand("leave",SA_LeaveFaction)
 

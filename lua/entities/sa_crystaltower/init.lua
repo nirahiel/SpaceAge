@@ -17,7 +17,7 @@ end
 
 function ENT:Think()
 	self.BaseClass.Think(self)
-	RemoveIntersecting(self,{"sa_crystaltower","sa_mining_drill"})
+	SA.Functions.Tiberium.RemoveIntersecting(self,{"sa_crystaltower","sa_mining_drill"})
 	self:NextThink(CurTime() + 2)
 	return true
 end
@@ -90,7 +90,7 @@ function ENT:SpawnCrystal(auto)
 	if self.crystalCount >= SA_MaxCrystalCount then return end
 	
 	local p = self:GetPos()
-	local tmpPos = FindWorldFloor(Vector(math.random(-SA_CrystalRadius,SA_CrystalRadius)+p.x,math.random(-SA_CrystalRadius,SA_CrystalRadius)+p.y,p.z+200),nil,{self})
+	local tmpPos = SA.Functions.Tiberium.FindWorldFloor(Vector(math.random(-SA_CrystalRadius,SA_CrystalRadius)+p.x,math.random(-SA_CrystalRadius,SA_CrystalRadius)+p.y,p.z+200),nil,{self})
 	if not tmpPos then 
 		if auto then
 			self:SpawnCrystal(false)
@@ -136,7 +136,7 @@ function ENT:SpawnCrystal(auto)
 	phys:SetMass(50000)
 	phys:EnableMotion(false)
 	
-	PropMoveSlow(crystal,tmpPos,2)
+	SA.Functions.PropMoveSlow(crystal,tmpPos,2)
 	
 	self:DeleteOnRemove(crystal)
 	

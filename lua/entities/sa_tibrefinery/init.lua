@@ -35,9 +35,9 @@ end
 
 function ENT:StartTouch(ent)
 	if ent.IsTiberiumStorage and (RD.GetResourceAmount( ent, "tiberium" ) >= 0) then
-		local attachPlace = FindFreeAttachPlace(ent,self)
+		local attachPlace = SA.Functions.Tiberium.FindFreeAttachPlace(ent,self)
 		if not attachPlace then return end
-		if not AttachStorage(ent,self,attachPlace) then return end
+		if not SA.Functions.Tiberium.AttachStorage(ent,self,attachPlace) then return end
 		constraint.Weld(ent, SA_TheWorld,0,0,false)
 		self.TouchTable[attachPlace] = ent
 		--local tmp = RD.GetEntityTable(ent)
@@ -76,7 +76,7 @@ function ENT:Think()
 						end
 					end
 					ply.TotalCredits = ply.TotalCredits + creds
-					SA_Send_CredSc(ply)
+					SA.SendCreditsScore(ply)
 				end
 			else
 				v:Remove()

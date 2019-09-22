@@ -277,7 +277,7 @@ local function DoAcceptPlayerRes(data, isok, merror, ply, app, appf, args)
 			v.UserGroup = SA.Factions.Table[appf][2]
 			v.IsLeader = false
 			v:Spawn()
-			SA_Send_Main(v)
+			SA.SendCreditsScore(v)
 			SA_Send_FactionRes(v)
 		end
 	end

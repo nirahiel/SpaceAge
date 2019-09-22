@@ -102,7 +102,7 @@ function ENT:Think()
 					else
 						self.yield = self.oldyield
 					end
-					MineThing(self,self.TouchEnt,"tiberium")
+					SA.Functions.MineThing(self,self.TouchEnt,"tiberium")
 					self.yield = self.oldyield
 				end
 			else

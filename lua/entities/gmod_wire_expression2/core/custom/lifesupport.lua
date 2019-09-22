@@ -1,40 +1,53 @@
 local RD = CAF.GetAddon("Resource Distribution")
 
-if not CLIENT then
-	function e2_ls_info(ent)
-		local retTab = {}
+local function convert_table_to_e2_table(tab)
+	local newTab = {}
+	for k,v in pairs(tab) do
+		local ty = string.lower(type(v))
+		if ty == "string" then
+			newTab["s"..k] = v
+		elseif ty == "number" then
+			newTab["n"..k] = v
+		elseif ty == "entity" then
+			newTab["e"..k] = v
+		end
+	end
+	return newTab
+end
+
+local function ls_table_to_e2_table(sbenv)
+	local retTab = convert_table_to_e2_table(sbenv)
+	if sbenv.air then
+		for k,v in pairs(sbenv.air) do
+			if type(v) == "number" then
+				retTab["nair"..k] = v
+			end
+		end
+	end
+	return retTab
+end
+
+local function e2_ls_info(ent)
+	local retTab = {}
+	if ent.sbenvironment then
+		retTab = ls_table_to_e2_table(ent.sbenvironment)
+		if validEntity(ent) then
+			retTab.eentity = ent
+		end
+	end
+	if ent.environment and ent.environment.sbenvironment then
 		if ent.sbenvironment then
-			retTab = ls_table_to_e2_table(ent.sbenvironment)
-			if validEntity(ent) then
-				retTab.eentity = ent
+			if ent.environment ~= ent and validEntity(ent.environment) then
+				retTab.eparent = ent.environment
+			end
+		else
+			retTab = ls_table_to_e2_table(ent.environment.sbenvironment)
+			if validEntity(ent.environment) then
+				retTab.eentity = ent.environment
 			end
 		end
-		if ent.environment and ent.environment.sbenvironment then
-			if ent.sbenvironment then
-				if ent.environment ~= ent and validEntity(ent.environment) then
-					retTab.eparent = ent.environment
-				end
-			else
-				retTab = ls_table_to_e2_table(ent.environment.sbenvironment)
-				if validEntity(ent.environment) then
-					retTab.eentity = ent.environment
-				end
-			end
-		end
-		return retTab
 	end
-	
-	function ls_table_to_e2_table(sbenv)
-		local retTab = convert_table_to_e2_table(sbenv)
-		if sbenv.air then
-			for k,v in pairs(sbenv.air) do
-				if type(v) == "number" then
-					retTab["nair"..k] = v
-				end
-			end
-		end
-		return retTab
-	end
+	return retTab
 end
 
 local function ls_get_res_by_ent(this)

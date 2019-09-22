@@ -93,7 +93,7 @@ function ENT:Think()
 	if ( self.Active == 1 ) then
 			if ( RD.GetResourceAmount(self, "energy") >= self.consume ) then
 				RD.ConsumeResource(self, "energy", self.consume)
-				Discharge(self)
+				SA.Functions.Discharge(self)
 				Wire_TriggerOutput(self, "Output", self.yield)
 			else
 				self:TurnOff()

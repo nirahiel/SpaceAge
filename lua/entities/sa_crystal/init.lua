@@ -32,7 +32,7 @@ function ENT:Think()
 			end*/
 		end
 	end
-	RemoveIntersecting(self,{"sa_crystalroid","sa_crystaltower","sa_mining_drill"})
+	SA.Functions.Tiberium.RemoveIntersecting(self,{"sa_crystalroid","sa_crystaltower","sa_mining_drill"})
 	self:NextThink(CurTime() + 2)
 	return true
 end

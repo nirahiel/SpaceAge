@@ -495,7 +495,7 @@ local function SA_MarketSell(ply,cmd,args)
 			end
 		end
 	end
-	SA_Send_CredSc(ply)
+	SA.SendCreditsScore(ply)
 	SA_UpdateInfo(ply)
 end
 concommand.Add("sa_market_sell",SA_MarketSell)
@@ -541,7 +541,7 @@ local function SA_MarketBuy(ply,cmd,args)
 			TempStorage[uid][index] = buying
 		end
 	end
-	SA_Send_CredSc(ply)
+	SA.SendCreditsScore(ply)
 	SA_UpdateInfo(ply)
 end
 concommand.Add("sa_market_buy",SA_MarketBuy)
@@ -621,7 +621,7 @@ local function SA_BuyPermStorage(ply,cmd,args)
 		ply.Credits = credits - cost
 		ply.MaxCap = maxcap + amt
 		UpdateCapacity(ply)
-		SA_Send_CredSc(ply)
+		SA.SendCreditsScore(ply)
 		SA_UpdateInfo(ply)
 	end
 end
@@ -740,7 +740,7 @@ local function SA_Research(ply, cmd, args)
 			end
 		end
 	end
-	SA_Send_CredSc(ply)
+	SA.SendCreditsScore(ply)
 end
 concommand.Add("sa_buy_research",SA_Research)
 
@@ -769,7 +769,7 @@ local function SA_ResetMe(ply, cmd, args)
 	ply.devlimit = ply.devlimit + 1
 	
 	SA_UpdateInfo(ply)
-	SA_Send_CredSc(ply)
+	SA.SendCreditsScore(ply)
 end
 concommand.Add("sa_advance_level",SA_ResetMe)
 

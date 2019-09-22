@@ -333,7 +333,7 @@ local function LoadRes(data, isok, merror, ply, sid)
 	timer.Simple(1,function()
 		if not (ply and ply.IsValid and ply:IsValid()) then return end
 		ply.MayBePoked = true
-		SA_Send_AllInfos(ply)
+		SA.SendCreditsScore(ply)
 		if ply.IsLeader then
 			MySQL:Query("SELECT * FROM applications WHERE faction='"..ply.TeamIndex.."'", LeaderRes, ply)
 		else
