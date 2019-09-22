@@ -6,20 +6,26 @@ TERMLOADER = nil
 
 require("supernet")
 
-SA_TermDraggedElement = nil
-if not SA_FactionData then SA_FactionData = {} end
-if not SA_StatsList then SA_StatsList = {} end
-if not ResearchPanels then ResearchPanels = {} end
-if not term_info then term_info = {} end
-SA_Term_StationCap = 0
-SA_Term_StationMax = 0
-SA_DevLimitLevel = 1
+local SA_TermDraggedElement = nil
+local SA_FactionData = {}
+local SA_StatsList = {}
+local ResearchPanels = {}
+local term_info = {}
+local SA_Term_StationCap = 0
+local SA_Term_StationMax = 0
+local SA_DevLimitLevel = 1
 
 surface.CreateFont("ServerHUDFontS", { font = "Arial", size = 36, weight = 700, antialias = true, shadow = false})
 
 local ScrX = surface.ScreenWidth()
 local ScrY = surface.ScreenHeight()
 local HASH = 0
+
+local function SA_RefreshStatsList(isAuto)
+	if isAuto then timer.Simple(30, function() SA_RefreshStatsList(true) end) end
+	if not SA_Term_StatList then return end
+	SA_Term_StatList:OpenURL("https://stats.spaceage.online/?ingame=1&rand="..tostring(CurTime()))
+end
 
 local function sa_new_stats(len, ply)
 	SA_StatsList = net.ReadTable()
@@ -38,13 +44,50 @@ local function SA_RecvFactionData( um )
 end
 usermessage.Hook("SA_FactionData", SA_RecvFactionData) 
 
-function SA_RefreshStatsList(isAuto)
-	if isAuto then timer.Simple(30, function() SA_RefreshStatsList(true) end) end
-	if not SA_Term_StatList then return end
-	SA_Term_StatList:OpenURL("https://stats.spaceage.online/?ingame=1&rand="..tostring(CurTime()))
+local SA_ErrorText = ""
+local SA_ErrorAlpha = 0
+
+local function SA_TermError(ErrText)
+	SA_ErrorText = ErrText
+	SA_ErrorAlpha = 150
 end
 
-function CreateTerminalGUI()
+local function SA_DevSetVal(vnum,vval)
+	RunConsoleCommand("DevSetVar",vnum,tonumber(vval:GetValue()))
+end
+
+function SA.Application.Refresh()
+	if not (SA_PTimeLBL and SA_ScoreLBL and SA_ApplyText and SA_SelFCombo) then return end
+	local plisleader = LocalPlayer():GetNWBool("isleader")
+	
+	if plisleader then
+		local fValue = false
+		SA_SelFCombo:Clear()
+		for k, v in pairs(AppTable) do
+			SA_SelFCombo:AddChoice(v[1].." | "..k)
+			fValue = true
+		end 
+		if (fValue) then
+			SA_SelFCombo:ChooseOptionID(1)
+			CSelID = SApp_ExtractSteamID(SA_SelFCombo:GetOptionText(1))
+			if (CSelID and AppTable[CSelID]) then
+				SA_ApplyText:SetValue(AppTable[CSelID][2])
+				SA_PTimeLBL:SetText("Playtime: "..AppTable[CSelID][3])
+				SA_ScoreLBL:SetText("Score: "..AppTable[CSelID][4])
+			end
+		else
+			CSelID = ""
+			SA_ApplyText:SetValue("")
+			SA_PTimeLBL:SetText("Playtime: NOTHING SELECTED")
+			SA_ScoreLBL:SetText("Score: NOTHING SELECTED")
+		end
+	else
+		SA_SelFCombo:ChooseOption(SA.Application.Faction)
+		SA_ApplyText:SetValue(SA.Application.Text)
+	end
+end
+
+local function CreateTerminalGUI()
 	if not LocalPlayer():GetNWBool("isloaded") then
 		return
 	end
@@ -151,8 +194,7 @@ function CreateTerminalGUI()
 	
 	SA_Term_StatList = StatsList
 	
-	SA_RefreshStatsList(true)
-		
+	SA.Application.Refresh(true)
 	
 	local MarketTab = vgui.Create ( "DPanel" )
 	MarketTab:SetPos(5,25)
@@ -436,7 +478,7 @@ function CreateTerminalGUI()
 		ClearButton.DoClick = function()
 			SA.Application.Text = "Hi"
 			SA.Application.Faction = "Major Miners"
-			SA_RefreshApplications()
+			SA.Application.Refresh()
 		end
 		
 		local ApplyButton = vgui.Create( "DButton", ApplicationTab )
@@ -608,7 +650,7 @@ function CreateTerminalGUI()
 		SA_DevBasePanel = nil
 	end
 	
-	SA_RefreshApplications()
+	SA.Application.Refresh()
 	
 	Tabs:AddSheet( "Stats", StatTab, "VGUI/application-monitor", false, false, "Statistics" )
 	Tabs:AddSheet( "Market", MarketTab, "VGUI/balance", false, false, "Marketplace" )
@@ -627,15 +669,7 @@ function CreateTerminalGUI()
 end
 timer.Create("RecreateTermGUI", 1, 0, CreateTerminalGUI)
 
-local SA_ErrorText = ""
-local SA_ErrorAlpha = 0
-
-function SA_TermError(ErrText)
-	SA_ErrorText = ErrText
-	SA_ErrorAlpha = 150
-end
-
-function SA_DrawTerminalError()
+local function SA_DrawTerminalError()
 	if (SA_ErrorAlpha > 0) then
 		local TermX, TermY = SA_Term_GUI:GetPos()
 		TermX = TermX + 395
@@ -650,41 +684,6 @@ function SA_DrawTerminalError()
 end
 hook.Add("PostRenderVGUI","SA_DrawTerminalError",SA_DrawTerminalError)
 
-function SA_DevSetVal(vnum,vval)
-	RunConsoleCommand("DevSetVar",vnum,tonumber(vval:GetValue()))
-end
-
-function SA_RefreshApplications()
-	if not (SA_PTimeLBL and SA_ScoreLBL and SA_ApplyText and SA_SelFCombo) then return end
-	local plisleader = LocalPlayer():GetNWBool("isleader")
-	
-	if plisleader then
-		local fValue = false
-		SA_SelFCombo:Clear()
-		for k, v in pairs(AppTable) do
-			SA_SelFCombo:AddChoice(v[1].." | "..k)
-			fValue = true
-		end 
-		if (fValue) then
-			SA_SelFCombo:ChooseOptionID(1)
-			CSelID = SApp_ExtractSteamID(SA_SelFCombo:GetOptionText(1))
-			if (CSelID and AppTable[CSelID]) then
-				SA_ApplyText:SetValue(AppTable[CSelID][2])
-				SA_PTimeLBL:SetText("Playtime: "..AppTable[CSelID][3])
-				SA_ScoreLBL:SetText("Score: "..AppTable[CSelID][4])
-			end
-		else
-			CSelID = ""
-			SA_ApplyText:SetValue("")
-			SA_PTimeLBL:SetText("Playtime: NOTHING SELECTED")
-			SA_ScoreLBL:SetText("Score: NOTHING SELECTED")
-		end
-	else
-		SA_SelFCombo:ChooseOption(SA.Application.Faction)
-		SA_ApplyText:SetValue(SA.Application.Text)
-	end
-end
-
 local function SA_RefreshGoodiesRecv(ply, decoded)
 	SA_Term_GoodieList:Clear()
 	local goodie
@@ -697,14 +696,14 @@ local function SA_RefreshGoodiesRecv(ply, decoded)
 end
 supernet.Hook("GoodieUpdate", SA_RefreshGoodiesRecv)
 
-function SA_RefreshGoodies()
+local function SA_RefreshGoodies()
 	RunConsoleCommand("GoodiesUpdate")
 end
 
 local function sa_terminal_msg( msg )
 	local active = msg:ReadBool()
 	if active then
-		SA_RefreshApplications()
+		SA.Application.Refresh()
 		if not SA_Term_GUI then
 			CreateTerminalGUI()
 			if not SA_Term_GUI then
@@ -718,7 +717,7 @@ local function sa_terminal_msg( msg )
 end
 usermessage.Hook("TerminalStatus", sa_terminal_msg) 
 
-function CleanString(str)
+local function CleanString(str)
 	local implode = {}
 	local splode = string.Explode(" ",str)
 	for k,v in pairs(splode) do
@@ -731,8 +730,8 @@ function CleanString(str)
 end
 
 local function sa_term_update1(msg)
-	term_info.orecount = AddCommasToInt(msg:ReadLong())
-	term_info.tempore = AddCommasToInt(msg:ReadLong())
+	term_info.orecount = SA.AddCommasToInt(msg:ReadLong())
+	term_info.tempore = SA.AddCommasToInt(msg:ReadLong())
 end
 usermessage.Hook("TerminalUpdate1", sa_term_update1) 
 
@@ -753,7 +752,7 @@ local function sa_term_update(ply, tbl)
 	
 	if SA_UpgradeLevelButton then 	
 		SA_UpgradeLevelButton:SetDisabled(not canReset)
-		SA_UpgradeLevelButton:SetText("Advance Level (current: "..tostring(lv).." / 5) [Price: "..AddCommasToInt(5000000000 * (lv * lv)).."]")
+		SA_UpgradeLevelButton:SetText("Advance Level (current: "..tostring(lv).." / 5) [Price: "..SA.AddCommasToInt(5000000000 * (lv * lv)).."]")
 	end
 
 
@@ -761,7 +760,7 @@ local function sa_term_update(ply, tbl)
 	SA_Term_MarketSell:Clear()
 	for k,v in pairs(ResTabl) do
 		local name = CleanString(k)
-		local value = AddCommasToInt(v[1])
+		local value = SA.AddCommasToInt(v[1])
 		local price = v[2]
 		local item = vgui.Create("SA_Terminal_Resource")
 		item:SetSize(220,42)
@@ -772,8 +771,8 @@ local function sa_term_update(ply, tbl)
 	end
 	
 	SA_Term_PermStorage:Clear()
-	SA_Term_StationCap = AddCommasToInt(capacity)
-	SA_Term_StationMax = AddCommasToInt(maxcap)
+	SA_Term_StationCap = SA.AddCommasToInt(capacity)
+	SA_Term_StationMax = SA.AddCommasToInt(maxcap)
 
 	for k,v in pairs(PermStorage) do
 		local name = CleanString(tostring(k))
@@ -829,7 +828,7 @@ local function sa_term_update(ply, tbl)
 						elseif group == "starfleet" then
 							total = math.ceil(total * 0.9175)
 						end
-						cost = "Cost: "..AddCommasToInt(total)
+						cost = "Cost: "..SA.AddCommasToInt(total)
 					end
 					ResearchPanels[RGroup][name]:Update(rank,cost)
 				end
@@ -847,6 +846,6 @@ supernet.Hook("TerminalUpdate", sa_term_update)
 
 local function SetHash(msg)
 	HASH = msg:ReadLong()
-	SA_SetResourceItemPanelHash(HASH)
+	SA.SetResourceItemPanelHash(HASH)
 end
 usermessage.Hook("LoadHash", SetHash)

@@ -95,7 +95,7 @@ function PANEL:UpdatePlayerData()
 	self:SetInfo(1, "ICE Storages:","Raw: "..(self.Player:GetNWInt("IceRSLV")+1).."; Product: "..(self.Player:GetNWInt("IcePSLV")+1))
 	self:SetInfo(1, "Ore Lasers:","Mark "..LaserMKRoman(self.Player) .." at level "..self.Player:GetNWInt("LaserLV") )
 	self:SetInfo(1, "Ore Storages:",OreMKStr(self.Player) .." storages at level "..self.Player:GetNWInt("OreLV"))*/
-	self:SetInfo(1, "Time played:",SA_FormatTime(math.abs(os.time()-self.Player:GetNWInt("Playtime"))))
+	self:SetInfo(1, "Time played:",SA.FormatTime(math.abs(os.time()-self.Player:GetNWInt("Playtime"))))
 	
 	self:InvalidateLayout()
 

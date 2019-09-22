@@ -9,29 +9,23 @@ if SERVER then
 	AddCSLuaFile( "sa_scoreboard/vote_button.lua" )
 	resource.AddFile("resource/fonts/neuropol.ttf")
 else
-	include( "sa_scoreboard/scoreboard.lua" )
+	include("sa_scoreboard/scoreboard.lua")
 
-	SA_ScoreBoard = nil
+	local SA_ScoreBoard = nil
 	
-	timer.Simple( 1.5, function()
-		
+	timer.Simple(1.5, function()
 		function GAMEMODE:CreateScoreboard()
-		
-			if ( ScoreBoard ) then
-			
+			if ScoreBoard then
 				ScoreBoard:Remove()
 				ScoreBoard = nil
-				
 			end
 			
-			SA_ScoreBoard = vgui.Create( "SA_ScoreBoard" )
+			SA_ScoreBoard = vgui.Create("SA_ScoreBoard")
 			
 			return true
-
 		end
 		
 		function GAMEMODE:ScoreboardShow()
-		
 			if not SA_ScoreBoard then
 				self:CreateScoreboard()
 			end
@@ -43,19 +37,15 @@ else
 			SA_ScoreBoard:UpdateScoreboard( true )
 			
 			return true
-
 		end
 		
 		function GAMEMODE:ScoreboardHide()
-		
 			GAMEMODE.ShowScoreboard = false
 			gui.EnableScreenClicker( false )
 
 			SA_ScoreBoard:SetVisible( false )
 			
 			return true
-			
 		end
-		
-	end )
+	end)
 end

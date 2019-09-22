@@ -1,7 +1,7 @@
 local Clamp = math.Clamp
 
 e2function string number:format()
-	return AddCommasToInt(this)
+	return SA.AddCommasToInt(this)
 end
 
 e2function void selectTerminalNode(entity node)

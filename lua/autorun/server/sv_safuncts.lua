@@ -177,7 +177,7 @@ concommand.Add("RespawnCrystals",function(ply)
 end)
 
 function TFormerTerraForm(terent)
-	local ply = SAPPShim.GetOwner(terent)
+	local ply = SA.PP.GetOwner(terent)
 	if not (ply and ply:IsValid() and ply:IsPlayer()) then return end
 	
 	local SB = CAF.GetAddon("Spacebuild")
@@ -507,7 +507,7 @@ function TFormerSpazzOut(terent,forcekill)
 		TFormerExplosion(terent)
 		timer.Simple(0.5,TFormerExplosion,terent)
 	end
-	local ply = SAPPShim.GetOwner(terent)
+	local ply = SA.PP.GetOwner(terent)
 	if not (ply and ply:IsValid() and ply:IsPlayer()) then return end
 end
 
@@ -574,7 +574,7 @@ function Discharge(ent)
 end
 
 function MineThing(ent,hitent,resType)
-	local own = SAPPShim.GetOwner(ent)
+	local own = SA.PP.GetOwner(ent)
 	if own and own.IsAFK then return end
 	if (hitent.health > 0) then
 		if (hitent.health < ent.damage) then 

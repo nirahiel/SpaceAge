@@ -9,7 +9,7 @@ local PanelColor = Color(100,100,100,255)
 local ImageBackColor = Color(25,25,25,255)
 
 local HASH = 0
-function SA_SetResourceItemPanelHash(xhas)
+function SA.SetResourceItemPanelHash(xhas)
 	HASH = xhas
 end
 
@@ -52,10 +52,10 @@ end
 function PANEL:SetAmount(amount,capacity)
 	amount = math.floor(amount)
 	if not capacity then
-		self.ResourceAmount:SetText(AddCommasToInt(amount))
+		self.ResourceAmount:SetText(SA.AddCommasToInt(amount))
 	else
 		capacity = math.floor(capacity)
-		self.ResourceAmount:SetText(AddCommasToInt(amount).." / "..AddCommasToInt(capacity))
+		self.ResourceAmount:SetText(SA.AddCommasToInt(amount).." / "..SA.AddCommasToInt(capacity))
 	end
 	self.RAmount = math.floor(amount)
 	if capacity then capacity = math.floor(capacity) end

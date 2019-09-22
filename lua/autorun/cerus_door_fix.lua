@@ -1,5 +1,5 @@
 if SERVER then
-	AddCSLuaFile("autorun/cerus_door_fix.lua")
+	AddCSLuaFile()
 end
 
 local OldIsValidModel = util.IsValidModel

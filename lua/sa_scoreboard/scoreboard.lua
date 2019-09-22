@@ -116,9 +116,9 @@ function PANEL:PerformLayout()
 
 end
 
-/*---------------------------------------------------------
+--[[---------------------------------------------------------
    Name: ApplySchemeSettings
----------------------------------------------------------*/
+---------------------------------------------------------]]
 function PANEL:ApplySchemeSettings()
 
 	self.Hostname:SetFont( "SA_ScoreboardHeader" )

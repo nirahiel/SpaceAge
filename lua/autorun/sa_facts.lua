@@ -1,5 +1,5 @@
 if SERVER then
-	AddCSLuaFile("autorun/SA_Facts.lua")
+	AddCSLuaFile()
 end
 
 SA_Factions = {}

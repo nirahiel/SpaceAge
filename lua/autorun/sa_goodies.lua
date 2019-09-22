@@ -1,3 +1,7 @@
+if SERVER then
+	AddCSLuaFile()
+end
+
 SA_GoodieTbl = {
 	ally_1m= {
 		name = "Alliance 1 month",

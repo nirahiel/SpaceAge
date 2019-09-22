@@ -7,7 +7,7 @@ end
 
 usermessage.Hook("SA_OpenGiveQuery",function(um)
 	local to = um:ReadString()
-	local amt = AddCommasToInt(um:ReadLong())
+	local amt = SA.AddCommasToInt(um:ReadLong())
 	local theID = um:ReadString()
 	
 	if (not sa_enpay:GetBool()) or gui.ScreenClickerEnabled() then SA_AnswerGiveQuery("deny",theID,true) return end

@@ -65,4 +65,3 @@ timer.Simple(1, function() --Wait to load or it will load before RD3 and fail!
 	end
 
 end)
-

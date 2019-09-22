@@ -1,6 +1,6 @@
 local function sa_info_msg_credsc( msg )
-	fa_info.credits = AddCommasToInt(msg:ReadString())
-	fa_info.totalcredits = AddCommasToInt(msg:ReadString())
+	fa_info.credits = SA.AddCommasToInt(msg:ReadString())
+	fa_info.totalcredits = SA.AddCommasToInt(msg:ReadString())
 end
 usermessage.Hook("SA_Info_CredSc", sa_info_msg_credsc) 
 

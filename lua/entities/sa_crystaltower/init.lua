@@ -125,7 +125,7 @@ function ENT:SpawnCrystal(auto)
 	crystal.health = cHealth
 	crystal.maxhealth = cHealth
 
-	SAPPShim.MakeOwner(crystal)
+	SA.PP.MakeOwner(crystal)
 
 	if auto then
 		crystal:SetPos(tmpPos - Vector(0,0,(crystal:LocalToWorld(crystal:OBBMaxs()) - crystal:LocalToWorld(crystal:OBBMins())).z))

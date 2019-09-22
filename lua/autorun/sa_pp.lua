@@ -1,19 +1,23 @@
-SAPPShim = {}
+if SERVER then
+	AddCSLuaFile()
+end
 
-function SAPPShim.GetOwner(ent)
+SA.PP = {}
+
+function SA.PP.GetOwner(ent)
 	return ent:CPPIGetOwner()
 end
 
-function SAPPShim.MakeOwner(ent, owner)
+function SA.PP.MakeOwner(ent, owner)
 	return ent:CPPISetOwner(owner)
 end
 
-function SAPPShim.IsWorldEnt(ent)
+function SA.PP.IsWorldEnt(ent)
 	local owner, ownerId = ent:CPPISetOwner()
 	return not ownerId
 end
 
-function SAPPShim.PlyCanPerform(ply, ent)
+function SA.PP.PlyCanPerform(ply, ent)
 	return ent:CPPICanPhysgun(ply)
 end
 

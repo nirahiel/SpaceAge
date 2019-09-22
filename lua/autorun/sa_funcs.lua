@@ -1,13 +1,13 @@
 if SERVER then
-	AddCSLuaFile("autorun/SA_Funcs.lua")
+	AddCSLuaFile()
 end
 
-function AddCommasToInt(str)
-	str = string.reverse(tostring(math.floor(tonumber(str))));
-	local len = string.len(str);
-	local ret = "";
+function SA.AddCommasToInt(str)
+	str = string.reverse(tostring(math.floor(tonumber(str))))
+	local len = string.len(str)
+	local ret = ""
 	for i=1,len do
-		ret = ret .. string.sub(str,i,i);
+		ret = ret .. string.sub(str,i,i)
 		if((i%3) == 0) then
 			ret = ret .. ","
 		end
@@ -15,11 +15,11 @@ function AddCommasToInt(str)
 	return string.reverse(ret)
 end
 
-function SA_GetPlayerByName(name)
+function SA.GetPlayerByName(name)
 	return nil
 end
 
-function SA_FormatTime(time)
+function SA.FormatTime(time)
 	return "" .. time
 end
 

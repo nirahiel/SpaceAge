@@ -10,7 +10,7 @@ local CSelID = ""
 local function SA_DoSetAppData(len, ply)
 	SA.Application.Faction = net.ReadString()
 	SA.Application.Text = net.ReadString()
-	if SA_AppBasePanel then SA_RefreshApplications() end
+	if SA_AppBasePanel then SA.Application.Refresh() end
 end
 net.Receive("sa_dosetappdata",SA_DoSetAppData)
 
@@ -21,7 +21,7 @@ local function SA_DoAddApp(len, ply)
 	local playtime = net.ReadString()
 	local score = net.ReadString()
 
-	AppTable[steamid] = {name, text, playtime, AddCommasToInt(score)}
+	AppTable[steamid] = {name, text, playtime, SA.AddCommasToInt(score)}
 	if SA_AppBasePanel then SA_RefreshApplications() end
 end
 net.Receive("sa_doaddapp",SA_DoAddApp)

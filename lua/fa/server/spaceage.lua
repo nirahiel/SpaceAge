@@ -26,7 +26,7 @@ SA_RegisterChatCommand("join",SA_JoinFaction)
 local function SA_InviteToFaction(ply,txt)
 	local name = string.sub(txt,9)
 	if ply.IsLeader then
-		local v = SA_GetPlayerByName(name)
+		local v = SA.GetPlayerByName(name)
 		if v then
 			v.InvitedTo = ply.TeamIndex
 			ply:AddHint("Invited "..v:Name().." to your faction.",NOTIFY_GENERIC,5)
@@ -44,7 +44,7 @@ SA_RegisterChatCommand("invite",SA_InviteToFaction)
 local function SA_KickFaction(ply,txt)
 	local name = string.sub(txt,7)
 	if ply.IsLeader then
-		local v = SA_GetPlayerByName(name)
+		local v = SA.GetPlayerByName(name)
 		if v then
 			if ply == v then ply:AddHint("You cannot kick yourself.", NOTIFY_CLEANUP, 5) return "" end
 			if v.TeamIndex == ply.TeamIndex then

@@ -330,7 +330,7 @@ end
 concommand.Add("DoDenyPlayer",SA_DoDenyPlayer)
 
 function SA_GiveCreditsByName(ply,name,amt)
-	v = SA_GetPlayerByName(name,nil)
+	v = SA.GetPlayerByName(name,nil)
 	if v then
 		return SA_GiveCredits(ply,v,amt)
 	end
@@ -348,7 +348,7 @@ function SA_GiveCredits(ply,v,amt)
 	
 	v.Credits = v.Credits + amt
 	ply.Credits = ply.Credits - amt
-	local num = AddCommasToInt(amt)
+	local num = SA.AddCommasToInt(amt)
 	ply:AddHint("You have given "..v:Name().." "..num.." credits.", NOTIFY_GENERIC, 5)
 	v:AddHint(ply:Name().." has given you "..num.." credits.", NOTIFY_GENERIC, 5)
 	SA_Send_CredSc(ply)

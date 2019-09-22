@@ -4,9 +4,9 @@ local PANEL = {}
 PANEL.VoteName = "none"
 PANEL.MaterialName = "exclamation"
 
-/*---------------------------------------------------------
+--[[---------------------------------------------------------
    Name: 
----------------------------------------------------------*/
+---------------------------------------------------------]]
 function PANEL:Init()
 
 	self.Label = vgui.Create( "DLabel", self )
@@ -14,9 +14,9 @@ function PANEL:Init()
 	
 end
 
-/*---------------------------------------------------------
+--[[---------------------------------------------------------
    Name: 
----------------------------------------------------------*/
+---------------------------------------------------------]]
 function PANEL:DoClick()
 
 	local ply = self:GetParent().Player
@@ -26,9 +26,9 @@ function PANEL:DoClick()
 
 end
 
-/*---------------------------------------------------------
+--[[---------------------------------------------------------
    Name: PerformLayout
----------------------------------------------------------*/
+---------------------------------------------------------]]
 function PANEL:ApplySchemeSettings()
 	
 	self.Label:SetFont( "Default" )
@@ -37,9 +37,9 @@ function PANEL:ApplySchemeSettings()
 
 end
 
-/*---------------------------------------------------------
+--[[---------------------------------------------------------
    Name: PerformLayout
----------------------------------------------------------*/
+---------------------------------------------------------]]
 function PANEL:PerformLayout()	
 
 	if ( self:GetParent().Player and self:GetParent().Player:IsValid() ) then
@@ -51,9 +51,9 @@ function PANEL:PerformLayout()
 
 end
 
-/*---------------------------------------------------------
+--[[---------------------------------------------------------
    Name: 
----------------------------------------------------------*/
+---------------------------------------------------------]]
 function PANEL:SetUp( mat, votename, nicename )
 
 	self.MaterialName 	= mat
@@ -62,9 +62,9 @@ function PANEL:SetUp( mat, votename, nicename )
 
 end
 
-/*---------------------------------------------------------
+--[[---------------------------------------------------------
    Name: Paint
----------------------------------------------------------*/
+---------------------------------------------------------]]
 function PANEL:Paint()
 	
 	if ( !self.Material ) then
@@ -89,7 +89,7 @@ function PANEL:Paint()
 	surface.DrawTexturedRect( self:GetWide()/2 - 8, self:GetWide()/2 - 8, 16, 16 ) 
 	
 	
-	//draw.SimpleText( , "DefaultSmall", self:GetWide() / 2, 19, Color(0,0,0,100), TEXT_ALIGN_CENTER )
+	--draw.SimpleText( , "DefaultSmall", self:GetWide() / 2, 19, Color(0,0,0,100), TEXT_ALIGN_CENTER )
 	
 	return true
 
@@ -97,33 +97,24 @@ end
 
 local TooltipText = nil
 
-/*---------------------------------------------------------
+--[[---------------------------------------------------------
    Name: OnCursorEntered
----------------------------------------------------------*/
+---------------------------------------------------------]]
 function PANEL:OnCursorEntered()
-
 	TooltipText = self.NiceName
-	
 end
 
-/*---------------------------------------------------------
+--[[---------------------------------------------------------
    Name: OnCursorEntered
----------------------------------------------------------*/
+---------------------------------------------------------]]
 function PANEL:OnCursorExited()
-
 	TooltipText = nil
-	
 end
-
 
 vgui.Register( "SA_SpawnMenuVoteButton", PANEL, "Button" )
 
-
 local _GetTooltipText = GetTooltipText
 function GetTooltipText()
-
 	if ( TooltipText ) then return TooltipText end
-
 	return _GetTooltipText()
-	
 end

@@ -139,7 +139,7 @@ function SA_ReceiveStatsUpdate(um)
 	local i = um:ReadLong()
 	SA_StatsTable[i] = {}
 	SA_StatsTable[i]["name"] = um:ReadString()
-	SA_StatsTable[i]["score"] = AddCommasToInt(um:ReadString())
+	SA_StatsTable[i]["score"] = SA.AddCommasToInt(um:ReadString())
 	local tempColor = SA_FactionColors[um:ReadString()]
 	if (!tempColor) then tempColor = Color(255,100,0,255) end
 	SA_StatsTable[i]["factioncolor"] = tempColor

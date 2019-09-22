@@ -5,10 +5,10 @@ local function DestroyTeleportPanel()
 	end
 end
 DestroyTeleportPanel()
-SA_TeleList = {}
-SA_TeleportPanel = nil
-SA_TeleportLocaLBox = nil
-SA_TeleKey = "NONE"
+local SA_TeleList = {}
+local SA_TeleportPanel = nil
+local SA_TeleportLocaLBox = nil
+local SA_TeleKey = "NONE"
 
 usermessage.Hook("SA_HideTeleportPanel",function(um)
 	um:ReadBool()

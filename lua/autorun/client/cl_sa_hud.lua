@@ -43,20 +43,73 @@ timer.Create("SA_CheckHUDHookIn", 1, 0, CheckHookIn)
 
 local HUDFont = "Default"
 
-SA_HUDBlink = true
+local SA_HUDBlink = true
 timer.Create("SA_HUDBlink",0.5,0,function() SA_HUDBlink = not SA_HUDBlink end)
 
 timer.Destroy("SA_HealthBarRed")
-SA_HealthBarRed = 0
+local SA_HealthBarRed = 0
 timer.Create("SA_HealthBarRed",0.01,0,function() 
 	if SA_HealthBarRed > 0 then
 		SA_HealthBarRed = SA_HealthBarRed - 2
 		if SA_HealthBarRed < 0 then SA_HealthBarRed = 0 end
 	end
 end)
-SA_LastHealth = 0
+local SA_LastHealth = 0
 
-function SA_CustomHUDPaint()
+local function DrawLSBar(BarNum,CaptionX,Value,ScH,ScW,ColBack,ColText)
+	local Caption = CAF.GetLangVar(CaptionX)
+	local BarHei = 30
+	local BarSpace = 5
+	local BarWid = 440
+	local RealBarWid = BarWid - 70
+	local Hei = (ScH - 120) - (BarNum * (BarHei + BarSpace))
+	local XMinX = (ScW - BarWid) / 2
+	
+	draw.RoundedBox(4, XMinX, Hei, BarWid, BarHei, ColBack)
+	draw.SimpleText(Caption, HUDFont, XMinX + 8, Hei + (BarHei / 2), ColText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+	
+	local Perc = Value / 4000
+	
+	local ValCol = Color(255*(1-Perc),255*Perc,0,255)
+	
+	if Value > 0 then
+		local XWid = (BarWid - 154)  * Perc
+		XWid = math.Max(XWid,4)
+		draw.RoundedBox(4, XMinX + 150, Hei + 4, XWid, BarHei - 8, ValCol)
+		draw.SimpleText(tostring(Perc*100).." %", HUDFont, XMinX + 70, Hei + (BarHei / 2), ValCol, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+	else
+		if not SA_HUDBlink then ValCol = Color(0,0,0,0) end
+		draw.SimpleText("EMPTY", HUDFont, XMinX + 70, Hei + (BarHei / 2), ValCol, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+	end
+end
+
+local WeaponMaxAmmo = {}
+WeaponMaxAmmo["weapon_pistol"] = 18
+WeaponMaxAmmo["weapon_357"] = 6
+WeaponMaxAmmo["weapon_smg1"] = 45
+WeaponMaxAmmo["weapon_ar2"] = 30
+WeaponMaxAmmo["weapon_shotgun"] = 6
+WeaponMaxAmmo["weapon_crossbow"] = 1
+WeaponMaxAmmo["weapon_frag"] = 0
+WeaponMaxAmmo["weapon_rpg"] = 0
+WeaponMaxAmmo["weapon_crowbar"] = 0
+WeaponMaxAmmo["weapon_physcannon"] = 0
+WeaponMaxAmmo["weapon_physgun"] = 0
+
+local function GetMaxAmmo(SWEP)
+	if SWEP.Primary and SWEP.Primary.ClipSize then
+		return SWEP.Primary.ClipSize
+	end
+	
+	local MAmmo = WeaponMaxAmmo[SWEP:GetClass()]
+	if MAmmo then return MAmmo end
+	
+	LocalPlayer():ChatPrint("UNKOWN WEAPON: "..SWEP:GetClass() .. "|" .. tostring(SWEP:Clip1()))
+	
+	return SWEP:Clip1()
+end
+
+local function SA_CustomHUDPaint()
 	if GetConVarNumber("cl_drawhud") == 0 then return end
 	if not LocalPlayer():Alive() then return end
 	local SWEP = LocalPlayer():GetActiveWeapon()
@@ -219,61 +272,3 @@ function SA_CustomHUDPaint()
 	end
 end
 hook.Add("HUDPaint", "SA_CustomHUDPaint", SA_CustomHUDPaint)
-
-function DrawLSBar(BarNum,CaptionX,Value,ScH,ScW,ColBack,ColText)
-	local Caption = CAF.GetLangVar(CaptionX)
-	local BarHei = 30
-	local BarSpace = 5
-	local BarWid = 440
-	local RealBarWid = BarWid - 70
-	local Hei = (ScH - 120) - (BarNum * (BarHei + BarSpace))
-	local XMinX = (ScW - BarWid) / 2
-	
-	draw.RoundedBox(4, XMinX, Hei, BarWid, BarHei, ColBack)
-	draw.SimpleText(Caption, HUDFont, XMinX + 8, Hei + (BarHei / 2), ColText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-	
-	local Perc = Value / 4000
-	
-	local ValCol = Color(255*(1-Perc),255*Perc,0,255)
-	
-	if Value > 0 then
-		local XWid = (BarWid - 154)  * Perc
-		XWid = math.Max(XWid,4)
-		draw.RoundedBox(4, XMinX + 150, Hei + 4, XWid, BarHei - 8, ValCol)
-		draw.SimpleText(tostring(Perc*100).." %", HUDFont, XMinX + 70, Hei + (BarHei / 2), ValCol, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-	else
-		if not SA_HUDBlink then ValCol = Color(0,0,0,0) end
-		draw.SimpleText("EMPTY", HUDFont, XMinX + 70, Hei + (BarHei / 2), ValCol, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-	end
-end
-
-WeaponMaxAmmo = {}
-WeaponMaxAmmo["weapon_pistol"] = 18
-WeaponMaxAmmo["weapon_357"] = 6
-WeaponMaxAmmo["weapon_smg1"] = 45
-WeaponMaxAmmo["weapon_ar2"] = 30
-WeaponMaxAmmo["weapon_shotgun"] = 6
-WeaponMaxAmmo["weapon_crossbow"] = 1
-WeaponMaxAmmo["weapon_frag"] = 0
-WeaponMaxAmmo["weapon_rpg"] = 0
-WeaponMaxAmmo["weapon_crowbar"] = 0
-WeaponMaxAmmo["weapon_physcannon"] = 0
-WeaponMaxAmmo["weapon_physgun"] = 0
-
-function GetMaxAmmo(SWEP)
-	if SWEP.Primary and SWEP.Primary.ClipSize then
-		return SWEP.Primary.ClipSize
-	end
-	
-	local MAmmo = WeaponMaxAmmo[SWEP:GetClass()]
-	if MAmmo then return MAmmo end
-	
-	LocalPlayer():ChatPrint("UNKOWN WEAPON: "..SWEP:GetClass() .. "|" .. tostring(SWEP:Clip1()))
-	
-	return SWEP:Clip1()
-end
-
-function Color( r, g, b, a )
-	a = a or 255
-	return { r = math.min( tonumber(r or 0), 255 ), g =  math.min( tonumber(g or 0), 255 ), b =  math.min( tonumber(b or 0), 255 ), a =  math.min( tonumber(a or 0), 255 ) }
-end

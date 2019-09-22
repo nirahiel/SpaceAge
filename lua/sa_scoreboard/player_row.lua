@@ -93,7 +93,7 @@ function PANEL:UpdatePlayerData()
 		LeaderCap = LeaderCap.." [Leader]"
 	end	
 	self.lblName:SetText( team.GetName(self.Player:Team()).. LeaderCap .." - "..self.Player:Nick() )
-	self.lblScore:SetText( AddCommasToInt(self.Player:GetNWInt("Score")) )
+	self.lblScore:SetText( SA.AddCommasToInt(self.Player:GetNWInt("Score")) )
 	--self.lblTC:SetText( self.Player:GetNWInt("TerraCredits") )
 	self.lblPing:SetText( self.Player:Ping() )
 	

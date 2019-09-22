@@ -1,5 +1,5 @@
 if SERVER then
-	AddCSLuaFile( "autorun/SA_Research.lua" )
+	AddCSLuaFile()
 end
 
 local Researches = {}
@@ -21,7 +21,7 @@ local function SA_VerifyResearchXQINT(res)
 	return true
 end
 
-function SA_AddResearch(name,group,displayname,ranks,variable,cost,costinc,desc,reqtype,prereq,position,classes,image)
+local function SA_AddResearch(name,group,displayname,ranks,variable,cost,costinc,desc,reqtype,prereq,position,classes,image)
 	local tbl = {}
 	image = image or "SA_Research_Icon"
 	tbl["display"] = displayname
@@ -54,7 +54,7 @@ function SA_AddResearch(name,group,displayname,ranks,variable,cost,costinc,desc,
 end
 
 
-/*
+--[[
 SA_AddResearch(	Research Name,
 			Research Group,
 			Display Name,
@@ -66,7 +66,7 @@ SA_AddResearch(	Research Name,
 			Pre-Requisite,
 			Position on List,
 			Class types to update with new values)
-*/
+]]
 
 SA_AddResearch(	"mining_yield","Asteroid Mining","Augmented Mining Lasers I",300,"miningyield",10000,25,"Each rank increases the amount of ore mined by the MkI laser by 6.25 a second.","none",{},1,{"sa_mining_laser"})
 SA_AddResearch(	"mining_yield_ii","Asteroid Mining","Augmented Mining Lasers II",300,"miningyield_ii",800000,0.625,"Each rank increases the amount of ore mined by the MkII laser by 12.5 a second.","unlock",{{"miningyield",300},{"miningtheory",1}},2,{"sa_mining_laser_ii"})

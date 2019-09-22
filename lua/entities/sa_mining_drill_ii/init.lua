@@ -92,7 +92,7 @@ function ENT:Think()
 	if ( self.Active == 1 ) then
 			if ( RD.GetResourceAmount(self, "energy") >= self.consume ) then
 				RD.ConsumeResource(self, "energy", self.consume)
-				local myOwner = SAPPShim.GetOwner(self)
+				local myOwner = SA.PP.GetOwner(self)
 				if self.TouchEnt and self.TouchEnt.IsCrystal and myOwner and myOwner:IsValid() and myOwner:GetPos():Distance(self:GetPos()) <= 300 and myOwner:InVehicle() then
 					local skin = self.TouchEnt:GetSkin()
 					if skin == 2 then
