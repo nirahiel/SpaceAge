@@ -44,7 +44,7 @@ end
 ---------------------------------------------------------*/
 function PANEL:SetInfo( column, k, v )
 
-	if ( !v || v == "" ) then v = "N/A" end
+	if ( !v or v == "" ) then v = "N/A" end
 
 	if ( !self.InfoLabels[ column ][ k ] ) then
 	
@@ -175,7 +175,7 @@ end
 ---------------------------------------------------------*/
 function PANEL:Think()
 
-	if ( self.PlayerUpdate && self.PlayerUpdate > CurTime() ) then return end
+	if ( self.PlayerUpdate and self.PlayerUpdate > CurTime() ) then return end
 	self.PlayerUpdate = CurTime() + 0.25
 	
 	self:UpdatePlayerData()
@@ -213,8 +213,8 @@ function PANEL:PerformLayout()
 	
 	end
 	
-	if ( !self.Player ||
-		 self.Player == LocalPlayer() ||
+	if ( !self.Player or
+		 self.Player == LocalPlayer() or
 		 !LocalPlayer():IsAdmin() ) then 
 	
 		self.btnKick:SetVisible( false )

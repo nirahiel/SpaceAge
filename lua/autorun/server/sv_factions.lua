@@ -217,7 +217,7 @@ local function DoApplyFactionResRes(data, isok, merror, ply, ffid, pltimexx)
 		net.WriteString(pltimexx)
 		net.WriteInt(ply.TotalCredits)
 	net.Send(toPlayers)
-	ply:SendLua("CloseApply()")
+	ply:SendLua("SA.Application.Close()")
 end
 
 local function DoApplyFactionRes(data, isok, merror, ply, steamid, plname, ffid, satx, cscore, pltimex, pltimexx)
@@ -264,7 +264,7 @@ net.Receive("sa_doapplyfaction",SA_DoApplyFaction)
 --FA.RegisterDataStream("sa_doapplyfaction",0)
 
 local function DoAcceptPlayerResRes(data, isok, merror, ply)
-	ply:SendLua("CloseApply()")
+	ply:SendLua("SA.Application.Close()")
 end
 
 local function DoAcceptPlayerRes(data, isok, merror, ply, app, appf, args)
@@ -291,12 +291,12 @@ local function DoAcceptPlayer(data, isok, merror, ply, args)
 	if (!data[1]) then return end
 	local app = data[1]
 	local appf = tonumber(app['faction'])
-	if (appf != ply.TeamIndex) then return end
+	if (appf ~= ply.TeamIndex) then return end
 	MySQL:Query("DELETE FROM applications WHERE steamid = '"..MySQL:Escape(args[1]).."'", DoAcceptPlayerRes, ply, app, appf, args)
 end
 
 local function SA_DoAcceptPlayer(ply,cmd,args)
-	if (#args != 1) then return end
+	if (#args ~= 1) then return end
 	if(!ply.IsLeader) then return end
 	MySQL:Query("SELECT steamid, faction FROM applications WHERE steamid = '"..MySQL:Escape(args[1]).."'", DoAcceptPlayer, ply, args)
 end
@@ -311,19 +311,19 @@ local function DoDenyPlayerResRes(data, isok, merror, ply, app)
 			umsg.End()
 		end
 	end
-	ply:SendLua("CloseApply()")
+	ply:SendLua("SA.Application.Close()")
 end
 
 local function DoDenyPlayerRes(data, isok, merror, ply, args)
 	if (!isok) then return end
 	if (!data[1]) then return end
 	app = data[1]
-	if (tonumber(app['faction']) != ply.TeamIndex) then return end
+	if (tonumber(app['faction']) ~= ply.TeamIndex) then return end
 	MySQL:Query("DELETE FROM applications WHERE steamid = '"..MySQL:Escape(args[1]).."'", DoDenyPlayerResRes, ply, app)
 end
 
 local function SA_DoDenyPlayer(ply,cmd,args)
-	if (#args != 1) then return end
+	if (#args ~= 1) then return end
 	if(!ply.IsLeader) then return end
 	MySQL:Query("SELECT steamid, faction FROM applications WHERE steamid = '"..MySQL:Escape(args[1]).."'", DoDenyPlayerRes, ply, args)
 end
@@ -343,7 +343,7 @@ function SA_GiveCredits(ply,v,amt)
 	local amt = tonumber(amt)
 	if not amt then ply:AddHint("Invalid command parameters.", NOTIFY_CLEANUP, 5) return false end
 	local cred = tonumber(ply.Credits)
-	if (amt <= 0) or (math.ceil(amt) != math.floor(amt)) then ply:AddHint("That is not a valid number.", NOTIFY_CLEANUP, 5) return false end
+	if (amt <= 0) or (math.ceil(amt) ~= math.floor(amt)) then ply:AddHint("That is not a valid number.", NOTIFY_CLEANUP, 5) return false end
 	if (amt > cred) then ply:AddHint("You do not have enough credits.", NOTIFY_CLEANUP, 5) return false end
 	
 	v.Credits = v.Credits + amt
@@ -371,7 +371,7 @@ function SA_ConfirmGiveCredits(ply,v,amt,func)
 end
 
 local function SA_GiveRequestHandler(ply,cmd,args)
-	if #args != 2 then return end
+	if #args ~= 2 then return end
 	local allowed = (args[1] == "allow")
 	local theID = args[2]
 	local theRequest = SA_giveRequests[theID]

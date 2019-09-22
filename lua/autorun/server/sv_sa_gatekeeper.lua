@@ -33,7 +33,7 @@ end
 local function RefreshCache()
 	local sa_faction_only = GetConVar("sa_faction_only")
 	if not sa_faction_only:GetBool() then return end
-	local isok, err = MySQL:Query("SELECT steamid FROM players WHERE groupname != 'freelancer' AND score >= 100000000", RefreshCacheDone)
+	local isok, err = MySQL:Query("SELECT steamid FROM players WHERE groupname ~= 'freelancer' AND score >= 100000000", RefreshCacheDone)
 	if not isok then
 		Msg("Error loading gatekeeper cache: "..tostring(err).."\n")
 		return

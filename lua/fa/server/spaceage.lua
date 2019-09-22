@@ -89,7 +89,7 @@ SA_RegisterChatCommand("apply",SA_ApplyFaction)
 local function SA_ChatGiveCredits(ply,txt)
 	local texty = string.sub(txt,7)
 	local splode = string.Explode(" ",texty)
-	if #splode != 2 then ply:ChatPrint("The correct format is [give <name> <amount>") return end
+	if #splode ~= 2 then ply:ChatPrint("The correct format is [give <name> <amount>") return end
 	SA_GiveCreditsByName(ply,splode[1],splode[2])
 end
 SA_RegisterChatCommand("give",SA_ChatGiveCredits)
@@ -103,7 +103,7 @@ local function SA_ChatTypeSACommand(ply,txt)
 		cmd = string.sub(txt,1,spacepos-1)
 	end
 	local cFunc = SA_ChatCommands[cmd]
-	if type(cFunc) != "function" then return end
+	if type(cFunc) ~= "function" then return end
 	cFunc(ply,"["..txt)
 	return ""
 end

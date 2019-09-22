@@ -34,7 +34,7 @@ function ENT:CalcVars(ply)
 end
 
 function ENT:Think()
-	if WireAddon != nil then 
+	if WireAddon ~= nil then 
 		self:UpdateWireOutput()
 	end	
 	self:NextThink(CurTime() + 1)

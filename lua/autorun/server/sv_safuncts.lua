@@ -601,7 +601,7 @@ function DestroyConstraints( Ent1, Ent2, Bone1, Bone2, cType )
 	
 	if ( Phys1 == Phys2 ) then return false end
 	
-	if ( !Ent1:GetTable().Constraints && !Ent2:GetTable().Constraints ) then return end
+	if ( !Ent1:GetTable().Constraints and !Ent2:GetTable().Constraints ) then return end
 	if ( !Ent1:GetTable().Constraints ) then -- If our Ent1 is the world, we can't get a constraint table, so switch the entities and look through them that way
 		local thirdEnt
 		thirdEnt = Ent1
@@ -618,7 +618,7 @@ function DestroyConstraints( Ent1, Ent2, Bone1, Bone2, cType )
 	
 			local CTab = v:GetTable() -- Variableizes all of the attributes of the individual constraint
  
-			if ( CTab.Type == cType && CTab.Ent1 == Ent1 && CTab.Ent2 == Ent2 && CTab.Bone1 == Bone1 && CTab.Bone2 == Bone2 ) ||  ( CTab.Type == cType && CTab.Ent1 == Ent2 && CTab.Ent2 == Ent1 && CTab.Bone1 == Bone2 && CTab.Bone2 == Bone1 ) then
+			if ( CTab.Type == cType and CTab.Ent1 == Ent1 and CTab.Ent2 == Ent2 and CTab.Bone1 == Bone1 and CTab.Bone2 == Bone2 ) or  ( CTab.Type == cType and CTab.Ent1 == Ent2 and CTab.Ent2 == Ent1 and CTab.Bone1 == Bone2 and CTab.Bone2 == Bone1 ) then
 
 				foundConstraint = v -- We've found the constraint we want to destroy
 				

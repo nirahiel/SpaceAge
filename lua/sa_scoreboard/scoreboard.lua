@@ -140,7 +140,7 @@ end
 
 function PANEL:UpdateScoreboard( force )
 
-	if ( !force && !self:IsVisible() ) then return end
+	if ( !force and !self:IsVisible() ) then return end
 
 	for k, v in pairs( self.PlayerRows ) do
 	

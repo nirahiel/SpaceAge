@@ -68,12 +68,12 @@ end
 
 function PANEL:OnMousePressed(mcode)
 	if SA_TermDraggedElement then return end
-	if mcode != MOUSE_LEFT and mcode != MOUSE_RIGHT then return end
+	if mcode ~= MOUSE_LEFT and mcode ~= MOUSE_RIGHT then return end
 	
 	local t = self:GetParent()
 	local x,y = self:GetPos()
 	local xt,yt
-	while t != SA_Term_GUI do
+	while t ~= SA_Term_GUI do
 		xt,yt = t:GetPos()
 		x = x + xt
 		y = y + yt
@@ -94,7 +94,7 @@ function PANEL:OnMousePressed(mcode)
 		self:SetPos(px,py)
 	end
 	function item:OnMouseReleased(mcode)
-		if mcode != self.MCode then self:QuitThis() return end
+		if mcode ~= self.MCode then self:QuitThis() return end
 		local cx, cy = self:CursorPos()
 		local x,y = self:GetPos()
 		cx = cx + x

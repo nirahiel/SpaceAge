@@ -28,7 +28,7 @@ function PANEL:Paint()
 		color = Color( 200, 120, 50, 255 )
 		end
 		
-		if ( self.Open || self.Size != self.TargetSize ) then
+		if ( self.Open or self.Size ~= self.TargetSize ) then
 	
 		draw.RoundedBox( 4, 0, 16, self:GetWide(), self:GetTall() - 16, color )
 		draw.RoundedBox( 4, 2, 16, self:GetWide()-4, self:GetTall() - 16 - 2, Color( color.r, color.g, color.b, 255 ) )
@@ -188,7 +188,7 @@ end
 ---------------------------------------------------------*/
 function PANEL:Think()
 
-	if ( self.Size != self.TargetSize ) then
+	if ( self.Size ~= self.TargetSize ) then
 	
 		self.Size = math.Approach( self.Size, self.TargetSize, (math.abs( self.Size - self.TargetSize ) + 1) * 10 * FrameTime() )
 		self:PerformLayout()
@@ -197,7 +197,7 @@ function PANEL:Think()
 	
 	end
 	
-	if ( !self.PlayerUpdate || self.PlayerUpdate < CurTime() ) then
+	if ( !self.PlayerUpdate or self.PlayerUpdate < CurTime() ) then
 	
 		self.PlayerUpdate = CurTime() + 0.5
 		self:UpdatePlayerData()
@@ -222,7 +222,7 @@ function PANEL:PerformLayout()
 	--self.lblTC:SetPos( self:GetWide() - COLUMN_SIZE * 2, 0 )
 	self.lblScore:SizeToContents()
 	self.lblScore:SetPos( self:GetWide() - COLUMN_SIZE * 4, 2 )
-	if ( self.Open || self.Size != self.TargetSize ) then
+	if ( self.Open or self.Size ~= self.TargetSize ) then
 	
 		self.infoCard:SetVisible( true )
 		self.infoCard:SetPos( 4, self.lblName:GetTall() + 10 )

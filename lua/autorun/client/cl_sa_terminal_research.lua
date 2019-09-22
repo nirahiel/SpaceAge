@@ -62,7 +62,7 @@ function PANEL:SetDesc()
 	local Desc = self.ResearchTbl["desc"]
 	local reqtype = self.ResearchTbl["type"]
 	local prereq = self.ResearchTbl["prereq"]
-	if reqtype != "none" then
+	if reqtype ~= "none" then
 		local DescAdd = "\nRequires: "
 		if reqtype == "unlock" then
 			for k,v in pairs(prereq) do
@@ -77,7 +77,7 @@ function PANEL:SetDesc()
 					if self.ResearchTbl["variable"] == v[1] then
 						name = n["display"]
 					end
-					if name != "" then
+					if name ~= "" then
 						DescAdd = DescAdd.." ("..name..": "..v[2]..")"
 					end
 				end
@@ -103,18 +103,18 @@ function PANEL:SetDesc()
 							if self.ResearchTbl["variable"] == v[1] then
 								name = n["display"]
 							end
-							if name != "" then
+							if name ~= "" then
 								DescAdd = DescAdd.." ("..name..": "..v[2]..")"
 							end
 						end
 					end
 				end
-				if name != "" then
+				if name ~= "" then
 					DescAdd = DescAdd.." ("..name..": "..level..")"
 				end	
 			end
 		end
-		if (DescAdd != "\nRequires: ") then
+		if (DescAdd ~= "\nRequires: ") then
 			Desc = Desc..DescAdd
 		end
 	end

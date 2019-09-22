@@ -436,7 +436,7 @@ local function SA_RefineOre(ply,cmd,args)
 	if not ply.AtTerminal then return end
 	if ply.IsAFK then return end
 	local CHECK = tonumber(args[1])
-	if CHECK != HASH then return end
+	if CHECK ~= HASH then return end
 	local uid = ply:UniqueID()
 	local ShipOre, netid = SA_GetResource(ply,"ore")
 	local TempOre = TempStorage[uid]["ore"] or 0
@@ -464,7 +464,7 @@ local function SA_MarketSell(ply,cmd,args)
 	if ply.IsAFK then return end
 	if #args < 2 then return end
 	local CHECK = tonumber(args[3])
-	if CHECK != HASH then return end
+	if CHECK ~= HASH then return end
 	local uid = ply:UniqueID()
 	local num = tonumber(args[2])
 	if not (num > 0) then return end
@@ -507,7 +507,7 @@ local function SA_MarketBuy(ply,cmd,args)
 	if ply.IsAFK then return end
 	if #args < 2 then return end
 	local CHECK = tonumber(args[3])
-	if CHECK != HASH then return end
+	if CHECK ~= HASH then return end
 	local uid = ply:UniqueID()
 	local num = tonumber(args[2])
 	if not (num > 0) then return end
@@ -558,7 +558,7 @@ local function SA_MoveResource(ply,cmd,args,notagain)
 	local res = args[3]
 	local num = tonumber(args[4])
 	local CHECK = tonumber(args[5])
-	if CHECK != HASH then return end
+	if CHECK ~= HASH then return end
 	if not (num > 0) then return end
 	local maxamt = 0
 	if (from == "temp") then
@@ -613,7 +613,7 @@ local function SA_BuyPermStorage(ply,cmd,args)
 	if not ply.AtTerminal then return end
 	if ply.IsAFK then return end
 	local CHECK = tonumber(args[2])
-	if CHECK != HASH then return end
+	if CHECK ~= HASH then return end
 	local credits = tonumber(ply.Credits)
 	local maxcap = ply.MaxCap
 	local amt = tonumber(args[1])
@@ -636,7 +636,7 @@ local function SA_Research(ply, cmd, args)
 	local ResearchGroups = SA_GetResearchGroups()
 	local res = args[1]
 	local CHECK = tonumber(args[2])
-	if CHECK != HASH then return end
+	if CHECK ~= HASH then return end
 	local Research = nil
 	for _,RGroup in pairs(ResearchGroups) do
 		for k,v in pairs(Researches[RGroup]) do
@@ -654,7 +654,7 @@ local function SA_Research(ply, cmd, args)
 	local var = Research["variable"]
 	local cur = ply[var]
 	local cap = Research["ranks"]
-	if (cap != 0) then
+	if (cap ~= 0) then
 		if (cap == cur) then return end
 	end
 	if (Research["faction"] and #Research["faction"] > 0) then
@@ -662,7 +662,7 @@ local function SA_Research(ply, cmd, args)
 			return
 		end
 	end
-	if (Research["type"] != "none") then
+	if (Research["type"] ~= "none") then
 		local prereq = Research["prereq"]
 		local reqtype = Research["type"]
 		if reqtype == "unlock" then
@@ -750,7 +750,7 @@ local function SA_ResetMe(ply, cmd, args)
 	if not ply.AtTerminal then return end
 	if ply.IsAFK then return end
 	local CHECK = tonumber(args[1])
-	if CHECK != HASH then return end
+	if CHECK ~= HASH then return end
 	
 	if ply.devlimit >= 5 then return end
 	
@@ -824,7 +824,7 @@ local function CheckCanDevice(ply,tr,mode)
 				return false
 			end
 		elseif sel == "sa_mining_laser_vi" then
-			if ply.UserGroup != "miners" and ply.UserGroup != "alliance" then
+			if ply.UserGroup ~= "miners" and ply.UserGroup ~= "alliance" then
 				ply:AddHint("You must be in Major Miners or The Alliance to use this!", NOTIFY_CLEANUP, 5)
 				return false			
 			elseif lvl < 5 then
@@ -858,7 +858,7 @@ local function CheckCanDevice(ply,tr,mode)
 		end
 		local lvl = ply.tibdrillmod
 		if sel == "sa_mining_drill_ii" then
-			if ply.UserGroup != "legion" and ply.UserGroup != "alliance" then
+			if ply.UserGroup ~= "legion" and ply.UserGroup ~= "alliance" then
 				ply:AddHint("You must be in The Legion or The Alliance to use this!", NOTIFY_CLEANUP, 5)
 				return false			
 			elseif lvl < 1 then
@@ -886,7 +886,7 @@ local function CheckCanDevice(ply,tr,mode)
 				return false
 			end
 		elseif sel == "ore_storage_v" then
-			if ply.UserGroup != "starfleet" and ply.UserGroup != "miners" and ply.UserGroup != "alliance" then
+			if ply.UserGroup ~= "starfleet" and ply.UserGroup ~= "miners" and ply.UserGroup ~= "alliance" then
 				ply:AddHint("You must be in Star Fleet or Major Miners or The Alliance to use this!", NOTIFY_CLEANUP, 5)
 				return false
 			elseif lvl < 4 then
@@ -913,7 +913,7 @@ local function CheckCanDevice(ply,tr,mode)
 		local lvl = ply.tibstoragemod
 		if (sel == "tiberium_storage_ii" or sel == "tiberium_storage") and (ValidEntity(tr.Entity) and tr.Entity:GetClass() == "tiberium_storage_holder") then return false end
 		if sel == "tiberium_storage_ii" then
-			if ply.UserGroup != "legion" and ply.UserGroup != "alliance" then
+			if ply.UserGroup ~= "legion" and ply.UserGroup ~= "alliance" then
 				ply:AddHint("You must be in The Legion or The Alliance to use this!", NOTIFY_CLEANUP, 5)
 				return false			
 			elseif lvl < 1 then

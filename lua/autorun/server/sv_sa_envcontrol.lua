@@ -214,7 +214,7 @@ function SA_SaveAllPlanets()
 	end
 	for k,v in pairs(SA_MyPlanets) do
 		local envname = string.lower(v.sbenvironment.name)
-		if envname != "no name" then
+		if envname ~= "no name" then
 			file.Write(dirname..envname..".txt",util.TableToKeyValues(v.sbenvironment))
 		end
 	end

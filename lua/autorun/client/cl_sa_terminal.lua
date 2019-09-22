@@ -403,7 +403,7 @@ function CreateTerminalGUI()
 		ApplyText:SetSize(ApplicationTab:GetWide() - 40, 410)
 		ApplyText:SetUpdateOnType(true)
 		ApplyText.OnTextChanged = function()
-			SAppText = ApplyText:GetValue()
+			SA.Application.Text = ApplyText:GetValue()
 		end
 	else
 		ApplyText:SetPos(15, 110)
@@ -425,7 +425,7 @@ function CreateTerminalGUI()
 		SelFCombo:AddChoice("Star Fleet")
 		
 		SelFCombo.OnSelect = function(index,value,data)
-			SAppFact = data
+			SA.Application.Faction = data
 		end
 		
 		local ClearButton = vgui.Create( "DButton", ApplicationTab )
@@ -434,8 +434,8 @@ function CreateTerminalGUI()
 		ClearButton:SetSize(100,40)
 		
 		ClearButton.DoClick = function()
-			SAppText = "Hi"
-			SAppFact = "Major Miners"
+			SA.Application.Text = "Hi"
+			SA.Application.Faction = "Major Miners"
 			SA_RefreshApplications()
 		end
 		
@@ -444,7 +444,7 @@ function CreateTerminalGUI()
 		ApplyButton:SetPos((ApplicationTab:GetWide() / 2) - 105, ApplicationTab:GetTall() - 85)
 		ApplyButton:SetSize(100,40)
 
-		ApplyButton.DoClick = DoApply
+		ApplyButton.DoClick = SA.Application.Do
 		
 	else
 	
@@ -476,7 +476,7 @@ function CreateTerminalGUI()
 		AcceptButton:SetPos((ApplicationTab:GetWide() / 2) - 105, ApplicationTab:GetTall() - 85)
 		AcceptButton:SetSize(100,40)
 		AcceptButton.DoClick = function()
-			if CSelID != "" and AppTable[CSelID] then
+			if CSelID ~= "" and AppTable[CSelID] then
 				RunConsoleCommand("DoAcceptPlayer",CSelID)
 			end
 		end
@@ -485,7 +485,7 @@ function CreateTerminalGUI()
 		DenyButton:SetPos((ApplicationTab:GetWide() / 2) + 5, ApplicationTab:GetTall() - 85)
 		DenyButton:SetSize(100,40)
 		DenyButton.DoClick = function()
-			if CSelID != "" and AppTable[CSelID] then
+			if CSelID ~= "" and AppTable[CSelID] then
 				RunConsoleCommand("DoDenyPlayer",CSelID)
 			end
 		end
@@ -496,7 +496,7 @@ function CreateTerminalGUI()
 	
 	local DeveloperTab = nil
 	
-	if LocalPlayer():GetNWInt("ulevel") >= 3 then
+	if LocalPlayer():IsSuperAdmin() then
 		DeveloperTab = vgui.Create ( "DPanel" )
 		DeveloperTab:SetPos(5,25)
 		DeveloperTab:SetSize(790,625)
@@ -680,8 +680,8 @@ function SA_RefreshApplications()
 			SA_ScoreLBL:SetText("Score: NOTHING SELECTED")
 		end
 	else
-		SA_SelFCombo:ChooseOption(SAppFact)
-		SA_ApplyText:SetValue(SAppText)
+		SA_SelFCombo:ChooseOption(SA.Application.Faction)
+		SA_ApplyText:SetValue(SA.Application.Text)
 	end
 end
 
@@ -733,8 +733,6 @@ end
 local function sa_term_update1(msg)
 	term_info.orecount = AddCommasToInt(msg:ReadLong())
 	term_info.tempore = AddCommasToInt(msg:ReadLong())
-	--SA_Term_Refinery:GetLine(1):SetValue(2,term_info.orecount)
-	--SA_Term_Refinery:GetLine(2):SetValue(2,term_info.tempore)
 end
 usermessage.Hook("TerminalUpdate1", sa_term_update1) 
 
@@ -819,7 +817,7 @@ local function sa_term_update(ply, tbl)
 			for name,val in pairs(Researches[RGroup]) do
 				if name == resname then
 					local ranks = val["ranks"]
-					if (ranks == rank) and (ranks != 0) then
+					if (ranks == rank) and (ranks ~= 0) then
 						cost = "Max Rank"
 					else
 						local base = val["cost"]

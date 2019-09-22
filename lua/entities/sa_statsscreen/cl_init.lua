@@ -37,7 +37,7 @@ function ENT:Draw()
 	local Res = 0
 	local RatioX = 0
 	
-	if (WireGPU_Monitors[self:GetModel()]) && (WireGPU_Monitors[self:GetModel()].OF) then
+	if (WireGPU_Monitors[self:GetModel()]) and (WireGPU_Monitors[self:GetModel()].OF) then
 		OF = WireGPU_Monitors[self:GetModel()].OF
 		OU = WireGPU_Monitors[self:GetModel()].OU
 		OR = WireGPU_Monitors[self:GetModel()].OR

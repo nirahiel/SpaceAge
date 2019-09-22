@@ -49,7 +49,7 @@ local function CreateAsteroids(cnt,noamount)
 	if not noamount then
 		SA_Max_Roid_Count = roids["amount"]
 	end
-	if (cnt != 0) then
+	if (cnt ~= 0) then
 		Afield.num = cnt
 	end
 	for k=1,Afield.num,1 do

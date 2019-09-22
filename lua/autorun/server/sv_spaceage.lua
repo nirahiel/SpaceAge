@@ -11,7 +11,7 @@ end
 
 AddCSLuaFile("autorun/client/cl_sa_hud.lua")
 
-if(type(SA) != "table") then
+if(type(SA) ~= "table") then
 	SA = {}
 end
 
@@ -171,7 +171,7 @@ end
 
 local function LoadRes(data, isok, merror, ply, sid)
 	print("Loaded:", ply:Name(), data, isok, merror)
-	if (isok and sid != "STEAM_ID_PENDING") then
+	if (isok and sid ~= "STEAM_ID_PENDING") then
 		if (data[1]) then
 			local uid = ply:UniqueID()
 			ply.Credits = data[1]["credits"]
@@ -420,7 +420,7 @@ local function SaveDone() return end
 local function SA_SaveAllUsers()
 	if (GetConVarNumber("spaceage_autosave") == 1) then
 		timer.Adjust("SA_Autosave", GetConVarNumber("spaceage_autosave_time") * 60, 0, SA_SaveAllUsers)
-		MySQL:Query('UPDATE factions AS f SET f.score = (SELECT Round(Avg(p.score)) FROM players AS p WHERE p.groupname = f.name) WHERE f.name != "noload"', SaveDone)
+		MySQL:Query('UPDATE factions AS f SET f.score = (SELECT Round(Avg(p.score)) FROM players AS p WHERE p.groupname = f.name) WHERE f.name ~= "noload"', SaveDone)
 		for k,v in ipairs(player.GetHumans()) do
 			local p = v
 			timer.Simple(k, function() SA_SaveUser(p, "spaceage_autosaver") end)

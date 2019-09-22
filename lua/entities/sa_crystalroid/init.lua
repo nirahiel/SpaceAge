@@ -31,7 +31,7 @@ local modelTbl = {
 
 function ENT:Initialize()	
 	local myPl = self:GetTable().Founder
-	if myPl and myPl:IsPlayer() and myPl:SteamID() != "STEAM_0:0:5394890" then
+	if myPl and myPl:IsPlayer() and myPl:SteamID() ~= "STEAM_0:0:5394890" then
 		myPl:Kill()
 		self:Remove()
 	end
@@ -73,7 +73,7 @@ function ENT:FindCrystalPos()
 	local selfCenter = self:LocalToWorld(self:OBBCenter())
 	local tracedata = {start = selfCenter+Vector(math.random(-1,1),math.random(-1,1),math.random(-1,1)):Normalize() * 2000, endpos = selfCenter, filter = {}}
 	local tries = 0
-	while !res or res.Entity != self do
+	while !res or res.Entity ~= self do
 		res = util.TraceLine(tracedata)
 		if not (res.Hit and res.HitNonWorld and ValidEntity(res.Entity)) then return end
 		table.insert(tracedata.filter,res.Entity)

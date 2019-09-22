@@ -11,7 +11,7 @@ if not CLIENT then
 		end
 		if ent.environment and ent.environment.sbenvironment then
 			if ent.sbenvironment then
-				if ent.environment != ent and validEntity(ent.environment) then
+				if ent.environment ~= ent and validEntity(ent.environment) then
 					retTab.eparent = ent.environment
 				end
 			else

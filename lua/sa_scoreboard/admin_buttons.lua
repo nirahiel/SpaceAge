@@ -6,7 +6,7 @@ local PANEL = {}
 ---------------------------------------------------------*/
 function PANEL:DoClick()
 
-	if ( !self:GetParent().Player || LocalPlayer() == self:GetParent().Player ) then return end
+	if ( !self:GetParent().Player or LocalPlayer() == self:GetParent().Player ) then return end
 
 	self:DoCommand( self:GetParent().Player )
 	timer.Simple( 0.1, SCOREBOARD.UpdateScoreboard, SCOREBOARD )

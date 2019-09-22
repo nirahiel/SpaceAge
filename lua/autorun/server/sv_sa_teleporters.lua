@@ -63,7 +63,7 @@ concommand.Add("sateleporterupdate",function(ply,cmd,args)
 	umsg.Start("SA_TeleUpdate",ply)
 		umsg.Short(#SA_TeleportNames - 1)
 		for k,v in pairs(SA_TeleportNames) do
-			if v != ply.AtTeleporter then
+			if v ~= ply.AtTeleporter then
 				umsg.String(v)
 			end
 		end
@@ -103,7 +103,7 @@ function OpenTeleporter(ply,TeleKey)
 		umsg.String(TeleKey)
 	umsg.End()
 	hook.Add("KeyPress","SA_TeleAbortMove_"..ply:EntIndex(),function(ply,key)
-		if key != IN_USE and ply and ply.IsValid and ply:IsValid() then
+		if key ~= IN_USE and ply and ply.IsValid and ply:IsValid() then
 			AbortTeleport(ply)
 			hook.Remove("KeyPress","SA_TeleAbortMove_"..ply:EntIndex())
 		end

@@ -7,7 +7,7 @@ function ENT:Initialize()
 	self.BaseClass.Initialize(self)
 	self.damaged = 0
 	self.vent = false
-	if WireAddon != nil then
+	if WireAddon ~= nil then
 		self.WireDebugName = self.PrintName
 		self.Inputs = { }
 		self.Outputs = Wire_CreateOutputs(self, { "Permafrost", "TerraCrystal", "Dark Matter", "Max Permafrost", "Max TerraCrystal", "Max Dark Matter" })
@@ -37,7 +37,7 @@ end
 function ENT:Think()
 	self.BaseClass.Think(self)
 	
-	if WireAddon != nil then 
+	if WireAddon ~= nil then 
 		self:UpdateWireOutput()
 	end
 	self:NextThink(CurTime() + 1)

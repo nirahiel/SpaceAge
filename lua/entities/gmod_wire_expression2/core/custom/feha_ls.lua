@@ -93,7 +93,7 @@
           //Prop-Protection
           if (!isOwner(self, ent1)) then return "Not owner" end      //check ownership
           
-          if (ent2 != "null") then
+          if (ent2 ~= "null") then
              if (!validEntity(ent2)) then return "Invalid entity" end
              if (!isOwner(self, ent2)) then return "Not owner" end         //check ownership
           else
@@ -178,8 +178,8 @@
           if (!validEntity(ent1)) then return "Invalid entity"   end
           if (!validEntity(ent2)) then return "Invalid entity"   end
           //Prop-Protection
-          if (ent1 != GetWorldEntity() and !isOwner(self, ent1)) then return "Not owner" end         //check ownership
-          if (ent2 != GetWorldEntity() and !isOwner(self, ent2)) then return "Not owner" end         //check ownership
+          if (ent1 ~= GetWorldEntity() and !isOwner(self, ent1)) then return "Not owner" end         //check ownership
+          if (ent2 ~= GetWorldEntity() and !isOwner(self, ent2)) then return "Not owner" end         //check ownership
           */
           
           if (!ent1 or !ent1.IsPump) then return

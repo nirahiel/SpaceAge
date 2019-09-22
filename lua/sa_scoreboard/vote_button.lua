@@ -20,7 +20,7 @@ end
 function PANEL:DoClick()
 
 	local ply = self:GetParent().Player
-	if ( !ply || !ply:IsValid() || ply == LocalPlayer() ) then return end
+	if ( !ply or !ply:IsValid() or ply == LocalPlayer() ) then return end
 	
 	LocalPlayer():ConCommand( "rateuser ".. ply:EntIndex().. " "..self.VoteName.."\n" )
 
@@ -42,7 +42,7 @@ end
 ---------------------------------------------------------*/
 function PANEL:PerformLayout()	
 
-	if ( self:GetParent().Player && self:GetParent().Player:IsValid() ) then
+	if ( self:GetParent().Player and self:GetParent().Player:IsValid() ) then
 		self.Label:SetText( self:GetParent().Player:GetNetworkedInt( "Rating."..self.VoteName, 0 ) )
 	end
 	

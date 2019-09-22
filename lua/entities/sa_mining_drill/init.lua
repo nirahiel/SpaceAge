@@ -63,7 +63,7 @@ end
 function ENT:TurnOff()
 	if (self.Active == 1) then
 		self.Active = 0
-		if WireAddon != nil then 
+		if WireAddon ~= nil then 
 			Wire_TriggerOutput(self, "On", 0)
 		end
 		self:SetOOO(0)

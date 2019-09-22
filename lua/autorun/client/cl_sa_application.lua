@@ -1,25 +1,20 @@
-AppPanel = null
-AppFaction = ""
+local AppPanel = nil
 
-AppTable = {}
---AppTKeys = {}
+SA.Application = {}
+SA.Application.Table = {}
+SA.Application.Text = "Hi"
+SA.Application.Faction = "Major Miners"
 
---CreateClientConVar("sage_appfaction","Major Miners",false,true)
---CreateClientConVar("sage_apptext","Hi",false,true)
+local CSelID = ""
 
-SAppText = "Hi"
-SAppFact = "Major Miners"
-
-CSelID = ""
-
-function SA_DoSetAppData(len, ply)
-	SAppFact = net.ReadString()
-	SAppText = net.ReadString()
+local function SA_DoSetAppData(len, ply)
+	SA.Application.Faction = net.ReadString()
+	SA.Application.Text = net.ReadString()
 	if SA_AppBasePanel then SA_RefreshApplications() end
 end
 net.Receive("sa_dosetappdata",SA_DoSetAppData)
 
-function SA_DoAddApp(len, ply)
+local function SA_DoAddApp(len, ply)
 	local steamid = net.ReadString()
 	local name = net.ReadString()
 	local text = net.ReadString()
@@ -31,11 +26,17 @@ function SA_DoAddApp(len, ply)
 end
 net.Receive("sa_doaddapp",SA_DoAddApp)
 
-function SA_DoDelApp( um ) 
+local function SA_DoDelApp( um ) 
 	AppTable[um:ReadString()] = nil
 	if SA_AppBasePanel then SA_RefreshApplications() end
 end
 usermessage.Hook("sa_dodelapp",SA_DoDelApp)
+
+local function SApp_ExtractSteamID(optiontext)
+	local temp = string.Explode("|",optiontext)
+	if #temp < 1 then return "" end
+	return string.Trim(temp[#temp])
+end
 
 local function CreateAppGUI(BasePanel)
 	local ScrX = surface.ScreenWidth()
@@ -54,7 +55,7 @@ local function CreateAppGUI(BasePanel)
 		CloseButton:SetText("X")
 		CloseButton:SetPos(BasePanel:GetWide() - 25, 1)
 		CloseButton:SetSize(20,20)
-		CloseButton.DoClick = CloseApply
+		CloseButton.DoClick = SA.Application.Close
 		
 		local BPanel = vgui.Create ("DPanel", BasePanel)
 		BPanel:SetPos(0, 25)
@@ -65,7 +66,7 @@ local function CreateAppGUI(BasePanel)
 	local ApplyText = vgui.Create( "DTextEntry", BasePanel )
 	
 	if (!plisleader) then
-		ApplyText:SetValue(SAppText)
+		ApplyText:SetValue(SA.Application.Text)
 	end
 
 	ApplyText:SetMultiline(true)
@@ -77,7 +78,7 @@ local function CreateAppGUI(BasePanel)
 		ApplyText:SetSize(BasePanel:GetWide() - 40, 380)
 		ApplyText:SetUpdateOnType(true)
 		ApplyText.OnTextChanged = function()
-			SAppText = ApplyText:GetValue()
+			SA.Application.Text = ApplyText:GetValue()
 		end
 	else
 		ApplyText:SetPos(20, 80)
@@ -94,9 +95,9 @@ local function CreateAppGUI(BasePanel)
 		SelFCombo:AddChoice("The Guild")
 		SelFCombo:AddChoice("The Corporation")
 		SelFCombo:AddChoice("Star Fleet")
-		SelFCombo:ChooseOption(SAppFact)
+		SelFCombo:ChooseOption(SA.Application.Faction)
 		SelFCombo.OnSelect = function(index,value,data)
-			SAppFact = data
+			SA.Application.Faction = data
 		end
 	else
 		local PTimeLBL = vgui.Create("DLabel", BasePanel)
@@ -146,7 +147,7 @@ local function CreateAppGUI(BasePanel)
 		AcceptButton:SetPos((BasePanel:GetWide() / 2) - 105, BasePanel:GetTall() - 45)
 		AcceptButton:SetSize(100,40)
 		AcceptButton.DoClick = function()
-			if CSelID != "" and AppTable[CSelID] then
+			if CSelID ~= "" and AppTable[CSelID] then
 				RunConsoleCommand("DoAcceptPlayer",CSelID)
 			end
 		end
@@ -155,7 +156,7 @@ local function CreateAppGUI(BasePanel)
 		DenyButton:SetPos((BasePanel:GetWide() / 2) + 5, BasePanel:GetTall() - 45)
 		DenyButton:SetSize(100,40)
 		DenyButton.DoClick = function()
-			if CSelID != "" and AppTable[CSelID] then
+			if CSelID ~= "" and AppTable[CSelID] then
 				RunConsoleCommand("DoDenyPlayer",CSelID)
 			end
 		end
@@ -168,19 +169,13 @@ local function CreateAppGUI(BasePanel)
 	end
 end
 
-function SApp_ExtractSteamID(optiontext)
-	local temp = string.Explode("|",optiontext)
-	if(#temp < 1) then return "" end
-	return string.Trim(temp[#temp])
-end
-
-function StartApply()
+function SA.Application.Start()
 	CreateAppGUI()
 	AppPanel:SetVisible(true)
 	gui.EnableScreenClicker(true)
 end
 
-function CloseApply()
+function SA.Application.Close()
 	if AppPanel then
 		AppPanel:SetVisible(false)
 		AppPanel:Close()
@@ -188,9 +183,9 @@ function CloseApply()
 	end
 end
 
-function DoApply()
+function SA.Application.Do()
 	net.Start("sa_doapplyfaction")
-		net.WriteString(SAppText)
-		net.WriteString(SAppFact)
+		net.WriteString(SA.Application.Text)
+		net.WriteString(SA.Application.Faction)
 	net.SendToServer()
 end

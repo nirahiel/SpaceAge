@@ -15,7 +15,7 @@ function ENT:Initialize()
 	self.Active = 0
 	self.damage = 16
 	
-	if WireAddon != nil then 
+	if WireAddon ~= nil then 
 		self.WireDebugName = self.PrintName
 		self.Inputs = Wire_CreateInputs(self, { "On" })
 		self.Outputs = Wire_CreateOutputs(self, { "On", "Output" })	

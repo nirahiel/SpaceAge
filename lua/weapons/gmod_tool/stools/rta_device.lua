@@ -76,7 +76,7 @@ if (SERVER) then
 end
 
 function TOOL:UpdateGhostRTA( ent, player )
-	if ( !ent || !ent:IsValid() ) then return end
+	if ( !ent or !ent:IsValid() ) then return end
 
 	local tr 	= utilx.GetPlayerTrace( player, player:GetCursorAimVector() )
 	local trace 	= util.TraceLine( tr )
@@ -92,7 +92,7 @@ function TOOL:UpdateGhostRTA( ent, player )
 end
 
 function TOOL:Think()
-	if (!self.GhostEntity || !self.GhostEntity:IsValid()  ) then
+	if (!self.GhostEntity or !self.GhostEntity:IsValid()  ) then
 		self:MakeGhostEntity( "models/slyfo/rover_na_large.mdl" , Vector(0,0,0), Angle(0,0,0) )
 	end
 

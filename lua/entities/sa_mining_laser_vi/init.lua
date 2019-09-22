@@ -15,7 +15,7 @@ function ENT:Initialize()
 	self.Active = 0
 	self.damage = 32
 	
-	if WireAddon != nil then 
+	if WireAddon ~= nil then 
 	self.WireDebugName = self.PrintName
 	self.Inputs = Wire_CreateInputs(self, { "On" })
 	self.Outputs = Wire_CreateOutputs(self, { "On", "Output" })	
@@ -53,7 +53,7 @@ function ENT:TurnOn()
 			return
 		end
 		self.lasersound:Play()
-		if WireAddon != nil then Wire_TriggerOutput(self, "On", 1) end
+		if WireAddon ~= nil then Wire_TriggerOutput(self, "On", 1) end
 		self:SetOOO(1)
 		self:SetNetworkedBool("o",true)
 	end
@@ -63,7 +63,7 @@ function ENT:TurnOff()
 	if (self.Active == 1) then
 		self.Active = 0
 		self.lasersound:Stop()
-		if WireAddon != nil then 
+		if WireAddon ~= nil then 
 			Wire_TriggerOutput(self, "On", 0)
 		end
 		self:SetOOO(0)

@@ -20,7 +20,7 @@ end
 
 function ENT:TriggerInput(iname, value)
 	if (iname == "OpenTerminal") then
-		if value != 0 then
+		if value ~= 0 then
 			OpenTerminal(self,self.pl,self:GetTable().Founder)
 		end
 	end

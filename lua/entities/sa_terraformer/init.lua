@@ -13,7 +13,7 @@ function ENT:Initialize()
 	self.FinalSpazzed = false
 	self.State = 0
 	self.StateTicks = 0
-	if WireAddon != nil then
+	if WireAddon ~= nil then
 		self.WireDebugName = self.PrintName
 		self.Inputs = Wire_CreateInputs(self, { "On" })
 		self.Outputs = Wire_CreateOutputs(self, {"On", "Stability", "State" })
@@ -34,7 +34,7 @@ function ENT:ChangeStability(change)
 	if (self.Stability > 1000) then
 		self.Stability = 1000
 	end
-	if WireAddon != nil then Wire_TriggerOutput(self, "Stability", self.Stability) end
+	if WireAddon ~= nil then Wire_TriggerOutput(self, "Stability", self.Stability) end
 end
 
 function ENT:TriggerInput(iname, value)
@@ -71,7 +71,7 @@ function ENT:TurnOff()
 end
 
 function ENT:SetState(myState)
-	if (self.State != myState) then
+	if (self.State ~= myState) then
 		self.State = myState
 		self.StateTicks = 0
 		Wire_TriggerOutput(self, "State", self.State)
