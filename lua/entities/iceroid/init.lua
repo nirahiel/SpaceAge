@@ -36,7 +36,7 @@ function ENT:OnRemove()
 	smokepuff:Fire("kill","",10)
 		
 	if self.RespawnDelay > 0 then
-		timer.Simple(self.RespawnDelay, Spawn_Roid, self.MineralName, self.data)
+		timer.Simple(self.RespawnDelay, function() SA.Ice.SpawnRoid(self.MineralName, self.data) end)
 	end
 end
 

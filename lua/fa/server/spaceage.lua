@@ -90,7 +90,7 @@ local function SA_ChatGiveCredits(ply,txt)
 	local texty = string.sub(txt,7)
 	local splode = string.Explode(" ",texty)
 	if #splode ~= 2 then ply:ChatPrint("The correct format is [give <name> <amount>") return end
-	SA_GiveCreditsByName(ply,splode[1],splode[2])
+	SA.GiveCredits.ByName(ply,splode[1],splode[2])
 end
 SA_RegisterChatCommand("give",SA_ChatGiveCredits)
 

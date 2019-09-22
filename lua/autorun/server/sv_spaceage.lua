@@ -1,24 +1,8 @@
-local data, isok, merror
-
---require("glon")
-local function glon_encode(tbl)
-	return util.TableToJSON(tbl)
-end
-local function glon_decode(str)
-	return util.JSONToTable(str)
-end
-
-
 AddCSLuaFile("autorun/client/cl_sa_hud.lua")
-
-if(type(SA) ~= "table") then
-	SA = {}
-end
 
 local RD = nil
 
 timer.Simple(1,function() RD = CAF.GetAddon("Resource Distribution") end)
-
 
 WorldClasses = {}
 local function AddWorldClass(name)
@@ -216,10 +200,10 @@ local function LoadRes(data, isok, merror, ply, sid)
 			
 			local tbl = {}
 			if data[1]["stationres"] then
-				if not pcall(function() tbl = glon_decode(data[1]["stationres"]) end) then
+				if not pcall(function() tbl = util.JSONToTable(data[1]["stationres"]) end) then
 					pcall(function()
 						tbl = util.KeyValuesToTable(data[1]["stationres"])
-						MySQL:Query("UPDATE players SET stationres = '"..MySQL:Escape(glon_encode(tbl)).."' WHERE steamid = '"..sid.."'", function() end)
+						MySQL:Query("UPDATE players SET stationres = '"..MySQL:Escape(util.TableToJSON(tbl)).."' WHERE steamid = '"..sid.."'", function() end)
 					end)
 				end
 			end
@@ -371,7 +355,7 @@ end
 
 function SA_InitSpawn(ply)
 	local sid = ply:SteamID()
-	SA_giveRequests[sid] = nil
+	SA.GiveCredits.Remove(ply)
 	print("Loading:", ply:Name())
 	local isok = MySQL:Query("SELECT * FROM players WHERE steamid='"..MySQL:Escape(sid).."'", LoadRes, ply, sid)
 	if not isok then
@@ -399,7 +383,7 @@ function SA_SaveUser(ply, isautosave)
 		--local miningrange = ply.miningbeam
 		local oremod = ply.oremod
 		local fighterenergy = ply.fighterenergy 
-		local perm = MySQL:Escape(glon_encode(GetPermStorage(ply)))
+		local perm = MySQL:Escape(util.TableToJSON(GetPermStorage(ply)))
 		local name = MySQL:Escape(ply:Name())
 		
 		if ply.devlimit <= 0 then ply.devlimit = 1 end
@@ -415,17 +399,15 @@ function SA_SaveUser(ply, isautosave)
 end
 hook.Add("PlayerDisconnected", "SA_Save_Disconnect", SA_SaveUser)
 
-local function SaveDone() return end
-
 local function SA_SaveAllUsers()
 	if (GetConVarNumber("spaceage_autosave") == 1) then
 		timer.Adjust("SA_Autosave", GetConVarNumber("spaceage_autosave_time") * 60, 0, SA_SaveAllUsers)
-		MySQL:Query('UPDATE factions AS f SET f.score = (SELECT Round(Avg(p.score)) FROM players AS p WHERE p.groupname = f.name) WHERE f.name ~= "noload"', SaveDone)
+		MySQL:Query('UPDATE factions AS f SET f.score = (SELECT Round(Avg(p.score)) FROM players AS p WHERE p.groupname = f.name) WHERE f.name ~= "noload"')
 		for k,v in ipairs(player.GetHumans()) do
 			local p = v
 			timer.Simple(k, function() SA_SaveUser(p, "spaceage_autosaver") end)
 		end
-		SA_SaveAllPlanets()
+		SA.Planets.Save()
 	end
 end
 timer.Create("SA_Autosave", 60, 0, SA_SaveAllUsers)

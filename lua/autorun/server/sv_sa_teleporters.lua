@@ -1,5 +1,7 @@
 AddCSLuaFile("autorun/client/cl_sa_teleporters.lua")
 
+SA.Teleporter = {}
+
 local SA_TeleportLocs = {}
 local SA_TeleporterLocs = {}
 local SA_TeleportNames = {}
@@ -10,7 +12,7 @@ local function AddSATeleporter(name,TeleportLocs,TeleporterLocs)
 	table.insert(SA_TeleportNames,name)
 end
 
-function InitSATeleporters()
+local function InitSATeleporters()
 	for k,v in pairs(ents.FindByClass("teleport_panel")) do v:Remove() end
 	local mapname = string.lower(game:GetMap())
 	if mapname == "sb_gooniverse" then
@@ -56,7 +58,6 @@ function InitSATeleporters()
 end
 timer.Simple(2,InitSATeleporters)
 
-
 concommand.Add("sateleporterupdate",function(ply,cmd,args)
 	if not (ply and ply.IsValid and ply:IsValid() and ply.AtTeleporter) then return end
 	if ply.LastTeleKey == ply.AtTeleporter then return end
@@ -93,9 +94,7 @@ concommand.Add("sadoteleport",function(ply,cmd,args)
 	ply:SetPos(table.Random(TeleTBL))
 end)
 
-
-
-function OpenTeleporter(ply,TeleKey)
+function SA.Teleporter.Open(ply,TeleKey)
 	if not (ply and ply.IsValid and ply:IsValid()) then return end
 	if ply.AtTeleporter then return end
 	ply.AtTeleporter = TeleKey

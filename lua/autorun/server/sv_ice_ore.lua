@@ -1,4 +1,8 @@
-function AM_GetRefined(ore, efficiency)
+if not SA.Ice then
+	SA.Ice = {}
+end
+
+function SA.Ice.GetRefined(ore, efficiency)
 	if not efficiency then
 		efficiency = 0.5
 	end

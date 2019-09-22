@@ -156,7 +156,6 @@ function FindWorldFloor(fromPos,traceIgno,mayNotHit) --traceIgno AND mayNotHit A
 	end
 end
 
-
 concommand.Add("RespawnCrystals",function(ply)
 	if ply:GetLevel() < 3 then return end
 	local tempMax = SA_MaxCrystalCount
@@ -592,7 +591,6 @@ end
 
 
 function DestroyConstraints( Ent1, Ent2, Bone1, Bone2, cType )
-	
 	if ( !constraint.CanConstrain( Ent1, Bone1 ) ) then return false end
 	if ( !constraint.CanConstrain( Ent2, Bone2 ) ) then return false end
 

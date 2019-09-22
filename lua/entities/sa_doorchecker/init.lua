@@ -154,8 +154,8 @@ function ENT:RefreshAtmo()
 	local env = self.environment
 	if !env then return end
 	if (self.isopen ~= 0) then
-		MakePlanetSpace(env)
+		SA.Planets.MakeSpace(env)
 	elseif (self.fullyclosed ~= 0) then
-		MakePlanetHabitable(env)
+		Sa.Planets.MakeHabitable(env)
 	end
 end

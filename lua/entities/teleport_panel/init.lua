@@ -25,6 +25,6 @@ end
 
 function ENT:Use( ply, called )
 	if self.LastUse > CurTime() then return end
-	OpenTeleporter(ply,self.TeleKey)
+	SA.Teleporter.Open(ply,self.TeleKey)
 	self.LastUSe = CurTime() + 1
 end

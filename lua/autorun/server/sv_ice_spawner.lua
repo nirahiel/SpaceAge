@@ -1,3 +1,6 @@
+if not SA.Ice then
+	SA.Ice = {}
+end
 
 local IceTypes = {}
 local IceModels = {"models/props_wasteland/rockgranite04a.mdl", "models/props_wasteland/rockgranite04b.mdl"}
@@ -23,7 +26,7 @@ local function Calc_Ring(inrad, outrad, angle)
 	return (angle:Right() * math.sin(RandAng) + angle:Forward() * math.cos(RandAng)) * math.random(tonumber(inrad),tonumber(outrad))
 end
 
-function Spawn_Roid(Type,data)
+function SA.Ice.SpawnRoid(Type,data)
 	local ent = ents.Create("iceroid")
 	
 	local IceData = IceTypes[Type]
@@ -61,49 +64,49 @@ local function AM_Spawn_Ice(tbl)
 
     	        for _,i in pairs(ice.BlueIce:TrimExplode(" ")) do
 					for a=1,i do
-						local Roid = Spawn_Roid("Blue Ice",RingData)
+						local Roid = SA.Ice.SpawnRoid("Blue Ice",RingData)
 						Roid.MineralAmount = Roid.MineralAmount * 2
 					end
     	        end
     	        for _,i in pairs(ice.ClearIce:TrimExplode(" ")) do
 					for a=1,i do
-						local Roid = Spawn_Roid("Clear Ice",RingData)
+						local Roid = SA.Ice.SpawnRoid("Clear Ice",RingData)
 						Roid.MineralAmount = Roid.MineralAmount * 2
 					end
     	        end
     	        for _,i in pairs(ice.GlacialMass:TrimExplode(" ")) do
 					for a=1,i do
-						local Roid = Spawn_Roid("Glacial Mass",RingData)
+						local Roid = SA.Ice.SpawnRoid("Glacial Mass",RingData)
 						Roid.MineralAmount = Roid.MineralAmount * 2
 					end
     	        end
     	        for _,i in pairs(ice.WhiteGlaze:TrimExplode(" ")) do
 					for a=1,i do
-						local Roid = Spawn_Roid("White Glaze",RingData)
+						local Roid = SA.Ice.SpawnRoid("White Glaze",RingData)
 						Roid.MineralAmount = Roid.MineralAmount * 2
 					end
     	        end
     	        for _,i in pairs(ice.GlareCrust:TrimExplode(" ")) do
 					for a=1,i do
-						local Roid = Spawn_Roid("Glare Crust",RingData)
+						local Roid = SA.Ice.SpawnRoid("Glare Crust",RingData)
 						Roid.MineralAmount = Roid.MineralAmount * 2
 					end
     	        end
     	        for _,i in pairs(ice.DarkGlitter:TrimExplode(" ")) do
 					for a=1,i do
-						local Roid = Spawn_Roid("Dark Glitter",RingData)
+						local Roid = SA.Ice.SpawnRoid("Dark Glitter",RingData)
 						Roid.MineralAmount = Roid.MineralAmount * 2
 					end
     	        end
     	        for _,i in pairs(ice.Gelidus:TrimExplode(" ")) do
 					for a=1,i do
-						local Roid = Spawn_Roid("Gelidus",RingData)
+						local Roid = SA.Ice.SpawnRoid("Gelidus",RingData)
 						Roid.MineralAmount = Roid.MineralAmount * 2
 					end
     	        end
     	        for _,i in pairs(ice.Krystallos:TrimExplode(" ")) do
 					for a=1,i do
-						local Roid = Spawn_Roid("Krystallos",RingData)
+						local Roid = SA.Ice.SpawnRoid("Krystallos",RingData)
 						Roid.MineralAmount = Roid.MineralAmount * 2
 					end
     	        end

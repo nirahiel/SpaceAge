@@ -11,7 +11,7 @@ local IceTypes = {
 	"Glare Crust",
 	"Gelidus",
 	"Krystallos"
-	}
+}
 
 local GiveTranslate = {
 	coolant = "coolant",
@@ -23,7 +23,7 @@ local GiveTranslate = {
 	nitrogen = "Nitrogen Isotopes",
 	ozone = "Liquid Ozone",
 	strontium = "Strontium Clathrates"
-	}	
+}	
 
 
 function ENT:Initialize()
@@ -100,7 +100,7 @@ function ENT:Refine()
 			Wire_TriggerOutput(self,"Progress",Progress)
 			self:SetOverlayText(self.PrintName.."\nProgress: "..tostring(Progress).."%")
 			if (self.Volume <= 0) then
-				local Gives = AM_GetRefined(self.CurrentRef, self.RefineEfficiency)
+				local Gives = SA.Ice.GetRefined(self.CurrentRef, self.RefineEfficiency)
 				for Res,Count in pairs(Gives) do
 					RD_SupplyResource(self, GiveTranslate[Res], Count)
 				end

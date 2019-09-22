@@ -1,3 +1,5 @@
+SA.Planets = {}
+
 local SB_Terraforming_Target = {o2 = 29,co2 = 0.6,h = 0.4,n = 70,empty = 0}
 
 local SA_MyPlanets = {}
@@ -5,7 +7,7 @@ local SA_DefEnvsA = {}
 local SA_DefEnvs = {}
 local SA_IgnoreValsA = {o2per = true,nper = true,hper = true,hper = true,co2per =true,emptyper = true}
 
-function MakePlanetHabitable(planet)
+function SA.Planets.MakeHabitable(planet)
 	local mainenv = planet.sbenvironment
 	local mainair = planet.sbenvironment.air
 	mainenv.atmosphere = 0
@@ -39,7 +41,7 @@ local function MakePlanetProtected(planet)
 	end
 end
 
-function MakePlanetSpace(planet)
+function SA.Planets.MakeSpace(planet)
 	local myname = planet.sbenvironment.name
 	local mainenv = planet.sbenvironment
 	local mainair = planet.sbenvironment.air
@@ -139,7 +141,7 @@ local function InitHabitablePlanets()
 		planet.sbenvironment.name = v[1]
 		planet.SA_Created = true
 		planet.MyPriority = 2
-		MakePlanetHabitable(planet)
+		SA.Planets.MakeHabitable(planet)
 		MakePlanetProtected(planet)
 	end
 	local envname
@@ -151,7 +153,7 @@ local function InitHabitablePlanets()
 		end
 		if (table.HasValue(toTerraform,envname)) then
 			print('Making planet "'..v.sbenvironment.name..'" habitable!')
-			MakePlanetHabitable(v)
+			SA.Planets.MakeHabitable(v)
 		end
 		if (table.HasValue(toProtect,envname)) then
 			MakePlanetProtected(v)
@@ -207,7 +209,7 @@ local function SA_PlanetRestore()
 end
 timer.Create("SA_PlanetBackfall", 50, 0, SA_PlanetRestore)
 
-function SA_SaveAllPlanets()
+function SA.Planets.Save()
 	local dirname = "spaceage/planetsave/"..string.lower(game.GetMap()).."/"
 	if not file.Exists(dirname, "DATA") then
 		file.CreateDir(dirname)
@@ -235,7 +237,7 @@ concommand.Add("RestartEnvironment",function(ply)
 			SA_DefEnvsA[envname] = envdata.air
 		end
 	end	
-	SA_SaveAllPlanets()
+	SA.Planets.Save()
 end)
 
 concommand.Add("PrintEnvironment",function(ply)
