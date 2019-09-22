@@ -1,10 +1,9 @@
-AddCSLuaFile( "autorun/client/cl_sa_topbar.lua" )
-AddCSLuaFile( "autorun/client/cl_sa_terminal.lua" )
-AddCSLuaFile( "autorun/client/cl_sa_terminal_research.lua" )
-AddCSLuaFile( "autorun/client/cl_sa_terminal_resource.lua" )
-AddCSLuaFile( "autorun/client/cl_sa_terminal_goodie.lua" )
+AddCSLuaFile("autorun/client/cl_sa_terminal.lua")
+AddCSLuaFile("autorun/client/cl_sa_terminal_research.lua")
+AddCSLuaFile("autorun/client/cl_sa_terminal_resource.lua")
+AddCSLuaFile("autorun/client/cl_sa_terminal_goodie.lua")
 
-AddCSLuaFile( "autorun/SA_Goodies.lua" )
+AddCSLuaFile("autorun/sa_goodies.lua")
 
 require("supernet")
 --require("random")

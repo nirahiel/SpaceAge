@@ -1,5 +1,5 @@
 if SERVER then
-	AddCSLuaFile("autorun/SA_Scoreboard.lua")
+	AddCSLuaFile("autorun/sa_scoreboard.lua")
 	AddCSLuaFile("sa_scoreboard/admin_buttons.lua")
 	AddCSLuaFile("sa_scoreboard/cl_tooltips.lua")
 	AddCSLuaFile("sa_scoreboard/player_frame.lua")

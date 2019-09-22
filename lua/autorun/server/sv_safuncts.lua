@@ -1,5 +1,4 @@
 AddCSLuaFile("autorun/client/cl_sa_givequery.lua")
-AddCSLuaFile("autorun/client/cl_sg_functs.lua")
 
 local RD = nil
 local function InitSAFuncs()
