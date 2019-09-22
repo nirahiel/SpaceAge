@@ -41,5 +41,5 @@ local function SendStatsUpdateRes(data, isok, merror, ply)
 end
 
 function SA_SendStatsUpdate(ply)
-	MySQL:Query("SELECT name, score, groupname FROM players ORDER BY score DESC LIMIT 0,"..tostring(SA_PlayersToShow), SendStatsUpdateRes, ply)
+	SA.MySQL:Query("SELECT name, score, groupname FROM players ORDER BY score DESC LIMIT 0,"..tostring(SA_PlayersToShow), SendStatsUpdateRes, ply)
 end

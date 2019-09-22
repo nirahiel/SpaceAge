@@ -6,4 +6,4 @@
 		sv_terminal.lua
 	entities/
 		everything!
-- Refactor to prefix all hooks with SA_
+- Refactor to prefix all hooks, timers with SA_

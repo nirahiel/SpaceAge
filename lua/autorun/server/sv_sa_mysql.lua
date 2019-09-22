@@ -1,6 +1,6 @@
 require("mysqloolib")
 
-MySQL = {}
+SA.MySQL = {}
 
 local config = util.JSONToTable(file.Read("spaceage/config/mysql.txt"))
 local db = mysqloo.CreateDatabase(config.hostname, config.username, config.password, config.database)
@@ -21,10 +21,10 @@ local function makecb(cb, ...)
 	end
 end
 
-function MySQL:Query(query, cb, ...)
+function SA.MySQL:Query(query, cb, ...)
 	return db:RunQuery(query, makecb(cb, ...))
 end
 
-function MySQL:Escape(str)
+function SA.MySQL:Escape(str)
 	return db:escape(str)
 end

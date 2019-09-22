@@ -113,14 +113,14 @@ function ENT:Think()
 			return
 		end
 		if( self.Stability > 0) then
-			TFormerTerraForm(self)
+			SA.Terraformer.Run(self)
 		else
-			TFormerSpazzOut(self,false)
+			SA.Terraformer.SpazzOut(self,false)
 		end
 	else
 		self:ChangeStability(math.random(1,3))
 		if ( self.Stability <= -300 ) then
-			TFormerSpazzOut(self,false)
+			SA.Terraformer.SpazzOut(self,false)
 		end
 	end
 	self:NextThink( CurTime() + 1 )

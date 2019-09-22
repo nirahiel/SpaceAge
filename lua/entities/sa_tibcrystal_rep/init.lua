@@ -52,7 +52,7 @@ function ENT:Think()
 				end
 				if CurTime() > self.delay then
 					if #ents.FindByClass(self:GetClass()) <= 100 then			
-						local Pos = SA.Functions.Tiberium.FindWorldFloor(self:GetPos()+Vector(math.Rand(-500,500),math.Rand(-500,500),500),nil,{self})
+						local Pos = SA.Tiberium.FindWorldFloor(self:GetPos()+Vector(math.Rand(-500,500),math.Rand(-500,500),500),nil,{self})
 						if Pos then
 							local crystal = ents.Create("sa_tibcrystal_rep")
 							crystal:SetModel( self:GetModel() )

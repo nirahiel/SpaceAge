@@ -685,6 +685,8 @@ end
 hook.Add("PostRenderVGUI","SA_DrawTerminalError",SA_DrawTerminalError)
 
 local function SA_RefreshGoodiesRecv(ply, decoded)
+	if not SA_Term_GoodieList then return end
+
 	SA_Term_GoodieList:Clear()
 	local goodie
 	for _,v in pairs(decoded) do
@@ -715,7 +717,7 @@ local function sa_terminal_msg(len, ply)
 	SA_Term_GUI:SetVisible(active)
 	gui.EnableScreenClicker(active)
 end
-net.Receive("SA_TerminalStatus", sa_terminal_msg) 
+net.Receive("SA_Terminal_SetVisible", sa_terminal_msg) 
 
 local function CleanString(str)
 	local implode = {}

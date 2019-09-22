@@ -1,6 +1,6 @@
-SA.Functions.Tiberium = {}
+SA.Tiberium = {}
 
-function SA.Functions.Tiberium.FindFreeAttachPlace(ent,holder)
+function SA.Tiberium.FindFreeAttachPlace(ent,holder)
 	if table.HasValue(holder.TouchTable,ent) then return end
 	local i = 0
 	for i=1,2,1 do
@@ -9,7 +9,7 @@ function SA.Functions.Tiberium.FindFreeAttachPlace(ent,holder)
 	end
 end
 
-function SA.Functions.Tiberium.AttachStorage(ent,holder,pos)
+function SA.Tiberium.AttachStorage(ent,holder,pos)
 	if ent.TouchPos then return false end
 	if not (holder:GetModel() == "models/slyfo/sat_rtankstand.mdl") then return false end
 	if not (ent:GetModel() == "models/slyfo/sat_resourcetank.mdl") then return false end
@@ -31,7 +31,7 @@ function SA.Functions.Tiberium.AttachStorage(ent,holder,pos)
 	return true
 end
 
-function SA.Functions.Tiberium.RemoveIntersecting(ent,ignoClasses) --ignoClass IS AND MUST ALWAYS BE A TABLE OR NIL!!!!
+function SA.Tiberium.RemoveIntersecting(ent,ignoClasses) --ignoClass IS AND MUST ALWAYS BE A TABLE OR NIL!!!!
 	if not ignoClasses then ignoClasses = {} end
 	--if string.lower(type(ignoClasses)) == "string" then ignoClasses = {ignoClasses,"sa_mining_drill"} end
 	local minPos = ent:LocalToWorld(ent:OBBMins())
@@ -50,7 +50,7 @@ function SA.Functions.Tiberium.RemoveIntersecting(ent,ignoClasses) --ignoClass I
 	end
 end
 
-function SA.Functions.Tiberium.FindWorldFloor(fromPos,traceIgno,mayNotHit) --traceIgno AND mayNotHit ARE AND MUST ALWAYS BE A TABLE OR NIL!!!!
+function SA.Tiberium.FindWorldFloor(fromPos,traceIgno,mayNotHit) --traceIgno AND mayNotHit ARE AND MUST ALWAYS BE A TABLE OR NIL!!!!
 	if not traceIgno then traceIgno = {} end
 	if not mayNotHit then mayNotHit = {} end
 	local i = 0
@@ -92,7 +92,7 @@ concommand.Add("sa_respawn_crystals",function(ply)
 	end
 end)
 
-function SA.Functions.Tiberium.DestroyConstraints( Ent1, Ent2, Bone1, Bone2, cType )
+function SA.Tiberium.DestroyConstraints( Ent1, Ent2, Bone1, Bone2, cType )
 	if ( !constraint.CanConstrain( Ent1, Bone1 ) ) then return false end
 	if ( !constraint.CanConstrain( Ent2, Bone2 ) ) then return false end
 

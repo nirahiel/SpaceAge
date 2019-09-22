@@ -10,6 +10,10 @@ require("supernet")
 
 local HASH = math.random(1000000,9999999)
 
+SA.Terminal = {}
+
+local SA_UpdateInfo
+
 local RefinedResources = {{},{},{},{}}
 local PriceTable = {}
 local BuyPriceTable = {}
@@ -65,7 +69,7 @@ AddResourceBuyPrice("Water",3.0)
 local StationPos = Vector(0,0,0)
 local StationSize = 0
 local RD = nil
-SA_TheWorld = nil
+local SA_TheWorld = nil
 
 local function InitSATerminal()
 	SA_TheWorld = ents.FindByClass("worldspawn")[1]
@@ -106,11 +110,11 @@ local function InitSATerminal()
 end
 timer.Simple(0,InitSATerminal)
 
-function GetStationPos()
+function SA.Terminal.GetStationPos()
 	return StationPos
 end
 
-function GetStationSize()
+function SA.Terminal.GetStationSize()
 	return StationSize
 end
 
@@ -133,7 +137,7 @@ local function UpdateCapacity(ply)
 	ply.Capacity = maxcap - count
 end
 
-function SetupStorage(ply,tbl)
+function SA.Terminal.SetupStorage(ply,tbl)
 	local uid = ply:UniqueID()
 	if not TempStorage[uid] then
 		TempStorage[uid] = {}
@@ -147,12 +151,12 @@ function SetupStorage(ply,tbl)
 	UpdateCapacity(ply)
 end
 
-function GetPermStorage(ply)
+function SA.Terminal.GetPermStorage(ply)
 	local uid = ply:UniqueID()
 	return PermStorage[uid]
 end
 
-function SA_CanReset(ply)
+local function SA_CanReset(ply)
 	local Researches = SA.Research.Get()
 	for _,vv in pairs(Researches) do
 		for _,v in pairs(vv) do
@@ -292,17 +296,17 @@ local function SA_GetPermStorage(ply)
 	return PermStorage[uid]
 end
 
-function SA_TerminalStatus(ply,status)
-	net.Start("SA_TerminalStatus")
+function SA.Terminal.SetVisible(ply,status)
+	net.Start("SA_Terminal_SetVisible")
 		net.WriteBool(status)
 	net.Send(ply)
 end
 
 local function SA_CloseTerminal(ply)
 	if ply.AtTerminal then
-		SA_SaveUser(ply)
+		SA.SaveUser(ply)
 	end
-	SA_TerminalStatus(ply,false)
+	SA.Terminal.SetVisible(ply,false)
 	ply:Freeze(false)
 	ply.AtTerminal = false
 end
@@ -312,7 +316,7 @@ local function SA_InfoSent(ply)
 	ply.SendingTermUp = false
 end
 
-function SA_UpdateInfo(ply,CanPass)
+SA_UpdateInfo = function(ply,CanPass)
 	--This will prevent it from updating if multiple terminal commands are executed in the same tick.
 	if type(CanPass) == "string" or type(CanPass) == "table" or not (CanPass) then
 		timer.Create("SA_UpdateTerminalInfo_Delay",0.03,1, function() SA_UpdateInfo(ply, true) end)
@@ -325,7 +329,7 @@ function SA_UpdateInfo(ply,CanPass)
 	--Send the player a list of nodes within range.
 	SA_UpdateNodeSelection(ply)
 	
-	if not TempStorage[uid] then SetupStorage(ply) end
+	if not TempStorage[uid] then SA.Terminal.SetupStorage(ply) end
 	
 	local uid = ply:UniqueID()
 	local orecount = SA_GetResource(ply,"ore")
@@ -408,7 +412,7 @@ local function SA_RequestUpdateGoodies(ply)
 	if ply.SendingGoodieUp then return end
 	ply.SendingGoodieUp = true
 	local sid = ply:SteamID()
-	if not MySQL:Query("SELECT id,intid FROM goodies WHERE steamid='"..MySQL:Escape(sid).."'", SA_UpdateGoodies, ply) then
+	if not SA.MySQL:Query("SELECT id,intid FROM goodies WHERE steamid='"..SA.MySQL:Escape(sid).."'", SA_UpdateGoodies, ply) then
 		ply.SendingGoodieUp = false
 	end
 end
@@ -423,10 +427,10 @@ local function SA_UseGoodie(ply,cmd,args)
 	
 	goodie.func(ply)
 	
-	--FA.MySQL.SavePlayer(ply)
-	SA_SaveUser(ply)
+	--FA.SA.MySQL.SavePlayer(ply)
+	SA.SaveUser(ply)
 	
-	MySQL:Query("DELETE FROM goodies WHERE id='"..MySQL:Escape(id).."'",function() SA_RequestUpdateGoodies(ply) end)
+	SA.MySQL:Query("DELETE FROM goodies WHERE id='"..SA.MySQL:Escape(id).."'",function() SA_RequestUpdateGoodies(ply) end)
 end
 concommand.Add("sa_goodies_use",SA_UseGoodie)
 

@@ -64,9 +64,9 @@ function ENT:StartTouch(ent)
 	local eOwner = SA.PP.GetOwner(ent)
 	if not (eOwner and eOwner:IsValid() and eOwner:IsPlayer()) then return end
 	if self.Active == 1 and SA.PP.PlyCanPerform(eOwner,self) then
-		local attachPlace = SA.Functions.Tiberium.FindFreeAttachPlace(ent,self)
+		local attachPlace = SA.Tiberium.FindFreeAttachPlace(ent,self)
 		if not attachPlace then return end
-		if not SA.Functions.Tiberium.AttachStorage(ent,self,attachPlace) then return end
+		if not SA.Tiberium.AttachStorage(ent,self,attachPlace) then return end
 		self.TouchTable[attachPlace] = ent
 		ent.TouchPos = attachPlace
 		constraint.RemoveAll(ent)
@@ -86,8 +86,8 @@ function ENT:ReleaseStorage(ent)
 	if table.HasValue(self.TouchTable,ent) and ent.TouchPos then
 		self.TouchTable[ent.TouchPos] = nil
 		ent.TouchPos = nil
-		SA.Functions.Tiberium.DestroyConstraints(ent,self,0,0,"weld")
-		SA.Functions.Tiberium.DestroyConstraints(ent,self,0,0,"Weld")
+		SA.Tiberium.DestroyConstraints(ent,self,0,0,"weld")
+		SA.Tiberium.DestroyConstraints(ent,self,0,0,"Weld")
 	end
 end
 

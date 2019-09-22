@@ -4,7 +4,7 @@ local RD = nil
 
 timer.Simple(1,function() RD = CAF.GetAddon("Resource Distribution") end)
 
-WorldClasses = {}
+local WorldClasses = {}
 local function AddWorldClass(name)
 	table.insert(WorldClasses,name)
 end
@@ -48,6 +48,19 @@ function PlayerMeta:AssignFaction(name)
 	end
 	self:SetTeam(self.TeamIndex)
 end
+
+local LoadRes, LoadFailed
+
+local function SA_InitSpawn(ply)
+	local sid = ply:SteamID()
+	SA.GiveCredits.Remove(ply)
+	print("Loading:", ply:Name())
+	local isok = SA.MySQL:Query("SELECT * FROM players WHERE steamid='"..SA.MySQL:Escape(sid).."'", LoadRes, ply, sid)
+	if not isok then
+		LoadFailed(ply)
+	end
+end 
+hook.Add("PlayerInitialSpawn", "SpaceageLoad", SA_InitSpawn)
 
 local function LeaderRes(data, isok, merror, ply)
 	if (isok) then
@@ -100,7 +113,7 @@ local function NonLeaderRes(data, isok, merror, ply)
 	end
 end
 
-local function LoadFailed(ply)
+LoadFailed = function(ply)
 	ply.Loaded = false
 	ply.Credits = 0
 	ply.TotalCredits = 0
@@ -141,7 +154,7 @@ local function LoadFailed(ply)
 	ply.devlimit = 1
 	ply.allyuntil = 0
 	
-	SetupStorage(ply)
+	SA.Terminal.SetupStorage(ply)
 	ply:ChatPrint("There has been an error, changes to your account will not be saved this session to prevent loss of data. Loading will be retried all 30 seconds")
 	ply:AssignFaction()
 	timer.Simple(30,function()
@@ -153,7 +166,7 @@ local function LoadFailed(ply)
 	end)
 end
 
-local function LoadRes(data, isok, merror, ply, sid)
+LoadRes = function(data, isok, merror, ply, sid)
 	print("Loaded:", ply:Name(), data, isok, merror)
 	if (isok and sid ~= "STEAM_ID_PENDING") then
 		if (data[1]) then
@@ -203,18 +216,18 @@ local function LoadRes(data, isok, merror, ply, sid)
 				if not pcall(function() tbl = util.JSONToTable(data[1]["stationres"]) end) then
 					pcall(function()
 						tbl = util.KeyValuesToTable(data[1]["stationres"])
-						MySQL:Query("UPDATE players SET stationres = '"..MySQL:Escape(util.TableToJSON(tbl)).."' WHERE steamid = '"..sid.."'", function() end)
+						SA.MySQL:Query("UPDATE players SET stationres = '"..SA.MySQL:Escape(util.TableToJSON(tbl)).."' WHERE steamid = '"..sid.."'", function() end)
 					end)
 				end
 			end
-			SetupStorage(ply,tbl)
+			SA.Terminal.SetupStorage(ply,tbl)
 			ply:ChatPrint("Your account has been loaded, welcome on duty.")
 			ply.Loaded = true
 			ply:AssignFaction()
 		else
-			local username = MySQL:Escape(ply:Name())
+			local username = SA.MySQL:Escape(ply:Name())
 			if not (username == false) then
-				MySQL:Query("INSERT INTO players (steamid,name,groupname) VALUES ('"..sid.."','"..username.."','freelancer')", function() end)
+				SA.MySQL:Query("INSERT INTO players (steamid,name,groupname) VALUES ('"..sid.."','"..username.."','freelancer')", function() end)
 				ply:ChatPrint("You have not been found in the database, an account has been created for you.")
 				ply.Credits = 0
 				ply.TotalCredits = 0
@@ -256,11 +269,11 @@ local function LoadRes(data, isok, merror, ply, sid)
 				
 				ply.devlimit = 1
 				
-				SetupStorage(ply)
+				SA.Terminal.SetupStorage(ply)
 				
 				ply:AssignFaction()
 				
-				SA_SaveUser(ply)
+				SA.SaveUser(ply)
 			end
 		end
 	else
@@ -335,13 +348,13 @@ local function LoadRes(data, isok, merror, ply, sid)
 		ply.MayBePoked = true
 		SA.SendCreditsScore(ply)
 		if ply.IsLeader then
-			MySQL:Query("SELECT * FROM applications WHERE faction='"..ply.TeamIndex.."'", LeaderRes, ply)
+			SA.MySQL:Query("SELECT * FROM applications WHERE faction='"..ply.TeamIndex.."'", LeaderRes, ply)
 		else
-			local psid = MySQL:Escape(ply:SteamID())
+			local psid = SA.MySQL:Escape(ply:SteamID())
 			if ( psid ) then
 				local psids = tostring(psid)
 				if ( psids ) then
-					data, isok, merror = MySQL:Query("SELECT * FROM applications WHERE steamid='"..psids.."'", NonLeaderRes, ply)
+					data, isok, merror = SA.MySQL:Query("SELECT * FROM applications WHERE steamid='"..psids.."'", NonLeaderRes, ply)
 				end
 			end
 		end
@@ -353,19 +366,7 @@ local function LoadRes(data, isok, merror, ply, sid)
 	end
 end
 
-function SA_InitSpawn(ply)
-	local sid = ply:SteamID()
-	SA.GiveCredits.Remove(ply)
-	print("Loading:", ply:Name())
-	local isok = MySQL:Query("SELECT * FROM players WHERE steamid='"..MySQL:Escape(sid).."'", LoadRes, ply, sid)
-	if not isok then
-		LoadFailed(ply)
-	end
-end 
-hook.Add("PlayerInitialSpawn", "SpaceageLoad", SA_InitSpawn)
-
-
-function SA_SaveUser(ply, isautosave)
+function SA.SaveUser(ply, isautosave)
 	if (isautosave == "sa_autosaver") then
 		ply:SetNWInt("sa_save_int",GetConVarNumber("sa_autosave_time") * 60)
 		ply:SetNWInt("sa_last_saved",CurTime())
@@ -383,8 +384,8 @@ function SA_SaveUser(ply, isautosave)
 		--local miningrange = ply.miningbeam
 		local oremod = ply.oremod
 		local fighterenergy = ply.fighterenergy 
-		local perm = MySQL:Escape(util.TableToJSON(GetPermStorage(ply)))
-		local name = MySQL:Escape(ply:Name())
+		local perm = SA.MySQL:Escape(util.TableToJSON(SA.Terminal.GetPermStorage(ply)))
+		local name = SA.MySQL:Escape(ply:Name())
 		
 		if ply.devlimit <= 0 then ply.devlimit = 1 end
 		
@@ -392,20 +393,20 @@ function SA_SaveUser(ply, isautosave)
 			isleader = 1
 		end
 		if username == false then return end
-		MySQL:Query("UPDATE players SET credits='"..credits.."', name='"..name.."',score='"..totalcred.."', groupname='"..group.."', isleader='"..isleader.."', capacity='"..cap.."', miningyield='"..miningyield.."', miningenergy='"..miningenergy.."', oremod='"..oremod.."', stationres='"..perm.."', fighterenergy='"..fighterenergy.."', miningyield_ii='"..ply.miningyield_ii.."', miningyield_iii='"..ply.miningyield_iii.."', miningyield_iv='"..ply.miningyield_iv.."', miningyield_v='"..ply.miningyield_v.."', miningyield_vi='"..ply.miningyield_vi.."', miningtheory='"..ply.miningtheory.."', rtadevice='"..ply.rta.."', oremod_ii='"..ply.oremod_ii.."', oremanage='"..ply.oremanage.."', gcombat = '"..ply.gcombat.."', oremod_iii='"..ply.oremod_iii.."', oremod_iv='"..ply.oremod_iv.."', oremod_v='"..ply.oremod_v.."', hdpower = '"..ply.hdpower.."', tiberiummod = '"..ply.tiberiummod.."', tiberiumyield = '"..ply.tiberiumyield.."', icelasermod = '"..ply.icelasermod.."', icerawmod = '"..ply.icerawmod.."', icerefinerymod = '"..ply.icerefinerymod.."', iceproductmod = '"..ply.iceproductmod.."', tibdrillmod = '"..ply.tibdrillmod.."', tibstoragemod = '"..ply.tibstoragemod.."', tiberiumyield_ii = '"..ply.tiberiumyield_ii.."', tiberiummod_ii = '"..ply.tiberiummod_ii.."', devlimit = '"..ply.devlimit.."', allyuntil = '"..ply.allyuntil.."' WHERE steamid='"..sid.."'", SaveDone)
+		SA.MySQL:Query("UPDATE players SET credits='"..credits.."', name='"..name.."',score='"..totalcred.."', groupname='"..group.."', isleader='"..isleader.."', capacity='"..cap.."', miningyield='"..miningyield.."', miningenergy='"..miningenergy.."', oremod='"..oremod.."', stationres='"..perm.."', fighterenergy='"..fighterenergy.."', miningyield_ii='"..ply.miningyield_ii.."', miningyield_iii='"..ply.miningyield_iii.."', miningyield_iv='"..ply.miningyield_iv.."', miningyield_v='"..ply.miningyield_v.."', miningyield_vi='"..ply.miningyield_vi.."', miningtheory='"..ply.miningtheory.."', rtadevice='"..ply.rta.."', oremod_ii='"..ply.oremod_ii.."', oremanage='"..ply.oremanage.."', gcombat = '"..ply.gcombat.."', oremod_iii='"..ply.oremod_iii.."', oremod_iv='"..ply.oremod_iv.."', oremod_v='"..ply.oremod_v.."', hdpower = '"..ply.hdpower.."', tiberiummod = '"..ply.tiberiummod.."', tiberiumyield = '"..ply.tiberiumyield.."', icelasermod = '"..ply.icelasermod.."', icerawmod = '"..ply.icerawmod.."', icerefinerymod = '"..ply.icerefinerymod.."', iceproductmod = '"..ply.iceproductmod.."', tibdrillmod = '"..ply.tibdrillmod.."', tibstoragemod = '"..ply.tibstoragemod.."', tiberiumyield_ii = '"..ply.tiberiumyield_ii.."', tiberiummod_ii = '"..ply.tiberiummod_ii.."', devlimit = '"..ply.devlimit.."', allyuntil = '"..ply.allyuntil.."' WHERE steamid='"..sid.."'", SaveDone)
 	else
 		return false
 	end
 end
-hook.Add("PlayerDisconnected", "SA_Save_Disconnect", SA_SaveUser)
+hook.Add("PlayerDisconnected", "SA_Save_Disconnect", SA.SaveUser)
 
 local function SA_SaveAllUsers()
 	if (GetConVarNumber("sa_autosave_time") == 1) then
 		timer.Adjust("SA_Autosave", GetConVarNumber("sa_autosave_time") * 60, 0, SA_SaveAllUsers)
-		MySQL:Query('UPDATE factions AS f SET f.score = (SELECT Round(Avg(p.score)) FROM players AS p WHERE p.groupname = f.name) WHERE f.name ~= "noload"')
+		SA.MySQL:Query('UPDATE factions AS f SET f.score = (SELECT Round(Avg(p.score)) FROM players AS p WHERE p.groupname = f.name) WHERE f.name ~= "noload"')
 		for k,v in ipairs(player.GetHumans()) do
 			local p = v
-			timer.Simple(k, function() SA_SaveUser(p, "sa_autosaver") end)
+			timer.Simple(k, function() SA.SaveUser(p, "sa_autosaver") end)
 		end
 		SA.Planets.Save()
 	end
@@ -475,13 +476,13 @@ local function SA_Autospawner(ply)
 		end			
 	end
 	if(ply and ply:IsPlayer()) then
-		SystemSendMSG(ply,"respawned all SpaceAge stuff")
+		SystemSendMSG(ply, "respawned all SpaceAge stuff")
 	end
 end
 timer.Simple(1, SA_Autospawner)
 concommand.Add("sa_autospawn_run",function(ply) if ply:GetLevel() >= 3 then SA_Autospawner(ply) end end)
 
-function SA_IsProtectedProp(ent)
+local function SA_IsProtectedProp(ent)
 	for k,v in pairs(WorldClasses) do
 		if (ent:GetClass() == v) then
 			return true

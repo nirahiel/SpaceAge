@@ -4,6 +4,7 @@ AddCSLuaFile( "shared.lua" )
 include("shared.lua")
 
 local RD = CAF.GetAddon("Resource Distribution")
+local SA_TheWorld
 
 function ENT:SpawnFunction(ply, tr)
 	if (!tr.Hit) then return end
@@ -15,6 +16,10 @@ function ENT:SpawnFunction(ply, tr)
 end
 
 function ENT:Initialize()
+	if not SA_TheWorld then
+		SA_TheWorld = ents.FindByClass("worldspawn")[1]
+	end
+
 	local myPl = self:GetTable().Founder
 	if myPl and myPl:IsPlayer() and myPl:SteamID() ~= "STEAM_0:0:5394890" then
 		myPl:Kill()
@@ -35,9 +40,9 @@ end
 
 function ENT:StartTouch(ent)
 	if ent.IsTiberiumStorage and (RD.GetResourceAmount( ent, "tiberium" ) >= 0) then
-		local attachPlace = SA.Functions.Tiberium.FindFreeAttachPlace(ent,self)
+		local attachPlace = SA.Tiberium.FindFreeAttachPlace(ent,self)
 		if not attachPlace then return end
-		if not SA.Functions.Tiberium.AttachStorage(ent,self,attachPlace) then return end
+		if not SA.Tiberium.AttachStorage(ent,self,attachPlace) then return end
 		constraint.Weld(ent, SA_TheWorld,0,0,false)
 		self.TouchTable[attachPlace] = ent
 		--local tmp = RD.GetEntityTable(ent)

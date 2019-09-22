@@ -71,7 +71,7 @@ end
 function ENT:Leak()
 	for i = 1,math.Rand(1,4) do
 		if #ents.FindByClass("sa_tibcrystal_rep") >= 100 then return end
-		local Pos = SA.Functions.Tiberium.FindWorldFloor(self:GetPos()+Vector(math.Rand(-500,500),math.Rand(-500,500),500),nil,{self})
+		local Pos = SA.Tiberium.FindWorldFloor(self:GetPos()+Vector(math.Rand(-500,500),math.Rand(-500,500),500),nil,{self})
 		if Pos then
 			local crystal = ents.Create("sa_tibcrystal_rep")
 			GLOBALTIMETILDELETE[crystal:EntIndex()] = CurTime()+math.Rand(10,30)

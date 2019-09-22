@@ -1,4 +1,91 @@
-function TFormerTerraForm(terent)
+SA.Terraformer = {}
+
+local RD = nil
+local function InitSAFuncs()
+	RD = CAF.GetAddon("Resource Distribution")
+end
+timer.Simple(0,InitSAFuncs)
+
+local function SA_Terraformer_PushAtmosphere(terent,resName,atmoname,amount)
+	RD.ConsumeResource(terent,resName,amount)
+	local terair = terent.environment.sbenvironment.air
+	if terair.empty < amount then
+		local neededAm = amount - terair.empty
+		terair.empty = 0
+		if terair.n > 0 then
+			if terair.n > neededAm then
+				terair.n = terair.n - neededAm
+				neededAm = 0
+			else
+				neededAm = neededAm - terair.n
+				terair.n = 0
+			end
+		end
+		if neededAm > 0 and terair.h > 0 then
+			if terair.h > neededAm then
+				terair.h = terair.h - neededAm
+				neededAm = 0
+			else
+				neededAm = neededAm - terair.h
+				terair.h = 0
+			end
+		end
+		if atmoname ~= "co2" and neededAm > 0 and (terair.co2 / terair.max) > 0.80 then
+			if terair.co2 > neededAm then
+				terair.co2 = terair.co2 - neededAm
+				neededAm = 0
+			end
+		end
+		if atmoname ~= "o2" and neededAm > 0 and (terair.o2 / terair.max) > 0.10 then
+			if terair.o2 > neededAm then
+				terair.o2 = terair.o2 - neededAm
+				neededAm = 0
+			end
+		end
+		amount = amount - neededAm
+	else
+		terair.empty = terair.empty - amount
+	end
+	terair[atmoname] = terair[atmoname] + amount
+end
+
+local function SA_Terraformer_Sparks(terent)
+		local Rep = ents.Create("point_tesla")
+		Rep:SetKeyValue("targetname", "teslab")
+		Rep:SetKeyValue("m_SoundName", "DoSpark")
+		Rep:SetKeyValue("texture", "sprites/physbeam.spr")
+		Rep:SetKeyValue("m_Color", "200 200 255")
+		Rep:SetKeyValue("m_flRadius", 1000)
+		Rep:SetKeyValue("beamcount_min", 2)
+		Rep:SetKeyValue("beamcount_max", 5)
+		Rep:SetKeyValue("thick_min", 2)
+		Rep:SetKeyValue("thick_max", 8)
+		Rep:SetKeyValue("lifetime_min", "0.1")
+		Rep:SetKeyValue("lifetime_max", "0.2")
+		Rep:SetKeyValue("interval_min", "0.05")
+		Rep:SetKeyValue("interval_max", "0.08")
+		local OBBMid = terent:OBBCenter()
+		local OBBMax = terent:OBBMaxs()
+		local SparPos = terent:LocalToWorld(Vector(OBBMid.x, OBBMid.y, OBBMax.z))
+		Rep:SetPos(SparPos)
+		Rep:Spawn()
+		Rep:Fire("DoSpark","",0)
+		Rep:Fire("kill","", 1)
+end
+
+local function SA_Terraformer_Explosion(terent)
+		local OBBMins = terent:OBBMins() 
+		local OBBMaxs = terent:OBBMaxs()
+		local vPoint = terent:LocalToWorld(Vector(math.random(OBBMins.x,OBBMaxs.x),math.random(OBBMins.y,OBBMaxs.y),math.random(OBBMins.z,OBBMaxs.z)))
+		local effectdata = EffectData() 
+		effectdata:SetStart( vPoint )
+		effectdata:SetOrigin( vPoint ) 
+		effectdata:SetScale( 1 ) 
+		effectdata:SetMagnitude( 1 )
+		util.Effect( "Explosion", effectdata )
+end
+
+function SA.Terraformer.Run(terent)
 	local ply = SA.PP.GetOwner(terent)
 	if not (ply and ply:IsValid() and ply:IsPlayer()) then return end
 	
@@ -128,12 +215,12 @@ function TFormerTerraForm(terent)
 				terent:ChangeStability(math.random(-30,-10))
 				return				
 			end
-			TFormerPushAtmo(terent,"oxygen","o2",10000)
+			SA_Terraformer_PushAtmosphere(terent,"oxygen","o2",10000)
 			avalid = false
 		end
 		local ttemp = terenv:GetTemperature(terent)
 		if ttemp < 288 then
-			TFormerPushAtmo(terent,"carbon dioxide","co2",10000)
+			SA_Terraformer_PushAtmosphere(terent,"carbon dioxide","co2",10000)
 			avalid = false
 		elseif ttemp > 295 then
 			if terair.co2 > 10000 then
@@ -154,50 +241,7 @@ function TFormerTerraForm(terent)
 	end
 end
 
-function TFormerPushAtmo(terent,resName,atmoname,amount)
-	RD.ConsumeResource(terent,resName,amount)
-	local terair = terent.environment.sbenvironment.air
-	if terair.empty < amount then
-		local neededAm = amount - terair.empty
-		terair.empty = 0
-		if terair.n > 0 then
-			if terair.n > neededAm then
-				terair.n = terair.n - neededAm
-				neededAm = 0
-			else
-				neededAm = neededAm - terair.n
-				terair.n = 0
-			end
-		end
-		if neededAm > 0 and terair.h > 0 then
-			if terair.h > neededAm then
-				terair.h = terair.h - neededAm
-				neededAm = 0
-			else
-				neededAm = neededAm - terair.h
-				terair.h = 0
-			end
-		end
-		if atmoname ~= "co2" and neededAm > 0 and (terair.co2 / terair.max) > 0.80 then
-			if terair.co2 > neededAm then
-				terair.co2 = terair.co2 - neededAm
-				neededAm = 0
-			end
-		end
-		if atmoname ~= "o2" and neededAm > 0 and (terair.o2 / terair.max) > 0.10 then
-			if terair.o2 > neededAm then
-				terair.o2 = terair.o2 - neededAm
-				neededAm = 0
-			end
-		end
-		amount = amount - neededAm
-	else
-		terair.empty = terair.empty - amount
-	end
-	terair[atmoname] = terair[atmoname] + amount
-end
-
-function TFormerSpazzOut(terent,forcekill)
+function SA.Terraformer.SpazzOut(terent,forcekill)
 	local SB = CAF.GetAddon("Spacebuild")
 	if terent.FinalSpazzed or terent.environment.IsProtected or (not terent.environment:IsPlanet()) or terent.environment == SB.GetSpace() then return end
 	local energy = RD.GetResourceAmount(terent, "energy")
@@ -316,55 +360,19 @@ function TFormerSpazzOut(terent,forcekill)
 			terent:Remove()
 		end
 	elseif not forcekill then
-		TFormerSparks(terent)
-		timer.Simple(0.1,TFormerSparks,terent)
-		timer.Simple(0.2,TFormerSparks,terent)
-		timer.Simple(0.3,TFormerSparks,terent)
-		timer.Simple(0.4,TFormerSparks,terent)
-		timer.Simple(0.5,TFormerSparks,terent)
-		timer.Simple(0.6,TFormerSparks,terent)
-		timer.Simple(0.7,TFormerSparks,terent)
-		timer.Simple(0.8,TFormerSparks,terent)
-		timer.Simple(0.9,TFormerSparks,terent)
-		TFormerExplosion(terent)
-		timer.Simple(0.5,TFormerExplosion,terent)
+		SA_Terraformer_Sparks(terent)
+		timer.Simple(0.1,SA_Terraformer_Sparks,terent)
+		timer.Simple(0.2,SA_Terraformer_Sparks,terent)
+		timer.Simple(0.3,SA_Terraformer_Sparks,terent)
+		timer.Simple(0.4,SA_Terraformer_Sparks,terent)
+		timer.Simple(0.5,SA_Terraformer_Sparks,terent)
+		timer.Simple(0.6,SA_Terraformer_Sparks,terent)
+		timer.Simple(0.7,SA_Terraformer_Sparks,terent)
+		timer.Simple(0.8,SA_Terraformer_Sparks,terent)
+		timer.Simple(0.9,SA_Terraformer_Sparks,terent)
+		SA_Terraformer_Explosion(terent)
+		timer.Simple(0.5,SA_Terraformer_Explosion,terent)
 	end
 	local ply = SA.PP.GetOwner(terent)
 	if not (ply and ply:IsValid() and ply:IsPlayer()) then return end
-end
-
-function TFormerExplosion(terent)
-		local OBBMins = terent:OBBMins() 
-		local OBBMaxs = terent:OBBMaxs()
-		local vPoint = terent:LocalToWorld(Vector(math.random(OBBMins.x,OBBMaxs.x),math.random(OBBMins.y,OBBMaxs.y),math.random(OBBMins.z,OBBMaxs.z)))
-		local effectdata = EffectData() 
-		effectdata:SetStart( vPoint )
-		effectdata:SetOrigin( vPoint ) 
-		effectdata:SetScale( 1 ) 
-		effectdata:SetMagnitude( 1 )
-		util.Effect( "Explosion", effectdata )
-end
-
-function TFormerSparks(terent)
-		local Rep = ents.Create("point_tesla")
-		Rep:SetKeyValue("targetname", "teslab")
-		Rep:SetKeyValue("m_SoundName", "DoSpark")
-		Rep:SetKeyValue("texture", "sprites/physbeam.spr")
-		Rep:SetKeyValue("m_Color", "200 200 255")
-		Rep:SetKeyValue("m_flRadius", 1000)
-		Rep:SetKeyValue("beamcount_min", 2)
-		Rep:SetKeyValue("beamcount_max", 5)
-		Rep:SetKeyValue("thick_min", 2)
-		Rep:SetKeyValue("thick_max", 8)
-		Rep:SetKeyValue("lifetime_min", "0.1")
-		Rep:SetKeyValue("lifetime_max", "0.2")
-		Rep:SetKeyValue("interval_min", "0.05")
-		Rep:SetKeyValue("interval_max", "0.08")
-		local OBBMid = terent:OBBCenter()
-		local OBBMax = terent:OBBMaxs()
-		local SparPos = terent:LocalToWorld(Vector(OBBMid.x, OBBMid.y, OBBMax.z))
-		Rep:SetPos(SparPos)
-		Rep:Spawn()
-		Rep:Fire("DoSpark","",0)
-		Rep:Fire("kill","", 1)
 end
