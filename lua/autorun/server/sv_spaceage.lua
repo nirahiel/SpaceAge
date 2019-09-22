@@ -24,10 +24,10 @@ local function SetupConvars(name)
 		CreateConVar(name,0)
 	end
 end
-SetupConvars("spaceage_autosave")
-SetupConvars("spaceage_autosave_time")
-CreateConVar("spaceage_autospawner", "1")
-SetupConvars("friendlyfire")
+SetupConvars("sa_autosave")
+SetupConvars("sa_autosave_time")
+CreateConVar("sa_autospawner", "1")
+SetupConvars("sa_friendlyfire")
 CreateConVar("sa_pirating", "1", { FCVAR_NOTIFY, FCVAR_REPLICATED })
 CreateConVar("sa_faction_only", "0", { FCVAR_NOTIFY })
 local sa_faction_only = GetConVar("sa_faction_only")
@@ -366,9 +366,9 @@ hook.Add("PlayerInitialSpawn", "SpaceageLoad", SA_InitSpawn)
 
 
 function SA_SaveUser(ply, isautosave)
-	if (isautosave == "spaceage_autosaver") then
-		ply:SetNWInt("spaceage_save_int",GetConVarNumber("spaceage_autosave_time") * 60)
-		ply:SetNWInt("spaceage_last_saved",CurTime())
+	if (isautosave == "sa_autosaver") then
+		ply:SetNWInt("sa_save_int",GetConVarNumber("sa_autosave_time") * 60)
+		ply:SetNWInt("sa_last_saved",CurTime())
 	end
 	local sid = ply:SteamID()
 	if (ply.Loaded == true) then
@@ -400,12 +400,12 @@ end
 hook.Add("PlayerDisconnected", "SA_Save_Disconnect", SA_SaveUser)
 
 local function SA_SaveAllUsers()
-	if (GetConVarNumber("spaceage_autosave") == 1) then
-		timer.Adjust("SA_Autosave", GetConVarNumber("spaceage_autosave_time") * 60, 0, SA_SaveAllUsers)
+	if (GetConVarNumber("sa_autosave_time") == 1) then
+		timer.Adjust("SA_Autosave", GetConVarNumber("sa_autosave_time") * 60, 0, SA_SaveAllUsers)
 		MySQL:Query('UPDATE factions AS f SET f.score = (SELECT Round(Avg(p.score)) FROM players AS p WHERE p.groupname = f.name) WHERE f.name ~= "noload"')
 		for k,v in ipairs(player.GetHumans()) do
 			local p = v
-			timer.Simple(k, function() SA_SaveUser(p, "spaceage_autosaver") end)
+			timer.Simple(k, function() SA_SaveUser(p, "sa_autosaver") end)
 		end
 		SA.Planets.Save()
 	end
@@ -414,7 +414,7 @@ timer.Create("SA_Autosave", 60, 0, SA_SaveAllUsers)
 concommand.Add("SavePlayers",function(ply) if ply:IsAdmin() then SA_SaveAllUsers() end end)
 
 local function SA_Autospawner(ply)
-	if (GetConVarNumber("spaceage_autospawner") == 1) then
+	if (GetConVarNumber("sa_autospawner") == 1) then
 		for k,v in ipairs(ents.GetAll()) do
 			if v.RealAutospawned == true then
 				if v.SASound then v.SASound:Stop() end
