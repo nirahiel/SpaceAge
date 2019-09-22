@@ -7,3 +7,4 @@
 	entities/
 		everything!
 - Refactor to prefix all hooks with SA_
+ply:AddHint -> notification.AddLegacy
