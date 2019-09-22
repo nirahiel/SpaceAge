@@ -1,4 +1,4 @@
-local alwaysshowtemp = CreateClientConVar("cl_alwaysshowtemperature",0,true,false)
+local alwaysshowtemp = CreateClientConVar("cl_sa_always_show_temperature",0,true,false)
 
 local function hidehud(name)
 	if name == "CHudHealth" or name == "CHudBattery" or name == "CHudAmmo" or name == "CHudSecondaryAmmo" or name == "CustFiremode" then
