@@ -12,7 +12,7 @@ local function SA_DoSetAppData(len, ply)
 	SA.Application.Text = net.ReadString()
 	if SA_AppBasePanel then SA.Application.Refresh() end
 end
-net.Receive("sa_dosetappdata",SA_DoSetAppData)
+net.Receive("SA_DoSetApplicationData",SA_DoSetAppData)
 
 local function SA_DoAddApp(len, ply)
 	local steamid = net.ReadString()
@@ -24,13 +24,13 @@ local function SA_DoAddApp(len, ply)
 	AppTable[steamid] = {name, text, playtime, SA.AddCommasToInt(score)}
 	if SA_AppBasePanel then SA_RefreshApplications() end
 end
-net.Receive("sa_doaddapp",SA_DoAddApp)
+net.Receive("SA_DoAddApplication",SA_DoAddApp)
 
 local function SA_DoDelApp(len, ply) 
 	AppTable[net.ReadString()] = nil
 	if SA_AppBasePanel then SA_RefreshApplications() end
 end
-net.Receive("sa_dodelapp",SA_DoDelApp)
+net.Receive("SA_DoDeleteApplication",SA_DoDelApp)
 
 local function SApp_ExtractSteamID(optiontext)
 	local temp = string.Explode("|",optiontext)
@@ -184,7 +184,7 @@ function SA.Application.Close()
 end
 
 function SA.Application.Do()
-	net.Start("sa_doapplyfaction")
+	net.Start("SA_DoApplyFaction")
 		net.WriteString(SA.Application.Text)
 		net.WriteString(SA.Application.Faction)
 	net.SendToServer()

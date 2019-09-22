@@ -52,7 +52,7 @@ end
 local function LeaderRes(data, isok, merror, ply)
 	if (isok) then
 		for k, v in pairs(data) do
-			net.Start("sa_doaddapp")
+			net.Start("SA_DoAddApplication")
 				net.WriteString(v['steamid'])
 				net.WriteString(v['name'])
 				net.WriteString(v['text'])
@@ -93,7 +93,7 @@ local function NonLeaderRes(data, isok, merror, ply)
 			appfact = SA.Factions.Table[ffid][1]
 			apptext = data[1]['text']
 		end
-		net.Start("sa_dosetappdata")
+		net.Start("SA_DoSetApplicationData")
 			net.WriteString(appfact)
 			net.WriteString(apptext)
 		net.Send(ply)

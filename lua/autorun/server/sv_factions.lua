@@ -197,7 +197,7 @@ hook.Add("PlayerShouldTakeDamage","SA_FriendlyFire",SA_FriendlyFire)
 --Chat Commands
 
 local function DoApplyFactionResRes(data, isok, merror, ply, ffid, pltimexx)
-	net.Start("sa_dodelapp")
+	net.Start("SA_DoDeleteApplication")
 		net.WriteString(ply:SteamID())
 	net.Send()
 	local toPlayers = {}
@@ -208,7 +208,7 @@ local function DoApplyFactionResRes(data, isok, merror, ply, ffid, pltimexx)
 			end
 		end
 	end
-	net.Start("sa_addapp")
+	net.Start("SA_AddApplication")
 		net.WriteString(ply:SteamID())
 		net.WriteString(ply:GetName())
 		net.WriteString(sat)
@@ -258,8 +258,8 @@ local function SA_DoApplyFaction(len, ply)
 	local cscore = MySQL:Escape(ply.TotalCredits)
 	MySQL:Query("SELECT steamid FROM applications WHERE steamid = '"..steamid.."'", DoApplyFactionRes, ply, steamid, plname, ffid, satx, cscore, pltimex)
 end
-net.Receive("sa_doapplyfaction",SA_DoApplyFaction)
---FA.RegisterDataStream("sa_doapplyfaction",0)
+net.Receive("SA_DoApplyFaction",SA_DoApplyFaction)
+--FA.RegisterDataStream("SA_DoApplyFaction",0)
 
 local function DoAcceptPlayerResRes(data, isok, merror, ply)
 	ply:SendLua("SA.Application.Close()")
@@ -269,7 +269,7 @@ local function DoAcceptPlayerRes(data, isok, merror, ply, app, appf, args)
 	if (!isok) then return end
 	for k, v in pairs(player.GetAll()) do 
  		if v.IsLeader then
-			net.Start("sa_dodelapp")
+			net.Start("SA_DoDeleteApplication")
 				net.WriteString(app['steamid'])
 			net.Send(v)
 		elseif (v:SteamID() == app['steamid']) then
@@ -304,7 +304,7 @@ local function DoDenyPlayerResRes(data, isok, merror, ply, app)
 	if (!isok) then return end
 	for k, v in pairs(player.GetAll()) do 
  		if v.IsLeader then
-			net.Start("sa_dodelapp")
+			net.Start("SA_DoDeleteApplication")
 				net.WriteString(app['steamid'])
 			net.Send(v)
 		end

@@ -61,7 +61,7 @@ timer.Simple(2,InitSATeleporters)
 concommand.Add("sateleporterupdate",function(ply,cmd,args)
 	if not (ply and ply.IsValid and ply:IsValid() and ply.AtTeleporter) then return end
 	if ply.LastTeleKey == ply.AtTeleporter then return end
-	net.Start("SA_TeleUpdate")
+	net.Start("SA_TeleporterUpdate")
 		net.WriteInt(#SA_TeleportNames - 1, 16)
 		for k,v in pairs(SA_TeleportNames) do
 			if v ~= ply.AtTeleporter then
@@ -100,7 +100,7 @@ function SA.Teleporter.Open(ply,TeleKey)
 	ply.AtTeleporter = TeleKey
 	net.Start("SA_OpenTeleporter")
 		net.WriteString(TeleKey)
-	net.End(ply)
+	net.Send(ply)
 	hook.Add("KeyPress","SA_TeleAbortMove_"..ply:EntIndex(),function(ply,key)
 		if key ~= IN_USE and ply and ply.IsValid and ply:IsValid() then
 			AbortTeleport(ply)

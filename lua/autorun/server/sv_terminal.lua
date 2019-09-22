@@ -117,7 +117,7 @@ end
 
 local function SendHash(ply)
 	timer.Simple(5,function()
-		net.Start("LoadHash")
+		net.Start("SA_LoadHash")
 			net.WriteInt(HASH, 32)
 		net.Send(ply)
 	end)
@@ -222,7 +222,7 @@ local function SA_UpdateNodeSelection(ply)
 	
 	local Selected = 0
 	local Count = table.Count(Nodes)
-	net.Start("NodeSelectionUpdate")
+	net.Start("SA_NodeSelectionUpdate")
 		net.WriteInt(Count, 16)
 		for k,v in pairs(Nodes) do
 			net.WriteInt(v, 16)
@@ -294,7 +294,7 @@ local function SA_GetPermStorage(ply)
 end
 
 function SA_TerminalStatus(ply,status)
-	net.Start("TerminalStatus")
+	net.Start("SA_TerminalStatus")
 		net.WriteBool(status)
 	net.Send(ply)
 end
@@ -341,9 +341,9 @@ function SA_UpdateInfo(ply,CanPass)
 	local idx_s = table.Count(ShipStorage)
 	local idx_m = table.Count(BuyPriceTable)
 	
-	net.Start("TerminalUpdate1")
-		net.WriteInt(orecount, 32)
-		net.WriteInt(tempore, 32)
+	net.Start("SA_TerminalUpdateSmall")
+		net.WriteInt(orecount or 0, 32)
+		net.WriteInt(tempore or 0, 32)
 	net.Send(ply)
 	
 	local ResTabl = {}
@@ -380,7 +380,7 @@ function SA_UpdateInfo(ply,CanPass)
 	end
 	
 	ply.SendingTermUp = true
-	supernet.Send(ply, "TerminalUpdate", {
+	supernet.Send(ply, "SA_TerminalUpdate", {
 		ResTabl,
 		math.floor(ply.Capacity),
 		math.floor(ply.MaxCap),
@@ -393,7 +393,7 @@ function SA_UpdateInfo(ply,CanPass)
 		DevVars,
 	}, function() SA_InfoSent(ply) end)
 end
-concommand.Add("TerminalUpdate",SA_UpdateInfo)
+concommand.Add("SA_TerminalUpdate",SA_UpdateInfo)
 
 local function SA_UpdateGoodies(data, isok, merror, ply)
 	if not ValidEntity(ply) then return end
@@ -402,7 +402,7 @@ local function SA_UpdateGoodies(data, isok, merror, ply)
 	for _,v in pairs(data) do
 		ply.Goodies[v["id"]] = SA.Goodies[v["intid"]]
 	end
-	supernet.Send(ply, "GoodieUpdate", data, function() ply.SendingGoodieUp = false end)
+	supernet.Send(ply, "SA_GoodieUpdate", data, function() ply.SendingGoodieUp = false end)
 end
 
 local function SA_RequestUpdateGoodies(ply)

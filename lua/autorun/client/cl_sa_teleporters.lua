@@ -25,7 +25,7 @@ local function RefreshTeleportPanel()
 	end
 end
 
-net.Receive("SA_TeleUpdate",function(len, ply)
+net.Receive("SA_TeleporterUpdate",function(len, ply)
 	local iMax = net.ReadInt(16)
 	local i = nil
 	SA_TeleList = {}

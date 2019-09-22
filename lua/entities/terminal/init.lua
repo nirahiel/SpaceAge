@@ -49,6 +49,6 @@ function ENT:Use( ply, called )
 	ply.AtTerminal = true
 	SA_TerminalStatus(ply,true)
 	ply:Freeze(true)
-	ply:ConCommand("TerminalUpdate")
+	ply:ConCommand("SA_TerminalUpdate")
 	ply:ConCommand("GoodiesUpdate")
 end 

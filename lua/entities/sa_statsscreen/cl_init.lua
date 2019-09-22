@@ -143,7 +143,7 @@ function SA_ReceiveStatsUpdate(ply, decoded)
 
 	statsAllowDraw = true
 end
-supernet.Hook("sa_statsupdate",SA_ReceiveStatsUpdate) 
+supernet.Hook("SA_StatsUpdate",SA_ReceiveStatsUpdate) 
 
 function ENT:IsTranslucent()
 	return true

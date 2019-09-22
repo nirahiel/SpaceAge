@@ -37,7 +37,7 @@ local function SendStatsUpdateRes(data, isok, merror, ply)
 	local imax = table.maxn(data)
 	if imax <= 0 then return end
 
-	supernet.Send(ply, "sa_statsupdate", data)
+	supernet.Send(ply, "SA_StatsUpdate", data)
 end
 
 function SA_SendStatsUpdate(ply)

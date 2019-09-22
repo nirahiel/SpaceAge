@@ -38,7 +38,7 @@ function SA.GiveCredits.Confirm(ply,v,amt,func)
 		net.WriteString(v:Name())
 		net.WriteInt(amt, 32)
 		net.WriteString(theID)
-	net.End(ply)
+	net.Send(ply)
 	return true
 end
 

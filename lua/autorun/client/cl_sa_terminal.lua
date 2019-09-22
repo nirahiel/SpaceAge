@@ -148,7 +148,7 @@ local function CreateTerminalGUI()
 						NodeSelect:ChooseOptionID(1)
 					end
 				end
-				net.Receive("NodeSelectionUpdate",UpdateNodeSelect)
+				net.Receive("SA_NodeSelectionUpdate",UpdateNodeSelect)
 				
 				function NodeSelect:OnSelect(ID,Name,Data)
 					if (ID <= 2) then return end
@@ -642,7 +642,7 @@ local function CreateTerminalGUI()
 		CancelButton:SetPos((DeveloperTab:GetWide() / 2) + 5, 140)
 		CancelButton:SetSize(100,40)
 		CancelButton.DoClick = function()
-			RunConsoleCommand("TerminalUpdate")
+			RunConsoleCommand("SA_TerminalUpdate")
 		end
 		
 		SA_DevBasePanel = DeveloperTab
@@ -694,7 +694,7 @@ local function SA_RefreshGoodiesRecv(ply, decoded)
 		SA_Term_GoodieList:AddItem(goodie)
 	end
 end
-supernet.Hook("GoodieUpdate", SA_RefreshGoodiesRecv)
+supernet.Hook("SA_GoodieUpdate", SA_RefreshGoodiesRecv)
 
 local function SA_RefreshGoodies()
 	RunConsoleCommand("GoodiesUpdate")
@@ -715,7 +715,7 @@ local function sa_terminal_msg(len, ply)
 	SA_Term_GUI:SetVisible(active)
 	gui.EnableScreenClicker(active)
 end
-net.Receive("TerminalStatus", sa_terminal_msg) 
+net.Receive("SA_TerminalStatus", sa_terminal_msg) 
 
 local function CleanString(str)
 	local implode = {}
@@ -733,7 +733,7 @@ local function sa_term_update1(len, ply)
 	term_info.orecount = SA.AddCommasToInt(net.ReadInt(32))
 	term_info.tempore = SA.AddCommasToInt(net.ReadInt(32))
 end
-net.Receive("TerminalUpdate1", sa_term_update1) 
+net.Receive("SA_TerminalUpdateSmall", sa_term_update1) 
 
 local function sa_term_update(ply, tbl)
 	local ResTabl = tbl[1]
@@ -842,10 +842,10 @@ local function sa_term_update(ply, tbl)
 		SA_Max_Roid_Count:SetText(devVars[3])
 	end
 end
-supernet.Hook("TerminalUpdate", sa_term_update)
+supernet.Hook("SA_TerminalUpdate", sa_term_update)
 
 local function SetHash(len, ply)
 	HASH = net.ReadInt(32)
 	SA.SetResourceItemPanelHash(HASH)
 end
-net.Receive("LoadHash", SetHash)
+net.Receive("SA_LoadHash", SetHash)
