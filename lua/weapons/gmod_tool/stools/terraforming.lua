@@ -10,9 +10,9 @@ TOOL.ClientConVar['model'] = 'models/chipstiks_ls3_models/Terraformer/terraforme
 cleanup.Register('terraforming')
 
 if ( CLIENT ) then
-	language.Add( 'Tool_terraforming_name', 'Terraforming Systems' )
-	language.Add( 'Tool_terraforming_desc', 'Create Terraforming Systems attached to any surface.' )
-	language.Add( 'Tool_terraforming_0', 'Left-Click: Spawn a Device.  Right-Click: Repair Device.' )
+	language.Add( 'tool.terraforming.name', 'Terraforming Systems' )
+	language.Add( 'tool.terraforming.desc', 'Create Terraforming Systems attached to any surface.' )
+	language.Add( 'tool.terraforming.0', 'Left-Click: Spawn a Device.  Right-Click: Repair Device.' )
 
 	language.Add( 'Undone_terraforming', 'Terraforming Device Undone' )
 	language.Add( 'Cleanup_terraforming', 'Terraforming Device' )

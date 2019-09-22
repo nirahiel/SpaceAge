@@ -5,9 +5,9 @@ TOOL.ConfigName		= ""
 TOOL.Tab = "Custom Addon Framework"
 
 if ( CLIENT ) then
-    language.Add( "Tool_rta_device_name", "RTA Device" )
-    language.Add( "Tool_rta_device_desc", "Creates a Remote Terminal Access computer." )
-    language.Add( "Tool_rta_device_0", "Primary: Create RTA Device." )
+    language.Add( "tool.rta_device.name", "RTA Device" )
+    language.Add( "tool.rta_device.desc", "Creates a Remote Terminal Access computer." )
+    language.Add( "tool.rta_device.0", "Primary: Create RTA Device." )
 	language.Add( "sboxlimit_rta_devices", "You've hit the RTA devices limit." )
 	language.Add( "undone_rta device", "Undone RTA Device" )
 end
@@ -76,7 +76,7 @@ end
 function TOOL:UpdateGhostRTA( ent, player )
 	if ( !ent or !ent:IsValid() ) then return end
 
-	local tr 	= utilx.GetPlayerTrace( player, player:GetCursorAimVector() )
+	local tr 	= util.GetPlayerTrace( player, player:GetAimVector() )
 	local trace 	= util.TraceLine( tr )
 
 	local Ang = trace.HitNormal:Angle()

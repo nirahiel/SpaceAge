@@ -5,9 +5,9 @@ TOOL.ConfigName = ''
 TOOL.Tab = "Administration"
 
 if ( CLIENT ) then
-	language.Add( 'Tool_autospawn_name', 'Autospawn' )
-	language.Add( 'Tool_autospawn_desc', 'ASK DORIDIAN TO USE' )
-	language.Add( 'Tool_autospawn_0', 'Wut' )
+	language.Add( 'tool.autospawn.name', 'Autospawn' )
+	language.Add( 'tool.autospawn.desc', 'ASK DORIDIAN TO USE' )
+	language.Add( 'tool.autospawn.0', 'Wut' )
 end
 function TOOL:LeftClick(tr)
 	if CLIENT then return end

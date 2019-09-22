@@ -10,9 +10,9 @@ TOOL.ClientConVar['model'] = 'models/jaanus/wiretool/wiretool_beamcaster.mdl'
 cleanup.Register('mininglasers')
 
 if ( CLIENT ) then
-	language.Add( 'Tool_asteroid_scanner_name', 'Mining Scanner' )
-	language.Add( 'Tool_asteroid_scanner_desc', 'Creates an mining scanner.' )
-	language.Add( 'Tool_asteroid_scanner_0', 'Left click to spawn a scanner.' )
+	language.Add( 'tool.asteroid_scanner.name', 'Mining Scanner' )
+	language.Add( 'tool.asteroid_scanner.desc', 'Creates an mining scanner.' )
+	language.Add( 'tool.lasteroid_scanner.0', 'Left click to spawn a scanner.' )
 
 	language.Add( 'Undone_asteroid_scanner', 'Mining Scanner Undone' )
 	language.Add( 'Cleanup_asteroid_scanner', 'Mining Scanner' )

@@ -10,9 +10,9 @@ TOOL.ClientConVar['model'] = 'models/props_phx/life_support/crylaser_small.mdl'
 cleanup.Register('mininglasers')
 
 if ( CLIENT ) then
-	language.Add( 'Tool_mining_laser_sa_name', 'Mining' )
-	language.Add( 'Tool_mining_laser_sa_desc', 'Creates an mining device.' )
-	language.Add( 'Tool_mining_laser_sa_0', 'Left click to spawn a mining device.' )
+	language.Add( 'tool.mining_laser_sa.name', 'Mining' )
+	language.Add( 'tool.mining_laser_sa.desc', 'Creates an mining device.' )
+	language.Add( 'tool.mining_laser_sa.0', 'Left click to spawn a mining device.' )
 
 	language.Add( 'Undone_mining_laser_sa', 'Mining Device Undone' )
 	language.Add( 'Cleanup_mining_laser_sa', 'Mining Device' )
@@ -35,16 +35,6 @@ local miningdevice_models = {
 	{ 'ICE Refinery Level 1: Basic', 'models/props_c17/substation_transformer01b.mdl', 'ice_refinery_basic' },
 	{ 'ICE Refinery Level 2: Improved', 'models/props_c17/substation_transformer01b.mdl', 'ice_refinery_improved' },
 	{ 'ICE Refinery Level 3: Advanced', 'models/props_citizen_tech/SteamEngine001a.mdl', 'ice_refinery_advanced' },
-	
-	// PM :D
-	
-	{ 'PM Refinery: Basic', 'models/props_c17/substation_transformer01b.mdl', 'sa_planetmining_refinery' },
-	{ 'PM Refinery: Improved', 'models/Slyfo/refinery_small.mdl', 'sa_planetmining_refinery' },
-	{ 'PM Refinery: Advanced', 'models/Slyfo/refinery_large.mdl', 'sa_planetmining_refinery' },
-	{ 'PM Drill (Default)', 'models/Slyfo/drillplatform.mdl', 'sa_planetmining_drill' },
-	{ 'PM Drill (Model 2)', 'models/Slyfo/drillbase_basic.mdl', 'sa_planetmining_drill' },
-	{ 'PM Drill (Mobile)', 'models/Slyfo/rover_drillbase.mdl', 'sa_planetmining_drill' },
-	{ 'PM O.D.E. (Ore Density Evaluator)', 'models/Slyfo/powercrystal.mdl', 'sa_planetmining_ode_radar' },
 }
 
 local TLNAMEX = "mining_laser_sa"

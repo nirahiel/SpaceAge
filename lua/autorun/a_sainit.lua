@@ -11,38 +11,43 @@ if SERVER then
 	file.Write("gvars_server.txt", "")
 end
 
-function GTableMeta.__newindex(tbl, idx, val)
-	rawset(tbl, idx, val)
-	if idx == "SCRIPTNAME" or idx == "SCRIPTPATH" or idx == "ENT" or idx == "TERMLOADER" or idx == "SA" or idx == "supernet" or idx == "INIParser" then
-		return
-	end
+if not GTableMeta.__newindex_sa_checker then
+	GTableMeta.__newindex_sa_checker = true
+	local oldNewIndex = GTableMeta.__newindex or rawset
+	function GTableMeta.__newindex(tbl, idx, val)
+		oldNewIndex(tbl, idx, val)
 
-	local tbidx = 1
-	local tb
-
-	repeat
-		tbidx = tbidx + 1
-		tb = debug.getinfo(tbidx)
-		if not tb or not tb.short_src then
+		if idx == "SCRIPTNAME" or idx == "SCRIPTPATH" or idx == "ENT" or idx == "TERMLOADER" or idx == "SA" or idx == "supernet" or idx == "INIParser" then
 			return
 		end
-	until tb.name ~= "__newindex"
 
-	if tb.short_src:sub(1, 16) ~= "addons/spaceage/" then
-		return
-	end
+		local tbidx = 1
+		local tb
 
-	local side
-	if CLIENT then
-		side = "client"
+		repeat
+			tbidx = tbidx + 1
+			tb = debug.getinfo(tbidx)
+			if not tb or not tb.short_src then
+				return
+			end
+		until tb.name ~= "__newindex"
+
+		if tb.short_src:sub(1, 16) ~= "addons/spaceage/" then
+			return
+		end
+
+		local side
+		if CLIENT then
+			side = "client"
+		end
+		if SERVER then
+			side = "server"
+		end
+		
+		local str = idx .. " " .. tostring(tb.short_src) .. " @ " .. tostring(tb.linedefined) .. "\n"
+		file.Append("gvars_" .. side .. ".txt", str)
+		print("GVars DETECTOR on ", side, str)
 	end
-	if SERVER then
-		side = "server"
-	end
-	
-	local str = idx .. " " .. tostring(tb.short_src) .. " @ " .. tostring(tb.linedefined) .. "\n"
-	file.Append("gvars_" .. side .. ".txt", str)
-	print("GVars DETECTOR on ", side, str)
 end
 
 if SERVER then

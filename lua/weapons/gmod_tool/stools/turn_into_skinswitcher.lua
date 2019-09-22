@@ -6,9 +6,9 @@ TOOL.Command 		= nil
 TOOL.ConfigName 	= ""
 
 if ( CLIENT ) then
-	language.Add( "Tool_turn_into_skinswitcher_name" , "Make-A-Skin-Switcher Tool" )
-	language.Add( "Tool_turn_into_skinswitcher_desc" , "Easily turn props into skin switchers." )
-	language.Add( "Tool_turn_into_skinswitcher_0", "Left click a prop to turn it into a skin switcher." )
+	language.Add( "tool.turn_into_skinswitcher.name" , "Make-A-Skin-Switcher Tool" )
+	language.Add( "tool.turn_into_skinswitcher.desc" , "Easily turn props into skin switchers." )
+	language.Add( "tool.turn_into_skinswitcher.0", "Left click a prop to turn it into a skin switcher." )
 	language.Add( "undone_Skin Switcher", "Undone Habitable Module" )
 	language.Add("TurnToSkinSwitcher","Make-A-Skin-Switcher")
 end

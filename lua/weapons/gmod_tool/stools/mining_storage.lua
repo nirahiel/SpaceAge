@@ -10,9 +10,9 @@ TOOL.ClientConVar['model'] = 'models/slyfo/sat_resourcetank.mdl'
 cleanup.Register('asteroid mining')
 
 if ( CLIENT ) then
-	language.Add( 'Tool_mining_storage_name', 'Mining Storage' )
-	language.Add( 'Tool_mining_storage_desc', 'Spawn storages for ore.' )
-	language.Add( 'Tool_mining_storage_0', 'Left click to spawn a storage.' )
+	language.Add( 'tool.mining_storage.name', 'Mining Storage' )
+	language.Add( 'tool.mining_storage.desc', 'Spawn storages for ore.' )
+	language.Add( 'tool.mining_storage.0', 'Left click to spawn a storage.' )
 
 	language.Add( 'Undone_mining_storage', 'Mining Storage Undone' )
 	language.Add( 'Cleanup_mining_storage', 'Mining Storage' )
