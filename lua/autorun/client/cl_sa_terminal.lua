@@ -53,7 +53,7 @@ local function SA_TermError(ErrText)
 end
 
 local function SA_DevSetVal(vnum,vval)
-	RunConsoleCommand("DevSetVar",vnum,tonumber(vval:GetValue()))
+	RunConsoleCommand("sa_dev_set_var",vnum,tonumber(vval:GetValue()))
 end
 
 function SA.Application.Refresh()
@@ -114,50 +114,50 @@ local function CreateTerminalGUI()
 	
 	SA_Term_GUI = BasePanel
 	
-				local CloseButton = vgui.Create( "DButton", BasePanel )
-				CloseButton:SetText("Close Terminal")
-				CloseButton:SetPos(370,660)
-				CloseButton:SetSize(90,30)
-				CloseButton.DoClick = function()
-					RunConsoleCommand( "CloseTerminal" )
-				end
-				
-				local NodeSelect = vgui.Create( "DComboBox", BasePanel )
-				NodeSelect:SetPos(25,665)
-				NodeSelect:SetSize(120,20)
-				--NodeSelect:SetEditable(false)
-				
-				local function UpdateNodeSelect(len, ply)
-					NodeSelect:Clear()
-					NodeSelect.Nodes = {}
-					
-					NodeSelect:AddChoice("Node Selection")
-					NodeSelect:AddChoice("--------------")
-					
-					local count = net.ReadInt(16)
-					for K=1,count do
-						local NetID = net.ReadInt(16)
-						local Name = "Network "..NetID
-						NodeSelect.Nodes[Name] = NetID
-						NodeSelect:AddChoice(Name)
-					end
-					NodeSelect.Selected = net.ReadInt(16)+2
-					if (NodeSelect.Selected > 2) then
-						NodeSelect:ChooseOptionID(NodeSelect.Selected)
-					else
-						NodeSelect:ChooseOptionID(1)
-					end
-				end
-				net.Receive("SA_NodeSelectionUpdate",UpdateNodeSelect)
-				
-				function NodeSelect:OnSelect(ID,Name,Data)
-					if (ID <= 2) then return end
-					if (ID == self.Selected) then return end
-					local NetID = self.Nodes[Name]
-					if (NetID > 0) then
-						RunConsoleCommand("Terminal_SelectNode",NetID)
-					end
-				end
+	local CloseButton = vgui.Create("DButton", BasePanel)
+	CloseButton:SetText("Close Terminal")
+	CloseButton:SetPos(370,660)
+	CloseButton:SetSize(90,30)
+	CloseButton.DoClick = function()
+		RunConsoleCommand("sa_terminal_close")
+	end
+	
+	local NodeSelect = vgui.Create("DComboBox", BasePanel)
+	NodeSelect:SetPos(25,665)
+	NodeSelect:SetSize(120,20)
+	--NodeSelect:SetEditable(false)
+	
+	local function UpdateNodeSelect(len, ply)
+		NodeSelect:Clear()
+		NodeSelect.Nodes = {}
+		
+		NodeSelect:AddChoice("Node Selection")
+		NodeSelect:AddChoice("--------------")
+		
+		local count = net.ReadInt(16)
+		for K=1,count do
+			local NetID = net.ReadInt(16)
+			local Name = "Network "..NetID
+			NodeSelect.Nodes[Name] = NetID
+			NodeSelect:AddChoice(Name)
+		end
+		NodeSelect.Selected = net.ReadInt(16)+2
+		if (NodeSelect.Selected > 2) then
+			NodeSelect:ChooseOptionID(NodeSelect.Selected)
+		else
+			NodeSelect:ChooseOptionID(1)
+		end
+	end
+	net.Receive("SA_NodeSelectionUpdate",UpdateNodeSelect)
+	
+	function NodeSelect:OnSelect(ID,Name,Data)
+		if (ID <= 2) then return end
+		if (ID == self.Selected) then return end
+		local NetID = self.Nodes[Name]
+		if (NetID > 0) then
+			RunConsoleCommand("sa_terminal_select_node",NetID)
+		end
+	end
 				
 	local StatTab = vgui.Create ( "DPanel" )
 	StatTab:SetPos(5,25)
@@ -247,7 +247,7 @@ local function CreateTerminalGUI()
 					end
 					for _,Line in pairs(Selected) do
 						local Type = Line:GetValue(1)
-						RunConsoleCommand("Market_Sell",Type,Amount,HASH)
+						RunConsoleCommand("sa_market_sell",Type,Amount,HASH)
 					end
 				end
 				
@@ -284,7 +284,7 @@ local function CreateTerminalGUI()
 						return
 					end
 					local Type = tmpX:GetValue(1)
-					RunConsoleCommand("Market_Buy",Type,Amount,HASH)
+					RunConsoleCommand("sa_market_buy",Type,Amount,HASH)
 				end
 				
 	
@@ -340,7 +340,7 @@ local function CreateTerminalGUI()
 		RefineButton1:SetText("Refine Ore")
 		
 		RefineButton.DoClick = function()
-			RunConsoleCommand("refineore",HASH)
+			RunConsoleCommand("sa_refine_ore",HASH)
 		end
 		RefineButton1.DoClick = RefineButton.DoClick
 		
@@ -356,7 +356,7 @@ local function CreateTerminalGUI()
 		BuyStorageButton:SetText("Buy Station Storage")
 		
 		BuyStorageButton.DoClick = function()
-			RunConsoleCommand("BuyPermStorage",BuyStorageAmt:GetValue(),HASH)
+			RunConsoleCommand("sa_buy_perm_storage",BuyStorageAmt:GetValue(),HASH)
 		end
 	
 		SA_Term_TempStorage = TempStore
@@ -379,7 +379,7 @@ local function CreateTerminalGUI()
 			UpgradeLevelButton:SetSize(500,30)
 			UpgradeLevelButton:SetText("Upgrade Level")
 			UpgradeLevelButton:SetDisabled(true)
-			UpgradeLevelButton.DoClick = function() Derma_Query("Do you really want to upgrade? You will lose all your current researches!","Confirm","Yes",function() RunConsoleCommand("AdvanceLevel",HASH) end,"No",function() end) end
+			UpgradeLevelButton.DoClick = function() Derma_Query("Do you really want to upgrade? You will lose all your current researches!","Confirm","Yes",function() RunConsoleCommand("sa_advance_level",HASH) end,"No",function() end) end
 			SA_UpgradeLevelButton = UpgradeLevelButton
 	
 			local SubResearchTab = vgui.Create( "DPropertySheet", ResearchTab )
@@ -415,7 +415,7 @@ local function CreateTerminalGUI()
 					ResearchPanel:SetSize(700,74)
 					ResearchPanel:SetResearch(ResearchData)
 					ResearchPanel.UpgradeCommand = function()
-						RunConsoleCommand("BuyResearch",v,HASH)
+						RunConsoleCommand("sa_buy_research",v,HASH)
 					end
 					ResearchPanels[RGroup][v] = ResearchPanel
 					GroupList:AddItem(ResearchPanel)
@@ -519,7 +519,7 @@ local function CreateTerminalGUI()
 		AcceptButton:SetSize(100,40)
 		AcceptButton.DoClick = function()
 			if CSelID ~= "" and AppTable[CSelID] then
-				RunConsoleCommand("DoAcceptPlayer",CSelID)
+				RunConsoleCommand("sa_application_accept",CSelID)
 			end
 		end
 		local DenyButton = vgui.Create( "DButton", ApplicationTab )
@@ -528,7 +528,7 @@ local function CreateTerminalGUI()
 		DenyButton:SetSize(100,40)
 		DenyButton.DoClick = function()
 			if CSelID ~= "" and AppTable[CSelID] then
-				RunConsoleCommand("DoDenyPlayer",CSelID)
+				RunConsoleCommand("sa_application_deny",CSelID)
 			end
 		end
 	end
@@ -585,7 +585,7 @@ local function CreateTerminalGUI()
 		ResetPlanetsButton:SetPos(15, 215)
 		ResetPlanetsButton:SetSize(150,40)
 		ResetPlanetsButton.DoClick = function()
-			RunConsoleCommand("RestartEnvironment")
+			RunConsoleCommand("sa_restart_environment")
 		end		
 	
 		local ResetRoidsButton = vgui.Create( "DButton", DeveloperTab )
@@ -593,7 +593,7 @@ local function CreateTerminalGUI()
 		ResetRoidsButton:SetPos(15, 260)
 		ResetRoidsButton:SetSize(150,40)
 		ResetRoidsButton.DoClick = function()
-			RunConsoleCommand("RespawnAsteroids")
+			RunConsoleCommand("sa_respawn_asteroids")
 		end	
 	
 		local RemoveCrystalsButton = vgui.Create( "DButton", DeveloperTab )
@@ -601,7 +601,7 @@ local function CreateTerminalGUI()
 		RemoveCrystalsButton:SetPos(15, 305)
 		RemoveCrystalsButton:SetSize(150,40)
 		RemoveCrystalsButton.DoClick = function()
-			RunConsoleCommand("RespawnCrystals")
+			RunConsoleCommand("sa_respawn_crystals")
 		end	
 	
 		local NewAutospawnButton = vgui.Create( "DButton", DeveloperTab )
@@ -609,7 +609,7 @@ local function CreateTerminalGUI()
 		NewAutospawnButton:SetPos(15, 350)
 		NewAutospawnButton:SetSize(150,40)
 		NewAutospawnButton.DoClick = function()
-			RunConsoleCommand("NewAutospawn")
+			RunConsoleCommand("sa_autospawn_run")
 		end	
 		
 		local RestartServerButton = vgui.Create( "DButton", DeveloperTab )
@@ -642,7 +642,7 @@ local function CreateTerminalGUI()
 		CancelButton:SetPos((DeveloperTab:GetWide() / 2) + 5, 140)
 		CancelButton:SetSize(100,40)
 		CancelButton.DoClick = function()
-			RunConsoleCommand("SA_TerminalUpdate")
+			RunConsoleCommand("sa_terminal_update")
 		end
 		
 		SA_DevBasePanel = DeveloperTab
@@ -697,7 +697,7 @@ end
 supernet.Hook("SA_GoodieUpdate", SA_RefreshGoodiesRecv)
 
 local function SA_RefreshGoodies()
-	RunConsoleCommand("GoodiesUpdate")
+	RunConsoleCommand("sa_goodies_update")
 end
 
 local function sa_terminal_msg(len, ply)
@@ -707,7 +707,7 @@ local function sa_terminal_msg(len, ply)
 		if not SA_Term_GUI then
 			CreateTerminalGUI()
 			if not SA_Term_GUI then
-				RunConsoleCommand("closeterminal")
+				RunConsoleCommand("sa_close_terminal")
 				return
 			end
 		end

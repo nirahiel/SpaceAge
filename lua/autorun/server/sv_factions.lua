@@ -298,7 +298,7 @@ local function SA_DoAcceptPlayer(ply,cmd,args)
 	if(!ply.IsLeader) then return end
 	MySQL:Query("SELECT steamid, faction FROM applications WHERE steamid = '"..MySQL:Escape(args[1]).."'", DoAcceptPlayer, ply, args)
 end
-concommand.Add("DoAcceptPlayer",SA_DoAcceptPlayer)
+concommand.Add("sa_application_accept",SA_DoAcceptPlayer)
 
 local function DoDenyPlayerResRes(data, isok, merror, ply, app)
 	if (!isok) then return end
@@ -325,4 +325,4 @@ local function SA_DoDenyPlayer(ply,cmd,args)
 	if(!ply.IsLeader) then return end
 	MySQL:Query("SELECT steamid, faction FROM applications WHERE steamid = '"..MySQL:Escape(args[1]).."'", DoDenyPlayerRes, ply, args)
 end
-concommand.Add("DoDenyPlayer",SA_DoDenyPlayer)
+concommand.Add("sa_application_deny",SA_DoDenyPlayer)

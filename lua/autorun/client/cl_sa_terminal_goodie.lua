@@ -36,7 +36,7 @@ function PANEL:Init()
 	self.UseButton:SetSize(100,28)
 	self.UseButton:SetText("Activate")
 	self.UseButton.DoClick = function()
-		RunConsoleCommand("sa_usegoodie",tostring(self.GoodieID))
+		RunConsoleCommand("sa_goodies_use",tostring(self.GoodieID))
 	end
 end
 
@@ -55,4 +55,4 @@ function PANEL:Paint()
 	draw.RoundedBox(8,3,3,68,68,ImageBackColor)
 end
 
-vgui.Register( "SA_Terminal_Goodie", PANEL, "DPanel" )
+vgui.Register("SA_Terminal_Goodie", PANEL, "DPanel")

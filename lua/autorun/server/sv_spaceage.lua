@@ -411,7 +411,7 @@ local function SA_SaveAllUsers()
 	end
 end
 timer.Create("SA_Autosave", 60, 0, SA_SaveAllUsers)
-concommand.Add("SavePlayers",function(ply) if ply:IsAdmin() then SA_SaveAllUsers() end end)
+concommand.Add("sa_save_players",function(ply) if ply:IsAdmin() then SA_SaveAllUsers() end end)
 
 local function SA_Autospawner(ply)
 	if (GetConVarNumber("sa_autospawner") == 1) then
@@ -479,7 +479,7 @@ local function SA_Autospawner(ply)
 	end
 end
 timer.Simple(1, SA_Autospawner)
-concommand.Add("NewAutospawn",function(ply) if ply:GetLevel() >= 3 then SA_Autospawner(ply) end end)
+concommand.Add("sa_autospawn_run",function(ply) if ply:GetLevel() >= 3 then SA_Autospawner(ply) end end)
 
 function SA_IsProtectedProp(ent)
 	for k,v in pairs(WorldClasses) do

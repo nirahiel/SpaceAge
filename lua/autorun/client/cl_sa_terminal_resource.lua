@@ -147,7 +147,7 @@ function PANEL:OnMousePressed(mcode)
 		end
 	end
 	function item:TransferStuff()
-		RunConsoleCommand("MoveResources",self.Location,self.ToLocation,self.RName,self.RAmount,HASH)
+		RunConsoleCommand("sa_move_resource",self.Location,self.ToLocation,self.RName,self.RAmount,HASH)
 		self:QuitThis()
 	end
 	function item:QuitThis()

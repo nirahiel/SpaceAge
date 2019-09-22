@@ -17,7 +17,7 @@ local function SpawnAsteroid(model, pos, size)
 	end
 	SA_Roid_Count = SA_Roid_Count + 1
 
-	local asteroid = ents.Create( "sa_roid" )
+	local asteroid = ents.Create("sa_roid")
 	asteroid:SetModel( model )
 	asteroid:SetPos( pos )
 	asteroid:SetAngles(Angle(math.random(0, 360), math.random(0, 360), math.random(0, 360))) 
@@ -60,7 +60,7 @@ end
 timer.Simple(5,function() CreateAsteroids(0) end)
 
 
-concommand.Add("RespawnAsteroids",function(ply)
+concommand.Add("sa_respawn_asteroids",function(ply)
 	if ply:GetLevel() < 3 then return end
 	for k,v in pairs(ents.FindByClass("sa_roid")) do
 		v.RespOnRemove = false
@@ -74,7 +74,7 @@ concommand.Add("RespawnAsteroids",function(ply)
 end)
 
 local LastSpawn = 0
-timer.Create("AsteroidReplenishment",1,0,function()
+timer.Create("SA_AsteroidReplenishment",1,0,function()
 	if (SA_Roid_Count >= SA_Max_Roid_Count) then return end
 	local DelayFactor = (SA_Roid_Count ^ 2) / 10
 	if ((LastSpawn + DelayFactor) < CurTime()) then

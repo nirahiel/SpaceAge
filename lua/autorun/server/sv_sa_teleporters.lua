@@ -58,7 +58,7 @@ local function InitSATeleporters()
 end
 timer.Simple(2,InitSATeleporters)
 
-concommand.Add("sateleporterupdate",function(ply,cmd,args)
+concommand.Add("sa_teleporter_update",function(ply,cmd,args)
 	if not (ply and ply.IsValid and ply:IsValid() and ply.AtTeleporter) then return end
 	if ply.LastTeleKey == ply.AtTeleporter then return end
 	net.Start("SA_TeleporterUpdate")
@@ -80,9 +80,9 @@ local function AbortTeleport(ply,cmd,args)
 	net.Send(ply)
 	hook.Remove("KeyPress","SA_TeleAbortMove_"..ply:EntIndex())
 end
-concommand.Add("sacancelteleport",AbortTeleport)
+concommand.Add("sa_teleporter_cancel",AbortTeleport)
 
-concommand.Add("sadoteleport",function(ply,cmd,args)
+concommand.Add("sa_teleporter_do",function(ply,cmd,args)
 	if not (ply and ply.IsValid and ply:IsValid() and ply.AtTeleporter) then return end
 	local TeleKey = string.Implode(" ",args)
 	if ply.AtTeleporter == TeleKey then return end

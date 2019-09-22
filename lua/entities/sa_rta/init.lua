@@ -42,6 +42,6 @@ function OpenTerminal(ent,ply,founder)
 	ply.AtTerminal = true
 	SA_TerminalStatus(ply,true)
 	ply:Freeze(true)
-	ply:ConCommand("SA_TerminalUpdate")
-	ply:ConCommand("GoodiesUpdate")
+	ply:ConCommand("sa_terminal_update")
+	ply:ConCommand("sa_goodies_update")
 end

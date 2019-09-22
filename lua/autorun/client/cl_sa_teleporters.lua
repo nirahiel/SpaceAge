@@ -66,7 +66,7 @@ local function CreateTeleportPanel()
 				local SelPanel = SA_TeleportLocaLBox:GetLine(SelLine)
 				if SelPanel then
 					local SelText = SelPanel:GetValue(1)
-					RunConsoleCommand("sadoteleport",SelText)
+					RunConsoleCommand("sa_teleporter_do",SelText)
 				end
 			end
 		end
@@ -77,7 +77,7 @@ local function CreateTeleportPanel()
 	DenyButton:SetPos((BasePanel:GetWide() / 2) + 5, BasePanel:GetTall() - 45)
 	DenyButton:SetSize(100,40)
 	DenyButton.DoClick = function()
-		RunConsoleCommand("sacancelteleport")
+		RunConsoleCommand("sa_teleporter_cancel")
 	end
 	BasePanel:SetVisible(false)
 	SA_TeleportPanel = BasePanel
@@ -88,7 +88,7 @@ timer.Simple(0,CreateTeleportPanel)
 
 net.Receive("SA_OpenTeleporter", function(len, ply)
 	SA_TeleKey = net.ReadString()
-	RunConsoleCommand("sateleporterupdate")
+	RunConsoleCommand("sa_teleporter_update")
 	SA_TeleportPanel:SetTitle("Teleporter Form: "..SA_TeleKey)
 	gui.EnableScreenClicker(true)
 	SA_TeleportPanel:SetVisible(true)

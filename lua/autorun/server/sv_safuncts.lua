@@ -156,7 +156,7 @@ function FindWorldFloor(fromPos,traceIgno,mayNotHit) --traceIgno AND mayNotHit A
 	end
 end
 
-concommand.Add("RespawnCrystals",function(ply)
+concommand.Add("sa_respawn_crystals",function(ply)
 	if ply:GetLevel() < 3 then return end
 	local tempMax = SA_MaxCrystalCount
 	SA_MaxCrystalCount = 0

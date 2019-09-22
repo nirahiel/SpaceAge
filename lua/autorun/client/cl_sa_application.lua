@@ -148,7 +148,7 @@ local function CreateAppGUI(BasePanel)
 		AcceptButton:SetSize(100,40)
 		AcceptButton.DoClick = function()
 			if CSelID ~= "" and AppTable[CSelID] then
-				RunConsoleCommand("DoAcceptPlayer",CSelID)
+				RunConsoleCommand("sa_application_accept",CSelID)
 			end
 		end
 		local DenyButton = vgui.Create( "DButton", BasePanel )
@@ -157,7 +157,7 @@ local function CreateAppGUI(BasePanel)
 		DenyButton:SetSize(100,40)
 		DenyButton.DoClick = function()
 			if CSelID ~= "" and AppTable[CSelID] then
-				RunConsoleCommand("DoDenyPlayer",CSelID)
+				RunConsoleCommand("sa_application_deny",CSelID)
 			end
 		end
 	end

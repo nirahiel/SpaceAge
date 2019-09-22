@@ -176,7 +176,7 @@ local function SA_SelectNode(ply,cmd,args)
 		end
 	end
 end
-concommand.Add("Terminal_SelectNode",SA_SelectNode)
+concommand.Add("sa_terminal_select_node",SA_SelectNode)
 
 local function SA_SelectedNode(ply)
 	--Use the node the player selected.
@@ -307,7 +307,7 @@ local function SA_CloseTerminal(ply)
 	ply:Freeze(false)
 	ply.AtTerminal = false
 end
-concommand.Add("CloseTerminal",SA_CloseTerminal)
+concommand.Add("sa_terminal_close",SA_CloseTerminal)
 
 local function SA_InfoSent(ply)
 	ply.SendingTermUp = false
@@ -393,7 +393,7 @@ function SA_UpdateInfo(ply,CanPass)
 		DevVars,
 	}, function() SA_InfoSent(ply) end)
 end
-concommand.Add("SA_TerminalUpdate",SA_UpdateInfo)
+concommand.Add("sa_terminal_update",SA_UpdateInfo)
 
 local function SA_UpdateGoodies(data, isok, merror, ply)
 	if not ValidEntity(ply) then return end
@@ -413,7 +413,7 @@ local function SA_RequestUpdateGoodies(ply)
 		ply.SendingGoodieUp = false
 	end
 end
-concommand.Add("GoodiesUpdate",SA_RequestUpdateGoodies)
+concommand.Add("sa_goodies_update",SA_RequestUpdateGoodies)
 
 local function SA_UseGoodie(ply,cmd,args)
 	local id = tonumber(args[1])
@@ -429,7 +429,7 @@ local function SA_UseGoodie(ply,cmd,args)
 	
 	MySQL:Query("DELETE FROM goodies WHERE id='"..MySQL:Escape(id).."'",function() SA_RequestUpdateGoodies(ply) end)
 end
-concommand.Add("sa_usegoodie",SA_UseGoodie)
+concommand.Add("sa_goodies_use",SA_UseGoodie)
 
 local function SA_RefineOre(ply,cmd,args)
 	if not ply.AtTerminal then return end
@@ -456,7 +456,7 @@ local function SA_RefineOre(ply,cmd,args)
 	end
 	SA_UpdateInfo(ply)
 end
-concommand.Add("refineore",SA_RefineOre)
+concommand.Add("sa_refine_ore",SA_RefineOre)
 
 local function SA_MarketSell(ply,cmd,args)
 	if not ply.AtTerminal then return end
@@ -499,7 +499,7 @@ local function SA_MarketSell(ply,cmd,args)
 	SA_Send_CredSc(ply)
 	SA_UpdateInfo(ply)
 end
-concommand.Add("Market_Sell",SA_MarketSell)
+concommand.Add("sa_market_sell",SA_MarketSell)
 
 local function SA_MarketBuy(ply,cmd,args)
 	if not ply.AtTerminal then return end
@@ -545,7 +545,7 @@ local function SA_MarketBuy(ply,cmd,args)
 	SA_Send_CredSc(ply)
 	SA_UpdateInfo(ply)
 end
-concommand.Add("Market_Buy",SA_MarketBuy)
+concommand.Add("sa_market_buy",SA_MarketBuy)
 
 local function SA_MoveResource(ply,cmd,args,notagain)
 	if not ply.AtTerminal then return end
@@ -606,7 +606,7 @@ local function SA_MoveResource(ply,cmd,args,notagain)
 	UpdateCapacity(ply)
 	SA_UpdateInfo(ply)
 end
-concommand.Add("MoveResources",SA_MoveResource)
+concommand.Add("sa_move_resource",SA_MoveResource)
 
 local function SA_BuyPermStorage(ply,cmd,args)
 	if not ply.AtTerminal then return end
@@ -626,7 +626,7 @@ local function SA_BuyPermStorage(ply,cmd,args)
 		SA_UpdateInfo(ply)
 	end
 end
-concommand.Add("BuyPermStorage",SA_BuyPermStorage)
+concommand.Add("sa_buy_perm_storage",SA_BuyPermStorage)
 
 local function SA_Research(ply, cmd, args)
 	if not ply.AtTerminal then return end
@@ -743,7 +743,7 @@ local function SA_Research(ply, cmd, args)
 	end
 	SA_Send_CredSc(ply)
 end
-concommand.Add("BuyResearch",SA_Research)
+concommand.Add("sa_buy_research",SA_Research)
 
 local function SA_ResetMe(ply, cmd, args)
 	if not ply.AtTerminal then return end
@@ -772,7 +772,7 @@ local function SA_ResetMe(ply, cmd, args)
 	SA_UpdateInfo(ply)
 	SA_Send_CredSc(ply)
 end
-concommand.Add("AdvanceLevel",SA_ResetMe)
+concommand.Add("sa_advance_level",SA_ResetMe)
 
 local function SA_DevSetVar(ply, cmd, args)
 	if not (ply and ply:IsValid() and ply:IsAdmin()) then return end
@@ -796,7 +796,7 @@ local function SA_DevSetVar(ply, cmd, args)
 	end
 	SystemSendMSG(ply, "changed "..varname.." to "..tostring(cval))
 end
-concommand.Add("DevSetVar",SA_DevSetVar)
+concommand.Add("sa_dev_set_var",SA_DevSetVar)
 
 local function CheckCanDevice(ply,tr,mode)
 	if (mode == "mining_laser_sa") then

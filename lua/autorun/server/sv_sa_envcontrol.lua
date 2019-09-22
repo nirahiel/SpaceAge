@@ -222,7 +222,7 @@ function SA.Planets.Save()
 	end
 end
 
-concommand.Add("RestartEnvironment",function(ply)
+concommand.Add("sa_restart_environment",function(ply)
 	if ply:GetLevel() < 3 then return end
 	for k,v in pairs(SA_MyPlanets) do
 		local envname = string.lower(v.sbenvironment.name)
@@ -240,7 +240,7 @@ concommand.Add("RestartEnvironment",function(ply)
 	SA.Planets.Save()
 end)
 
-concommand.Add("PrintEnvironment",function(ply)
+concommand.Add("sa_print_environment",function(ply)
 	if ply:GetLevel() < 3 then return end
 	local env = CAF.GetAddon("Spacebuild").FindClosestPlanet(ply:GetPos(), false)
 	local name = env:GetEnvironmentName()
