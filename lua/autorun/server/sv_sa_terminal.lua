@@ -125,7 +125,7 @@ local function SendHash(ply)
 		net.Send(ply)
 	end)
 end
-hook.Add("PlayerInitialSpawn","SendHash",SendHash)
+hook.Add("PlayerInitialSpawn","SA_SendHash",SendHash)
 
 local function UpdateCapacity(ply)
 	local maxcap = ply.MaxCap
@@ -938,4 +938,4 @@ local function CheckCanDevice(ply,tr,mode)
 		end
 	end
 end
-hook.Add("CanTool","MiningToolCanTool", CheckCanDevice)
+hook.Add("CanTool","SA_MiningToolCanTool", CheckCanDevice)

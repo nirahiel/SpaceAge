@@ -132,3 +132,13 @@ function SA.Tiberium.DestroyConstraints( Ent1, Ent2, Bone1, Bone2, cType )
 	
 	return true
 end
+
+local tiberiumTimeUntilDelete = {}
+
+function SA.Tiberium.SetTimeUntilDelete(ent, time)
+	tiberiumTimeUntilDelete[ent:EntIndex()] = time 
+end
+
+function SA.Tiberium.GetTimeUntilDelete(ent)
+	return tiberiumTimeUntilDelete[ent:EntIndex()]
+end

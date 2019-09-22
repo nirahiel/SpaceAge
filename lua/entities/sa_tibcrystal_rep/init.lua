@@ -37,8 +37,10 @@ function ENT:Think()
 			self:Remove()
 			return
 		end
-		if GLOBALTIMETILDELETE[self.MainSpawnedBy:EntIndex()] then
-			if CurTime() < GLOBALTIMETILDELETE[self.MainSpawnedBy:EntIndex()]  then
+		local timeUntilDelete = SA.Tiberium.GetTimeUntilDelete(self.MainSpawnedBy)
+
+		if timeUntilDelete then
+			if CurTime() < timeUntilDelete  then
 				if CurTime() > self.UpdateEnts then
 					self.Players = ents.FindInSphere(self:GetPos(),250)
 					for _,ply in pairs(self.Players) do
@@ -67,7 +69,7 @@ function ENT:Think()
 					end
 				end
 			end
-			if CurTime() > GLOBALTIMETILDELETE[self.MainSpawnedBy:EntIndex()] then
+			if CurTime() > timeUntilDelete then
 				if self.alpha > 0 then
 					self.alpha = self.alpha - 10
 					self:SetColor(255,255,255,self.alpha)
@@ -75,7 +77,6 @@ function ENT:Think()
 			end
 		end
 		if self.alpha <= 0 then
-			//print("REMOVING")
 			self:SetColor(255,255,255,0)
 			self:Remove()
 		end

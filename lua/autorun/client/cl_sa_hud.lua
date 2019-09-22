@@ -5,7 +5,7 @@ local function hidehud(name)
 		return false
 	end
 end
-hook.Add("HUDShouldDraw", "hidehud", hidehud)
+hook.Add("HUDShouldDraw", "SA_HideHud", hidehud)
 
 local GlobalTemp_Min = 0
 local GlobalTemp_Max = 600

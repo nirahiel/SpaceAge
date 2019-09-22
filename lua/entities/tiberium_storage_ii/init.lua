@@ -4,8 +4,6 @@ AddCSLuaFile( "shared.lua" )
 include("shared.lua")
 local RD = CAF.GetAddon("Resource Distribution")
 
-GLOBALTIMETILDELETE = {}
-
 function ENT:Initialize()
 	self.BaseClass.Initialize(self)
 	
@@ -74,8 +72,7 @@ function ENT:Leak()
 		local Pos = SA.Tiberium.FindWorldFloor(self:GetPos()+Vector(math.Rand(-500,500),math.Rand(-500,500),500),nil,{self})
 		if Pos then
 			local crystal = ents.Create("sa_tibcrystal_rep")
-			GLOBALTIMETILDELETE[crystal:EntIndex()] = CurTime()+math.Rand(10,30)
-			//print("Delete after "..GLOBALTIMETILDELETE[crystal:EntIndex()])
+			SA.Tiberium.SetTimeUntilDelete(crystal, CurTime()+math.Rand(10,30))
 			crystal:SetModel( "models/ce_ls3additional/tiberium/tiberium_normal.mdl" )
 			local Height = math.abs(crystal:OBBMaxs().z - crystal:OBBCenter().z)
 			crystal:SetPos(Pos-Vector(0,0,Height-5))
@@ -86,14 +83,3 @@ function ENT:Leak()
 		end
 	end
 end
-
-local function XXXThink()
-	for _,ent in pairs(ents.FindByClass("sa_tibcrystal_rep")) do
-		if ent:IsValid() then
-			if math.floor(GLOBALTIMETILDELETE[ent.MainSpawnedBy:EntIndex()]) < CurTime() then
-				ent:Remove()
-			end
-		end
-	end
-end
-hook.Add("Think","TibExtraRemoveThink",XXXThink)

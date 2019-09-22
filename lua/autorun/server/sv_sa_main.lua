@@ -60,7 +60,7 @@ local function SA_InitSpawn(ply)
 		LoadFailed(ply)
 	end
 end 
-hook.Add("PlayerInitialSpawn", "SpaceageLoad", SA_InitSpawn)
+hook.Add("PlayerInitialSpawn", "SA_LoadPlayer", SA_InitSpawn)
 
 local function LeaderRes(data, isok, merror, ply)
 	if (isok) then
@@ -78,7 +78,7 @@ local function LeaderRes(data, isok, merror, ply)
 	end
 end
 
-hook.Add("Initialize","MapCleanInitialize",function()
+hook.Add("Initialize","SA_MapCleanInitialize",function()
 	local map = game.GetMap()
 	if map:lower() == "sb_forlorn_sb3_r2l" or map:lower() == "sb_forlorn_sb3_r3" then
 		timer.Simple(5,function()
@@ -504,4 +504,4 @@ local function SA_DonatorCanTool(ply,tr,mode)
 		end
 	end
 end
-hook.Add("CanTool","DonatorCanTool", SA_DonatorCanTool)
+hook.Add("CanTool","SA_DonatorCanTool", SA_DonatorCanTool)
