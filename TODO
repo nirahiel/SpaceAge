@@ -1,0 +1,8 @@
+- Remove GLua syntax (! for not, // and /**/ comments)
+- Refactor to use no globals for:
+	autorun/server/
+		sv_safuncts.lua
+		sv_spaceage.lua
+		sv_terminal.lua
+- Refactor to replace all umsg/usermessage with net
+- Refactor to prefix all commands and Net with SA_
