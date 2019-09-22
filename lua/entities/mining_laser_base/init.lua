@@ -2,6 +2,8 @@ AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 include("shared.lua")
 
+local RD = CAF.GetAddon("Resource Distribution")
+
 function ENT:Initialize()
 	local myPl = self:GetTable().Founder
 	if myPl and myPl:IsPlayer() then
@@ -24,7 +26,7 @@ function ENT:Initialize()
 		phys:EnableMotion(true)
 	end
 	
-	RD_AddResource(self,"energy", 0)
+	RD.AddResource(self,"energy", 0)
 	
 	self.Inputs = Wire_CreateInputs( self, { "Activate" } ) 
 	self.Outputs = Wire_CreateOutputs( self, { "Active", "Mineral", "Cycle %" } )
@@ -49,9 +51,9 @@ end
 
 function ENT:DoRes()
 	local energyneed = self.LaserConsume/self.LaserCycle
-	if (RD_GetResourceAmount(self, "energy") >= energyneed) then	
+	if (RD.GetResourceAmount(self, "energy") >= energyneed) then	
 		self.energytofire = true
-		RD_ConsumeResource(self, "energy", energyneed)		
+		RD.ConsumeResource(self, "energy", energyneed)		
 	 	return true		
 	else
 		self.energytofire = false
@@ -160,14 +162,14 @@ function ENT:ConsumeOre(ent, takeall, pulls) --Comsumes the Ore
 
 	if takeall then
 		ent.MineralAmount = ent.MineralAmount - ent.MineralAmount
-		RD_SupplyResource(self, ent.MineralName, math.floor(ent.MineralAmount))
+		RD.SupplyResource(self, ent.MineralName, math.floor(ent.MineralAmount))
 		self.pulls = 0
 		return
 	else
 		local toextract = math.floor((((self.LaserExtract/self.LaserCycle)*self.pulls) / ent.MineralVol))
 		
 		ent.MineralAmount = ent.MineralAmount - toextract
-		RD_SupplyResource(self, ent.MineralName, toextract)
+		RD.SupplyResource(self, ent.MineralName, toextract)
 		self.pulls = 0 
 	end
 	if self.InputActive == false then

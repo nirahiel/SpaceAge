@@ -2,6 +2,8 @@ AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 include("shared.lua")
 
+local RD = CAF.GetAddon("Resource Distribution")
+
 local IceTypes = {
 	"Blue Ice",
 	"Clear Ice",
@@ -14,7 +16,7 @@ local IceTypes = {
 }
 
 local GiveTranslate = {
-	coolant = "coolant",
+	liquidnitrogen = "liquid nitrogen",
 	heavywater = "heavy water",
 	water = "water",
 	oxygen = "Oxygen Isotopes",
@@ -41,21 +43,21 @@ function ENT:Initialize()
 		phys:EnableMotion(true)
 	end
 	
-	RD_AddResource(self, "energy", 0)
-	RD_AddResource(self, "coolant", 0)
-	RD_AddResource(self, "water", 0)
-	RD_AddResource(self, "heavy water", 0)
+	RD.AddResource(self, "energy", 0)
+	RD.AddResource(self, "liquid nitrogen", 0)
+	RD.AddResource(self, "water", 0)
+	RD.AddResource(self, "heavy water", 0)
 	
 	for _,Type in pairs(IceTypes) do
-		RD_AddResource(self, Type, 0)
+		RD.AddResource(self, Type, 0)
 	end
 	
-	RD_AddResource(self, "Oxygen Isotopes", 0)
-	RD_AddResource(self, "Hydrogen Isotopes", 0)
-	RD_AddResource(self, "Helium Isotopes", 0)
-	RD_AddResource(self, "Nitrogen Isotopes", 0)
-	RD_AddResource(self, "Liquid Ozone", 0)
-	RD_AddResource(self, "Strontium Clathrates", 0)
+	RD.AddResource(self, "Oxygen Isotopes", 0)
+	RD.AddResource(self, "Hydrogen Isotopes", 0)
+	RD.AddResource(self, "Helium Isotopes", 0)
+	RD.AddResource(self, "Nitrogen Isotopes", 0)
+	RD.AddResource(self, "Liquid Ozone", 0)
+	RD.AddResource(self, "Strontium Clathrates", 0)
 	
 	self:SetOverlayText(self.PrintName.."\n".."Progress: 0%")
 	
@@ -74,25 +76,24 @@ function ENT:CalcVars(ply)
 end
 
 function ENT:Refine()
-
-	local CurEnergy = RD_GetResourceAmount(self, "energy")
+	local CurEnergy = RD.GetResourceAmount(self, "energy")
 	local EnergyReq = self.CycleEnergy/self.CycleTime
 	
 	if (CurEnergy > EnergyReq) then
 		if not (self.CurrentRef) then
 			for _,Type in pairs(IceTypes) do
-				local Avail = RD_GetResourceAmount(self, Type)
+				local Avail = RD.GetResourceAmount(self, Type)
 				if (Avail > 0) then
 					self.CurrentRef = Type
 					self.Volume = 1000
-					RD_ConsumeResource(self, Type, 1)
+					RD.ConsumeResource(self, Type, 1)
 					Wire_TriggerOutput(self,"Active",1)
 					break
 				end
 			end
 		end
 		if (self.CurrentRef) then
-			RD_ConsumeResource(self, "energy", EnergyReq)
+			RD.ConsumeResource(self, "energy", EnergyReq)
 			
 			local RefSpeed = (self.CycleVol / self.CycleTime) * 1000
 			self.Volume = self.Volume - RefSpeed
@@ -102,7 +103,7 @@ function ENT:Refine()
 			if (self.Volume <= 0) then
 				local Gives = SA.Ice.GetRefined(self.CurrentRef, self.RefineEfficiency)
 				for Res,Count in pairs(Gives) do
-					RD_SupplyResource(self, GiveTranslate[Res], Count)
+					RD.SupplyResource(self, GiveTranslate[Res], Count)
 				end
 				self.CurrentRef = nil
 				Wire_TriggerOutput(self,"Active",0)
@@ -135,7 +136,7 @@ function ENT:TriggerInput(iname, value)
 end
 
 function ENT:PreEntityCopy()
-	RD_BuildDupeInfo(self)
+	RD.BuildDupeInfo(self)
 	local DupeInfo = self:BuildDupeInfo()
 	if(DupeInfo) then
 		duplicator.StoreEntityModifier(self,"WireDupeInfo",DupeInfo)
@@ -143,7 +144,7 @@ function ENT:PreEntityCopy()
 end
 
 function ENT:PostEntityPaste(Player,Ent,CreatedEntities)
-	RD_ApplyDupeInfo(Ent, CreatedEntities)
+	RD.ApplyDupeInfo(Ent, CreatedEntities)
 	if(Ent.EntityMods and Ent.EntityMods.WireDupeInfo) then
 		self.Owner = Player	
 		Ent:ApplyDupeInfo(Player, Ent, Ent.EntityMods.WireDupeInfo, function(id) return CreatedEntities[id] end)

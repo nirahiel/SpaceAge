@@ -2,7 +2,7 @@ AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 include("shared.lua")
 
-ForceShowDoorCs = false
+local ForceShowDoorCs = false
 
 function ENT:SpawnFunction(ply, tr)
 	if (ForceShowDoorCs == false or !tr.Hit) then return end

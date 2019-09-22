@@ -73,13 +73,13 @@ function PANEL:OnMousePressed(mcode)
 	local t = self:GetParent()
 	local x,y = self:GetPos()
 	local xt,yt
-	while t ~= SA_Term_GUI do
+	while not t.SA_IsTerminalGUI do
 		xt,yt = t:GetPos()
 		x = x + xt
 		y = y + yt
 		t = t:GetParent()
 	end
-	local item = vgui.Create("SA_Terminal_Resource",SA_Term_GUI)
+	local item = vgui.Create("SA_Terminal_Resource", t)
 	item:SetPos(x,y)
 	item:SetSize(220,42)
 	item:SetLocation(self.Location)

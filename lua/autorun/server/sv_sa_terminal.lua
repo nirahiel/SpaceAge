@@ -34,10 +34,6 @@ AddRefineRes("valuable minerals",3)
 AddRefineRes("dark matter",4)
 AddRefineRes("permafrost",4)
 
-function GetRefineRes()
-	return RefinedResources
-end
-
 local function AddResourcePrice(res,price)
 	table.insert(PriceTable,{res,price})
 end
@@ -183,7 +179,7 @@ concommand.Add("sa_terminal_select_node",SA_SelectNode)
 
 local function SA_SelectedNode(ply)
 	--Use the node the player selected.
-	if (ValidEntity(ply.SelectedNode)) then
+	if (SA.ValidEntity(ply.SelectedNode)) then
 		if (SA.PP.GetOwner(ply.SelectedNode) == ply) then
 			local dist = StationPos:Distance(ply.SelectedNode:GetPos())
 			if (dist < StationSize) then
@@ -239,7 +235,7 @@ end
 
 local function SA_GetResource(ply,res)
 	local SelNode = SA_SelectedNode(ply)
-	if (ValidEntity(SelNode)) then
+	if (SA.ValidEntity(SelNode)) then
 		local count = RD.GetNetResourceAmount(SelNode.netid, res)
 		if count > 0 then
 			return count, SelNode.netid
@@ -250,7 +246,7 @@ end
 
 local function SA_FindCapacity(ply,res)
 	local SelNode = SA_SelectedNode(ply)
-	if (ValidEntity(SelNode)) then
+	if (SA.ValidEntity(SelNode)) then
 		local capacity = RD.GetNetNetworkCapacity(SelNode.netid, res)
 		if (capacity > 0) then
 			return capacity, SelNode.netid
@@ -261,7 +257,7 @@ end
 
 local function SA_SupplyResource(ply, res, num)
 	local SelNode = SA_SelectedNode(ply)
-	if (ValidEntity(SelNode)) then
+	if (SA.ValidEntity(SelNode)) then
 		RD.SupplyNetResource(SelNode.netid, res, num)
 	end
 	return 0
@@ -269,7 +265,7 @@ end
 
 local function SA_GetShipResources(ply)
 	local SelNode = SA_SelectedNode(ply)
-	if (ValidEntity(SelNode)) then
+	if (SA.ValidEntity(SelNode)) then
 		local tbl = RD.GetNetTable(SelNode.netid).resources
 		return tbl, SelNode.netid
 	end
@@ -379,7 +375,7 @@ SA_UpdateInfo = function(ply,CanPass)
 	
 	local DevVars = {0,0,0}
 	if ply:GetLevel() >= 3 then
-		DevVars = {SA_MaxCrystalCount,SA_CrystalRadius,SA_Max_Roid_Count}
+		DevVars = {SA.Tiberium.MaxCrystalCount,SA.Tiberium.CrystalRadius,SA.Asteroids.MaxCount}
 	end
 	
 	ply.SendingTermUp = true
@@ -399,7 +395,7 @@ end
 concommand.Add("sa_terminal_update",SA_UpdateInfo)
 
 local function SA_UpdateGoodies(data, isok, merror, ply)
-	if not ValidEntity(ply) then return end
+	if not SA.ValidEntity(ply) then return end
 	if not isok then ply.SendingGoodieUp = false end
 	ply.Goodies = {}
 	for _,v in pairs(data) do
@@ -785,16 +781,16 @@ local function SA_DevSetVar(ply, cmd, args)
 	if varid <= 0 or cval <= 0 then return end
 	local varname = "UNKOWN"
 	if varid == 1 then
-		if SA_MaxCrystalCount == cval then return end
-		SA_MaxCrystalCount = cval
+		if SA.Tiberium.MaxCrystalCount == cval then return end
+		SA.Tiberium.MaxCrystalCount = cval
 		varname = "max. concurrent tiberium crystals per tower"
 	elseif varid == 2 then
-		if SA_CrystalRadius == cval then return end
-		SA_CrystalRadius = cval
+		if SA.Tiberium.CrystalRadius == cval then return end
+		SA.Tiberium.CrystalRadius = cval
 		varname = "max. radius of tiberium crystals around tower"
 	elseif varid == 3 then
-		if SA_Max_Roid_Count == cval then return end
-		SA_Max_Roid_Count = cval
+		if SA.Asteroids.MaxCount == cval then return end
+		SA.Asteroids.MaxCount = cval
 		varname = "max. concurrent asteroid count"
 	end
 	SystemSendMSG(ply, "changed "..varname.." to "..tostring(cval))
@@ -897,7 +893,7 @@ local function CheckCanDevice(ply,tr,mode)
 			end
 		elseif sel == "storage_ice" then
 			local lvl = ply.icerawmod
-			local reqLvl = SA_RawIceStorageModels[sel2]
+			local reqLvl = SA.Ice.GetLevelForStorageModel(sel2)
 			if not reqLvl then return false end
 			if lvl < reqLvl then
 				ply:AddHint("You must have Rank "..reqLvl.." ICE Storages to use this!", NOTIFY_CLEANUP, 5)
@@ -905,7 +901,7 @@ local function CheckCanDevice(ply,tr,mode)
 			end
 		elseif sel == "storage_ice_product" then
 			local lvl = ply.iceproductmod
-			local reqLvl = SA_IceProductStorageModels[sel2]
+			local reqLvl = SA.Ice.GetLevelForProductStorageModel(sel2)
 			if not reqLvl then return false end
 			if lvl < reqLvl then
 				ply:AddHint("You must have Rank "..reqLvl.." ICE Product Storages to use this!", NOTIFY_CLEANUP, 5)
@@ -913,7 +909,7 @@ local function CheckCanDevice(ply,tr,mode)
 			end		
 		end
 		local lvl = ply.tibstoragemod
-		if (sel == "tiberium_storage_ii" or sel == "tiberium_storage") and (ValidEntity(tr.Entity) and tr.Entity:GetClass() == "tiberium_storage_holder") then return false end
+		if (sel == "tiberium_storage_ii" or sel == "tiberium_storage") and (SA.ValidEntity(tr.Entity) and tr.Entity:GetClass() == "tiberium_storage_holder") then return false end
 		if sel == "tiberium_storage_ii" then
 			if ply.UserGroup ~= "legion" and ply.UserGroup ~= "alliance" then
 				ply:AddHint("You must be in The Legion or The Alliance to use this!", NOTIFY_CLEANUP, 5)

@@ -18,6 +18,32 @@ end
 
 cleanup.Register( "rta_devices" )
 
+local function MakeRTA( pl, Pos, Ang )
+	if ( !pl:CheckLimit( "rta_devices" ) ) then return false end
+
+	local RTA = ents.Create( "sa_rta" )
+	if (!RTA:IsValid()) then return false end
+
+	RTA:SetAngles( Ang )
+	RTA:SetPos( Pos )
+	RTA:Spawn()
+
+	RTA:SetPlayer( pl )
+
+	local ttable = {
+		pl = pl,
+	}
+	table.Merge(RTA:GetTable(), ttable )
+	
+	pl:AddCount( "rta_devices", RTA )
+
+	return RTA
+end
+
+if SERVER then
+	duplicator.RegisterEntityClass("sa_rta", MakeRTA, "Pos", "Ang", "Vel", "aVel", "frozen")
+end
+
 function TOOL:LeftClick( trace )
 	if (!trace.HitPos) then return false end
 	if (trace.Entity:IsPlayer()) then return false end
@@ -45,34 +71,6 @@ function TOOL:LeftClick( trace )
 	ply:AddCleanup( "rta_devices", RTA )
 
 	return true
-end
-
-if (SERVER) then
-
-	function MakeRTA( pl, Pos, Ang )
-		if ( !pl:CheckLimit( "rta_devices" ) ) then return false end
-	
-		local RTA = ents.Create( "sa_rta" )
-		if (!RTA:IsValid()) then return false end
-
-		RTA:SetAngles( Ang )
-		RTA:SetPos( Pos )
-		RTA:Spawn()
-
-		RTA:SetPlayer( pl )
-
-		local ttable = {
-			pl = pl,
-		}
-		table.Merge(RTA:GetTable(), ttable )
-		
-		pl:AddCount( "rta_devices", RTA )
-
-		return RTA
-	end
-	
-	duplicator.RegisterEntityClass("sa_rta", MakeRTA, "Pos", "Ang", "Vel", "aVel", "frozen")
-
 end
 
 function TOOL:UpdateGhostRTA( ent, player )

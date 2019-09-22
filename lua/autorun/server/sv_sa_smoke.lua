@@ -1,5 +1,7 @@
 local SA_SmokeSpeed = 200
 local SA_SmokeWindSpeed = SA_SmokeSpeed / 10
+local SA_SmokeTable
+local SA_SmokeSpawners
 
 local function SA_StopSmoke(id,doremove)
 	if not SA_SmokeTable[id] then return end

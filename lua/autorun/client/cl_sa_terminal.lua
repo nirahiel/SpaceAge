@@ -1,3 +1,5 @@
+SA.Terminal = {}
+
 TERMLOADER = true
 include("cl_sa_terminal_research.lua")
 include("cl_sa_terminal_resource.lua")
@@ -14,6 +16,23 @@ local term_info = {}
 local SA_Term_StationCap = 0
 local SA_Term_StationMax = 0
 local SA_DevLimitLevel = 1
+
+local SA_Term_GUI
+local SA_Term_GoodieList
+local SA_Term_StatList
+local SA_Term_MarketBuy
+local SA_Term_MarketSell
+local SA_Term_TempStorage
+local SA_Term_PermStorage
+local SA_Term_ShipStorage
+local SA_UpgradeLevelButton
+local SA_ApplyText
+local SA_SelFCombo
+local SA_AppBasePanel
+local SA_MaxCrystalCount
+local SA_CrystalRadius
+local SA_DevBasePanel
+local SA_Max_Roid_Count
 
 surface.CreateFont("ServerHUDFontS", { font = "Arial", size = 36, weight = 700, antialias = true, shadow = false})
 
@@ -57,7 +76,7 @@ local function SA_DevSetVal(vnum,vval)
 end
 
 function SA.Application.Refresh()
-	if not (SA_PTimeLBL and SA_ScoreLBL and SA_ApplyText and SA_SelFCombo) then return end
+	if not (SA_AppBasePanel and SA_PTimeLBL and SA_ScoreLBL and SA_ApplyText and SA_SelFCombo) then return end
 	local plisleader = LocalPlayer():GetNWBool("isleader")
 	
 	if plisleader then
@@ -113,6 +132,7 @@ local function CreateTerminalGUI()
 	BasePanel:SetBackgroundBlur(true)
 	
 	SA_Term_GUI = BasePanel
+	SA_Term_GUI.SA_IsTerminalGUI = true
 	
 	local CloseButton = vgui.Create("DButton", BasePanel)
 	CloseButton:SetText("Close Terminal")
@@ -210,83 +230,82 @@ local function CreateTerminalGUI()
 		draw.SimpleText("Buy Resources",font,655,365,Color(255,255,255,255),1,1)
 	end
 	
-				local MarkSell = vgui.Create ( "DListView",MarketTab )
-				MarkSell:SetPos(50,90)
-				MarkSell:SetSize(500,200)
-				MarkSell:SetMultiSelect(true)
-				MarkSell:AddColumn("Resource")
-				MarkSell:AddColumn("Amount")
-				MarkSell:AddColumn("Price")
-				
-				SA_Term_MarketSell = MarkSell
-				
-				local SellAmount = vgui.Create("DTextEntry",MarketTab)
-				SellAmount:SetPos(610,195)
-				SellAmount:SetSize(90,30)
-				SellAmount:AllowInput(false)
-				SellAmount:SetValue("0")
-				SellAmount:SetNumeric(true)
-				
-				local SellButton = vgui.Create("DButton",MarketTab)
-				SellButton:SetPos(600,250)
-				SellButton:SetSize(110,30)
-				SellButton:SetText("Sell")
-				SellButton.DoClick = function()
-					local Amount = tonumber(SellAmount:GetValue())
-					if (Amount < 0) then
-						SA_TermError("You cannot sell negatives!")
-						return
-					elseif (Amount == 0) then
-						Amount = 999999999999  --Sell ALL
-					end
-					
-					local Selected = SA_Term_MarketSell:GetSelected()
-					if not (table.Count(Selected) > 0) then
-						SA_TermError("Please pick the resource(s) you wish to sell.")
-						return
-					end
-					for _,Line in pairs(Selected) do
-						local Type = Line:GetValue(1)
-						RunConsoleCommand("sa_market_sell",Type,Amount,HASH)
-					end
-				end
-				
-				local MarkBuy = vgui.Create ( "DListView",MarketTab )
-				MarkBuy:SetPos(50,350)
-				MarkBuy:SetSize(500,200)
-				MarkBuy:SetMultiSelect(false)
-				MarkBuy:AddColumn("Resource")
-				MarkBuy:AddColumn("Price")
+	local MarkSell = vgui.Create ( "DListView",MarketTab )
+	MarkSell:SetPos(50,90)
+	MarkSell:SetSize(500,200)
+	MarkSell:SetMultiSelect(true)
+	MarkSell:AddColumn("Resource")
+	MarkSell:AddColumn("Amount")
+	MarkSell:AddColumn("Price")
+	
+	SA_Term_MarketSell = MarkSell
+	
+	local SellAmount = vgui.Create("DTextEntry",MarketTab)
+	SellAmount:SetPos(610,195)
+	SellAmount:SetSize(90,30)
+	SellAmount:AllowInput(false)
+	SellAmount:SetValue("0")
+	SellAmount:SetNumeric(true)
+	
+	local SellButton = vgui.Create("DButton",MarketTab)
+	SellButton:SetPos(600,250)
+	SellButton:SetSize(110,30)
+	SellButton:SetText("Sell")
+	SellButton.DoClick = function()
+		local Amount = tonumber(SellAmount:GetValue())
+		if (Amount < 0) then
+			SA_TermError("You cannot sell negatives!")
+			return
+		elseif (Amount == 0) then
+			Amount = 999999999999  --Sell ALL
+		end
+		
+		local Selected = SA_Term_MarketSell:GetSelected()
+		if not (table.Count(Selected) > 0) then
+			SA_TermError("Please pick the resource(s) you wish to sell.")
+			return
+		end
+		for _,Line in pairs(Selected) do
+			local Type = Line:GetValue(1)
+			RunConsoleCommand("sa_market_sell",Type,Amount,HASH)
+		end
+	end
+	
+	local MarkBuy = vgui.Create ( "DListView",MarketTab )
+	MarkBuy:SetPos(50,350)
+	MarkBuy:SetSize(500,200)
+	MarkBuy:SetMultiSelect(false)
+	MarkBuy:AddColumn("Resource")
+	MarkBuy:AddColumn("Price")
 
-				
-				SA_Term_MarketBuy = MarkBuy
-								
-				local BuyAmount = vgui.Create("DTextEntry",MarketTab)
-				BuyAmount:SetPos(610,455)
-				BuyAmount:SetSize(90,30)
-				BuyAmount:AllowInput(false)
-				BuyAmount:SetValue("0")
-				BuyAmount:SetNumeric(true)
-				
-				local BuyButton = vgui.Create("DButton",MarketTab)
-				BuyButton:SetPos(600,510)
-				BuyButton:SetSize(110,30)
-				BuyButton:SetText("Buy")
-				BuyButton.DoClick = function()
-					local Amount = tonumber(BuyAmount:GetValue())
-					if ((not Amount) or (Amount <= 0)) then
-						SA_TermError("Please input a number to buy!")
-						return
-					end
-					local tmpX = SA_Term_MarketBuy:GetLine(SA_Term_MarketBuy:GetSelectedLine())
-					if not tmpX then
-						SA_TermError("Please pick a resource to buy!")
-						return
-					end
-					local Type = tmpX:GetValue(1)
-					RunConsoleCommand("sa_market_buy",Type,Amount,HASH)
-				end
-				
+	
+	SA_Term_MarketBuy = MarkBuy
+					
+	local BuyAmount = vgui.Create("DTextEntry",MarketTab)
+	BuyAmount:SetPos(610,455)
+	BuyAmount:SetSize(90,30)
+	BuyAmount:AllowInput(false)
+	BuyAmount:SetValue("0")
+	BuyAmount:SetNumeric(true)
+	
+	local BuyButton = vgui.Create("DButton",MarketTab)
+	BuyButton:SetPos(600,510)
+	BuyButton:SetSize(110,30)
+	BuyButton:SetText("Buy")
+	BuyButton.DoClick = function()
+		local Amount = tonumber(BuyAmount:GetValue())
+		if ((not Amount) or (Amount <= 0)) then
+			SA_TermError("Please input a number to buy!")
+			return
+		end
+		local tmpX = SA_Term_MarketBuy:GetLine(SA_Term_MarketBuy:GetSelectedLine())
+		if not tmpX then
+			SA_TermError("Please pick a resource to buy!")
+			return
+		end
+		local Type = tmpX:GetValue(1)
+		RunConsoleCommand("sa_market_buy",Type,Amount,HASH)
+	end
 	
 	local ResourceTab = vgui.Create ( "DPanel" )
 	ResourceTab:SetPos(5,25)
@@ -308,61 +327,60 @@ local function CreateTerminalGUI()
 		draw.SimpleText("Ship / Selected Node",font,640,90,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)		
 	end
 	
-		local TempStore = vgui.Create("DPanelList",ResourceTab)
-		TempStore:SetPos(35,110)
-		TempStore:SetSize(230,418)
-		TempStore:EnableVerticalScrollbar(true)
-		TempStore:SetSpacing(5)
-		TempStore:SetPadding(5)
-		
-		local PermStore = vgui.Create("DPanelList",ResourceTab)
-		PermStore:SetPos(280,110)
-		PermStore:SetSize(230,418)
-		PermStore:EnableVerticalScrollbar(true)
-		PermStore:SetSpacing(5)
-		PermStore:SetPadding(6)
-		
-		local ShipStore = vgui.Create("DPanelList",ResourceTab)
-		ShipStore:SetPos(525,110)
-		ShipStore:SetSize(230,418)
-		ShipStore:EnableVerticalScrollbar(true)
-		ShipStore:SetSpacing(5)
-		ShipStore:SetPadding(5)
-		
-		local RefineButton = vgui.Create("DButton",ResourceTab)
-		RefineButton:SetPos(35,533)
-		RefineButton:SetSize(230,30)
-		RefineButton:SetText("Refine Ore")
+	local TempStore = vgui.Create("DPanelList",ResourceTab)
+	TempStore:SetPos(35,110)
+	TempStore:SetSize(230,418)
+	TempStore:EnableVerticalScrollbar(true)
+	TempStore:SetSpacing(5)
+	TempStore:SetPadding(5)
 	
-		local RefineButton1 = vgui.Create("DButton",ResourceTab)
-		RefineButton1:SetPos(525,533)
-		RefineButton1:SetSize(230,30)
-		RefineButton1:SetText("Refine Ore")
-		
-		RefineButton.DoClick = function()
-			RunConsoleCommand("sa_refine_ore",HASH)
-		end
-		RefineButton1.DoClick = RefineButton.DoClick
-		
-		local BuyStorageAmt = vgui.Create ("DTextEntry",ResourceTab)
-		BuyStorageAmt:SetPos(410,538)
-		BuyStorageAmt:SetSize(100,20)
-		BuyStorageAmt:SetNumeric(true)
-		BuyStorageAmt:SetValue(5000)
-		
-		local BuyStorageButton = vgui.Create("DButton",ResourceTab)
-		BuyStorageButton:SetPos(280,533)
-		BuyStorageButton:SetSize(125,30)
-		BuyStorageButton:SetText("Buy Station Storage")
-		
-		BuyStorageButton.DoClick = function()
-			RunConsoleCommand("sa_buy_perm_storage",BuyStorageAmt:GetValue(),HASH)
-		end
+	local PermStore = vgui.Create("DPanelList",ResourceTab)
+	PermStore:SetPos(280,110)
+	PermStore:SetSize(230,418)
+	PermStore:EnableVerticalScrollbar(true)
+	PermStore:SetSpacing(5)
+	PermStore:SetPadding(6)
 	
-		SA_Term_TempStorage = TempStore
-		SA_Term_PermStorage = PermStore
-		SA_Term_ShipStorage = ShipStore
+	local ShipStore = vgui.Create("DPanelList",ResourceTab)
+	ShipStore:SetPos(525,110)
+	ShipStore:SetSize(230,418)
+	ShipStore:EnableVerticalScrollbar(true)
+	ShipStore:SetSpacing(5)
+	ShipStore:SetPadding(5)
 	
+	local RefineButton = vgui.Create("DButton",ResourceTab)
+	RefineButton:SetPos(35,533)
+	RefineButton:SetSize(230,30)
+	RefineButton:SetText("Refine Ore")
+
+	local RefineButton1 = vgui.Create("DButton",ResourceTab)
+	RefineButton1:SetPos(525,533)
+	RefineButton1:SetSize(230,30)
+	RefineButton1:SetText("Refine Ore")
+	
+	RefineButton.DoClick = function()
+		RunConsoleCommand("sa_refine_ore",HASH)
+	end
+	RefineButton1.DoClick = RefineButton.DoClick
+	
+	local BuyStorageAmt = vgui.Create ("DTextEntry",ResourceTab)
+	BuyStorageAmt:SetPos(410,538)
+	BuyStorageAmt:SetSize(100,20)
+	BuyStorageAmt:SetNumeric(true)
+	BuyStorageAmt:SetValue(5000)
+	
+	local BuyStorageButton = vgui.Create("DButton",ResourceTab)
+	BuyStorageButton:SetPos(280,533)
+	BuyStorageButton:SetSize(125,30)
+	BuyStorageButton:SetText("Buy Station Storage")
+	
+	BuyStorageButton.DoClick = function()
+		RunConsoleCommand("sa_buy_perm_storage",BuyStorageAmt:GetValue(),HASH)
+	end
+
+	SA_Term_TempStorage = TempStore
+	SA_Term_PermStorage = PermStore
+	SA_Term_ShipStorage = ShipStore
 	
 	local ResearchTab = vgui.Create ( "DPanel" )
 	ResearchTab:SetPos(5,25)
@@ -374,54 +392,54 @@ local function CreateTerminalGUI()
 		draw.SimpleText("Research",font,395,25,Color(255,255,255,255),1,1)
 	end
 	
-			local UpgradeLevelButton = vgui.Create( "DButton", ResearchTab )
-			UpgradeLevelButton:SetPos(155,555)
-			UpgradeLevelButton:SetSize(500,30)
-			UpgradeLevelButton:SetText("Upgrade Level")
-			UpgradeLevelButton:SetDisabled(true)
-			UpgradeLevelButton.DoClick = function() Derma_Query("Do you really want to upgrade? You will lose all your current researches!","Confirm","Yes",function() RunConsoleCommand("sa_advance_level",HASH) end,"No",function() end) end
-			SA_UpgradeLevelButton = UpgradeLevelButton
+	local UpgradeLevelButton = vgui.Create( "DButton", ResearchTab )
+	UpgradeLevelButton:SetPos(155,555)
+	UpgradeLevelButton:SetSize(500,30)
+	UpgradeLevelButton:SetText("Upgrade Level")
+	UpgradeLevelButton:SetDisabled(true)
+	UpgradeLevelButton.DoClick = function() Derma_Query("Do you really want to upgrade? You will lose all your current researches!","Confirm","Yes",function() RunConsoleCommand("sa_advance_level",HASH) end,"No",function() end) end
+	SA_UpgradeLevelButton = UpgradeLevelButton
+
+	local SubResearchTab = vgui.Create( "DPropertySheet", ResearchTab )
+	SubResearchTab:SetPos(25,60)
+	SubResearchTab:SetSize(730,490)
 	
-			local SubResearchTab = vgui.Create( "DPropertySheet", ResearchTab )
-			SubResearchTab:SetPos(25,60)
-			SubResearchTab:SetSize(730,490)
-			
-			local Researches = SA.Research.Get()
-			local ResearchGroups = SA.Research.GetGroups()
-						
-			for _,RGroup in pairs(ResearchGroups) do
-				if not (ResearchPanels[RGroup]) then
-					ResearchPanels[RGroup] = {}
-				end
-				local GroupPanel = vgui.Create( "DPanel" )
-				GroupPanel:SetPos(5,5)
-				GroupPanel:SetSize(720,444)
-				GroupPanel.Paint = function() end
+	local Researches = SA.Research.Get()
+	local ResearchGroups = SA.Research.GetGroups()
 				
-				local GroupList = vgui.Create( "DPanelList",GroupPanel )
-				GroupList:SetPos(5,5)
-				GroupList:SetSize(710,434)
-				GroupList:EnableVerticalScrollbar(true)
-				GroupList:SetSpacing(5)
-				
-				local tbl = {}
-				for k,v in pairs(Researches[RGroup]) do
-					tbl[v["pos"]] = k
-				end
-				
-				for k,v in pairs(tbl) do
-					local ResearchData = Researches[RGroup][v]
-					local ResearchPanel = vgui.Create("SA_Terminal_Research")
-					ResearchPanel:SetSize(700,74)
-					ResearchPanel:SetResearch(ResearchData)
-					ResearchPanel.UpgradeCommand = function()
-						RunConsoleCommand("sa_buy_research",v,HASH)
-					end
-					ResearchPanels[RGroup][v] = ResearchPanel
-					GroupList:AddItem(ResearchPanel)
-				end
-				SubResearchTab:AddSheet( RGroup, GroupPanel, "VGUI/application-monitor", false, false, RGroup )
+	for _,RGroup in pairs(ResearchGroups) do
+		if not (ResearchPanels[RGroup]) then
+			ResearchPanels[RGroup] = {}
+		end
+		local GroupPanel = vgui.Create( "DPanel" )
+		GroupPanel:SetPos(5,5)
+		GroupPanel:SetSize(720,444)
+		GroupPanel.Paint = function() end
+		
+		local GroupList = vgui.Create( "DPanelList",GroupPanel )
+		GroupList:SetPos(5,5)
+		GroupList:SetSize(710,434)
+		GroupList:EnableVerticalScrollbar(true)
+		GroupList:SetSpacing(5)
+		
+		local tbl = {}
+		for k,v in pairs(Researches[RGroup]) do
+			tbl[v["pos"]] = k
+		end
+		
+		for k,v in pairs(tbl) do
+			local ResearchData = Researches[RGroup][v]
+			local ResearchPanel = vgui.Create("SA_Terminal_Research")
+			ResearchPanel:SetSize(700,74)
+			ResearchPanel:SetResearch(ResearchData)
+			ResearchPanel.UpgradeCommand = function()
+				RunConsoleCommand("sa_buy_research",v,HASH)
 			end
+			ResearchPanels[RGroup][v] = ResearchPanel
+			GroupList:AddItem(ResearchPanel)
+		end
+		SubResearchTab:AddSheet( RGroup, GroupPanel, "VGUI/application-monitor", false, false, RGroup )
+	end
 	
 	local ApplicationTab = vgui.Create ( "DPanel" )
 	ApplicationTab:SetPos(5,25)

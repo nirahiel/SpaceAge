@@ -86,7 +86,7 @@ function EFFECT:RenderBuild()
 end
 
 function EFFECT:Think()
-	if(!ValidEntity(self.ent)) then
+	if(!SA.ValidEntity(self.ent)) then
 		return false;
 	end
 	return not self.shouldremove;

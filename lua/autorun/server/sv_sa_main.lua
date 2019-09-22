@@ -446,7 +446,7 @@ local function SA_Autospawner(ply)
 		if file.Exists(filename, "DATA") then
 			for k,v in pairs(util.KeyValuesToTable(file.Read(filename))) do
 				local spawn = ents.Create(v["class"])
-				if not ValidEntity(spawn) then
+				if not SA.ValidEntity(spawn) then
 					print("Could not create: " .. v["class"])
 					continue
 				end

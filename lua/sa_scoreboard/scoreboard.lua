@@ -12,9 +12,6 @@ local texGradientDown = surface.GetTextureID( "gui/gradient_down" )
 local PANEL = {}
 
 function PANEL:Init()
-
-	SCOREBOARD = self
-
 	self.Hostname = vgui.Create( "DLabel", self )
 	self.Hostname:SetText( GetGlobalString( "ServerName" ) )
 	
@@ -34,7 +31,6 @@ function PANEL:Init()
 	
 	self.lblScore = vgui.Create( "DLabel", self )
 	self.lblScore:SetText( "Score" )
-	
 end
 
 

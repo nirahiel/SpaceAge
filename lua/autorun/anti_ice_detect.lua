@@ -6,7 +6,7 @@ elseif (CLIENT) then
 		local Table = FBM(str)
 		if !Table then return {} end
 		for k,v in pairs(Table) do
-			if ValidEntity(v) and v:GetClass() == "iceroid" then
+			if SA.ValidEntity(v) and v:GetClass() == "iceroid" then
 				Table[k] = nil
 			end
 		end
@@ -18,7 +18,7 @@ elseif (CLIENT) then
 		local Table = FBC(str)
 		if !Table then return {} end
 		for k,v in pairs(Table) do
-			if ValidEntity(v) and v:GetClass() == "iceroid" then
+			if SA.ValidEntity(v) and v:GetClass() == "iceroid" then
 				Table[k] = nil
 			end
 		end
@@ -30,7 +30,7 @@ elseif (CLIENT) then
 		local Table = FIB(min, max)
 		if !Table then return {} end
 		for k,v in pairs(Table) do
-			if ValidEntity(v) and v:GetClass() == "iceroid" then
+			if SA.ValidEntity(v) and v:GetClass() == "iceroid" then
 				Table[k] = nil
 			end
 		end
@@ -42,7 +42,7 @@ elseif (CLIENT) then
 		local Table = FIC(pos, dir, dist, radius)
 		if !Table then return {} end
 		for k,v in pairs(Table) do
-			if ValidEntity(v) and v:GetClass() == "iceroid" then
+			if SA.ValidEntity(v) and v:GetClass() == "iceroid" then
 				Table[k] = nil
 			end
 		end
@@ -54,7 +54,7 @@ elseif (CLIENT) then
 		local Table = FIS(center, radius)
 		if !Table then return {} end
 		for k,v in pairs(Table) do
-			if ValidEntity(v) and v:GetClass() == "iceroid" then
+			if SA.ValidEntity(v) and v:GetClass() == "iceroid" then
 				Table[k] = nil
 			end
 		end
@@ -66,7 +66,7 @@ elseif (CLIENT) then
 		local Table = GA()
 		if !Table then return {} end
 		for k,v in pairs(Table) do
-			if ValidEntity(v) and v:GetClass() == "iceroid" then
+			if SA.ValidEntity(v) and v:GetClass() == "iceroid" then
 				Table[k] = nil
 			end
 		end
@@ -75,8 +75,8 @@ elseif (CLIENT) then
 
 	local GBI = ents.GetByIndex
 	function ents.GetByIndex(index)
-		Ent = GBI(index)
-		if ValidEntity(Ent) and Ent:GetClass() == "iceroid" then
+		local Ent = GBI(index)
+		if SA.ValidEntity(Ent) and Ent:GetClass() == "iceroid" then
 			return NullEntity()
 		end
 		return Ent
@@ -84,8 +84,8 @@ elseif (CLIENT) then
 
 	local E = Entity
 	function Entity(idx)
-		Ent = E(idx)
-		if ValidEntity(Ent) and Ent:GetClass() == "iceroid" then
+		local Ent = E(idx)
+		if SA.ValidEntity(Ent) and Ent:GetClass() == "iceroid" then
 			return NullEntity()
 		end
 		return Ent

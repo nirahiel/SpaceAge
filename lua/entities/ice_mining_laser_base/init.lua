@@ -2,6 +2,8 @@ AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 include("shared.lua")
 
+local RD = CAF.GetAddon("Resource Distribution")
+
 function ENT:Initialize()
 	self:SetModel( self.LaserModel )
 	self:PhysicsInit( SOLID_VPHYSICS ) 	
@@ -11,15 +13,15 @@ function ENT:Initialize()
 	
 	self:SetColor( 0, 100, 255, 255 )
 	
-	RD_AddResource(self,"energy", 0)
-	RD_AddResource(self, "Blue Ice", 0)
-	RD_AddResource(self, "Clear Ice", 0)
-	RD_AddResource(self, "Glacial Mass", 0)
-	RD_AddResource(self, "White Glaze", 0)
-	RD_AddResource(self, "Dark Glitter", 0)
-	RD_AddResource(self, "Glare Crust", 0)
-	RD_AddResource(self, "Gelidus", 0)
-	RD_AddResource(self, "Krystallos", 0)
+	RD.AddResource(self, "energy", 0)
+	RD.AddResource(self, "Blue Ice", 0)
+	RD.AddResource(self, "Clear Ice", 0)
+	RD.AddResource(self, "Glacial Mass", 0)
+	RD.AddResource(self, "White Glaze", 0)
+	RD.AddResource(self, "Dark Glitter", 0)
+	RD.AddResource(self, "Glare Crust", 0)
+	RD.AddResource(self, "Gelidus", 0)
+	RD.AddResource(self, "Krystallos", 0)
 	
 	self.Inputs = Wire_CreateInputs( self, { "Activate" } ) 
 	self.Outputs = Wire_CreateOutputs( self, { "Active", "Mineral Amount", "Progress" } )
@@ -40,7 +42,7 @@ end
 function ENT:Mine()
 	--Before we do anything, lets make sure they have power!
 	local EnergyUse = self.LaserConsume / self.LaserCycle
-	local CurEnergy = RD_GetResourceAmount(self, "energy")
+	local CurEnergy = RD.GetResourceAmount(self, "energy")
 	
 	if (CurEnergy < EnergyUse) then return end
 	
@@ -61,11 +63,11 @@ function ENT:Mine()
 			--Oh look, our laser is full, dump it into cargo.
 			if (self.IceCollected[Type] >= 1000) then
 				self.IceCollected[Type] = self.IceCollected[Type] - 1000
-				RD_SupplyResource(self, Type, 1)
+				RD.SupplyResource(self, Type, 1)
 			end
 			
 			--Energy Usage--
-			RD_ConsumeResource(self, "energy", EnergyUse)
+			RD.ConsumeResource(self, "energy", EnergyUse)
 			
 			--Updating shit--
 			Wire_TriggerOutput(self,"Mineral Amount",math.floor(ent.MineralAmount*10)/10)
@@ -92,7 +94,7 @@ function ENT:SetStatus(bool)
 end
 
 function ENT:OnRemove()
-	Dev_Unlink_All(self)
+	RD.RemoveRDEntity(self)
 	Wire_Remove(self)	
 end
 
@@ -115,7 +117,7 @@ function ENT:TriggerInput(iname, value)
 end
 
 function ENT:PreEntityCopy()
-	RD_BuildDupeInfo(self)
+	RD.BuildDupeInfo(self)
 	local DupeInfo = self:BuildDupeInfo()
 	if(DupeInfo) then
 		duplicator.StoreEntityModifier(self,"WireDupeInfo",DupeInfo)
@@ -123,7 +125,7 @@ function ENT:PreEntityCopy()
 end
 
 function ENT:PostEntityPaste(Player,Ent,CreatedEntities)
-	RD_ApplyDupeInfo(Ent, CreatedEntities)
+	RD.ApplyDupeInfo(Ent, CreatedEntities)
 	if(Ent.EntityMods and Ent.EntityMods.WireDupeInfo) then
 		self.Owner = Player	
 		Ent:ApplyDupeInfo(Player, Ent, Ent.EntityMods.WireDupeInfo, function(id) return CreatedEntities[id] end)

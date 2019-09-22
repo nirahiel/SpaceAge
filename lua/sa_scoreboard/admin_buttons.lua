@@ -9,7 +9,7 @@ function PANEL:DoClick()
 	if ( !self:GetParent().Player or LocalPlayer() == self:GetParent().Player ) then return end
 
 	self:DoCommand( self:GetParent().Player )
-	timer.Simple( 0.1, SCOREBOARD.UpdateScoreboard, SCOREBOARD )
+	timer.Simple(0.1, function() SA.ScoreBoard:UpdateScoreboard() end)
 
 end
 

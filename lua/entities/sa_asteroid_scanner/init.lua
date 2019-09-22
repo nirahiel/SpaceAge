@@ -50,7 +50,7 @@ function ENT:TriggerInput(iname, value)
 	end
 end
 
-function ScanRoid(ent)
+local function ScanRoid(ent)
 	local Pos = ent:GetPos()
 	local up = ent:GetAngles():Up()
 	local tr = util.TraceLine( {start = Pos+(up*ent:OBBMaxs().z), endpos = Pos+(up*ent.beamlength),filter = { ent }} )

@@ -1,4 +1,4 @@
-AllAsteroids = {
+local AllAsteroids = {
 	{ "models/ce_ls3additional/asteroids/asteroid_200.mdl", 400 },
 	{ "models/ce_ls3additional/asteroids/asteroid_250.mdl", 500 },
 	{ "models/ce_ls3additional/asteroids/asteroid_300.mdl", 600 },
@@ -8,11 +8,20 @@ AllAsteroids = {
 	{ "models/ce_ls3additional/asteroids/asteroid_500.mdl", 1000 },
 }
 
-SA_Roid_Count = 0
-SA_Max_Roid_Count = 0
+SA.Asteroids = {}
+SA.Asteroids.MaxCount = 0
+
+local SA_Roid_Count = 0
+
+function SA.Asteroids.OnRemove(ent)
+	if(ent.RespOnRemove == true) then
+		ent.RespOnRemove = false
+		SA_Roid_Count = SA_Roid_Count - 1
+	end
+end
 
 local function SpawnAsteroid(model, pos, size)
-	if ( SA_Roid_Count >= SA_Max_Roid_Count ) then
+	if ( SA_Roid_Count >= SA.Asteroids.MaxCount ) then
 		return
 	end
 	SA_Roid_Count = SA_Roid_Count + 1
@@ -47,7 +56,7 @@ local function CreateAsteroids(cnt,noamount)
 		return
 	end
 	if not noamount then
-		SA_Max_Roid_Count = roids["amount"]
+		SA.Asteroids.MaxCount = roids["amount"]
 	end
 	if (cnt ~= 0) then
 		Afield.num = cnt
@@ -75,7 +84,7 @@ end)
 
 local LastSpawn = 0
 timer.Create("SA_AsteroidReplenishment",1,0,function()
-	if (SA_Roid_Count >= SA_Max_Roid_Count) then return end
+	if SA_Roid_Count >= SA.Asteroids.MaxCount then return end
 	local DelayFactor = (SA_Roid_Count ^ 2) / 10
 	if ((LastSpawn + DelayFactor) < CurTime()) then
 		CreateAsteroids(1)

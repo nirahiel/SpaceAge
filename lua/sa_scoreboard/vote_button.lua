@@ -95,26 +95,18 @@ function PANEL:Paint()
 
 end
 
-local TooltipText = nil
-
 --[[---------------------------------------------------------
    Name: OnCursorEntered
 ---------------------------------------------------------]]
 function PANEL:OnCursorEntered()
-	TooltipText = self.NiceName
+	self.TooltipText = self.NiceName
 end
 
 --[[---------------------------------------------------------
    Name: OnCursorEntered
 ---------------------------------------------------------]]
 function PANEL:OnCursorExited()
-	TooltipText = nil
+	self.TooltipText = nil
 end
 
 vgui.Register( "SA_SpawnMenuVoteButton", PANEL, "Button" )
-
-local _GetTooltipText = GetTooltipText
-function GetTooltipText()
-	if ( TooltipText ) then return TooltipText end
-	return _GetTooltipText()
-end

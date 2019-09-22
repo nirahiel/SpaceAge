@@ -19,7 +19,7 @@ end
 string.explode = explode; -- Our function, which can be run as MyString:explode()
 string.Explode = function(sep,s) return explode(s,sep) end; -- Enhances garry's explode function
 
-function TrimExplode(s,sep)
+local function TrimExplode(s,sep)
 	if(sep and s:find(sep)) then
 		if(type(s) == "string") then
 			s=s:gsub("^[%s]+","");

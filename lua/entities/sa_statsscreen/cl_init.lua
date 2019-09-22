@@ -125,7 +125,7 @@ end
 local SA_MaxNameLength = 24
 local SA_PlayersToShow = 30
 
-function SA_ReceiveStatsUpdate(ply, decoded)
+local function SA_ReceiveStatsUpdate(ply, decoded)
 	statsAllowDraw = false
 
 	for i, v in pairs(decoded) do

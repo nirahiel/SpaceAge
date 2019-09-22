@@ -9,7 +9,7 @@ function SA.Ice.GetRefined(ore, efficiency)
 
 	if ore == "Blue Ice" then
 		return {
-			coolant = math.floor(2500 * efficiency),
+			liquidnitrogen = math.floor(2500 * efficiency),
 			water = math.floor(10000 * efficiency),
 			heavywater = math.floor(50 * efficiency),
 			oxygen = math.floor(300 * efficiency),
@@ -21,7 +21,7 @@ function SA.Ice.GetRefined(ore, efficiency)
 		}
 	elseif ore == "Clear Ice" then
 		return {
-			coolant = math.floor(2500 * efficiency),
+			liquidnitrogen = math.floor(2500 * efficiency),
 			water = math.floor(10000 * efficiency),
 			heavywater = math.floor(50 * efficiency),
 			oxygen = math.floor(150 * efficiency),
@@ -33,7 +33,7 @@ function SA.Ice.GetRefined(ore, efficiency)
 		}
 	elseif ore == "Glacial Mass" then
 		return {
-			coolant = math.floor(2500 * efficiency),
+			liquidnitrogen = math.floor(2500 * efficiency),
 			water = math.floor(10000 * efficiency),
 			heavywater = math.floor(50 * efficiency),
 			oxygen = math.floor(125 * efficiency),
@@ -45,7 +45,7 @@ function SA.Ice.GetRefined(ore, efficiency)
 		}
 	elseif ore == "White Glaze" then
 		return {
-			coolant = math.floor(2500 * efficiency),
+			liquidnitrogen = math.floor(2500 * efficiency),
 			water = math.floor(10000 * efficiency),
 			heavywater = math.floor(50 * efficiency),
 			oxygen = math.floor(200 * efficiency),
@@ -57,7 +57,7 @@ function SA.Ice.GetRefined(ore, efficiency)
 		}
 	elseif ore == "Dark Glitter" then
 		return {
-			coolant = math.floor(10000 * efficiency),
+			liquidnitrogen = math.floor(10000 * efficiency),
 			water = math.floor(25000 * efficiency),
 			heavywater = math.floor(500 * efficiency),
 			oxygen = math.floor(75 * efficiency),
@@ -69,7 +69,7 @@ function SA.Ice.GetRefined(ore, efficiency)
 		}
 	elseif ore == "Glare Crust" then
 		return {
-			coolant = math.floor(10000 * efficiency),
+			liquidnitrogen = math.floor(10000 * efficiency),
 			water = math.floor(25000 * efficiency),
 			heavywater = math.floor(1000 * efficiency),
 			oxygen = math.floor(150 * efficiency),
@@ -81,7 +81,7 @@ function SA.Ice.GetRefined(ore, efficiency)
 		}
 	elseif ore == "Gelidus" then
 		return {
-			coolant = math.floor(50000 * efficiency),
+			liquidnitrogen = math.floor(50000 * efficiency),
 			water = math.floor(10000 * efficiency),
 			heavywater = math.floor(250 * efficiency),
 			oxygen = math.floor(100 * efficiency),
@@ -93,7 +93,7 @@ function SA.Ice.GetRefined(ore, efficiency)
 		}
 	elseif ore == "Krystallos" then
 		return {
-			coolant = math.floor(50000 * efficiency),
+			liquidnitrogen = math.floor(50000 * efficiency),
 			water = math.floor(10000 * efficiency),
 			heavywater = math.floor(100 * efficiency),
 			oxygen = math.floor(100 * efficiency),

@@ -1,7 +1,6 @@
 if SERVER then
 	AddCSLuaFile("autorun/sa_scoreboard.lua")
 	AddCSLuaFile("sa_scoreboard/admin_buttons.lua")
-	AddCSLuaFile("sa_scoreboard/cl_tooltips.lua")
 	AddCSLuaFile("sa_scoreboard/player_frame.lua")
 	AddCSLuaFile("sa_scoreboard/player_infocard.lua")
 	AddCSLuaFile("sa_scoreboard/player_row.lua")
@@ -11,30 +10,28 @@ if SERVER then
 else
 	include("sa_scoreboard/scoreboard.lua")
 
-	local SA_ScoreBoard = nil
-	
 	timer.Simple(1.5, function()
 		function GAMEMODE:CreateScoreboard()
-			if ScoreBoard then
-				ScoreBoard:Remove()
-				ScoreBoard = nil
+			if SA.ScoreBoard then
+				SA.ScoreBoard:Remove()
+				SA.ScoreBoard = nil
 			end
 			
-			SA_ScoreBoard = vgui.Create("SA_ScoreBoard")
+			SA.ScoreBoard = vgui.Create("SA_ScoreBoard")
 			
 			return true
 		end
 		
 		function GAMEMODE:ScoreboardShow()
-			if not SA_ScoreBoard then
+			if not SA.ScoreBoard then
 				self:CreateScoreboard()
 			end
 
 			GAMEMODE.ShowScoreboard = true
 			gui.EnableScreenClicker( true )
 
-			SA_ScoreBoard:SetVisible( true )
-			SA_ScoreBoard:UpdateScoreboard( true )
+			SA.ScoreBoard:SetVisible( true )
+			SA.ScoreBoard:UpdateScoreboard( true )
 			
 			return true
 		end
@@ -43,7 +40,7 @@ else
 			GAMEMODE.ShowScoreboard = false
 			gui.EnableScreenClicker( false )
 
-			SA_ScoreBoard:SetVisible( false )
+			SA.ScoreBoard:SetVisible( false )
 			
 			return true
 		end

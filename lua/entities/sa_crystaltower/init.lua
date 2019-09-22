@@ -3,8 +3,12 @@ AddCSLuaFile( "shared.lua" )
 
 include("shared.lua")
 
-SA_CrystalRadius = 1024
-SA_MaxCrystalCount = 6
+if not SA.Tiberium then
+	SA.Tiberium = {}
+end
+
+SA.Tiberium.MaxCrystalCount = 6
+SA.Tiberium.CrystalRadius = 1024
 
 function ENT:SpawnFunction(ply, tr)
 	if (!tr.Hit) then return end
@@ -48,7 +52,7 @@ function ENT:Initialize()
 end  
 
 function ENT:AutoSpawn()
-	while self.crystalCount < SA_MaxCrystalCount do
+	while self.crystalCount < SA.Tiberium.MaxCrystalCount do
 		self:SpawnCrystal(false)
 	end
 end
@@ -87,6 +91,10 @@ function ENT:SpawnCrystal(auto)
 		local ctal = self
 		timer.Simple(math.random(1,10),function() ctal:SpawnCrystal(true) end)
 	end
+
+	local SA_MaxCrystalCount = SA.Tiberium.MaxCrystalCount
+	local SA_CrystalRadius = SA.Tiberium.CrystalRadius
+
 	if self.crystalCount >= SA_MaxCrystalCount then return end
 	
 	local p = self:GetPos()

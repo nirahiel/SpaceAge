@@ -32,18 +32,18 @@ local function e2_ls_info(ent)
 	local retTab = {}
 	if ent.sbenvironment then
 		retTab = ls_table_to_e2_table(ent.sbenvironment)
-		if validEntity(ent) then
+		if SA.ValidEntity(ent) then
 			retTab.eentity = ent
 		end
 	end
 	if ent.environment and ent.environment.sbenvironment then
 		if ent.sbenvironment then
-			if ent.environment ~= ent and validEntity(ent.environment) then
+			if ent.environment ~= ent and SA.ValidEntity(ent.environment) then
 				retTab.eparent = ent.environment
 			end
 		else
 			retTab = ls_table_to_e2_table(ent.environment.sbenvironment)
-			if validEntity(ent.environment) then
+			if SA.ValidEntity(ent.environment) then
 				retTab.eentity = ent.environment
 			end
 		end
@@ -52,7 +52,7 @@ local function e2_ls_info(ent)
 end
 
 local function ls_get_res_by_ent(this)
-	if(!validEntity(this)) then return nil end 
+	if(!SA.ValidEntity(this)) then return nil end 
 	local netid = this:GetNetworkedInt("netid")
 	if netid <= 0 then return nil end
 	local nettable = RD.GetNetTable(netid)
@@ -61,7 +61,7 @@ local function ls_get_res_by_ent(this)
 end
 
 e2function table entity:lsInfo()
-	if(!validEntity(this)) then return {} end
+	if(!SA.ValidEntity(this)) then return {} end
 	return e2_ls_info(this)
 end
 

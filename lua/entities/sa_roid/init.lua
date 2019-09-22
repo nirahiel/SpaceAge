@@ -17,8 +17,5 @@ function ENT:Initialize()
 end  
 
 function ENT:OnRemove()
-	if(self.RespOnRemove == true) then
-		self.RespOnRemove = false
-		SA_Roid_Count = SA_Roid_Count - 1
-	end
+	SA.Asteroids.OnRemove(self)
 end

@@ -37,7 +37,7 @@ function ENT:DrawLaser()
 	render.SetMaterial( sprite )
 	render.DrawSprite(start,width2,width2,color)
 	
-	if (ValidEntity(trace.Entity) and trace.Entity:GetClass() == "sa_roid") then
+	if (SA.ValidEntity(trace.Entity) and trace.Entity:GetClass() == "sa_roid") then
 		render.DrawSprite(End,width2,width2,color)
 
 		local len = start:Distance(End)/19

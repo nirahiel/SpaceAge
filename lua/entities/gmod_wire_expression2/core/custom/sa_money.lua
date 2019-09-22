@@ -26,12 +26,12 @@ local function callMyselfGive(self,resultTable,allowed)
 end
 
 e2function number entity:giveCredits(amount)
-	if not (callMoneyFunc(self.player) and this and validEntity(this) and this:IsPlayer()) then return 0 end
+	if not (callMoneyFunc(self.player) and this and SA.ValidEntity(this) and this:IsPlayer()) then return 0 end
 	return bool_to_number(SA.GiveCredits.Do(self.player,this,amount))
 end
 
 e2function number entity:payCredits(amount)
-	if not (callMoneyFunc(self.player) and this and validEntity(this) and this:IsPlayer()) then return 0 end
+	if not (callMoneyFunc(self.player) and this and SA.ValidEntity(this) and this:IsPlayer()) then return 0 end
 	return bool_to_number(SA.GiveCredits.Confirm(this,self.player,amount, 
 		function(resultTable,allowed)
 			callMyselfGive(self,resultTable,allowed)
@@ -39,7 +39,7 @@ e2function number entity:payCredits(amount)
 end
 
 e2function number entity:credits()
-	if not (this and validEntity(this) and this:IsPlayer() and this.Credits) then return 0 end
+	if not (this and SA.ValidEntity(this) and this:IsPlayer() and this.Credits) then return 0 end
 	return this.Credits
 end
 

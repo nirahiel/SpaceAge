@@ -1,8 +1,24 @@
-AddCSLuaFile( "cl_init.lua" )
-AddCSLuaFile( "shared.lua" )
+AddCSLuaFile("cl_init.lua")
+AddCSLuaFile("shared.lua")
 
 include("shared.lua")
-util.PrecacheSound( "tools/ifm/beep.wav" )
+util.PrecacheSound("tools/ifm/beep.wav")
+
+local function OpenTerminal(ent,ply,founder)
+	if CurTime() < ent.NextUse then return end
+	ent.NextUse = CurTime() + 1
+	if (ent:GetPos():Distance(SA.Terminal.GetStationPos()) > SA.Terminal.GetStationSize() and (not (founder and founder.UserGroup and founder.rta and (founder.UserGroup == "corporation" or founder.UserGroup == "alliance") and founder.rta > 1))) then ent:EmitSound("tools/ifm/beep.wav") ply:AddHint("RTA device out of range of station.", NOTIFY_CLEANUP, 5) return end
+	if ply:GetPos():Distance(ent:GetPos()) > 1000 then ent:EmitSound("tools/ifm/beep.wav") ply:AddHint("Too far away from RTA device.", NOTIFY_CLEANUP, 5) return end
+	if ply.AtTerminal then return end
+	if not ply.TempStorage then
+		ply.TempStorage = {}
+	end
+	ply.AtTerminal = true
+	SA.Terminal.SetVisible(ply,true)
+	ply:Freeze(true)
+	ply:ConCommand("sa_terminal_update")
+	ply:ConCommand("sa_goodies_update")
+end
 
 function ENT:Initialize()
 	self:SetModel( "models/slyfo/rover_na_large.mdl" ) 	
@@ -28,20 +44,4 @@ end
 
 function ENT:Use( ply, called )
 	OpenTerminal(self,ply,self:GetTable().Founder)
-end
-
-function OpenTerminal(ent,ply,founder)
-	if CurTime() < ent.NextUse then return end
-	ent.NextUse = CurTime() + 1
-	if (ent:GetPos():Distance(SA.Terminal.GetStationPos()) > SA.Terminal.GetStationSize() and (not (founder and founder.UserGroup and founder.rta and (founder.UserGroup == "corporation" or founder.UserGroup == "alliance") and founder.rta > 1))) then ent:EmitSound("tools/ifm/beep.wav") ply:AddHint("RTA device out of range of station.", NOTIFY_CLEANUP, 5) return end
-	if ply:GetPos():Distance(ent:GetPos()) > 1000 then ent:EmitSound("tools/ifm/beep.wav") ply:AddHint("Too far away from RTA device.", NOTIFY_CLEANUP, 5) return end
-	if ply.AtTerminal then return end
-	if not ply.TempStorage then
-		ply.TempStorage = {}
-	end
-	ply.AtTerminal = true
-	SA.Terminal.SetVisible(ply,true)
-	ply:Freeze(true)
-	ply:ConCommand("sa_terminal_update")
-	ply:ConCommand("sa_goodies_update")
 end
