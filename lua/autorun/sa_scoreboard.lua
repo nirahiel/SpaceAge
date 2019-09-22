@@ -1,13 +1,12 @@
 if SERVER then
-	AddCSLuaFile( "autorun/SA_Scoreboard.lua" )
-	AddCSLuaFile( "sa_scoreboard/admin_buttons.lua" )
-	AddCSLuaFile( "sa_scoreboard/cl_tooltips.lua" )
-	AddCSLuaFile( "sa_scoreboard/player_frame.lua" )
-	AddCSLuaFile( "sa_scoreboard/player_infocard.lua" )
-	AddCSLuaFile( "sa_scoreboard/player_row.lua" )
-	AddCSLuaFile( "sa_scoreboard/scoreboard.lua" )
-	AddCSLuaFile( "sa_scoreboard/vote_button.lua" )
-	resource.AddFile("resource/fonts/neuropol.ttf")
+	AddCSLuaFile("autorun/SA_Scoreboard.lua")
+	AddCSLuaFile("sa_scoreboard/admin_buttons.lua")
+	AddCSLuaFile("sa_scoreboard/cl_tooltips.lua")
+	AddCSLuaFile("sa_scoreboard/player_frame.lua")
+	AddCSLuaFile("sa_scoreboard/player_infocard.lua")
+	AddCSLuaFile("sa_scoreboard/player_row.lua")
+	AddCSLuaFile("sa_scoreboard/scoreboard.lua")
+	AddCSLuaFile("sa_scoreboard/vote_button.lua")
 else
 	include("sa_scoreboard/scoreboard.lua")
 

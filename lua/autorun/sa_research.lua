@@ -25,7 +25,7 @@ end
 
 local function SA_AddResearch(name,group,displayname,ranks,variable,cost,costinc,desc,reqtype,prereq,position,classes,image)
 	local tbl = {}
-	image = image or "SA_Research_Icon"
+	image = image or "sa_research_icon"
 	tbl["display"] = displayname
 	tbl["ranks"] = ranks
 	tbl["variable"] = variable
