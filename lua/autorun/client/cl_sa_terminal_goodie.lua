@@ -41,7 +41,7 @@ function PANEL:Init()
 end
 
 function PANEL:SetNameDescID(intid,goodieid)
-	intid = SA_GoodieTbl[intid]
+	intid = SA.Goodies[intid]
 	self.GoodieName:SetText(intid.name)
 	self.GoodieDesc:SetText(intid.desc)
 	self.GoodieID = goodieid

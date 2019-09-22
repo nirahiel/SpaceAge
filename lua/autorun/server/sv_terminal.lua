@@ -401,7 +401,7 @@ local function SA_UpdateGoodies(data, isok, merror, ply)
 	if not isok then ply.SendingGoodieUp = false end
 	ply.Goodies = {}
 	for _,v in pairs(data) do
-		ply.Goodies[v["id"]] = SA_GoodieTbl[v["intid"]]
+		ply.Goodies[v["id"]] = SA.Goodies[v["intid"]]
 	end
 	supernet.Send(ply, "GoodieUpdate", data, function() ply.SendingGoodieUp = false end)
 end

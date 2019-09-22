@@ -53,7 +53,7 @@ function PlayerMeta:AssignFaction(name)
 	if name then self.UserGroup = name end
 	if not self.UserGroup then self.UserGroup = "freelancer" end
 	if self.UserGroup == "alliance" and self.allyuntil < os.time() then self.UserGroup = "freelancer" end
-	for k,v in pairs(SA_Factions) do
+	for k,v in pairs(SA.Factions.Table) do
 		if self.UserGroup == v[2] then
 			self.TeamIndex = k
 		end
@@ -106,7 +106,7 @@ local function NonLeaderRes(data, isok, merror, ply)
 		local apptext = "Hi"
 		if (data[1]) then
 			local ffid = tonumber(data[1]['faction'])
-			appfact = SA_Factions[ffid][1]
+			appfact = SA.Factions.Table[ffid][1]
 			apptext = data[1]['text']
 		end
 		net.Start("sa_dosetappdata")
@@ -284,8 +284,8 @@ local function LoadRes(data, isok, merror, ply, sid)
 	end
 	
 	if sa_faction_only:GetBool() and
-	 ( ply.TeamIndex < SA_MinFaction or
-	   ply.TeamIndex > SA_MaxFaction or
+	 ( ply.TeamIndex < SA.Factions.Min or
+	   ply.TeamIndex > SA.Factions.Max or
 	   tonumber(ply.TotalCredits) < 100000000 ) then
 			ply:Kick("You don't meet the requirements for this server!")
 	end

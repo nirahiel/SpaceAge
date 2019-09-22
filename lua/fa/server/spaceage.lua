@@ -7,7 +7,7 @@ end
 local function SA_JoinFaction(ply,txt)
 	if ply.InvitedTo then
 		ply.TeamIndex = ply.InvitedTo
-		ply.UserGroup = SA_Factions[ply.InvitedTo][2]
+		ply.UserGroup = SA.Factions.Table[ply.InvitedTo][2]
 		ply.IsLeader = false
 		ply:Spawn()
 		ply.InvitedTo = false
@@ -30,7 +30,7 @@ local function SA_InviteToFaction(ply,txt)
 		if v then
 			v.InvitedTo = ply.TeamIndex
 			ply:AddHint("Invited "..v:Name().." to your faction.",NOTIFY_GENERIC,5)
-			v:AddHint("You have been invited to join "..SA_Factions[v.InvitedTo][1].." type [join to accept the invitation.",NOTIFY_GENERIC,5)
+			v:AddHint("You have been invited to join "..SA.Factions.Table[v.InvitedTo][1].." type [join to accept the invitation.",NOTIFY_GENERIC,5)
 			SA_Send_Main(v)
 		else
 			ply:AddHint("No players match the name given.",NOTIFY_ERROR,5)
@@ -49,7 +49,7 @@ local function SA_KickFaction(ply,txt)
 			if ply == v then ply:AddHint("You cannot kick yourself.", NOTIFY_CLEANUP, 5) return "" end
 			if v.TeamIndex == ply.TeamIndex then
 				ply:ChatPrint("Kicked "..v:Name().." out of your faction.")
-				v:AddHint("You have been kicked out of "..SA_Factions[v.TeamIndex][1], NOTIFY_CLEANUP, 5)
+				v:AddHint("You have been kicked out of "..SA.Factions.Table[v.TeamIndex][1], NOTIFY_CLEANUP, 5)
 				v.TeamIndex = 1
 				v.UserGroup = "freelancer"
 				v.IsLeader = false

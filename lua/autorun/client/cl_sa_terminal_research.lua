@@ -69,7 +69,7 @@ function PANEL:SetDesc()
 				if v[1] == "faction" then
 					DescAdd = DescAdd.." (Faction: "
 					for ke,ve in pairs(v[2]) do
-						DescAdd = DescAdd..SA_FactionToLong[ve]..","
+						DescAdd = DescAdd..SA.Factions.ToLong[ve]..","
 					end
 					DescAdd = string.Left(DescAdd,string.len(DescAdd)-1)..")"
 				else			
@@ -95,7 +95,7 @@ function PANEL:SetDesc()
 						if v[1] == "faction" then
 							DescAdd = DescAdd.." (Faction: "
 							for ke,ve in pairs(v[2]) do
-								DescAdd = DescAdd..SA_FactionToLong[ve]..","
+								DescAdd = DescAdd..SA.Factions.ToLong[ve]..","
 							end
 							DescAdd = string.Left(DescAdd,string.len(DescAdd)-1)..")"
 						else			

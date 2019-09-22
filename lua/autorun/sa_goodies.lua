@@ -2,7 +2,7 @@ if SERVER then
 	AddCSLuaFile()
 end
 
-SA_GoodieTbl = {
+SA.Goodies = {
 	ally_1m= {
 		name = "Alliance 1 month",
 		desc = "1 month membership in the faction \"The Alliance\"",

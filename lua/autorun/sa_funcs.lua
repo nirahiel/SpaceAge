@@ -3,15 +3,18 @@ if SERVER then
 end
 
 function SA.AddCommasToInt(str)
-	str = string.reverse(tostring(math.floor(tonumber(str))))
-	local len = string.len(str)
+	str = string.reverse(tostring(str)) -- Make sure this is a string!
+
+	local len = str:len() - 1
 	local ret = ""
-	for i=1,len do
-		ret = ret .. string.sub(str,i,i)
-		if((i%3) == 0) then
+	for i = 1, len do
+		ret = ret .. str:sub(i, i)
+		if i % 3 == 0 then
 			ret = ret .. ","
 		end
 	end
+	len = len + 1
+	ret = ret .. str:sub(len , len)
 	return string.reverse(ret)
 end
 
@@ -23,6 +26,8 @@ function SA.FormatTime(time)
 	return "" .. time
 end
 
-function ValidEntity(ent)
-	return ent and ent:IsValid()
+if not ValidEntity then
+	function ValidEntity(ent)
+		return ent and ent:IsValid()
+	end
 end

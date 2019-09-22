@@ -1,21 +1,12 @@
 include("shared.lua")
 
-ENT.RenderGroup 		= RENDERGROUP_BOTH
+ENT.RenderGroup = RENDERGROUP_BOTH
 
 ENT.allowDraw = false
 
-SA_FactionColors = {}
-SA_FactionColors["freelancer"] = Color(158,134,97,255)
-SA_FactionColors["miners"] = Color(128,64,0,255)
-SA_FactionColors["corporation"] = Color(0,150,255,255)
-SA_FactionColors["legion"] = Color(85,221,34,255)
-SA_FactionColors["starfleet"] = Color(210,210,210,255)
+local SA_PosColors = { Color(255,255,0,255), Color(128,128,128,255), Color(128,50,0,255) }
 
-SA_PosColors = { Color(255,255,0,255), Color(128,128,128,255), Color(128,50,0,255) }
-
-if(!statsAllowDraw) then
-	statsAllowDraw = false
-end
+local statsAllowDraw = false
 
 function ENT:Initialize()
 	self.scrollPos = 0
@@ -60,7 +51,7 @@ function ENT:Draw()
 	local pos = self:GetPos()+(self:GetForward()*OF)+(self:GetUp()*OU)+(self:GetRight()*OR)
 	if self.doScroll then
 		self.scrollPos = self.scrollPos + self.scrollSpeed
-	elseif !self.scrollAgainTimer then
+	elseif not self.scrollAgainTimer then
 		timer.Simple(3,function() 
 			self.doScroll = 1
 			self.scrollAgainTimer = false
@@ -140,7 +131,7 @@ function SA_ReceiveStatsUpdate(um)
 	SA_StatsTable[i] = {}
 	SA_StatsTable[i]["name"] = um:ReadString()
 	SA_StatsTable[i]["score"] = SA.AddCommasToInt(um:ReadString())
-	local tempColor = SA_FactionColors[um:ReadString()]
+	local tempColor = SA.Factions.Colors[um:ReadString()]
 	if (!tempColor) then tempColor = Color(255,100,0,255) end
 	SA_StatsTable[i]["factioncolor"] = tempColor
 	tempColor = Color(255,255,255,255)

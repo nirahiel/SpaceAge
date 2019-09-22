@@ -2,7 +2,7 @@ local data, isok, merror
 
 AddCSLuaFile("autorun/client/cl_sa_application.lua")
 
-SA_FactionData = {}
+local SA_FactionData = {}
 
 local function SetFactionSpawn(...)
 	local ent = {}
@@ -22,85 +22,85 @@ local function InitSAFactions()
 
 	local mapname = string.lower(game.GetMap())
 	if mapname == "sb_gooniverse" then
-		SA_Factions[1][6] = SetFactionSpawn(			
+		SA.Factions.Table[1][6] = SetFactionSpawn(			
 			Vector(-10582.343750,-7122.343750,-8011.968750),
 			Vector(-10599.000000,-7483.375000,-8011.968750),
 			Vector(-10610.656250,-7735.750000,-8011.968750)
 		)
-		SA_Factions[2][6] = SetFactionSpawn(
+		SA.Factions.Table[2][6] = SetFactionSpawn(
 			Vector(9640.250000,10959.062500,4652.000000),
 			Vector(10621.593750,10793.406250,4652.031250),
 			Vector(10224.375000,10891.750000,4651.375000)
 		)
-		SA_Factions[3][6] = SetFactionSpawn(
+		SA.Factions.Table[3][6] = SetFactionSpawn(
 			Vector(3779.468750,-10047.125000,-1983.968750),
 			Vector(3816.062500,-9695.156250,-1983.968750),
 			Vector(3835.593750,-9507.312500,-1983.968750)
 		)
-		SA_Factions[4][6] = SetFactionSpawn(
+		SA.Factions.Table[4][6] = SetFactionSpawn(
 			Vector(113.125000,794.843750,4660.031250),
 			Vector(113.000000,714.718750,4660.031250),
 			Vector(112.906250,647.562500,4660.031250)
 		)
-		SA_Factions[5][6] = SetFactionSpawn(
+		SA.Factions.Table[5][6] = SetFactionSpawn(
 			Vector(-121.625000,-695.156250,4660.031250),
 			Vector(-125.218750,-763.937500,4660.031250),
 			Vector(-129.562500,-847.718750,4660.031250)
 		)
 	elseif mapname == "sb_forlorn_sb3_r2l" then
-		SA_Factions[1][6] = SetFactionSpawn(			
+		SA.Factions.Table[1][6] = SetFactionSpawn(			
 			Vector(7769.562500,-11401.250000,-8954.968750),
 			Vector(7504.875000,-11396.343750,-8954.968750),
 			Vector(7245.843750,-11400.531250,-8954.968750)
 		)
-		SA_Factions[2][6] = SetFactionSpawn(
+		SA.Factions.Table[2][6] = SetFactionSpawn(
 			Vector(9749.156250,9996.843750,400.031250),
 			Vector(9417.656250,9998.156250,400.031250),
 			Vector(9090.000000,9999.437500,400.031250)
 		)
-		SA_Factions[3][6] = SetFactionSpawn(
+		SA.Factions.Table[3][6] = SetFactionSpawn(
 			Vector(10653.000000,11797.906250,-8822.750000),
 			Vector(10700.468750,11856.687500,-8823.593750),
 			Vector(10753.812500,11922.750000,-8824.5937)
 		)
-		SA_Factions[4][6] = SetFactionSpawn(
+		SA.Factions.Table[4][6] = SetFactionSpawn(
 			Vector(9749.156250,9996.843750,611.593750),
 			Vector(9417.656250,9998.156250,611.593750),
 			Vector(9090.000000,9999.437500,611.593750)
 		)
-		SA_Factions[5][6] = SetFactionSpawn(
+		SA.Factions.Table[5][6] = SetFactionSpawn(
 			Vector(9596.812500,10761.187500,874.031250),
 			Vector(9453.125000,10768.406250,874.031250),
 			Vector(9260.718750,10778.031250,874.031250)
 		)
 	elseif mapname == "sb_forlorn_sb3_r3" then
-		SA_Factions[1][6] = SetFactionSpawn(			
+		SA.Factions.Table[1][6] = SetFactionSpawn(			
 			Vector(7769.562500,-11401.250000,-8954.968750),
 			Vector(7504.875000,-11396.343750,-8954.968750),
 			Vector(7245.843750,-11400.531250,-8954.968750)
 		)
-		SA_Factions[2][6] = SetFactionSpawn(
+		SA.Factions.Table[2][6] = SetFactionSpawn(
 			Vector(9749.156250,9996.843750,400.031250),
 			Vector(9417.656250,9998.156250,400.031250),
 			Vector(9090.000000,9999.437500,400.031250)
 		)
-		SA_Factions[3][6] = SetFactionSpawn(
+		SA.Factions.Table[3][6] = SetFactionSpawn(
 			Vector(10653.000000,11797.906250,-8822.750000),
 			Vector(10700.468750,11856.687500,-8823.593750),
 			Vector(10753.812500,11922.750000,-8824.5937)
 		)
-		SA_Factions[4][6] = SetFactionSpawn(
+		SA.Factions.Table[4][6] = SetFactionSpawn(
 			Vector(9749.156250,9996.843750,611.593750),
 			Vector(9417.656250,9998.156250,611.593750),
 			Vector(9090.000000,9999.437500,611.593750)
 		)
-		SA_Factions[5][6] = SetFactionSpawn(
+		SA.Factions.Table[5][6] = SetFactionSpawn(
 			Vector(9596.812500,10761.187500,874.031250),
 			Vector(9453.125000,10768.406250,874.031250),
 			Vector(9260.718750,10778.031250,874.031250)
 		)
 	elseif mapname == "sb_forlorn_sb3_r3" then
-		for _, v in pairs(SA_Factions) do
+		for _, v in pairs(SA.Factions.Table) do
 			v[6] = SetFactionSpawn(
 				Vector(10864, 1078, 305),
 				Vector(10864, 1178, 305),
@@ -110,11 +110,11 @@ local function InitSAFactions()
 			)
 		end
 	end
-	SA_Factions[6][6] = SA_Factions[5][6] //ALLIANCE
-	//SA_Factions[8][6] = SA_Factions[5][6] //FAILED TO LOAD -- Already does this below...
-	SA_Factions[7][6] = SA_Factions[5][6] //PMS FACTION
+	SA.Factions.Table[6][6] = SA.Factions.Table[5][6] //ALLIANCE
+	--SA.Factions.Table[8][6] = SA.Factions.Table[5][6] //FAILED TO LOAD -- Already does this below...
+	SA.Factions.Table[7][6] = SA.Factions.Table[5][6] //PMS FACTION
 	
-	SA_Factions[SA_MaxFaction+1][6] = SA_Factions[1][6]
+	SA.Factions.Table[SA.Factions.Max+1][6] = SA.Factions.Table[1][6]
 end
 timer.Simple(0,InitSAFactions)
 
@@ -169,18 +169,18 @@ local function SA_SetSpawnPos( ply )
 		if (ply:IsVIP()) then
 			--DO NOTHING!
 		elseif islead then
-			timer.Simple(2, function() if (ply and ply:IsValid()) then ply:SetModel(SA_Factions[idx][5]) end end)
+			timer.Simple(2, function() if (ply and ply:IsValid()) then ply:SetModel(SA.Factions.Table[idx][5]) end end)
 		else
-			timer.Simple(2, function() if (ply and ply:IsValid()) then ply:SetModel(SA_Factions[idx][4]) end end)
+			timer.Simple(2, function() if (ply and ply:IsValid()) then ply:SetModel(SA.Factions.Table[idx][4]) end end)
 		end
 		ply:SetTeam(idx)
-		if SA_Factions[idx][6] then
-			return table.Random(SA_Factions[idx][6])
+		if SA.Factions.Table[idx][6] then
+			return table.Random(SA.Factions.Table[idx][6])
 		end
 	else
-		ply:SetTeam(SA_MaxFaction+1)
-		if SA_Factions[1][6] then
-			return table.Random(SA_Factions[SA_MaxFaction+1][6])
+		ply:SetTeam(SA.Factions.Max+1)
+		if SA.Factions.Table[1][6] then
+			return table.Random(SA.Factions.Table[SA.Factions.Max+1][6])
 		end
 	end
 end
@@ -233,7 +233,7 @@ local function SA_DoApplyFaction(len, ply)
 	local forfaction = net.ReadString()
 	satx = MySQL:Escape(sat)
 	local ffid = 0
-	for k, v in pairs(SA_Factions) do
+	for k, v in pairs(SA.Factions.Table) do
 		if (v[1] == forfaction) then
 			ffid = k
 			break
@@ -276,14 +276,14 @@ local function DoAcceptPlayerRes(data, isok, merror, ply, app, appf, args)
 			umsg.End()
 		elseif (v:SteamID() == app['steamid']) then
 			v.TeamIndex = appf
-			v.UserGroup = SA_Factions[appf][2]
+			v.UserGroup = SA.Factions.Table[appf][2]
 			v.IsLeader = false
 			v:Spawn()
 			SA_Send_Main(v)
 			SA_Send_FactionRes(v)
 		end
 	end
-	MySQL:Query('UPDATE players SET groupname = "'..MySQL:Escape(SA_Factions[appf][2])..'", isleader = 0 WHERE steamid = "'..MySQL:Escape(args[1])..'"', DoAcceptPlayerResRes, ply)
+	MySQL:Query('UPDATE players SET groupname = "'..MySQL:Escape(SA.Factions.Table[appf][2])..'", isleader = 0 WHERE steamid = "'..MySQL:Escape(args[1])..'"', DoAcceptPlayerResRes, ply)
 end
 
 local function DoAcceptPlayer(data, isok, merror, ply, args)
