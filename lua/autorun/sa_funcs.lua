@@ -23,11 +23,21 @@ function SA.GetPlayerByName(name)
 end
 
 function SA.FormatTime(time)
-	return "" .. time
+	return tostring(time)
 end
 
+
+
+-- Global functions
 if not ValidEntity then
 	function ValidEntity(ent)
 		return ent and ent:IsValid()
+	end
+end
+
+if not Color then
+	function Color(r, g, b, a)
+		if not a then a = 255 end
+		return {r=r,g=g,b=b,a=a}
 	end
 end
