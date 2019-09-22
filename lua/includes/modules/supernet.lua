@@ -7,15 +7,16 @@ end
 local tinsert = table.insert
 local tremove = table.remove
 
+local TOTAL_SIZE_MAX = SERVER and 2000000 or nil
 local SIZE_MAX = 60000
-local MSG_START = 0
-local MSG_MID = 1
-local MSG_END = 2
+local MSGCOUNT_MAX = TOTAL_SIZE_MAX and math.floor(TOTAL_SIZE_MAX / SIZE_MAX) or nil
 
 local queue = {}
 local inqueue = {}
 local hooks = {}
 local msgid = 0
+
+print("supernet, TOTAL_SIZE_MAX = ", TOTAL_SIZE_MAX, ", SIZE_MAX = ", SIZE_MAX, ", MSGCOUNT_MAX = ", MSGCOUNT_MAX)
 
 local sendFunc = net.SendToServer
 if SERVER then
@@ -25,7 +26,7 @@ end
 
 function supernet.Send(trg, name, data, cb)
 	msgid = msgid + 1
-	if msgid > 65530 then
+	if msgid > 4095 then
 		msgid = 1
 	end
 	local dJSON = util.TableToJSON(data)
@@ -35,6 +36,15 @@ end
 
 function supernet.Hook(name, cb)
 	hooks[name] = cb
+end
+
+local function callCB(cb, str)
+	local decomp = util.Decompress(str, TOTAL_SIZE_MAX)
+	if not decomp then
+		return
+	end
+	local tbl = util.JSONToTable(decomp)
+	cb(ply, tbl)
 end
 
 local function NetReceive(len, ply)
@@ -47,77 +57,98 @@ local function NetReceive(len, ply)
 		end
 	end
 
-	local msgType = net.ReadUInt(8)
-	local msgId = net.ReadUInt(16)
-	if msgType == MSG_START then
-		local name = net.ReadString()
+	local isNew = net.ReadBool()
+	local isEnd = net.ReadBool()
+	local msgId = net.ReadUInt(14)
+
+	local name
+	if isNew then
+		name = net.ReadString()
+	end
+
+	local dLen = net.ReadUInt(16)
+	local dBin = net.ReadData(dLen)
+
+	local data
+
+	if isNew then
+		if not name then
+			print("No name got from " .. tostring(ply))
+			return
+		end
+
 		local cb = hooks[name]
 		if not cb then
 			print("Received supernet for unknown name " .. name .. " from " .. tostring(ply))
 			return
 		end
-		myqueue[msgId] = {cb, {}}
-		return
+
+		if isEnd then
+			callCB(cb, dBin)
+			return
+		end
+
+		data = {cb, {dBin}, name}
+		myqueue[msgId] = data
+	else
+		data = myqueue[msgId]
+		tinsert(data[2], dBin)
 	end
 
-	local data = myqueue[msgId]
-	if not data then
-		return
-	end
-
-	local dLen = net.ReadUInt(16)
-	tinsert(data[2], net.ReadData(dLen))
-
-	if msgType == MSG_END then
+	local bits = data[2]
+	if MSGCOUNT_MAX and #bits > MSGCOUNT_MAX then
+		print("Ignoring message " .. data[3] .. " from " .. tostring(ply) .. ": Exceeded maximum message count!")
 		myqueue[msgId] = nil
-		local str = table.concat(data[2])
-		local decomp = util.Decompress(str)
-		local tbl = util.JSONToTable(decomp)
-		data[1](ply, tbl)
+		return
+	end
+
+	if isEnd then
+		myqueue[msgId] = nil
+		callCB(data[1], table.concat(bits))
 	end
 end
 net.Receive("SuperNet_MSG", NetReceive)
 
 local current
 local function RunQueue()
-	--local msgid = current[1]
-	--local target = current[2]
-	--local name = current[3]
+	local isNew = false
 
 	if not current then
 		if #queue < 1 then
 			return
 		end
 
+		isNew = true
 		current = tremove(queue, #queue)
-
-		net.Start("SuperNet_MSG")
-			net.WriteUInt(MSG_START, 8)
-			net.WriteUInt(current[1], 16)
-			net.WriteString(current[3])
-		sendFunc(current[2])
 	end
 
+	--local msgid = current[1]
+	--local target = current[2]
+	--local name = current[3]
 	--local data = current[4]
 	local pos = current[6]
 	local left = current[7]
 
-	local msgType = MSG_MID
+	local isEnd = false
 	local len = SIZE_MAX
 	if left <= SIZE_MAX then
-		msgType = MSG_END
+		isEnd = true
 		len = left
 	end
 
 	local dSub = current[4]:sub(pos, (pos + len) - 1)
 	net.Start("SuperNet_MSG")
-		net.WriteUInt(msgType, 8)
-		net.WriteUInt(current[1], 16)
+		net.WriteBool(isNew)
+		net.WriteBool(isEnd)
+		net.WriteUInt(current[1], 14)
+		if isNew then
+			net.WriteString(current[3])
+		end
 		net.WriteUInt(len, 16)
 		net.WriteData(dSub, len)
 	sendFunc(current[2])
 
-	if msgType == MSG_END then
+	if isEnd then
 		local cb = current[5]
 		current = nil
 		cb()
