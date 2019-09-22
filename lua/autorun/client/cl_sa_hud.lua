@@ -1,4 +1,4 @@
-local alwaysshowtemp = CreateClientConVar("cl_sa_always_show_temperature",0,true,false)
+local alwaysshowtemp = CreateClientConVar("cl_sa_hud_always_show_temperature", 0, true, false)
 
 local function hidehud(name)
 	if name == "CHudHealth" or name == "CHudBattery" or name == "CHudAmmo" or name == "CHudSecondaryAmmo" or name == "CustFiremode" then
@@ -56,33 +56,6 @@ timer.Create("SA_HealthBarRed",0.01,0,function()
 end)
 local SA_LastHealth = 0
 
-local function DrawLSBar(BarNum,CaptionX,Value,ScH,ScW,ColBack,ColText)
-	local Caption = CAF.GetLangVar(CaptionX)
-	local BarHei = 30
-	local BarSpace = 5
-	local BarWid = 440
-	local RealBarWid = BarWid - 70
-	local Hei = (ScH - 120) - (BarNum * (BarHei + BarSpace))
-	local XMinX = (ScW - BarWid) / 2
-	
-	draw.RoundedBox(4, XMinX, Hei, BarWid, BarHei, ColBack)
-	draw.SimpleText(Caption, HUDFont, XMinX + 8, Hei + (BarHei / 2), ColText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-	
-	local Perc = Value / 4000
-	
-	local ValCol = Color(255*(1-Perc),255*Perc,0,255)
-	
-	if Value > 0 then
-		local XWid = (BarWid - 154)  * Perc
-		XWid = math.Max(XWid,4)
-		draw.RoundedBox(4, XMinX + 150, Hei + 4, XWid, BarHei - 8, ValCol)
-		draw.SimpleText(tostring(Perc*100).." %", HUDFont, XMinX + 70, Hei + (BarHei / 2), ValCol, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-	else
-		if not SA_HUDBlink then ValCol = Color(0,0,0,0) end
-		draw.SimpleText("EMPTY", HUDFont, XMinX + 70, Hei + (BarHei / 2), ValCol, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-	end
-end
-
 local WeaponMaxAmmo = {}
 WeaponMaxAmmo["weapon_pistol"] = 18
 WeaponMaxAmmo["weapon_357"] = 6
@@ -107,6 +80,33 @@ local function GetMaxAmmo(SWEP)
 	LocalPlayer():ChatPrint("UNKOWN WEAPON: "..SWEP:GetClass() .. "|" .. tostring(SWEP:Clip1()))
 	
 	return SWEP:Clip1()
+end
+
+local function DrawLSBar(BarNum,CaptionX,Value,ScH,ScW,ColBack,ColText)
+	local Caption = CAF.GetLangVar(CaptionX)
+	local BarHei = 20
+	local BarSpace = 2
+	local BarWid = 440
+	local RealBarWid = BarWid - 70
+	local Hei = (ScH - 126) - (BarNum * (BarHei + BarSpace))
+	local XMinX = (ScW - BarWid) / 2
+	
+	draw.RoundedBox(4, XMinX, Hei, BarWid, BarHei, ColBack)
+	draw.SimpleText(Caption, HUDFont, XMinX + 8, Hei + (BarHei / 2), ColText, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+	
+	local Perc = Value / 4000
+	
+	local ValCol = Color(255*(1-Perc),255*Perc,0,255)
+	
+	if Value > 0 then
+		local XWid = (BarWid - 154)  * Perc
+		XWid = math.Max(XWid,4)
+		draw.RoundedBox(4, XMinX + 150, Hei + 4, XWid, BarHei - 8, ValCol)
+		draw.SimpleText(tostring(Perc*100).." %", HUDFont, XMinX + 70, Hei + (BarHei / 2), ValCol, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+	else
+		if not SA_HUDBlink then ValCol = Color(0,0,0,0) end
+		draw.SimpleText("EMPTY", HUDFont, XMinX + 70, Hei + (BarHei / 2), ValCol, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+	end
 end
 
 local function SA_CustomHUDPaint()
@@ -222,38 +222,102 @@ local function SA_CustomHUDPaint()
 		local goodTemp = Color(0,255,0,255)
 		
 		local XMinX = (ScW - 388) / 2
-		draw.RoundedBox(4, XMinX - 26, ScH - 120, 440, 100, HUDGrey)
+		draw.RoundedBox(6, XMinX - 26 - 8, ScH - 126, 440 + 16, 94, HUDGrey)
 		
 		local Perc = math.Clamp(FairTemp_Mid / GlobalTemp_Max, 0, 1)
 		local Wid = Perc * 390
-		draw.RoundedBox(4, (ScW - 390) / 2, ScH - 90, Wid, 40, coolTemp)
-		draw.RoundedBox(4, Wid + XMinX, ScH - 90, 390 - Wid, 40, hotTemp)
+		--draw.RoundedBox(4, (ScW - 390) / 2, ScH - 90 + 5, Wid, 40, coolTemp)
+		--draw.RoundedBox(4, Wid + XMinX, ScH - 90 + 5, 390 - Wid, 40, hotTemp)
+		local outlineW = 2
+		surface.SetDrawColor(Color(0,0,0,255))
+		draw.NoTexture()
+		surface.DrawTexturedRectRounded( (ScW - 390) / 2 - outlineW, ScH - 90 + 5 - outlineW, 390 + outlineW*2+1, 20 + outlineW*2, 4, 4, true, true, true, true)
+
+
+		surface.SetDrawColor(coolTemp)
+		draw.NoTexture()
+		surface.DrawTexturedRectRounded( (ScW - 390) / 2, ScH - 90 + 5, Wid, 20, 4, 4, true, false, true, false)
+
+		surface.SetDrawColor(hotTemp)
+		surface.DrawTexturedRectRounded( Wid + XMinX, ScH - 90 + 5, 390 - Wid, 20, 4, 4, false, true, false ,true )
+
+
+
+
+		--draw.NoTexture()
 
 		local Perc = math.Clamp(FairTemp_Min / GlobalTemp_Max, 0, 1)
 		local Wid = Perc * 390
 		local Perc2 = math.Clamp(FairTemp_Max / GlobalTemp_Max, 0, 1)
 		local Wid2 = math.Clamp(Perc2 - Perc, 0, 1) * 390
+
+
 		
 		surface.SetDrawColor(goodTemp)
-		surface.DrawRect(XMinX + Wid, ScH - 90, Wid2, 40)
+		surface.DrawTexturedRectRounded(XMinX + Wid, ScH - 90 + 5, Wid2, 20, 1, 3, true, true, true ,true )
+
+		surface.SetTexture(surface.GetTextureID("vgui/gradient-r"))
+		surface.SetDrawColor(Color(0,255,0,255))
+		surface.DrawTexturedRect(XMinX + Wid - 3, ScH - 90 + 5, 5, 20)
+
+		surface.SetTexture(surface.GetTextureID("vgui/gradient-l"))
+		surface.SetDrawColor(Color(0,255,0,255))
+		surface.DrawTexturedRect(XMinX + Wid + Wid2, ScH - 90 + 5, 5, 20)
+
+	
+
+		--gradients
+		surface.SetDrawColor(Color(0,0,0,235))
+		surface.SetTexture(surface.GetTextureID("vgui/gradient-d"))
+		surface.DrawTexturedRectRounded( (ScW - 390) / 2, ScH - 90 + 5, Wid, 20, 4, 4, true, false, true, false)
+		surface.DrawTexturedRectRounded( Wid + XMinX+Wid2-1, ScH - 90 + 5, 390 - Wid - Wid2+1, 20, 4, 4, false, true, false ,true )
+
+		surface.DrawTexturedRectRounded( Wid + XMinX-1, ScH - 90 + 5, Wid2, 20, 2, 2, false, false, false, false)
+
+
+		surface.SetTexture(surface.GetTextureID("vgui/gradient-u"))
+		surface.DrawTexturedRectRounded( (ScW - 390) / 2, ScH - 90 + 5, Wid, 20, 4, 4, true, false, true, false)
+		surface.DrawTexturedRectRounded( Wid + XMinX+Wid2-1, ScH - 90 + 5, 390 - Wid - Wid2+1, 20, 4, 4, false, true, false ,true )
+
+		surface.DrawTexturedRectRounded( Wid + XMinX-1, ScH - 90 + 5, Wid2, 20, 2, 2, false, false, false, false)
+
+		surface.SetDrawColor(Color(0,255,0,255))
+		surface.SetTexture(surface.GetTextureID("vgui/gradient-l"))
+		--surface.DrawTexturedRectRounded( (ScW - 390) / 2, ScH - 90 + 5, Wid, 20, 4, 4, true, false, true, false)
+		--surface.DrawTexturedRectRounded( Wid + XMinX-1 + Wid2, ScH - 90 + 5, Wid2, 20, 2, 2, false, false, false, false)
+
+		surface.SetTexture(surface.GetTextureID("vgui/gradient-r"))
+		--surface.DrawTexturedRectRounded( Wid + XMinX+Wid2-1, ScH - 90 + 5, 390 - Wid - Wid2+1, 20, 4, 4, false, true, false ,true )
+		--surface.DrawTexturedRectRounded( Wid + XMinX, ScH - 90 + 5, Wid2, 20, 2, 2, false, false, false, false)
 		
-		local textSlider = surface.GetTextureID("vgui/slider")
-		surface.SetTexture(textSlider)
-		surface.SetDrawColor(255,255,255,255)
+		--local textSlider = surface.GetTextureID("effects/tool_tracer")
+
+		--surface.SetTexture(textSlider)
+		draw.NoTexture()
+		surface.SetDrawColor(255,255,255,20)
 		
 		local Perc = math.Clamp(ls_tmp / GlobalTemp_Max, 0, 1)
 		local Wid = Perc * 390
 		local XWidX = XMinX + Wid
 		
-		surface.DrawTexturedRect(XWidX - 8, ScH - 98, 16, 16)
+		--surface.RoundedBoxTextued( cornerRadius, x, y, width, height, divisions )
+		surface.DrawTexturedRect(XWidX - 8, ScH - 98, 2, 34)
+		--surface.DrawTexturedRect(XWidX - 8+4, ScH - 98, 2, 34)
+		surface.DrawTexturedRect(XWidX - 8, ScH - 98, 6, 10)
 		
 		local xMyTemp = goodTemp
 		if ls_tmp < FairTemp_Min then xMyTemp = coolTemp
 		elseif ls_tmp > FairTemp_Max then xMyTemp = hotTemp end
-		draw.SimpleText(tostring(ls_tmp)..tempUnit, HUDFont, XWidX, ScH - 115, xMyTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+			
+
+
+		draw.SimpleTextOutlined(tostring(ls_tmp)..tempUnit, "ScoreboardDefault", XWidX-3, ScH - 122, xMyTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 0, Color(20,20,20,255))
 		
-		draw.SimpleText(tostring(GlobalTemp_Min)..tempUnit, HUDFont, XMinX, ScH - 45, coolTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-		draw.SimpleText(tostring(GlobalTemp_Max)..tempUnit, HUDFont, (XMinX + 390), ScH - 45, hotTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+		draw.SimpleTextOutlined(tostring(GlobalTemp_Min)..tempUnit, "Default", XMinX, ScH - 55, coolTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 0, Color(20,20,20,255))
+		draw.SimpleTextOutlined(tostring(GlobalTemp_Max)..tempUnit, "Default", (XMinX + 380), ScH - 55, hotTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 0, Color(20,20,20,255))
+
+		
+
 	end
 	--END OF TEMPERATURE
 	
