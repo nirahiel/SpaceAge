@@ -2,15 +2,17 @@ if SERVER then
 	AddCSLuaFile()
 end
 
+SA.Research = {}
+
 local Researches = {}
 local ResearchGroups = {"Asteroid Mining","Tiberium Mining","Ice Mining", "Miscellaneous"}
 local ResearchIcons = {}
 
-function SA_GetResearch()
+function SA.Research.Get()
 	return Researches
 end
 
-function SA_GetResearchGroups()
+function SA.Research.GetGroups()
 	return ResearchGroups
 end
 

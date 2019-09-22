@@ -99,7 +99,7 @@ local function CreateTerminalGUI()
 	
 	SA_TermDraggedElement = nil
 
-	local Researches = SA_GetResearch()
+	local Researches = SA.Research.Get()
 	local font = "DermaLarge"
 	surface.SetFont(font)
 	local BasePanel = vgui.Create( "DFrame" )
@@ -386,8 +386,8 @@ local function CreateTerminalGUI()
 			SubResearchTab:SetPos(25,60)
 			SubResearchTab:SetSize(730,490)
 			
-			local Researches = SA_GetResearch()
-			local ResearchGroups = SA_GetResearchGroups()
+			local Researches = SA.Research.Get()
+			local ResearchGroups = SA.Research.GetGroups()
 						
 			for _,RGroup in pairs(ResearchGroups) do
 				if not (ResearchPanels[RGroup]) then
@@ -801,8 +801,8 @@ local function sa_term_update(ply, tbl)
 		SA_Term_MarketBuy:AddLine(name,price)
 	end
 	
-	local Researches = SA_GetResearch()
-	local ResearchGroups = SA_GetResearchGroups()
+	local Researches = SA.Research.Get()
+	local ResearchGroups = SA.Research.GetGroups()
 	
 	for k,v in pairs(ResTabl2) do
 		local resname = v[1]

@@ -154,7 +154,7 @@ function GetPermStorage(ply)
 end
 
 function SA_CanReset(ply)
-	local Researches = SA_GetResearch()
+	local Researches = SA.Research.Get()
 	for _,vv in pairs(Researches) do
 		for _,v in pairs(vv) do
 			if ply[v.variable] < v.resetreq then return false end
@@ -364,8 +364,8 @@ function SA_UpdateInfo(ply,CanPass)
 		ResTabl[k] = {v,tostring(price)}
 	end
 	
-	local Researches = SA_GetResearch()
-	local ResearchGroups = SA_GetResearchGroups()
+	local Researches = SA.Research.Get()
+	local ResearchGroups = SA.Research.GetGroups()
 	
 	local ResTabl2 = {}
 	
@@ -632,8 +632,8 @@ concommand.Add("BuyPermStorage",SA_BuyPermStorage)
 local function SA_Research(ply, cmd, args)
 	if not ply.AtTerminal then return end
 	if ply.IsAFK then return end
-	local Researches = SA_GetResearch()
-	local ResearchGroups = SA_GetResearchGroups()
+	local Researches = SA.Research.Get()
+	local ResearchGroups = SA.Research.GetGroups()
 	local res = args[1]
 	local CHECK = tonumber(args[2])
 	if CHECK ~= HASH then return end
@@ -758,7 +758,7 @@ local function SA_ResetMe(ply, cmd, args)
 	local cost = 5000000000 * (devlim * devlim)
 	if ply.Credits < cost then return end
 	
-	local Researches = SA_GetResearch()
+	local Researches = SA.Research.Get()
 	
 	for _,vv in pairs(Researches) do
 		for _,v in pairs(vv) do
