@@ -1,3 +1,5 @@
+E2Lib.RegisterExtension("sa_money", false)
+
 local lastMoneyFunc = {}
 
 local moneyResults = {}

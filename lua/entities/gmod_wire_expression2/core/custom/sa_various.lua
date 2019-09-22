@@ -1,3 +1,5 @@
+E2Lib.RegisterExtension("sa_various", false)
+
 local Clamp = math.Clamp
 
 e2function string number:format()

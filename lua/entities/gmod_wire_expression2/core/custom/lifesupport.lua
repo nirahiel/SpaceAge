@@ -1,4 +1,5 @@
 local RD = CAF.GetAddon("Resource Distribution")
+E2Lib.RegisterExtension("lifesupport", false)
 
 local function convert_table_to_e2_table(tab)
 	local newTab = {}
