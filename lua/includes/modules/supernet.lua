@@ -92,6 +92,10 @@ local function NetReceive(len, ply)
 		myqueue[msgId] = data
 	else
 		data = myqueue[msgId]
+		if not data then
+			print("Invalid message for ID " .. tostring(msgId) .. "from " .. tostring(ply) .. ": Not found")
+			return
+		end
 		tinsert(data[2], dBin)
 	end
 
