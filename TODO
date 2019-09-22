@@ -6,4 +6,4 @@
 		sv_terminal.lua
 	entities/
 		everything!
-- Refactor to prefix all commands and Net with SA_
+- Refactor to prefix all hooks with SA_
