@@ -61,23 +61,23 @@ timer.Simple(2,InitSATeleporters)
 concommand.Add("sateleporterupdate",function(ply,cmd,args)
 	if not (ply and ply.IsValid and ply:IsValid() and ply.AtTeleporter) then return end
 	if ply.LastTeleKey == ply.AtTeleporter then return end
-	umsg.Start("SA_TeleUpdate",ply)
-		umsg.Short(#SA_TeleportNames - 1)
+	net.Start("SA_TeleUpdate")
+		net.WriteInt(#SA_TeleportNames - 1, 16)
 		for k,v in pairs(SA_TeleportNames) do
 			if v ~= ply.AtTeleporter then
-				umsg.String(v)
+				net.WriteString(v)
 			end
 		end
-	umsg.End()
+	net.Send(ply)
 	ply.LastTeleKey = ply.AtTeleporter
 end)
 
 local function AbortTeleport(ply,cmd,args)
 	if not (ply and ply.IsValid and ply:IsValid() and ply.AtTeleporter) then return end
 	ply.AtTeleporter = nil
-	umsg.Start("SA_HideTeleportPanel",ply)
-		umsg.Bool(false)
-	umsg.End()
+	net.Start("SA_HideTeleportPanel")
+		net.WriteBool(false)
+	net.Send(ply)
 	hook.Remove("KeyPress","SA_TeleAbortMove_"..ply:EntIndex())
 end
 concommand.Add("sacancelteleport",AbortTeleport)
@@ -98,9 +98,9 @@ function SA.Teleporter.Open(ply,TeleKey)
 	if not (ply and ply.IsValid and ply:IsValid()) then return end
 	if ply.AtTeleporter then return end
 	ply.AtTeleporter = TeleKey
-	umsg.Start("SA_OpenTeleporter",ply)
-		umsg.String(TeleKey)
-	umsg.End()
+	net.Start("SA_OpenTeleporter")
+		net.WriteString(TeleKey)
+	net.End(ply)
 	hook.Add("KeyPress","SA_TeleAbortMove_"..ply:EntIndex(),function(ply,key)
 		if key ~= IN_USE and ply and ply.IsValid and ply:IsValid() then
 			AbortTeleport(ply)

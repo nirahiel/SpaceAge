@@ -34,11 +34,11 @@ function SA.GiveCredits.Confirm(ply,v,amt,func)
 	local theID = ply:SteamID()
 	if SA_GiveRequests[theID] then return false end --No multiple requests to same user...
 	SA_GiveRequests[theID] = {ply,v,amt,func}
-	umsg.Start("SA_OpenGiveQuery",ply)
-		umsg.String(v:Name())
-		umsg.Long(amt)
-		umsg.String(theID)
-	umsg.End()
+	net.Start("SA_OpenGiveQuery")
+		net.WriteString(v:Name())
+		net.WriteInt(amt, 32)
+		net.WriteString(theID)
+	net.End(ply)
 	return true
 end
 

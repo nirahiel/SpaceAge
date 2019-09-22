@@ -134,19 +134,19 @@ local function LoadFactionResults(data, isok, merror)
 			local xc = tostring(tbl.Credits)
 			local xa = tostring(tbl.AddScore)
 			for _,ply in pairs(allply) do
-				umsg.Start("SA_FactionData",ply)
-				umsg.String(fn)
-				umsg.String(xs)
-				if ply.UserGroup == fn then
-					umsg.String(xc)
-					umsg.String(xa)
-					umsg.String(xrs)
-				else
-					umsg.String("-1")
-					umsg.String("-1")
-					umsg.String("-1")
-				end
-				umsg.End()
+				net.Start("SA_FactionData")
+					net.WriteString(fn)
+					net.WriteString(xs)
+					if ply.UserGroup == fn then
+						net.WriteString(xc)
+						net.WriteString(xa)
+						net.WriteString(xrs)
+					else
+						net.WriteString("-1")
+						net.WriteString("-1")
+						net.WriteString("-1")
+					end
+				net.Send(ply)
 			end
 		end
 	end
@@ -197,9 +197,9 @@ hook.Add("PlayerShouldTakeDamage","SA_FriendlyFire",SA_FriendlyFire)
 --Chat Commands
 
 local function DoApplyFactionResRes(data, isok, merror, ply, ffid, pltimexx)
-	umsg.Start("sa_dodelapp")
-		umsg.String(ply:SteamID())
-	umsg.End()
+	net.Start("sa_dodelapp")
+		net.WriteString(ply:SteamID())
+	net.Send()
 	local toPlayers = {}
 	for k, v in pairs(player.GetAll()) do 
  		if v.IsLeader then
@@ -269,9 +269,9 @@ local function DoAcceptPlayerRes(data, isok, merror, ply, app, appf, args)
 	if (!isok) then return end
 	for k, v in pairs(player.GetAll()) do 
  		if v.IsLeader then
-			umsg.Start("sa_dodelapp",v)
-				umsg.String(app['steamid'])
-			umsg.End()
+			net.Start("sa_dodelapp")
+				net.WriteString(app['steamid'])
+			net.Send(v)
 		elseif (v:SteamID() == app['steamid']) then
 			v.TeamIndex = appf
 			v.UserGroup = SA.Factions.Table[appf][2]
@@ -304,9 +304,9 @@ local function DoDenyPlayerResRes(data, isok, merror, ply, app)
 	if (!isok) then return end
 	for k, v in pairs(player.GetAll()) do 
  		if v.IsLeader then
-			umsg.Start("sa_dodelapp",v)
-				umsg.String(app['steamid'])
-			umsg.End()
+			net.Start("sa_dodelapp")
+				net.WriteString(app['steamid'])
+			net.Send(v)
 		end
 	end
 	ply:SendLua("SA.Application.Close()")

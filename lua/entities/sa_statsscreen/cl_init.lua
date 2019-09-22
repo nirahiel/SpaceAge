@@ -1,5 +1,7 @@
 include("shared.lua")
 
+require("supernet")
+
 ENT.RenderGroup = RENDERGROUP_BOTH
 
 ENT.allowDraw = false
@@ -7,6 +9,7 @@ ENT.allowDraw = false
 local SA_PosColors = { Color(255,255,0,255), Color(128,128,128,255), Color(128,50,0,255) }
 
 local statsAllowDraw = false
+local SA_StatsTable = {}
 
 function ENT:Initialize()
 	self.scrollPos = 0
@@ -119,27 +122,28 @@ function ENT:Draw()
 	Wire_Render(self)
 end
 
-SA_StatsTable = {}
+local SA_MaxNameLength = 24
+local SA_PlayersToShow = 30
 
-function SA_StatsDrawing(um)
-	statsAllowDraw = um:ReadBool()
-end
-usermessage.Hook("sa_statsdrawing",SA_StatsDrawing) 
+function SA_ReceiveStatsUpdate(ply, decoded)
+	statsAllowDraw = false
 
-function SA_ReceiveStatsUpdate(um)
-	local i = um:ReadLong()
-	SA_StatsTable[i] = {}
-	SA_StatsTable[i]["name"] = um:ReadString()
-	SA_StatsTable[i]["score"] = SA.AddCommasToInt(um:ReadString())
-	local tempColor = SA.Factions.Colors[um:ReadString()]
-	if (!tempColor) then tempColor = Color(255,100,0,255) end
-	SA_StatsTable[i]["factioncolor"] = tempColor
-	tempColor = Color(255,255,255,255)
-	if tcredits < 0 then tempColor = Color(255,0,0,255) end
-	if tcredits > 0 then tempColor = Color(0,255,0,255) end
-	SA_StatsTable[i]["statscolor"] = tempColor
+	for i, v in pairs(decoded) do
+		SA_StatsTable[i] = {}
+		SA_StatsTable[i]["name"] = string.Left(v["name"],SA_MaxNameLength)
+		SA_StatsTable[i]["score"] = SA.AddCommasToInt(v["score"])
+		local tempColor = SA.Factions.Colors[v["groupname"]]
+		if (!tempColor) then tempColor = Color(255,100,0,255) end
+		SA_StatsTable[i]["factioncolor"] = tempColor
+		tempColor = Color(255,255,255,255)
+		if tcredits < 0 then tempColor = Color(255,0,0,255) end
+		if tcredits > 0 then tempColor = Color(0,255,0,255) end
+		SA_StatsTable[i]["statscolor"] = tempColor
+	end
+
+	statsAllowDraw = true
 end
-usermessage.Hook("sa_statsupdate",SA_ReceiveStatsUpdate) 
+supernet.Hook("sa_statsupdate",SA_ReceiveStatsUpdate) 
 
 function ENT:IsTranslucent()
 	return true

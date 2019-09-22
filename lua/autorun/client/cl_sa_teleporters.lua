@@ -10,8 +10,8 @@ local SA_TeleportPanel = nil
 local SA_TeleportLocaLBox = nil
 local SA_TeleKey = "NONE"
 
-usermessage.Hook("SA_HideTeleportPanel",function(um)
-	um:ReadBool()
+net.Receive("SA_HideTeleportPanel",function(len, ply)
+	net.ReadBool()
 	if not SA_TeleportPanel then return end
 	gui.EnableScreenClicker(false)
 	SA_TeleportPanel:SetVisible(false)
@@ -25,12 +25,12 @@ local function RefreshTeleportPanel()
 	end
 end
 
-usermessage.Hook("SA_TeleUpdate",function(msg)
-	local iMax = msg:ReadShort()
+net.Receive("SA_TeleUpdate",function(len, ply)
+	local iMax = net.ReadInt(16)
 	local i = nil
 	SA_TeleList = {}
 	for i=1,iMax,1 do
-		table.insert(SA_TeleList,msg:ReadString())
+		table.insert(SA_TeleList,net.ReadString())
 	end
 	RefreshTeleportPanel()
 end)
@@ -86,8 +86,8 @@ end
 timer.Simple(0,CreateTeleportPanel)
 
 
-usermessage.Hook("SA_OpenTeleporter",function(msg)
-	SA_TeleKey = msg:ReadString()
+net.Receive("SA_OpenTeleporter", function(len, ply)
+	SA_TeleKey = net.ReadString()
 	RunConsoleCommand("sateleporterupdate")
 	SA_TeleportPanel:SetTitle("Teleporter Form: "..SA_TeleKey)
 	gui.EnableScreenClicker(true)

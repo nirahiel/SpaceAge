@@ -1,8 +1,8 @@
-local function sa_info_msg_credsc( msg )
-	fa_info.credits = SA.AddCommasToInt(msg:ReadString())
-	fa_info.totalcredits = SA.AddCommasToInt(msg:ReadString())
+local function sa_info_msg_credsc(len, ply)
+	fa_info.credits = SA.AddCommasToInt(net.ReadString())
+	fa_info.totalcredits = SA.AddCommasToInt(net.ReadString())
 end
-usermessage.Hook("SA_Info_CredSc", sa_info_msg_credsc) 
+net.Receive("SA_Info_CredSc", sa_info_msg_credsc) 
 
 FA.Topbar.Register(1,"Credits","fa_info","credits")
 FA.Topbar.Register(1,"Score","fa_info","totalcredits")

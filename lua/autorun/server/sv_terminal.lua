@@ -117,9 +117,9 @@ end
 
 local function SendHash(ply)
 	timer.Simple(5,function()
-		umsg.Start("LoadHash",ply)
-			umsg.Long(HASH)
-		umsg.End()
+		net.Start("LoadHash")
+			net.WriteInt(HASH, 32)
+		net.Send(ply)
 	end)
 end
 hook.Add("PlayerInitialSpawn","SendHash",SendHash)
@@ -222,16 +222,16 @@ local function SA_UpdateNodeSelection(ply)
 	
 	local Selected = 0
 	local Count = table.Count(Nodes)
-	umsg.Start("NodeSelectionUpdate",ply)
-		umsg.Short(Count)
+	net.Start("NodeSelectionUpdate")
+		net.WriteInt(Count, 16)
 		for k,v in pairs(Nodes) do
-			umsg.Short(v)
+			net.WriteInt(v, 16)
 			if (SelectedID == v) then
 				Selected = k
 			end
 		end
-		umsg.Short(Selected)
-	umsg.End()
+		net.WriteInt(Selected, 16)
+	net.Send(ply)
 end
 
 local function SA_GetResource(ply,res)
@@ -294,9 +294,9 @@ local function SA_GetPermStorage(ply)
 end
 
 function SA_TerminalStatus(ply,status)
-	umsg.Start("TerminalStatus", ply)
-		umsg.Bool(status)
-	umsg.End()
+	net.Start("TerminalStatus")
+		net.WriteBool(status)
+	net.Send(ply)
 end
 
 local function SA_CloseTerminal(ply)
@@ -341,11 +341,10 @@ function SA_UpdateInfo(ply,CanPass)
 	local idx_s = table.Count(ShipStorage)
 	local idx_m = table.Count(BuyPriceTable)
 	
-	umsg.Start("TerminalUpdate1", ply)
-		umsg.Long(orecount)
-		umsg.Long(tempore)
-	umsg.End()
-	
+	net.Start("TerminalUpdate1")
+		net.WriteInt(orecount, 32)
+		net.WriteInt(tempore, 32)
+	net.Send(ply)
 	
 	local ResTabl = {}
 	for k,v in pairs(TempStorage) do

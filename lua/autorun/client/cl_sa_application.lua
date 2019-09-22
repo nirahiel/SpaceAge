@@ -26,11 +26,11 @@ local function SA_DoAddApp(len, ply)
 end
 net.Receive("sa_doaddapp",SA_DoAddApp)
 
-local function SA_DoDelApp( um ) 
-	AppTable[um:ReadString()] = nil
+local function SA_DoDelApp(len, ply) 
+	AppTable[net.ReadString()] = nil
 	if SA_AppBasePanel then SA_RefreshApplications() end
 end
-usermessage.Hook("sa_dodelapp",SA_DoDelApp)
+net.Receive("sa_dodelapp",SA_DoDelApp)
 
 local function SApp_ExtractSteamID(optiontext)
 	local temp = string.Explode("|",optiontext)

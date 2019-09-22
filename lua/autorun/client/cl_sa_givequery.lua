@@ -5,10 +5,10 @@ local function SA_AnswerGiveQuery(answer,theID,noSC)
 	if not noSC then gui.EnableScreenClicker(false) end
 end
 
-usermessage.Hook("SA_OpenGiveQuery",function(um)
-	local to = um:ReadString()
-	local amt = SA.AddCommasToInt(um:ReadLong())
-	local theID = um:ReadString()
+net.Receive("SA_OpenGiveQuery",function(len, ply)
+	local to = net.ReadString()
+	local amt = SA.AddCommasToInt(net.ReadInt(32))
+	local theID = net.ReadString()
 	
 	if (not sa_enpay:GetBool()) or gui.ScreenClickerEnabled() then SA_AnswerGiveQuery("deny",theID,true) return end
 

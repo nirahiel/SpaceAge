@@ -33,16 +33,16 @@ local function sa_new_stats(len, ply)
 end
 net.Receive("sa_newstats", sa_new_stats) 
 
-local function SA_RecvFactionData( um )
-	local fn = um:ReadString()
+local function SA_RecvFactionData(len, ply)
+	local fn = net.ReadString()
 	local tbl = {}
-	tbl.Score = tonumber(um:ReadString())
-	tbl.Credits = tonumber(um:ReadString())
-	tbl.AddScore = tonumber(um:ReadString())
-	tbl.RealScore = tonumber(um:ReadString())
+	tbl.Score = tonumber(net.ReadString())
+	tbl.Credits = tonumber(net.ReadString())
+	tbl.AddScore = tonumber(net.ReadString())
+	tbl.RealScore = tonumber(net.ReadString())
 	SA_FactionData[fn] = tbl
 end
-usermessage.Hook("SA_FactionData", SA_RecvFactionData) 
+net.Receive("SA_FactionData", SA_RecvFactionData) 
 
 local SA_ErrorText = ""
 local SA_ErrorAlpha = 0
@@ -127,28 +127,28 @@ local function CreateTerminalGUI()
 				NodeSelect:SetSize(120,20)
 				--NodeSelect:SetEditable(false)
 				
-				local function UpdateNodeSelect(data)
+				local function UpdateNodeSelect(len, ply)
 					NodeSelect:Clear()
 					NodeSelect.Nodes = {}
 					
 					NodeSelect:AddChoice("Node Selection")
 					NodeSelect:AddChoice("--------------")
 					
-					local count = data:ReadShort()
+					local count = net.ReadInt(16)
 					for K=1,count do
-						local NetID = data:ReadShort()
+						local NetID = net.ReadInt(16)
 						local Name = "Network "..NetID
 						NodeSelect.Nodes[Name] = NetID
 						NodeSelect:AddChoice(Name)
 					end
-					NodeSelect.Selected = data:ReadShort()+2
+					NodeSelect.Selected = net.ReadInt(16)+2
 					if (NodeSelect.Selected > 2) then
 						NodeSelect:ChooseOptionID(NodeSelect.Selected)
 					else
 						NodeSelect:ChooseOptionID(1)
 					end
 				end
-				usermessage.Hook("NodeSelectionUpdate",UpdateNodeSelect)
+				net.Receive("NodeSelectionUpdate",UpdateNodeSelect)
 				
 				function NodeSelect:OnSelect(ID,Name,Data)
 					if (ID <= 2) then return end
@@ -700,8 +700,8 @@ local function SA_RefreshGoodies()
 	RunConsoleCommand("GoodiesUpdate")
 end
 
-local function sa_terminal_msg( msg )
-	local active = msg:ReadBool()
+local function sa_terminal_msg(len, ply)
+	local active = net.ReadBool()
 	if active then
 		SA.Application.Refresh()
 		if not SA_Term_GUI then
@@ -712,10 +712,10 @@ local function sa_terminal_msg( msg )
 			end
 		end
 	end
-	SA_Term_GUI:SetVisible( active )
-	gui.EnableScreenClicker( active )
+	SA_Term_GUI:SetVisible(active)
+	gui.EnableScreenClicker(active)
 end
-usermessage.Hook("TerminalStatus", sa_terminal_msg) 
+net.Receive("TerminalStatus", sa_terminal_msg) 
 
 local function CleanString(str)
 	local implode = {}
@@ -729,11 +729,11 @@ local function CleanString(str)
 	return cleaned
 end
 
-local function sa_term_update1(msg)
-	term_info.orecount = SA.AddCommasToInt(msg:ReadLong())
-	term_info.tempore = SA.AddCommasToInt(msg:ReadLong())
+local function sa_term_update1(len, ply)
+	term_info.orecount = SA.AddCommasToInt(net.ReadInt(32))
+	term_info.tempore = SA.AddCommasToInt(net.ReadInt(32))
 end
-usermessage.Hook("TerminalUpdate1", sa_term_update1) 
+net.Receive("TerminalUpdate1", sa_term_update1) 
 
 local function sa_term_update(ply, tbl)
 	local ResTabl = tbl[1]
@@ -844,8 +844,8 @@ local function sa_term_update(ply, tbl)
 end
 supernet.Hook("TerminalUpdate", sa_term_update)
 
-local function SetHash(msg)
-	HASH = msg:ReadLong()
+local function SetHash(len, ply)
+	HASH = net.ReadInt(32)
 	SA.SetResourceItemPanelHash(HASH)
 end
-usermessage.Hook("LoadHash", SetHash)
+net.Receive("LoadHash", SetHash)

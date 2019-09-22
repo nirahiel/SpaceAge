@@ -1,8 +1,8 @@
-local data, isok, merror
-
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
+
+require("supernet")
 
 ENT.WireDebugName = "SpaceAge Stats Display"
 
@@ -28,28 +28,16 @@ end
 function ENT:Think()
 end
 
-SA_MaxNameLength = 24
-SA_PlayersToShow = 30
+local SA_MaxNameLength = 24
+local SA_PlayersToShow = 30
 
 local function SendStatsUpdateRes(data, isok, merror, ply)
 	if (!isok) then print(merror) return end
 	local i = 0
 	local imax = table.maxn(data)
 	if imax <= 0 then return end
-	umsg.Start("sa_statsdrawing",ply)
-		umsg.Bool(false)
-	umsg.End()
-	for i=1,imax do
-		umsg.Start("sa_statsupdate",ply)
-				umsg.Long(i)
-				umsg.String(string.Left(data[i]["name"],SA_MaxNameLength))
-				umsg.String(data[i]["score"])
-				umsg.String(data[i]["groupname"])
-		umsg.End()
-	end
-	umsg.Start("sa_statsdrawing",ply)
-		umsg.Bool(true)
-	umsg.End()
+
+	supernet.Send(ply, "sa_statsupdate", data)
 end
 
 function SA_SendStatsUpdate(ply)
