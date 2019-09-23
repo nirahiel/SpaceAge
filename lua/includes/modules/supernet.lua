@@ -38,7 +38,7 @@ function supernet.Hook(name, cb)
 	hooks[name] = cb
 end
 
-local function callCB(cb, str)
+local function callCB(cb, ply, str)
 	local decomp = util.Decompress(str, TOTAL_SIZE_MAX)
 	if not decomp then
 		return
@@ -84,7 +84,7 @@ local function NetReceive(len, ply)
 		end
 
 		if isEnd then
-			callCB(cb, dBin)
+			callCB(cb, ply, dBin)
 			return
 		end
 
@@ -108,12 +108,18 @@ local function NetReceive(len, ply)
 
 	if isEnd then
 		myqueue[msgId] = nil
-		callCB(data[1], table.concat(bits))
+		callCB(data[1], ply, table.concat(bits))
 	end
 end
 net.Receive("SuperNet_MSG", NetReceive)
 
 local current
+local function FinishQueue()
+	local cb = current[5]
+	current = nil
+	cb()
+end
+
 local function RunQueue()
 	local isNew = false
 
@@ -127,11 +133,15 @@ local function RunQueue()
 	end
 
 	--local msgid = current[1]
-	--local target = current[2]
+	local target = current[2]
 	--local name = current[3]
 	--local data = current[4]
 	local pos = current[6]
 	local left = current[7]
+
+	if target and not target:IsValid() then
+		return FinishQueue()
+	end
 
 	local isEnd = false
 	local len = SIZE_MAX
@@ -150,13 +160,10 @@ local function RunQueue()
 		end
 		net.WriteUInt(len, 16)
 		net.WriteData(dSub, len)
-	sendFunc(current[2])
+	sendFunc(target)
 
 	if isEnd then
-		local cb = current[5]
-		current = nil
-		cb()
-		return
+		return FinishQueue()
 	end
 
 	current[6] = pos + SIZE_MAX
