@@ -3,6 +3,14 @@ AddCSLuaFile( "shared.lua" )
 
 include("shared.lua")
 
+function ENT:GetPlayerLevel(ply)
+	return ply.tiberiumyield
+end
+
+ENT.EnergyBase = 600
+ENT.YieldOffset = 50
+ENT.YieldIncrement = 10
+
 local RD = CAF.GetAddon("Resource Distribution")
 
 function ENT:Initialize()
@@ -36,14 +44,13 @@ function ENT:CalcVars(ply)
 	elseif ply.UserGroup == "starfleet" then
 		miningmod = 1.11
 	end
-	local level = ply.tiberiumyield
-	local energybase = 600
+	local level = self:GetPlayerLevel(ply)
 	local energycost = ply.miningenergy * 50
-	if (energycost > energybase * 0.75) then
-		energycost = energybase * 0.75
+	if (energycost > self.EnergyBase * 0.75) then
+		energycost = self.EnergyBase * 0.75
 	end
-	self.consume = energybase - energycost
-	self.yield = math.floor((50 + (level * 10)) * miningmod) * 2
+	self.consume = self.EnergyBase - energycost
+	self.yield = math.floor((self.YieldOffset + (level * self.YieldIncrement)) * miningmod) * 2
 	self.oldyield = self.yield
 end
 
