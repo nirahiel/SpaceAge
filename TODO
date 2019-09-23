@@ -1,5 +1,5 @@
 - Remove GLua syntax (! for not, // and /**/ comments)
-- find out wtf is up with:
+- Find out wtf is up with:
 		[ERROR] Warning! A net message (CAF_Start_false) is already started! Discarding in favor of the new message! (URPC)
 		  1. clientRPC - lua/ulib/server/util.lua:29
 		   2. fn - lua/ulib/server/ucl.lua:1091
@@ -11,3 +11,4 @@
 		         8. echoToAdmins - lua/ulx/log.lua:164
 		          9. fn - lua/ulx/log.lua:202
 		           10. unknown - lua/ulib/shared/hook.lua:
+- Refactor entities to common baseclass (especially roid mining lasers)
