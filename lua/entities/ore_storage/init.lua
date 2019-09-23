@@ -2,37 +2,54 @@ AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 
 include("shared.lua")
+
 local RD = CAF.GetAddon("Resource Distribution")
+
+ENT.ForcedModel = "models/slyfo/sat_resourcetank.mdl"
+ENT.MinOreManage = 0
+ENT.StorageOffset = 50000
+ENT.StorageIncrement = 5000
+
+function ENT:GetPlayerLevel(ply)
+	return ply.oremod
+end
 
 function ENT:Initialize()
 	self.BaseClass.Initialize(self)
-	
+
 	local ply = self:GetTable().Founder
-	
-	if not ply:IsAdmin() then self:SetModel("models/slyfo/sat_resourcetank.mdl") end
-	
+
+	if not ply:IsAdmin() then
+		self:SetModel(self.ForcedModel)
+	end
+
 	self:CalcVars(ply)
-	if not (WireAddon == nil) then
+	if WireAddon then
 		self.WireDebugName = self.PrintName
 		self.Outputs = Wire_CreateOutputs(self, { "Ore", "Max Ore" })
 	end
-	
+
 	local phys = self:GetPhysicsObject()
 	if (phys:IsValid()) then
-		phys:Wake()	
+		phys:Wake()
 		phys:SetMass(500)
 	end
 end
 
 function ENT:CalcVars(ply)
+	if ply.oremanage < self.MinOreManage then
+		self:Remove()
+		return
+	end
+
 	self.IsOreStorage = true
-	RD.AddResource(self, "ore", (50000 + (ply.oremod * 5000)) * ply.devlimit, 0)
+	RD.AddResource(self, "ore", (50000 + (self:GetPlayerLevel(ply) * 5000)) * ply.devlimit, 0)
 end
 
 function ENT:Think()
-	if WireAddon ~= nil then 
+	if WireAddon then
 		self:UpdateWireOutput()
-	end	
+	end
 	self:NextThink(CurTime() + 1)
 	return true
 end
