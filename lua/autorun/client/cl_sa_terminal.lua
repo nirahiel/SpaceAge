@@ -38,7 +38,7 @@ surface.CreateFont("ServerHUDFontS", { font = "Arial", size = 36, weight = 700, 
 
 local ScrX = surface.ScreenWidth()
 local ScrY = surface.ScreenHeight()
-local HASH = 0
+local HASH = ""
 
 local function SA_RefreshStatsList(isAuto)
 	if isAuto then timer.Simple(30, function() SA_RefreshStatsList(true) end) end
@@ -865,7 +865,7 @@ end
 supernet.Hook("SA_TerminalUpdate", sa_term_update)
 
 local function SetHash(len, ply)
-	HASH = net.ReadInt(32)
+	HASH = net.ReadString()
 	SA.SetResourceItemPanelHash(HASH)
 end
 net.Receive("SA_LoadHash", SetHash)

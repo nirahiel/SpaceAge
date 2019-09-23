@@ -51,6 +51,10 @@ if not GTableMeta.__newindex_sa_checker then
 end
 
 if SERVER then
+	print("RandomLoad", pcall(require, "random"))
+	if SecureRandomNumber then
+		math.random = SecureRandomNumber
+	end
 	AddCSLuaFile()
 end
 

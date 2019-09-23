@@ -6,9 +6,12 @@ AddCSLuaFile("autorun/client/cl_sa_terminal_goodie.lua")
 AddCSLuaFile("autorun/sa_goodies.lua")
 
 require("supernet")
---require("random")
 
-local HASH = math.random(1000000,9999999)
+local HASH = tostring(math.random(1000000,9999999))
+if SecureRandomString then
+	HASH = SecureRandomString(32)
+end
+print("SA security hash: ", HASH)
 
 SA.Terminal = {}
 
@@ -117,7 +120,7 @@ end
 local function SendHash(ply)
 	timer.Simple(5,function()
 		net.Start("SA_LoadHash")
-			net.WriteInt(HASH, 32)
+			net.WriteString(HASH)
 		net.Send(ply)
 	end)
 end
@@ -433,7 +436,7 @@ concommand.Add("sa_goodies_use",SA_UseGoodie)
 local function SA_RefineOre(ply,cmd,args)
 	if not ply.AtTerminal then return end
 	if ply.IsAFK then return end
-	local CHECK = tonumber(args[1])
+	local CHECK = args[1]
 	if CHECK ~= HASH then return end
 	local uid = ply:UniqueID()
 	local ShipOre, netid = SA_GetResource(ply,"ore")
@@ -461,7 +464,7 @@ local function SA_MarketSell(ply,cmd,args)
 	if not ply.AtTerminal then return end
 	if ply.IsAFK then return end
 	if #args < 2 then return end
-	local CHECK = tonumber(args[3])
+	local CHECK = args[3]
 	if CHECK ~= HASH then return end
 	local uid = ply:UniqueID()
 	local num = tonumber(args[2])
@@ -504,7 +507,7 @@ local function SA_MarketBuy(ply,cmd,args)
 	if not ply.AtTerminal then return end
 	if ply.IsAFK then return end
 	if #args < 2 then return end
-	local CHECK = tonumber(args[3])
+	local CHECK = args[3]
 	if CHECK ~= HASH then return end
 	local uid = ply:UniqueID()
 	local num = tonumber(args[2])
@@ -555,7 +558,7 @@ local function SA_MoveResource(ply,cmd,args,notagain)
 	local to = string.lower(args[2])
 	local res = args[3]
 	local num = tonumber(args[4])
-	local CHECK = tonumber(args[5])
+	local CHECK = args[5]
 	if CHECK ~= HASH then return end
 	if not (num > 0) then return end
 	local maxamt = 0
@@ -610,7 +613,7 @@ concommand.Add("sa_move_resource",SA_MoveResource)
 local function SA_BuyPermStorage(ply,cmd,args)
 	if not ply.AtTerminal then return end
 	if ply.IsAFK then return end
-	local CHECK = tonumber(args[2])
+	local CHECK = args[2]
 	if CHECK ~= HASH then return end
 	local credits = tonumber(ply.Credits)
 	local maxcap = ply.MaxCap
@@ -633,7 +636,7 @@ local function SA_Research(ply, cmd, args)
 	local Researches = SA.Research.Get()
 	local ResearchGroups = SA.Research.GetGroups()
 	local res = args[1]
-	local CHECK = tonumber(args[2])
+	local CHECK = args[2]
 	if CHECK ~= HASH then return end
 	local Research = nil
 	for _,RGroup in pairs(ResearchGroups) do
@@ -747,7 +750,7 @@ concommand.Add("sa_buy_research",SA_Research)
 local function SA_ResetMe(ply, cmd, args)
 	if not ply.AtTerminal then return end
 	if ply.IsAFK then return end
-	local CHECK = tonumber(args[1])
+	local CHECK = args[1]
 	if CHECK ~= HASH then return end
 	
 	if ply.devlimit >= 5 then return end

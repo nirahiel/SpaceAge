@@ -8,7 +8,7 @@ local ResourceAmountColor = Color(200,200,200,255)
 local PanelColor = Color(100,100,100,255)
 local ImageBackColor = Color(25,25,25,255)
 
-local HASH = 0
+local HASH = ""
 function SA.SetResourceItemPanelHash(xhas)
 	HASH = xhas
 end
