@@ -10,6 +10,7 @@ end
 ENT.EnergyBase = 600
 ENT.YieldOffset = 50
 ENT.YieldIncrement = 10
+ENT.MinTibDrillMod = 0
 
 local RD = CAF.GetAddon("Resource Distribution")
 
@@ -38,6 +39,11 @@ function ENT:Initialize()
 end
 
 function ENT:CalcVars(ply)
+	if ply.tibdrillmod < self.MinTibDrillMod then
+		self:Remove()
+		return
+	end
+
 	local miningmod = 1
 	if ply.UserGroup == "miners" or ply.UserGroup == "alliance" then
 		miningmod = 1.33

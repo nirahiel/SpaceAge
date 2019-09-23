@@ -10,9 +10,10 @@ end
 ENT.EnergyBase = 1200
 ENT.YieldOffset = 100
 ENT.YieldIncrement = 20
+ENT.MinTibDrillMod = 1
 
 function ENT:CalcVars(ply)
-	if ply.tibdrillmod < 1 or (ply.UserGroup ~= "legion" and ply.UserGroup ~= "alliance") then
+	if ply.UserGroup ~= "legion" and ply.UserGroup ~= "alliance" then
 		self:Remove()
 		return
 	end
