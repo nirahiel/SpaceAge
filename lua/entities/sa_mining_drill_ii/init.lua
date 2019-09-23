@@ -12,7 +12,7 @@ ENT.YieldOffset = 100
 ENT.YieldIncrement = 20
 
 function ENT:CalcVars(ply)
-	if not (ply.tibdrillmod > 0 and (ply.UserGroup == "legion" or ply.UserGroup == "alliance")) then
+	if ply.tibdrillmod < 1 or (ply.UserGroup ~= "legion" and ply.UserGroup ~= "alliance") then
 		self:Remove()
 		return
 	end
