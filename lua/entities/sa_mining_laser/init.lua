@@ -7,9 +7,9 @@ util.PrecacheSound( "ambient/energy/electric_loop.wav" )
 include("shared.lua")
 
 ENT.EnergyBase = 600
+ENT.BeamWidthOffset = 10
 ENT.YieldOffset = 50
 ENT.YieldIncrement = 6.25
-ENT.WidthOffet = 10
 
 local RD = CAF.GetAddon("Resource Distribution")
 
