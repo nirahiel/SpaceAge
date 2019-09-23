@@ -43,7 +43,7 @@ function ENT:CalcVars(ply)
 	end
 
 	self.IsOreStorage = true
-	RD.AddResource(self, "ore", (50000 + (self:GetPlayerLevel(ply) * 5000)) * ply.devlimit, 0)
+	RD.AddResource(self, "ore", (self.StorageOffset + (self:GetPlayerLevel(ply) * self.StorageIncrement)) * ply.devlimit, 0)
 end
 
 function ENT:Think()
