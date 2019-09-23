@@ -6,6 +6,11 @@ util.PrecacheSound( "ambient/energy/electric_loop.wav" )
 
 include("shared.lua")
 
+ENT.EnergyBase = 600
+ENT.YieldOffset = 50
+ENT.YieldIncrement = 6.25
+ENT.WidthOffet = 10
+
 local RD = CAF.GetAddon("Resource Distribution")
 
 function ENT:Initialize()
@@ -14,42 +19,49 @@ function ENT:Initialize()
 	RD.AddResource(self, "ore", 0, 0)
 	self.Active = 0
 	self.damage = 16
-	
-	if WireAddon ~= nil then 
+
+	if WireAddon ~= nil then
 		self.WireDebugName = self.PrintName
 		self.Inputs = Wire_CreateInputs(self, { "On" })
-		self.Outputs = Wire_CreateOutputs(self, { "On", "Output" })	
+		self.Outputs = Wire_CreateOutputs(self, { "On", "Output" })
 	end
-	
+
 	local phys = self:GetPhysicsObject()
 	if (phys:IsValid()) then
 		phys:SetMass(120)
 		phys:Wake()
 	end
 	self.lasersound = CreateSound(self,"ambient/energy/electric_loop.wav")
-	
-	timer.Simple(0.1,function() self:CalcVars(self:GetTable().Founder) end)
+
+	self:CalcVars(self:GetTable().Founder)
+end
+
+function ENT:CalcColor(level)
+	self:SetNetworkedColor("c", Color(255, 255 - math.floor(level * 0.85), 0))
 end
 
 function ENT:CalcVars(ply)
+	if ply.miningtheory < self.MinMiningTheory then
+		self:Remove()
+		return
+	end
+
 	local miningmod = 1
 	if ply.UserGroup == "miners" or ply.UserGroup == "alliance" then
 		miningmod = 1.33
 	elseif ply.UserGroup == "starfleet" then
 		miningmod = 1.11
 	end
-	local level = ply.miningyield
-	local energybase = 600
+	local level = self:GetPlayerLevel(ply)
 	local energycost = ply.miningenergy * 50
-	if (energycost > energybase * 0.75) then
-		energycost = energybase * 0.75
+	if (energycost > self.EnergyBase * 0.75) then
+		energycost = self.EnergyBase * 0.75
 	end
-	self.consume = energybase - energycost
-	self.yield = math.floor((50 + (level * 6.25)) * miningmod)*2
-	self.beamlength = 2000
+	self.consume = self.EnergyBase - energycost
+	self.yield = math.floor((self.YieldOffset + (level * self.YieldIncrement)) * miningmod) * 2
 
-	self:SetNetworkedInt("w", 10 + math.floor(level / 10))
-	self:SetNetworkedColor("c", Color(255, 255 - math.floor(level * 0.85), 0))
+	self:SetNWInt("w", self.BeamWidthOffset + math.floor(level / 10))
+	self:CalcColor(level)
 end
 
 function ENT:TurnOn()
@@ -60,9 +72,11 @@ function ENT:TurnOn()
 			return
 		end
 		self.lasersound:Play()
-		if not (WireAddon == nil) then Wire_TriggerOutput(self, "On", 1) end
+		if WireAddon then
+			Wire_TriggerOutput(self, "On", 1)
+		end
 		self:SetOOO(1)
-		self:SetNetworkedBool("o",true)
+		self:SetNWBool("o",true)
 	end
 end
 
@@ -70,11 +84,11 @@ function ENT:TurnOff()
 	if (self.Active == 1) then
 		self.Active = 0
 		self.lasersound:Stop()
-		if not (WireAddon == nil) then 
+		if WireAddon then
 			Wire_TriggerOutput(self, "On", 0)
 		end
 		self:SetOOO(0)
-		self:SetNetworkedBool("o",false)
+		self:SetNWBool("o",false)
 	end
 end
 

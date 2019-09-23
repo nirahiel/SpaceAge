@@ -1,101 +1,25 @@
 AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 
-util.PrecacheSound( "common/warning.wav" )
-util.PrecacheSound( "ambient/energy/electric_loop.wav" )
-
 include("shared.lua")
 
-local RD = CAF.GetAddon("Resource Distribution")
+ENT.EnergyBase = 5000
+ENT.BeamWidthOffset = 0
+ENT.YieldOffset = 60000
+ENT.YieldIncrement = 200
 
-function ENT:Initialize()
-	self.BaseClass.Initialize(self)
-	RD.AddResource(self, "energy", 0, 0)
-	RD.AddResource(self, "ore", 0, 0)
-	self.Active = 0
-	self.damage = 32
-	
-	if WireAddon ~= nil then 
-	self.WireDebugName = self.PrintName
-	self.Inputs = Wire_CreateInputs(self, { "On" })
-	self.Outputs = Wire_CreateOutputs(self, { "On", "Output" })	
-	end
-	
-	local phys = self:GetPhysicsObject()
-	if (phys:IsValid()) then
-		phys:SetMass(120)
-		phys:Wake()
-	end
-	self.lasersound = CreateSound(self,"ambient/energy/electric_loop.wav")
-	
-	timer.Simple(0.1,function() self:CalcVars(self:GetTable().Founder) end)
+function ENT:GetPlayerLevel(ply)
+	return ply.miningyield_vi
+end
+
+function ENT:CalcColor(level)
+	-- no-op
 end
 
 function ENT:CalcVars(ply)
-	if not (ply.miningtheory > 4 and (ply.UserGroup == "miners" or ply.UserGroup == "alliance")) then self:Remove() return end
-	local miningmod = 1.33
-	local level = ply.miningyield_vi
-	local energybase = 5000
-	local energycost = ply.miningenergy * 50
-	if (energycost > energybase * 0.75) then
-		energycost = energybase * 0.75
+	if ply.UserGroup ~= "miners" and ply.UserGroup ~= "alliance" then
+		self:Remove()
+		return
 	end
-	self.consume = energybase - energycost
-	self.yield = math.floor((60000 + (level * 200)) * miningmod)*2
-	self.beamlength = 4000
-end
-
-function ENT:TurnOn()
-	if (self.Active == 0) then
-		self.Active = 1
-		if ( RD.GetResourceAmount(self, "energy") < self.consume ) then
-			self:TurnOff()
-			return
-		end
-		self.lasersound:Play()
-		if WireAddon ~= nil then Wire_TriggerOutput(self, "On", 1) end
-		self:SetOOO(1)
-		self:SetNetworkedBool("o",true)
-	end
-end
-
-function ENT:TurnOff()
-	if (self.Active == 1) then
-		self.Active = 0
-		self.lasersound:Stop()
-		if WireAddon ~= nil then 
-			Wire_TriggerOutput(self, "On", 0)
-		end
-		self:SetOOO(0)
-		self:SetNetworkedBool("o",false)
-	end
-end
-
-function ENT:OnRemove()
-	self.lasersound:Stop()
-end
-
-function ENT:TriggerInput(iname, value)
-	if (iname == "On") then
-		self:SetActive(value)
-	end
-end
-
-function ENT:Think()
-	self.BaseClass.Think(self)
-	if ( self.Active == 1 ) then
-			if ( RD.GetResourceAmount(self, "energy") >= self.consume ) then
-				RD.ConsumeResource(self, "energy", self.consume)
-				SA.Functions.Discharge(self)
-				Wire_TriggerOutput(self, "Output", self.yield)
-			else
-				self:TurnOff()
-				Wire_TriggerOutput(self, "Output", 0)
-			end
-	else
-		self:TurnOff()
-		Wire_TriggerOutput(self, "Output", 0)
-	end
-	self:NextThink(CurTime() + 1)
-	return true
+	return self.BaseClass.CalcVars(self, ply)
 end

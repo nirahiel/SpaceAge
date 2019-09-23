@@ -12,21 +12,21 @@ function ENT:Initialize()
 	self.Active = 0
 	self.damage = 30
 	self.TouchEnt = nil
-	if (WireAddon) then 
+	if WireAddon then
 		self.WireDebugName = self.PrintName
 		self.Inputs = Wire_CreateInputs(self, { "On" })
 		self.Outputs = Wire_CreateOutputs(self, { "On", "Output" })
 	end
-	
+
 	self.CrystalResistant = true
-	
+
 	local phys = self:GetPhysicsObject()
 	if (phys:IsValid()) then
 		phys:SetMass(120)
 		phys:Wake()
 	end
-	
-	timer.Simple(0.1,function() self:CalcVars(self:GetTable().Founder) end)
+
+	self:CalcVars(self:GetTable().Founder)
 end
 
 function ENT:CalcVars(ply)
@@ -43,7 +43,7 @@ function ENT:CalcVars(ply)
 		energycost = energybase * 0.75
 	end
 	self.consume = energybase - energycost
-	self.yield = math.floor((50 + (level * 10)) * miningmod)*2
+	self.yield = math.floor((50 + (level * 10)) * miningmod) * 2
 	self.oldyield = self.yield
 end
 
@@ -54,20 +54,22 @@ function ENT:TurnOn()
 			self:TurnOff()
 			return
 		end
-		if not (WireAddon == nil) then Wire_TriggerOutput(self, "On", 1) end
+		if WireAddon then
+			Wire_TriggerOutput(self, "On", 1)
+		end
 		self:SetOOO(1)
-		self:GetNetworkedBool("o",false)
+		self:SetNWBool("o",false)
 	end
 end
 
 function ENT:TurnOff()
 	if (self.Active == 1) then
 		self.Active = 0
-		if WireAddon ~= nil then 
+		if WireAddon then
 			Wire_TriggerOutput(self, "On", 0)
 		end
 		self:SetOOO(0)
-		self:GetNetworkedBool("o",false)
+		self:SetNWBool("o",false)
 	end
 end
 
@@ -76,7 +78,7 @@ function ENT:OnRemove()
 end
 
 function ENT:TriggerInput(iname, value)
-	if (iname == "On") then
+	if iname == "On" then
 		self:SetActive(value)
 	end
 end
@@ -102,9 +104,9 @@ function ENT:Think()
 				if self.TouchEnt and self.TouchEnt.IsCrystal and myOwner and myOwner:IsValid() and myOwner:GetPos():Distance(self:GetPos()) <= 350 and myOwner:InVehicle() then
 					local skin = self.TouchEnt:GetSkin()
 					if skin == 2 then
-						self.yield = math.floor(self.oldyield*1.5)
+						self.yield = math.floor(self.oldyield * 1.5)
 					elseif skin == 0 then
-						self.yield = math.floor(self.oldyield*1.2)
+						self.yield = math.floor(self.oldyield * 1.2)
 					else
 						self.yield = self.oldyield
 					end
