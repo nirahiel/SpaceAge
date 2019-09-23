@@ -36,6 +36,10 @@ function ENT:Initialize()
 	self:CalcVars(self:GetTable().Founder)
 end
 
+function ENT:GetPlayerLevel(ply)
+	return ply.miningyield
+end
+
 function ENT:CalcColor(level)
 	self:SetNetworkedColor("c", Color(255, 255 - math.floor(level * 0.85), 0))
 end
