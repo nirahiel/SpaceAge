@@ -4,5 +4,9 @@ ENT.PrintName = "Mining Laser Mk III"
 
 list.Set( "LSEntOverlayText" , "sa_mining_laser_iii", {HasOOO = true, num = 2, strings = {"Mining Laser Mk III","\nEnergy: ","\nOre: "},resnames = {"energy","ore"}} )
 
-ENT.beamlength = 2500
+ENT.BeamLength = 2500
 ENT.MinMiningTheory = 2
+ENT.EnergyBase = 1800
+ENT.BeamWidthOffset = 30
+ENT.YieldOffset = 6000
+ENT.YieldIncrement = 25

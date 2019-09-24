@@ -21,7 +21,7 @@ function ENT:Initialize()
 		phys:Wake()
 	end
 	self.consume = 25
-	self.beamlength = 3000
+	self.BeamLength = 3000
 end
 
 function ENT:TurnOn()
@@ -53,7 +53,7 @@ end
 local function ScanRoid(ent)
 	local pos = ent:GetPos()
 	local up = ent:GetAngles():Up()
-	local tr = util.TraceLine( {start = pos + (up * ent:OBBMaxs().z), endpos = pos + (up * ent.beamlength),filter = { ent }} )
+	local tr = util.TraceLine( {start = pos + (up * ent:OBBMaxs().z), endpos = pos + (up * ent.BeamLength),filter = { ent }} )
 	local hitent = tr.Entity
 	if ( not hitent ) then return end
 	if hitent.IsAsteroid or hitent.IsCrystal then

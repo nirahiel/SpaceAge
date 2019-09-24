@@ -6,11 +6,6 @@ util.PrecacheSound( "ambient/energy/electric_loop.wav" )
 
 include("shared.lua")
 
-ENT.EnergyBase = 600
-ENT.BeamWidthOffset = 10
-ENT.YieldOffset = 50
-ENT.YieldIncrement = 6.25
-
 local RD = CAF.GetAddon("Resource Distribution")
 
 function ENT:Initialize()
@@ -40,10 +35,6 @@ function ENT:GetPlayerLevel(ply)
 	return ply.miningyield
 end
 
-function ENT:CalcColor(level)
-	self:SetNetworkedColor("c", Color(255, 255 - math.floor(level * 0.85), 0))
-end
-
 function ENT:CalcVars(ply)
 	if ply.miningtheory < self.MinMiningTheory then
 		self:Remove()
@@ -57,15 +48,14 @@ function ENT:CalcVars(ply)
 		miningmod = 1.11
 	end
 	local level = self:GetPlayerLevel(ply)
+	self:SetNWInt("level", level)
+
 	local energycost = ply.miningenergy * 50
 	if (energycost > self.EnergyBase * 0.75) then
 		energycost = self.EnergyBase * 0.75
 	end
 	self.consume = self.EnergyBase - energycost
 	self.yield = math.floor((self.YieldOffset + (level * self.YieldIncrement)) * miningmod) * 2
-
-	self:SetNWInt("w", self.BeamWidthOffset + math.floor(level / 10))
-	self:CalcColor(level)
 end
 
 function ENT:TurnOn()

@@ -66,7 +66,7 @@ function SA.Functions.Discharge(ent)
 	local Ang = ent:GetAngles()
 	local trace = {}
 	trace.start = pos + (Ang:Up() * ent:OBBMaxs().z)
-	trace.endpos = pos + (Ang:Up() * ent.beamlength)
+	trace.endpos = pos + (Ang:Up() * ent.BeamLength)
 	trace.filter = { ent }
 	local tr = util.TraceLine( trace )
 	if (tr.Hit) then

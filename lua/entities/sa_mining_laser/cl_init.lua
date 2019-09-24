@@ -13,9 +13,14 @@ function ENT:Draw()
 	end
 end
 
+function ENT:CalcColor(level)
+	return Color(255, 255 - math.floor(level * 0.85), 0)
+end
+
 function ENT:DrawLaser()
-	local color = self:GetNetworkedColor("c")
-	local width = self:GetNWInt("w")
+	local level = self:GetNWInt("level")
+	local color = self:CalcColor(level)
+	local width = self.BeamWidthOffset + math.floor(level / 10)
 	self:DrawLaserDef(color, width)
 end
 
@@ -26,7 +31,7 @@ function ENT:DrawLaserDef(color, width)
 	local right = ang:Right()
 	local fow = ang:Forward()
 	local start = self:GetPos() + (up * self:OBBMaxs().z)
-	local trace = util.TraceLine({start = start, endpos = start + (up * self.beamlength), filter = { self }})
+	local trace = util.TraceLine({start = start, endpos = start + (up * self.BeamLength), filter = { self }})
 
 	local End = trace.HitPos
 
