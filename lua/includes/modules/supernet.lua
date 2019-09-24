@@ -117,7 +117,9 @@ local current
 local function FinishQueue()
 	local cb = current[5]
 	current = nil
-	cb()
+	if cb then
+		cb()
+	end
 end
 
 local function RunQueue()
