@@ -211,15 +211,6 @@ LoadRes = function(data, isok, merror, ply, sid)
 
 			ply.allyuntil = tonumber(data[1]["allyuntil"])
 
-			local tbl = {}
-			if data[1]["stationres"] then
-				if not pcall(function() tbl = util.JSONToTable(data[1]["stationres"]) end) then
-					pcall(function()
-						tbl = util.KeyValuesToTable(data[1]["stationres"])
-						SA.MySQL:Query("UPDATE players SET stationres = '"..SA.MySQL:Escape(util.TableToJSON(tbl)).."' WHERE steamid = '"..sid.."'", function() end)
-					end)
-				end
-			end
 			SA.Terminal.SetupStorage(ply,tbl)
 			ply:ChatPrint("Your account has been loaded, welcome on duty.")
 			ply.Loaded = true
@@ -422,29 +413,11 @@ local function SA_Autospawner(ply)
 				v:Remove()
 			end
 		end
-		local mapname = game.GetMap()
-		local filename = "spaceage/autospawn/"..mapname..".txt"
-		if file.Exists(filename, "DATA") then
-			for k,v in pairs(util.KeyValuesToTable(file.Read(filename))) do
-				local spawn = ents.Create("prop_physics")
-				spawn:SetModel(v["model"])
-				spawn:SetPos(Vector(v["x"],v["y"],v["z"]))
-				spawn:SetAngles(Angle(v["pit"],v["yaw"],v["rol"]))
-				SA.PP.MakeOwner(spawn)
-				spawn:Spawn()
-				local phys = spawn:GetPhysicsObject()
-				if phys then
-					phys:EnableMotion(false)
-				end
-				spawn.CDSIgnore = true
-				spawn.Autospawned = true
-				spawn.RealAutospawned = true
-			end
-		end
+		local mapname = game.GetMap():lower()
 
 		local filename = "spaceage/autospawn2/"..mapname..".txt"
 		if file.Exists(filename, "DATA") then
-			for k,v in pairs(util.KeyValuesToTable(file.Read(filename))) do
+			for k,v in pairs(util.JSONToTable(file.Read(filename))) do
 				local spawn = ents.Create(v["class"])
 				if not SA.ValidEntity(spawn) then
 					print("Could not create: " .. v["class"])
@@ -492,7 +465,7 @@ local function SA_IsProtectedProp(ent)
 	return false
 end
 
-local SA_Don_Toollist = util.KeyValuesToTable(file.Read("spaceage/donator/toollist.txt"))
+local SA_Don_Toollist = util.JSONToTable(file.Read("spaceage/donator/toollist.txt"))
 
 local function SA_DonatorCanTool(ply,tr,mode)
 	for k,v in pairs(SA_Don_Toollist) do

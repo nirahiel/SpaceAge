@@ -165,12 +165,12 @@ local function InitHabitablePlanets()
 			SA_DefEnvsA[envname] = v.sbenvironment.air
 			SA_DefEnvs[envname] = v.sbenvironment
 			if file.Exists(filename.."_default.txt", "DATA") == false then
-				local output = util.TableToKeyValues(v.sbenvironment)
+				local output = util.TableToJSON(v.sbenvironment)
 				file.Write(filename.."_default.txt",output)
 			end
 			if file.Exists(filename..".txt", "DATA") then
 				local envfile = file.Read(filename..".txt")
-				local envdata = util.KeyValuesToTable(envfile)
+				local envdata = util.JSONToTable(envfile)
 				envdata.bloom = v.sbenvironment.bloom
 				envdata.color = v.sbenvironment.color
 				v.sbenvironment = envdata
@@ -217,7 +217,7 @@ function SA.Planets.Save()
 	for k,v in pairs(SA_MyPlanets) do
 		local envname = string.lower(v.sbenvironment.name)
 		if envname ~= "no name" then
-			file.Write(dirname..envname..".txt",util.TableToKeyValues(v.sbenvironment))
+			file.Write(dirname..envname..".txt",util.TableToJSON(v.sbenvironment))
 		end
 	end
 end
@@ -229,7 +229,7 @@ concommand.Add("sa_restart_environment",function(ply)
 		local filename = "spaceage/planetsave/"..string.lower(game:GetMap()).."/"..envname.."_default.txt"
 		if file.Exists(filename, "DATA") then
 			local envfile = file.Read(filename)
-			local envdata = util.KeyValuesToTable(envfile)
+			local envdata = util.JSONToTable(envfile)
 			envdata.bloom = v.sbenvironment.bloom
 			envdata.color = v.sbenvironment.color
 			v.sbenvironment = envdata
