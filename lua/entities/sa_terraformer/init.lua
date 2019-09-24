@@ -6,6 +6,8 @@ include("shared.lua")
 util.PrecacheSound( "apc_engine_start" )
 util.PrecacheSound( "apc_engine_stop" )
 
+local SB = CAF.GetAddon("Spacebuild")
+
 function ENT:Initialize()
 	self.BaseClass.Initialize(self)
 	self.Active = 0
@@ -45,7 +47,6 @@ end
 
 function ENT:TurnOn()
 	if (self.Active == 0) then
-		local SB = CAF.GetAddon("Spacebuild")
 		if (not self.environment) or self.environment.IsProtected or self.environment == SB.GetSpace() then return end
 		self:EmitSound( "apc_engine_start" )
 		self.Active = 1
@@ -107,7 +108,6 @@ function ENT:Think()
 	self.BaseClass.Think(self)
 	self.StateTicks = self.StateTicks + 1
 	if ( self.Active == 1 ) then
-		local SB = CAF.GetAddon("Spacebuild")
 		if self.environment.IsProtected or (not self.environment:IsPlanet()) or self.environment == SB.GetSpace() then
 			self.TurnOff()
 			return

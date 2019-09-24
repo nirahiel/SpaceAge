@@ -1,6 +1,7 @@
 SA.Terraformer = {}
 
 local RD = CAF.GetAddon("Resource Distribution")
+local SB = CAF.GetAddon("Spacebuild")
 
 local function SA_Terraformer_PushAtmosphere(terent,resName,atmoname,amount)
 	RD.ConsumeResource(terent,resName,amount)
@@ -81,7 +82,6 @@ function SA.Terraformer.Run(terent)
 	local ply = SA.PP.GetOwner(terent)
 	if not (ply and ply:IsValid() and ply:IsPlayer()) then return end
 
-	local SB = CAF.GetAddon("Spacebuild")
 	if terent.environment.IsProtected or (not terent.environment:IsPlanet()) or terent.environment == SB.GetSpace() then return end
 	local energy = RD.GetResourceAmount(terent, "energy")
 	local o2 = RD.GetResourceAmount(terent, "oxygen")
@@ -232,7 +232,6 @@ function SA.Terraformer.Run(terent)
 end
 
 function SA.Terraformer.SpazzOut(terent,forcekill)
-	local SB = CAF.GetAddon("Spacebuild")
 	if terent.FinalSpazzed or terent.environment.IsProtected or (not terent.environment:IsPlanet()) or terent.environment == SB.GetSpace() then return end
 	local energy = RD.GetResourceAmount(terent, "energy")
 	if terent.State ~= -1 then

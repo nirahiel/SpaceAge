@@ -8,6 +8,7 @@ include("shared.lua")
 local Energy_Increment = 25
 
 local RD = CAF.GetAddon("Resource Distribution")
+local SB = CAF.GetAddon("Spacebuild")
 
 function ENT:Initialize()
 	self.BaseClass.Initialize(self)
@@ -82,13 +83,11 @@ function ENT:Repair()
 end
 
 function ENT:Destruct()
-	local SB = CAF.GetAddon("Spacebuild")
 	SB.RemoveEnvironment(self)
 	CAF.GetAddon("Life Support").LS_Destruct( self, true )
 end
 
 function ENT:OnRemove()
-	local SB = CAF.GetAddon("Spacebuild")
 	SB.RemoveEnvironment(self)
 	self.BaseClass.OnRemove(self)
 	self:StopSound( "apc_engine_start" )

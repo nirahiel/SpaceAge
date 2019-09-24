@@ -1,5 +1,7 @@
 SA.Planets = {}
 
+local SB = CAF.GetAddon("Spacebuild")
+
 local SB_Terraforming_Target = {o2 = 29,co2 = 0.6,h = 0.4,n = 70,empty = 0}
 
 local SA_MyPlanets = {}
@@ -121,7 +123,7 @@ local function InitHabitablePlanets()
 		planet:SetModel("models/props_lab/huladoll.mdl")
 		planet:SetPos( v[2] )
 		planet:Spawn()
-		local SB = CAF.GetAddon("Spacebuild")
+
 		local closestPlan = SB.FindClosestPlanet(v[2],false)
 		local plSB = closestPlan.sbenvironment
 		planet.sbenvironment.bloom = table.Copy(plSB.bloom)
