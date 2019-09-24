@@ -116,8 +116,9 @@ local function AM_Spawn_Ice(tbl)
 end
 
 timer.Simple(1, function()
-	local ini = INIParser:new("asteroid_mining/asteroidspawner_maps/"..game.GetMap()..".txt")
-	if (ini) then
-		AM_Spawn_Ice(ini.IceField or {})
+	local iceTxt = file.Read("spaceage/ice/maps/" .. game.GetMap():lower() .. ".txt")
+	if not iceTxt then
+		return
 	end
+	AM_Spawn_Ice(util.JSONToTable(iceTxt))
 end)

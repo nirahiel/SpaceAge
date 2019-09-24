@@ -1,0 +1,1 @@
+[{"BlueIce":"10","Type":"Custom","GlareCrust":"4","WhiteGlaze":"10","Krystallos":"2","DarkGlitter":"4","Radius":"4096","Gelidus":"2","Origin":"200 -2800 -1024","ClearIce":"10","GlacialMass":"10"}]

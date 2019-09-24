@@ -17,7 +17,7 @@ if not GTableMeta.__newindex_sa_checker then
 	function GTableMeta.__newindex(tbl, idx, val)
 		oldNewIndex(tbl, idx, val)
 
-		if idx == "SCRIPTNAME" or idx == "SCRIPTPATH" or idx == "ENT" or idx == "TERMLOADER" or idx == "SA" or idx == "supernet" or idx == "INIParser" then
+		if idx == "SCRIPTNAME" or idx == "SCRIPTPATH" or idx == "ENT" or idx == "TERMLOADER" or idx == "SA" or idx == "supernet" then
 			return
 		end
 
@@ -43,7 +43,7 @@ if not GTableMeta.__newindex_sa_checker then
 		if SERVER then
 			side = "server"
 		end
-		
+
 		local str = idx .. " " .. tostring(tb.short_src) .. " @ " .. tostring(tb.linedefined) .. "\n"
 		file.Append("gvars_" .. side .. ".txt", str)
 		print("GVars DETECTOR on ", side, str)
