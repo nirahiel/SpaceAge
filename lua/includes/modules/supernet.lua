@@ -18,9 +18,7 @@ local msgid = 0
 
 print("supernet, TOTAL_SIZE_MAX = ", TOTAL_SIZE_MAX, ", SIZE_MAX = ", SIZE_MAX, ", MSGCOUNT_MAX = ", MSGCOUNT_MAX)
 
-local sendFunc = net.SendToServer
 if SERVER then
-	sendFunc = net.Send
 	util.AddNetworkString("SuperNet_MSG")
 end
 
@@ -162,7 +160,14 @@ local function RunQueue()
 		end
 		net.WriteUInt(len, 16)
 		net.WriteData(dSub, len)
-	sendFunc(target)
+
+	if CLIENT then
+		net.SendToServer()
+	elseif target then
+		net.Send(target)
+	else
+		net.Broadcast()
+	end
 
 	if isEnd then
 		return FinishQueue()
