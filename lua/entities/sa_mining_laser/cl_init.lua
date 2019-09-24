@@ -19,9 +19,12 @@ end
 
 function ENT:DrawLaser()
 	local level = self:GetNWInt("level")
-	local color = self:CalcColor(level)
-	local width = self.BeamWidthOffset + math.floor(level / 10)
-	self:DrawLaserDef(color, width)
+	if level ~= self.LastLevel then
+		self.LastLevel = level
+		self.LaserColor = self:CalcColor(level)
+		self.LaserWidth = self.BeamWidthOffset + math.floor(level / 10)
+	end
+	self:DrawLaserDef(self.LaserColor, self.LaserWidthwidth)
 end
 
 function ENT:DrawLaserDef(color, width)
