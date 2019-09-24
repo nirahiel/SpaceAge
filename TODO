@@ -11,4 +11,3 @@
 		         8. echoToAdmins - lua/ulx/log.lua:164
 		          9. fn - lua/ulx/log.lua:202
 		           10. unknown - lua/ulib/shared/hook.lua:
-- Refactor entities to common baseclass (especially roid mining lasers)
