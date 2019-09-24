@@ -110,9 +110,8 @@ local function InitSAFactions()
 	end
 	SA.Factions.Table[6][6] = SA.Factions.Table[5][6] --ALLIANCE
 	--SA.Factions.Table[8][6] = SA.Factions.Table[5][6] --FAILED TO LOAD -- Already does this below...
-	SA.Factions.Table[7][6] = SA.Factions.Table[5][6] --PMS FACTION
 
-	SA.Factions.Table[SA.Factions.Max+1][6] = SA.Factions.Table[1][6]
+	SA.Factions.Table[SA.Factions.Max + 1][6] = SA.Factions.Table[1][6]
 end
 timer.Simple(0,InitSAFactions)
 
@@ -130,7 +129,7 @@ local function LoadFactionResults(data, isok, merror)
 			local fn = v["name"]
 			SA_FactionData[fn] = tbl
 			local xrs = tostring(tbl.Score)
-			local xs = tostring(tbl.Score+tbl.AddScore)
+			local xs = tostring(tbl.Score + tbl.AddScore)
 			local xc = tostring(tbl.Credits)
 			local xa = tostring(tbl.AddScore)
 			for _,ply in pairs(allply) do

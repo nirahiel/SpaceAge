@@ -10,15 +10,14 @@ table.insert(SA.Factions.Table, { "The Legion", "legion", Color(85,221,34,255),"
 table.insert(SA.Factions.Table, { "Major Miners", "miners", Color(128,64,0,255),"models/player/Group03/male_01.mdl","models/player/Group03/male_06.mdl",nil,"have"})
 table.insert(SA.Factions.Table, { "The Corporation", "corporation", Color(0,150,255,255),"models/player/Hostage/Hostage_02.mdl","models/player/gman_high.mdl",nil,"has"})
 table.insert(SA.Factions.Table, { "The Alliance", "alliance", Color(229,33,222,255),"models/player/Group01/male_02.mdl","models/player/Group01/male_02.mdl",nil,"has"})
-table.insert(SA.Factions.Table, { "P.L.A.N.E.T.", "planet", Color(255,175,0,255),"models/player/Group01/male_02.mdl","models/player/Group01/male_02.mdl",nil,"has"})
 table.insert(SA.Factions.Table, { "FAILED TO LOAD", "noload", Color(75,75,75,255),"models/player/Group01/male_02.mdl","models/player/Group01/male_02.mdl",nil,"HAR"})
 
 SA.Factions.Min = 2
-SA.Factions.Max = 7
+SA.Factions.Max = 6
 
 SA.Factions.ToLong = {}
 SA.Factions.Colors = {}
-	
+
 for k,v in pairs(SA.Factions.Table) do
 	SA.Factions.ToLong[v[2]] = v[1]
 	SA.Factions.Colors[v[2]] = v[3]
