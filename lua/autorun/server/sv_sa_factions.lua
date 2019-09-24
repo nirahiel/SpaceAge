@@ -198,7 +198,7 @@ hook.Add("PlayerShouldTakeDamage","SA_FriendlyFire",SA_FriendlyFire)
 local function DoApplyFactionResRes(data, isok, merror, ply, ffid, pltimexx)
 	net.Start("SA_DoDeleteApplication")
 		net.WriteString(ply:SteamID())
-	net.Send()
+	net.Broadcast()
 	local toPlayers = {}
 	for k, v in pairs(player.GetAll()) do
 		if v.IsLeader and v.TeamIndex == ffid then
@@ -269,7 +269,7 @@ local function DoAcceptPlayerRes(data, isok, merror, ply, app, appf, args)
 			net.Start("SA_DoDeleteApplication")
 				net.WriteString(app.steamid)
 			net.Send(v)
-		elseif (v:SteamID() == app.steamid) then
+		elseif v:SteamID() == app.steamid then
 			v.TeamIndex = appf
 			v.UserGroup = SA.Factions.Table[appf][2]
 			v.IsLeader = false
