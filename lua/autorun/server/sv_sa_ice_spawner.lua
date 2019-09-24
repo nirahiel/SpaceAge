@@ -19,7 +19,7 @@ RegisterIce("Gelidus",Color(25,175,255,75),35,350,35)
 RegisterIce("Krystallos",Color(0,0,0,75),30,300,30)
 RegisterIce("Dark Glitter",Color(0,0,0,255),25,275,27)
 
-local IceMaterial = "models/props_combine/health_charger_glass"
+local IceMaterial = "models/shiny"
 
 local function Calc_Ring(inrad, outrad, angle)
 	local RandAng = math.rad(math.random(0,360))
