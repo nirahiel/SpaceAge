@@ -78,7 +78,7 @@ end
 
 function ENT:Repair()
 	self.BaseClass.Repair(self)
-	self:SetColor(255, 255, 255, 255)
+	self:SetColor(Color(255, 255, 255, 255))
 	self.damaged = 0
 end
 

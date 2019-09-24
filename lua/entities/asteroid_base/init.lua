@@ -1,5 +1,5 @@
-AddCSLuaFile( "cl_init.lua" )
-AddCSLuaFile( "shared.lua" )
+AddCSLuaFile("cl_init.lua")
+AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 ENT.WorldInternal = true
@@ -12,12 +12,12 @@ function ENT:Initialize()
 		self:Remove()
 	end
 
-	self:SetModel( self.AsteroidModel )
-	self:SetColor(self.AsteroidColor.r, self.AsteroidColor.g, self.AsteroidColor.b, self.AsteroidColor.a)
-	self:PhysicsInit( SOLID_VPHYSICS )
-	self:SetMoveType( MOVETYPE_NONE )
-	self:SetSolid( SOLID_VPHYSICS )
-	
+	self:SetModel(self.AsteroidModel)
+	self:SetColor(self.AsteroidColor)
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetMoveType(MOVETYPE_NONE)
+	self:SetSolid(SOLID_VPHYSICS)
+
 	local phys = self:GetPhysicsObject()
 	if (phys:IsValid()) then
 		phys:Wake()
@@ -26,7 +26,7 @@ function ENT:Initialize()
 		phys:EnableCollisions(true)
 		phys:EnableMotion(false)
 	end
-	
+
 	AM_AddOre(self.MineralName , self.MineralVol)
 
 	self:SetOverlayText(self.MineralName)
@@ -37,7 +37,7 @@ function ENT:SpawnFunction( ply, tr )
 	local ent = ents.Create( "asteroid_base" )
 	ent:SetPos(tr.HitPos + tr.HitNormal * 100 )
 	ent:Spawn()
-	ent:Activate() 
+	ent:Activate()
 	return ent
 end
 
@@ -57,16 +57,16 @@ function ENT:Think()
 		self:Remove()
 		return false
 	end
-	
+
 	if self.MineralAmount < self.MineralMax then
 		local newamount = self.MineralAmount + ((self.MineralRegen)/60)
-		if newamount > self.MineralMax then 
+		if newamount > self.MineralMax then
 			self.MineralAmount = self.MineralMax
 		else
 			self.MineralAmount = newamount
 		end
 	end
-	
+
 	self:NextThink(CurTime()+1)
 	return true
 end

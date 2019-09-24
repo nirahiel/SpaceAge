@@ -9,7 +9,7 @@ function EFFECT:Init(data)
 	self:SetModel(ent:GetModel());
 	self:SetPos(ent:GetPos());
 	self:SetAngles(ent:GetAngles());
-	ent:SetColor(255,255,255,0);
+	ent:SetColor(Color(255,255,255,0))
 	self:SetParent(ent);
 	self:SetSkin(ent:GetSkin())
 	self.ent = ent;
@@ -150,7 +150,7 @@ function EFFECT:RenderBuildEnd()
 
 	self.FadeColor = self.FadeColor - 0.01;
 	if (self.FadeColor <= 0) then
-		self.ent:SetColor(255,255,255,255)
+		self.ent:SetColor(Color(255,255,255,255))
 		self.shouldremove = true;
 	end
 end

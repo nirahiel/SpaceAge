@@ -73,12 +73,12 @@ function ENT:Think()
 		if CurTime() > timeUntilDelete then
 			if self.alpha > 0 then
 				self.alpha = self.alpha - 10
-				self:SetColor(255,255,255,self.alpha)
+				self:SetColor(Color(255,255,255,self.alpha))
 			end
 		end
 	end
 	if self.alpha <= 0 then
-		self:SetColor(255,255,255,0)
+		self:SetColor(Color(255,255,255,0))
 		self:Remove()
 	end
 end

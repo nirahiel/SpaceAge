@@ -31,7 +31,7 @@ function SA.Ice.SpawnRoid(Type,data)
 
 	local IceData = IceTypes[Type]
 
-	ent:SetColor(IceData.col.r,IceData.col.g,IceData.col.b,IceData.col.a)
+	ent:SetColor(IceData.col)
 	ent:SetModel(table.Random(IceModels))
 	ent:SetMaterial(IceMaterial)
 	ent.MineralName = Type

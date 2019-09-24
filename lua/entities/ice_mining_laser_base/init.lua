@@ -11,7 +11,7 @@ function ENT:Initialize()
 	self:SetSolid( SOLID_VPHYSICS )
 	self:SetUseType(SIMPLE_USE)
 
-	self:SetColor( 0, 100, 255, 255 )
+	self:SetColor(Color(0, 100, 255, 255))
 
 	RD.AddResource(self, "energy", 0)
 	RD.AddResource(self, "Blue Ice", 0)

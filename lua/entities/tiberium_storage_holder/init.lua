@@ -32,7 +32,7 @@ end
 function ENT:TurnOn()
 	if (self.Active == 0) then
 		self.Active = 1
-		if not (WireAddon == nil) then 
+		if not (WireAddon == nil) then
 			Wire_TriggerOutput(self, "On", self.Active)
 		end
 		self:SetOOO(1)
@@ -42,7 +42,7 @@ end
 function ENT:TurnOff()
 	if (self.Active == 1) then
 		self.Active = 0
-		if not (WireAddon == nil) then 
+		if not (WireAddon == nil) then
 			Wire_TriggerOutput(self, "On", self.Active)
 		end
 		self:SetOOO(0)
@@ -93,7 +93,7 @@ end
 
 function ENT:Repair()
 	self.BaseClass.Repair(self)
-	self:SetColor(255, 255, 255, 255)
+	self:SetColor(Color(255, 255, 255, 255))
 end
 
 function ENT:Destruct()
@@ -104,9 +104,9 @@ end
 
 function ENT:Think()
 	self.BaseClass.Think(self)
-	if not (WireAddon == nil) then 
+	if not (WireAddon == nil) then
 		self:UpdateWireOutput()
-	end	
+	end
 	self:NextThink(CurTime() + 1)
 	return true
 end
