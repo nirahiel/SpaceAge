@@ -1,9 +1,7 @@
 AddCSLuaFile("autorun/client/cl_sa_terminal.lua")
-AddCSLuaFile("autorun/client/cl_sa_terminal_research.lua")
-AddCSLuaFile("autorun/client/cl_sa_terminal_resource.lua")
-AddCSLuaFile("autorun/client/cl_sa_terminal_goodie.lua")
-
-AddCSLuaFile("autorun/sa_goodies.lua")
+AddCSLuaFile("sa/terminal/client/research.lua")
+AddCSLuaFile("sa/terminal/client/resource.lua")
+AddCSLuaFile("sa/terminal/client/goodies.lua")
 
 require("supernet")
 

@@ -17,7 +17,7 @@ if not GTableMeta.__newindex_sa_checker then
 	function GTableMeta.__newindex(tbl, idx, val)
 		oldNewIndex(tbl, idx, val)
 
-		if idx == "SCRIPTNAME" or idx == "SCRIPTPATH" or idx == "ENT" or idx == "TERMLOADER" or idx == "SA" or idx == "supernet" then
+		if idx == "SCRIPTNAME" or idx == "SCRIPTPATH" or idx == "ENT" or idx == "SA" or idx == "supernet" then
 			return
 		end
 

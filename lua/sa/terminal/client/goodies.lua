@@ -1,5 +1,3 @@
-if not TERMLOADER then return end
-
 local PANEL = {}
 
 local GoodieNameColor = Color(255,255,255,255)

@@ -7,8 +7,6 @@ local function hidehud(name)
 end
 hook.Add("HUDShouldDraw", "hidehud", hidehud)
 
-
-
 local GlobalTemp_Min = 0
 local GlobalTemp_Max = 600
 local FairTemp_Min = 283
@@ -66,24 +64,213 @@ surface.CreateFont( "DefaultLarge", {
 } )
 local HUDFont = "Default"
 
-SA_HUDBlink = true
+local SA_HUDBlink = true
 timer.Create("SA_HUDBlink",0.5,0,function() SA_HUDBlink = not SA_HUDBlink end)
 
 timer.Remove("SA_HealthBarRed")
-SA_HealthBarRed = 0
+local SA_HealthBarRed = 0
 timer.Create("SA_HealthBarRed",0.01,0,function()
 	if SA_HealthBarRed > 0 then
 		SA_HealthBarRed = SA_HealthBarRed - 2
 		if SA_HealthBarRed < 0 then SA_HealthBarRed = 0 end
 	end
 end)
-SA_LastHealth = 0
+local SA_LastHealth = 0
+
+local WeaponMaxAmmo = {}
+WeaponMaxAmmo["weapon_pistol"] = 18
+WeaponMaxAmmo["weapon_357"] = 6
+WeaponMaxAmmo["weapon_smg1"] = 45
+WeaponMaxAmmo["weapon_ar2"] = 30
+WeaponMaxAmmo["weapon_shotgun"] = 6
+WeaponMaxAmmo["weapon_crossbow"] = 1
+WeaponMaxAmmo["weapon_frag"] = 0
+WeaponMaxAmmo["weapon_rpg"] = 0
+WeaponMaxAmmo["weapon_crowbar"] = 0
+WeaponMaxAmmo["weapon_physcannon"] = 0
+WeaponMaxAmmo["weapon_physgun"] = 0
+
+local function GetMaxAmmo(SWEP)
+	if SWEP.Primary and SWEP.Primary.ClipSize then
+		return SWEP.Primary.ClipSize
+	end
+
+	local MAmmo = WeaponMaxAmmo[SWEP:GetClass()]
+	if MAmmo then return MAmmo end
+
+	LocalPlayer():ChatPrint("UNKOWN WEAPON: " .. SWEP:GetClass() .. "|" .. tostring(SWEP:Clip1()))
+
+	return SWEP:Clip1()
+end
+
+local function DrawLSBar(BarNum,CaptionX,Value,ScH,ScW,ColBack,ColText)
+	local Caption = CAF.GetLangVar(CaptionX)
+	local BarHei = 114
+	local BarSpace = 24
+	local BarWid = 30
+	local Hei = (ScH - 30) - BarHei - 4
+	local XMinX = ScW / 2 - tempGaugeWid / 2 - (BarWid + BarSpace) * BarNum - 12
+
+	--draw.RoundedBox(4, xPos-8, yPos-40, MeterWid+22, MeterHei+12 + 40, ColBack)
+	draw.RoundedBox(4, XMinX-8, Hei-32, BarWid + 16, BarHei + 12 + 30, ColBack)
+
+	draw.RoundedBox(4, XMinX + 3, Hei + 6, BarWid-6, BarHei-6, Color(70,70,70,230))
+	draw.SimpleText(Caption, HUDFont, XMinX + BarWid / 2-1, Hei -20, ColText, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+	local Perc = Value / 4000
+
+	local ValCol = Color(255 * (1-Perc),255 * Perc,0,255)
+
+	if Value > 0 then
+		local YHei = (BarHei-4)  * Perc
+		YHei = math.Max(YHei,4)
+		draw.RoundedBox(4, XMinX + 5, math.Round(Hei + 6 + BarHei - 4) - math.Round(YHei), BarWid-10, math.Round(YHei-4), ValCol)
+		draw.SimpleText(tostring(math.Round(Perc * 100,2)) .. " %", HUDFont, XMinX + BarWid / 2-1, Hei - 4, ValCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+	else
+		if not SA_HUDBlink then ValCol = Color(0,0,0,0) end
+		draw.SimpleText("EMPTY", HUDFont, XMinX + BarWid / 2-1, Hei -4, ValCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+	end
+end
+
+local function DrawMeterSlantSection(_slantAmount, _width, _height, _xMax, _yMax, _yMaxCut, _yMinCut)
+
+	--remember gmod y axis is flipped if you go to change anything! variable names can be confusing, always think about y direction!
+
+	local xMin = _xMax - _width
+	local yMin = _yMax - _height
+
+	-- if the lowest point of this is higher than our current value (as a bar y position), dont draw it at all
+	if (_yMax >= _yMinCut) then
+		--return
+	end
+
+	draw.NoTexture()
+	local slantSection = {}
 
 
+	-- if the top right point is less than  our current value (as a bar y position)
+	local cutAmount = 0
+	if ((yMin - _slantAmount) < _yMinCut) then
+		cutAmount = math.abs(_yMinCut-yMin)
+	end
 
-function SA_CustomHUDPaint()
+	-- this shouldn't happen, but just in case...
+	if (cutAmount >= _height) then
+		return
+	end
+
+	-- top left, top right, bottom left, bottom right
+	table.insert(slantSection, {x = xMin, y = yMin - _slantAmount + cutAmount, u = 0, v = 1})
+	table.insert(slantSection, {x = _xMax, y = yMin + cutAmount, u = 1, v = 1})
+	table.insert(slantSection, {x = _xMax, y = _yMax, u = 1, v = 0})
+	table.insert(slantSection, {x = xMin, y = _yMax - _slantAmount, u = 0, v = 0})
+
+	surface.DrawPoly(slantSection)
+
+
+end
+
+local function DrawLSBattery(CaptionX, Value, ScH, ScW, ColBack, ColText)
+
+	--remember gmod y axis is flipped if you go to change anything! variable names can be confusing, always think about y direction!
+
+	local Caption = CAF.GetLangVar(CaptionX)
+	local MeterHei = 100
+	local MeterWid = 30
+	local batteryTipHei = 10
+	local batteryTipWid = 16
+
+	-- the width of the lines drawn
+	local batLineWid = 6
+
+	local yPos = (ScH - MeterHei) - 40
+	local xPos = (ScW / 2) + (tempGaugeWid / 2) + MeterWid + 20
+
+
+	local ValCol = Color(255 * (1-(Value / 4000)),255 * (Value / 4000),0,255)
+
+	local grey = 60
+	local batteryColor = Color(grey,grey,grey,230)
+
+	draw.RoundedBox(4, xPos-8, yPos-40, MeterWid + 22, MeterHei + 16 + 40, ColBack)
+
+	local batteryMeterColor = ValCol
+	-- vert - draw the sides of the battery, move them down and size them to compensate for the tip of the battery graphic
+
+	draw.RoundedBoxEx(4, xPos, yPos + batteryTipHei, batLineWid, MeterHei - batteryTipHei, batteryColor, true, false, false, false)
+	draw.RoundedBoxEx(4, xPos + MeterWid, yPos + batteryTipHei, batLineWid, MeterHei - batteryTipHei, batteryColor, false, true, false, false)
+
+	-- horiz - draw the lines leading to the tip
+
+	local edgeLength = (MeterWid / 2 - batteryTipWid / 2)
+
+	draw.RoundedBoxEx(4, xPos + batLineWid, yPos + batteryTipHei, edgeLength, batLineWid, batteryColor, false, false, false, true)
+	draw.RoundedBoxEx(4, xPos + edgeLength + batteryTipWid, yPos + batteryTipHei, edgeLength, batLineWid, batteryColor, false, false, true, false)
+
+
+	-- vert - draw the sides of the tip
+	draw.RoundedBoxEx(4, xPos + edgeLength, yPos, batLineWid, batteryTipHei, batteryColor, true, false, false, false)
+	draw.RoundedBoxEx(4, xPos + edgeLength + batteryTipWid, yPos, batLineWid, batteryTipHei, batteryColor, false, true, false, false)
+
+	-- horiz - draw the top of the tip
+	draw.RoundedBoxEx(4, xPos + edgeLength + batLineWid, yPos, batteryTipWid-batLineWid, batLineWid, batteryColor)
+
+	-- horiz - draw the bottom of the battery
+	draw.RoundedBoxEx(4, xPos, yPos + MeterHei, MeterWid + batLineWid, batLineWid, batteryColor)
+
+
+	--function DrawVerticalBrokenMeter( _gapSize, _xMin, _yMax, _vbWid, _vbHei, _meterMax, _curValue)
+
+	local slantAmount = 4
+	local slantHei = 14
+	local slantWid = MeterWid - batLineWid * 2
+	local gapSize = 4
+
+	local heightWithGap = slantHei + gapSize
+
+	local batMeterHei = MeterHei - batteryTipHei - batLineWid * 2
+
+	-- take the modulus of the heightWithGap, that lets us know how much leftover height there is, take that height away.
+	-- now when we divide by the heightWithGap we'll have the number of slants we need to draw
+	local slantCount = (batMeterHei - (batMeterHei % heightWithGap)) / heightWithGap
+
+	local bottomY = yPos + MeterHei - batLineWid / 2
+
+	-- easiest start position is giving an xMin and yMax, that's the only spot that's on the bottom of the battery, so that's what the section drawing function uses
+	--print(slantCount)
+	surface.SetDrawColor(batteryMeterColor)
+	for slantNum = 0, slantCount-1 do
+		local ratio = (batMeterHei / 4000)
+		local heightCap = bottomY - math.Round(Value * ratio)
+
+		DrawMeterSlantSection(slantAmount, slantWid, slantHei, xPos + MeterWid - batLineWid / 2, bottomY - slantNum * heightWithGap, bottomY, heightCap)
+	end
+
+
+	-- draw bottom slant if value isn't 0 (or somethin)
+	-- draw broken meter slant section polys
+
+	draw.SimpleText(Caption, HUDFont, xPos + (MeterWid + batLineWid) / 2, yPos - 30, ColText, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+
+	local Perc = Value / 4000
+
+	local ValCol = Color(255 * (1-Perc), 255 * Perc,0,255)
+
+	if Value > 0 then
+		local XWid = (MeterWid - 154)  * Perc
+		XWid = math.Max(XWid,4)
+		--draw.RoundedBox(4, xPos + 150, yPos + 4, XWid, MeterHei - 8, ValCol)
+		draw.SimpleText(tostring(Perc * 100) .. " %", HUDFont, xPos + (MeterWid + batLineWid) / 2, yPos -12, ValCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+	else
+		if not SA_HUDBlink then ValCol = Color(0,0,0,0) end
+		draw.SimpleText("EMPTY", HUDFont, xPos + (MeterWid + batLineWid) / 2, yPos - 12, ValCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+	end
+end
+
+local function SA_CustomHUDPaint()
 	if GetConVarNumber("cl_drawhud") == 0 then return end
 	if not LocalPlayer():Alive() then return end
+
 	local SWEP = LocalPlayer():GetActiveWeapon()
 	if not (SWEP and SWEP.IsValid and SWEP:IsValid()) then return end
 	if SWEP:GetClass() == "gmod_camera" then return end
@@ -305,306 +492,3 @@ function SA_CustomHUDPaint()
 	end
 end
 hook.Add("HUDPaint", "SA_CustomHUDPaint", SA_CustomHUDPaint)
-
-
--- gets a set of edge vertex positions for rounding an edge 90 degrees from startDegrees
-local function GetProceduralEdge(vertices, cornerRadius, divisions, startDegrees, circleCenterX, circleCenterY, x, y, width, height)
-
-	for i = 1, divisions do
-
-		local offset = (90 / divisions) * i
-		local degrees = startDegrees - offset
-
-		local finalX = circleCenterX + (math.cos(math.rad( degrees )) * cornerRadius);
-  		local finalY = circleCenterY - (math.sin(math.rad( degrees )) * cornerRadius);
-
-		table.insert(vertices, {x = finalX, y = finalY, u = (finalX-x) / width, v = (finalY-y) / height})
-
-	end
-end
-
-
-function surface.DrawTexturedRectRounded( x, y, width, height, cornerRadius, divisions, roundTopLeft, roundTopRight, roundBottomLeft, roundBottomRight )
-	local vertices = {};
-
-	--top left and variable init
-	local cornerX = x
-	local cornerY = y
-
-	local circleCenterX = 0
-	local circleCenterY = 0
-
-	local startDegrees = 180
-
-	-- default nil round values
-	local roundTL = true
-	if (roundTopLeft ~= nil) then
-		 roundTL = roundTopLeft
-	end
-
-	local roundTR = true
-	if (roundTopRight ~= nil) then
-		 roundTR = roundTopRight
-	end
-
-	local roundBL = true
-	if (roundBottomLeft ~= nil) then
-		 roundBL = roundBottomLeft
-	end
-
-	local roundBR = true
-	if (roundBottomRight ~= nil) then
-		 roundBR = roundBottomRight
-	end
-
-	circleCenterX = cornerX + cornerRadius
-	circleCenterY = cornerY + cornerRadius
-
--- top left insert
-
-	if (roundTL) then
-		GetProceduralEdge(vertices, cornerRadius, divisions, startDegrees, circleCenterX, circleCenterY, x, y, width, height)
-	else
-		table.insert(vertices, {x = cornerX, y = cornerY, u = (cornerX-x) / width, v = (cornerY-y) / height })
-	end
-
-
--- top right
-	startDegrees = 90
-	cornerX = x + width
-	circleCenterX = cornerX - cornerRadius
-
-	if (roundTR) then
-		GetProceduralEdge(vertices, cornerRadius, divisions, startDegrees, circleCenterX, circleCenterY, x, y, width, height)
-	else
-		table.insert(vertices, {x = cornerX, y = cornerY, u = (cornerX-x) / width, v = (cornerY-y) / height })
-	end
-
--- bottom right
-	startDegrees = 360
-	cornerY = y + height
-	circleCenterY = cornerY - cornerRadius
-
-	if (roundBR) then
-		GetProceduralEdge(vertices, cornerRadius, divisions, startDegrees, circleCenterX, circleCenterY, x, y, width, height)
-	else
-		table.insert(vertices, {x = cornerX, y = cornerY, u = (cornerX-x) / width, v = (cornerY-y) / height})
-	end
-
--- bottom left
-	startDegrees = 270
-	cornerX = x
-	circleCenterX = cornerX + cornerRadius
-
-	if (roundBL) then
-		GetProceduralEdge(vertices, cornerRadius, divisions, startDegrees, circleCenterX, circleCenterY, x, y, width, height)
-	else
-		table.insert(vertices, {x = cornerX, y = cornerY, u = (cornerX-x) / width, v = (cornerY-y) / height})
-	end
-
-
-	surface.DrawPoly(vertices)
-
-
-end
-
-
-function DrawMeterSlantSection(_slantAmount, _width, _height, _xMax, _yMax, _yMaxCut, _yMinCut)
-
-	--remember gmod y axis is flipped if you go to change anything! variable names can be confusing, always think about y direction!
-
-	xMin = _xMax - _width
-	yMin = _yMax - _height
-
-	-- if the lowest point of this is higher than our current value (as a bar y position), dont draw it at all
-	if (_yMax >= _yMinCut) then
-		--return
-	end
-
-	draw.NoTexture()
-	local slantSection = {}
-
-
-	-- if the top right point is less than  our current value (as a bar y position)
-	local cutAmount = 0
-	if ((yMin - _slantAmount) < _yMinCut) then
-		cutAmount = math.abs(_yMinCut-yMin)
-	end
-
-	-- this shouldn't happen, but just in case...
-	if (cutAmount >= _height) then
-		return
-	end
-
-	-- top left, top right, bottom left, bottom right
-	table.insert(slantSection, {x = xMin, y = yMin - _slantAmount + cutAmount, u = 0, v = 1})
-	table.insert(slantSection, {x = _xMax, y = yMin + cutAmount, u = 1, v = 1})
-	table.insert(slantSection, {x = _xMax, y = _yMax, u = 1, v = 0})
-	table.insert(slantSection, {x = xMin, y = _yMax - _slantAmount, u = 0, v = 0})
-
-	surface.DrawPoly(slantSection)
-
-
-end
-
-
-function DrawLSBattery(CaptionX, Value, ScH, ScW, ColBack, ColText)
-
-	--remember gmod y axis is flipped if you go to change anything! variable names can be confusing, always think about y direction!
-
-	local Caption = CAF.GetLangVar(CaptionX)
-	local MeterHei = 100
-	local MeterWid = 30
-	local batteryTipHei = 10
-	local batteryTipWid = 16
-
-	-- the width of the lines drawn
-	local batLineWid = 6
-
-	local yPos = (ScH - MeterHei) - 40
-	local xPos = (ScW / 2) + (tempGaugeWid / 2) + MeterWid + 20
-
-
-	local ValCol = Color(255 * (1-(Value / 4000)),255 * (Value / 4000),0,255)
-
-	local grey = 60
-	local batteryColor = Color(grey,grey,grey,230)
-
-	draw.RoundedBox(4, xPos-8, yPos-40, MeterWid + 22, MeterHei + 16 + 40, ColBack)
-
-	local batteryMeterColor = ValCol
-	-- vert - draw the sides of the battery, move them down and size them to compensate for the tip of the battery graphic
-
-	draw.RoundedBoxEx(4, xPos, yPos + batteryTipHei, batLineWid, MeterHei - batteryTipHei, batteryColor, true, false, false, false)
-	draw.RoundedBoxEx(4, xPos + MeterWid, yPos + batteryTipHei, batLineWid, MeterHei - batteryTipHei, batteryColor, false, true, false, false)
-
-	-- horiz - draw the lines leading to the tip
-
-	local edgeLength = (MeterWid / 2 - batteryTipWid / 2)
-
-	draw.RoundedBoxEx(4, xPos + batLineWid, yPos + batteryTipHei, edgeLength, batLineWid, batteryColor, false, false, false, true)
-	draw.RoundedBoxEx(4, xPos + edgeLength + batteryTipWid, yPos + batteryTipHei, edgeLength, batLineWid, batteryColor, false, false, true, false)
-
-
-	-- vert - draw the sides of the tip
-	draw.RoundedBoxEx(4, xPos + edgeLength, yPos, batLineWid, batteryTipHei, batteryColor, true, false, false, false)
-	draw.RoundedBoxEx(4, xPos + edgeLength + batteryTipWid, yPos, batLineWid, batteryTipHei, batteryColor, false, true, false, false)
-
-	-- horiz - draw the top of the tip
-	draw.RoundedBoxEx(4, xPos + edgeLength + batLineWid, yPos, batteryTipWid-batLineWid, batLineWid, batteryColor)
-
-	-- horiz - draw the bottom of the battery
-	draw.RoundedBoxEx(4, xPos, yPos + MeterHei, MeterWid + batLineWid, batLineWid, batteryColor)
-
-
-	--function DrawVerticalBrokenMeter( _gapSize, _xMin, _yMax, _vbWid, _vbHei, _meterMax, _curValue)
-
-	local slantAmount = 4
-	local slantHei = 14
-	local slantWid = MeterWid - batLineWid * 2
-	local gapSize = 4
-
-	local heightWithGap = slantHei + gapSize
-
-	local batMeterHei = MeterHei - batteryTipHei - batLineWid * 2
-
-	-- take the modulus of the heightWithGap, that lets us know how much leftover height there is, take that height away.
-	-- now when we divide by the heightWithGap we'll have the number of slants we need to draw
-	local slantCount = (batMeterHei - (batMeterHei % heightWithGap)) / heightWithGap
-
-	local bottomY = yPos + MeterHei - batLineWid / 2
-
-	-- easiest start position is giving an xMin and yMax, that's the only spot that's on the bottom of the battery, so that's what the section drawing function uses
-	--print(slantCount)
-	surface.SetDrawColor(batteryMeterColor)
-	for slantNum = 0, slantCount-1 do
-		local ratio = (batMeterHei / 4000)
-		local heightCap = bottomY - math.Round(Value * ratio)
-
-		DrawMeterSlantSection(slantAmount, slantWid, slantHei, xPos + MeterWid - batLineWid / 2, bottomY - slantNum * heightWithGap, bottomY, heightCap)
-	end
-
-
-	-- draw bottom slant if value isn't 0 (or somethin)
-	-- draw broken meter slant section polys
-
-
-
-
-
-	draw.SimpleText(Caption, HUDFont, xPos + (MeterWid + batLineWid) / 2, yPos - 30, ColText, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-
-	local Perc = Value / 4000
-
-	local ValCol = Color(255 * (1-Perc), 255 * Perc,0,255)
-
-	if Value > 0 then
-		local XWid = (MeterWid - 154)  * Perc
-		XWid = math.Max(XWid,4)
-		--draw.RoundedBox(4, xPos + 150, yPos + 4, XWid, MeterHei - 8, ValCol)
-		draw.SimpleText(tostring(Perc * 100) .. " %", HUDFont, xPos + (MeterWid + batLineWid) / 2, yPos -12, ValCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-	else
-		if not SA_HUDBlink then ValCol = Color(0,0,0,0) end
-		draw.SimpleText("EMPTY", HUDFont, xPos + (MeterWid + batLineWid) / 2, yPos - 12, ValCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-	end
-end
-
-function DrawLSBar(BarNum,CaptionX,Value,ScH,ScW,ColBack,ColText)
-	local Caption = CAF.GetLangVar(CaptionX)
-	local BarHei = 114
-	local BarSpace = 24
-	local BarWid = 30
-	local Hei = (ScH - 30) - BarHei - 4
-	local XMinX = ScW / 2 - tempGaugeWid / 2 - (BarWid + BarSpace) * BarNum - 12
-
-	--draw.RoundedBox(4, xPos-8, yPos-40, MeterWid+22, MeterHei+12 + 40, ColBack)
-	draw.RoundedBox(4, XMinX-8, Hei-32, BarWid + 16, BarHei + 12 + 30, ColBack)
-
-	draw.RoundedBox(4, XMinX + 3, Hei + 6, BarWid-6, BarHei-6, Color(70,70,70,230))
-	draw.SimpleText(Caption, HUDFont, XMinX + BarWid / 2-1, Hei -20, ColText, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-
-	local Perc = Value / 4000
-
-	local ValCol = Color(255 * (1-Perc),255 * Perc,0,255)
-
-	if Value > 0 then
-		local YHei = (BarHei-4)  * Perc
-		YHei = math.Max(YHei,4)
-		draw.RoundedBox(4, XMinX + 5, math.Round(Hei + 6 + BarHei - 4) - math.Round(YHei), BarWid-10, math.Round(YHei-4), ValCol)
-		draw.SimpleText(tostring(math.Round(Perc * 100,2)) .. " %", HUDFont, XMinX + BarWid / 2-1, Hei - 4, ValCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-	else
-		if not SA_HUDBlink then ValCol = Color(0,0,0,0) end
-		draw.SimpleText("EMPTY", HUDFont, XMinX + BarWid / 2-1, Hei -4, ValCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-	end
-end
-
-WeaponMaxAmmo = {}
-WeaponMaxAmmo["weapon_pistol"] = 18
-WeaponMaxAmmo["weapon_357"] = 6
-WeaponMaxAmmo["weapon_smg1"] = 45
-WeaponMaxAmmo["weapon_ar2"] = 30
-WeaponMaxAmmo["weapon_shotgun"] = 6
-WeaponMaxAmmo["weapon_crossbow"] = 1
-WeaponMaxAmmo["weapon_frag"] = 0
-WeaponMaxAmmo["weapon_rpg"] = 0
-WeaponMaxAmmo["weapon_crowbar"] = 0
-WeaponMaxAmmo["weapon_physcannon"] = 0
-WeaponMaxAmmo["weapon_physgun"] = 0
-
-function GetMaxAmmo(SWEP)
-	if SWEP.Primary and SWEP.Primary.ClipSize then
-		return SWEP.Primary.ClipSize
-	end
-
-	local MAmmo = WeaponMaxAmmo[SWEP:GetClass()]
-	if MAmmo then return MAmmo end
-
-	LocalPlayer():ChatPrint("UNKOWN WEAPON: " .. SWEP:GetClass() .. "|" .. tostring(SWEP:Clip1()))
-
-	return SWEP:Clip1()
-end
-
-function Color( r, g, b, a )
-	a = a or 255
-	return { r = math.min( tonumber(r or 0), 255 ), g =  math.min( tonumber(g or 0), 255 ), b =  math.min( tonumber(b or 0), 255 ), a =  math.min( tonumber(a or 0), 255 ) }
-end

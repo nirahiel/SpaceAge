@@ -3,7 +3,7 @@ if SERVER then
 end
 
 SA.Goodies = {
-	ally_1m= {
+	ally_1m = {
 		name = "Alliance 1 month",
 		desc = "1 month membership in the faction \"The Alliance\"",
 		image = "SA_Research_Icon",

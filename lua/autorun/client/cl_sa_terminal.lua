@@ -1,15 +1,12 @@
 SA.Terminal = {}
 
-TERMLOADER = true
-include("cl_sa_terminal_research.lua")
-include("cl_sa_terminal_resource.lua")
-include("cl_sa_terminal_goodie.lua")
-TERMLOADER = nil
+include("sa/terminal/client/research.lua")
+include("sa/terminal/client/resource.lua")
+include("sa/terminal/client/goodies.lua")
 
 require("supernet")
 
 local SA_FactionData = {}
-local SA_StatsList = {}
 local ResearchPanels = {}
 local term_info = {}
 local SA_Term_StationCap = 0
@@ -43,12 +40,6 @@ local function SA_RefreshStatsList(isAuto)
 	if not SA_Term_StatList then return end
 	SA_Term_StatList:OpenURL("https://stats.spaceage.online/?ingame=1&rand=" .. tostring(CurTime()))
 end
-
-local function sa_new_stats(len, ply)
-	SA_StatsList = net.ReadTable()
-	SA_RefreshStatsList()
-end
-net.Receive("sa_newstats", sa_new_stats)
 
 local function SA_RecvFactionData(len, ply)
 	local fn = net.ReadString()
@@ -114,7 +105,6 @@ local function CreateTerminalGUI()
 		SA_Term_GUI:Close()
 	end
 
-	local Researches = SA.Research.Get()
 	local font = "DermaLarge"
 	surface.SetFont(font)
 	local BasePanel = vgui.Create( "DFrame" )
