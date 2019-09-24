@@ -21,92 +21,50 @@ RegisterIce("Dark Glitter",Color(0,0,0,255),25,275,27)
 
 local IceMaterial = "models/shiny"
 
-local function Calc_Ring(inrad, outrad, angle)
+local function CalcRing(inrad, outrad, angle)
 	local RandAng = math.rad(math.random(0,360))
 	return (angle:Right() * math.sin(RandAng) + angle:Forward() * math.cos(RandAng)) * math.random(tonumber(inrad),tonumber(outrad))
 end
 
-function SA.Ice.SpawnRoid(Type,data)
+function SA.Ice.SpawnRoidRing(iceType, data)
 	local ent = ents.Create("iceroid")
 
-	local IceData = IceTypes[Type]
+	local IceData = IceTypes[iceType]
 
 	ent:SetColor(IceData.col)
 	ent:SetModel(table.Random(IceModels))
 	ent:SetMaterial(IceMaterial)
-	ent.MineralName = Type
+	ent.MineralName = iceType
 	ent.MineralAmount = IceData.StartIce
 	ent.MineralMax = IceData.MaxIce
 	ent.MineralRegen = IceData.RegenIce
 	ent.RespawnDelay = math.random(1600,2000)
 
 	ent.data = data
-	ent:SetPos(data.pos + Calc_Ring(data.inrad,data.outrad,data.ang))
-	ent:SetAngles( Angle(math.random(-180,180),math.random(-180,180),math.random(-180,180)) )
+	ent:SetPos(data.Origin + CalcRing(data.InnerRadius,data.OuterRadius,data.Angle))
+	ent:SetAngles(Angle(math.random(-180,180),math.random(-180,180),math.random(-180,180)))
 	ent:Spawn()
 	ent:Activate()
 	ent.Autospawned = true
 	SA.PP.MakeOwner(ent)
+
+	ent.MineralAmount = ent.MineralAmount * data.MineralAmountMultiplier
+
 	return ent
 end
 
 local function AM_Spawn_Ice(tbl)
-	for _,ice in pairs(tbl) do
-		if ice.Type and ice.Origin and ice.Type == "Ring" and ice.InnerRadius and ice.OuterRadius and ice.Angle then
-			local RingData = {
-				pos = Vector(unpack(ice.Origin:TrimExplode(" "))),
-				inrad = unpack(ice.InnerRadius:TrimExplode(" ")),
-				outrad = unpack(ice.OuterRadius:TrimExplode(" ")),
-				ang = Angle(unpack(ice.Angle:TrimExplode(" ")))
-			}
+	PrintTable(tbl)
 
-			for _,i in pairs(ice.BlueIce:TrimExplode(" ")) do
-				for a = 1,i do
-					local Roid = SA.Ice.SpawnRoid("Blue Ice",RingData)
-					Roid.MineralAmount = Roid.MineralAmount * 2
-				end
-			end
-			for _,i in pairs(ice.ClearIce:TrimExplode(" ")) do
-				for a = 1,i do
-					local Roid = SA.Ice.SpawnRoid("Clear Ice",RingData)
-					Roid.MineralAmount = Roid.MineralAmount * 2
-				end
-			end
-			for _,i in pairs(ice.GlacialMass:TrimExplode(" ")) do
-				for a = 1,i do
-					local Roid = SA.Ice.SpawnRoid("Glacial Mass",RingData)
-					Roid.MineralAmount = Roid.MineralAmount * 2
-				end
-			end
-			for _,i in pairs(ice.WhiteGlaze:TrimExplode(" ")) do
-				for a = 1,i do
-					local Roid = SA.Ice.SpawnRoid("White Glaze",RingData)
-					Roid.MineralAmount = Roid.MineralAmount * 2
-				end
-			end
-			for _,i in pairs(ice.GlareCrust:TrimExplode(" ")) do
-				for a = 1,i do
-					local Roid = SA.Ice.SpawnRoid("Glare Crust",RingData)
-					Roid.MineralAmount = Roid.MineralAmount * 2
-				end
-			end
-			for _,i in pairs(ice.DarkGlitter:TrimExplode(" ")) do
-				for a = 1,i do
-					local Roid = SA.Ice.SpawnRoid("Dark Glitter",RingData)
-					Roid.MineralAmount = Roid.MineralAmount * 2
-				end
-			end
-			for _,i in pairs(ice.Gelidus:TrimExplode(" ")) do
-				for a = 1,i do
-					local Roid = SA.Ice.SpawnRoid("Gelidus",RingData)
-					Roid.MineralAmount = Roid.MineralAmount * 2
-				end
-			end
-			for _,i in pairs(ice.Krystallos:TrimExplode(" ")) do
-				for a = 1,i do
-					local Roid = SA.Ice.SpawnRoid("Krystallos",RingData)
-					Roid.MineralAmount = Roid.MineralAmount * 2
-				end
+	for _, ring in pairs(tbl.Ring) do
+		ring.Config.Origin = Vector(unpack(ring.Config.Origin))
+		ring.Config.Angle = Angle(unpack(ring.Config.Angle))
+
+		PrintTable(ring)
+
+		for iceType, iceCount in pairs(ring.Counts) do
+			for i = 1, iceCount do
+				SA.Ice.SpawnRoidRing(iceType, ring.Config)
 			end
 		end
 	end
@@ -114,6 +72,7 @@ end
 
 timer.Simple(1, function()
 	local iceTxt = file.Read("spaceage/ice/maps/" .. game.GetMap():lower() .. ".txt")
+	print(iceTxt)
 	if not iceTxt then
 		return
 	end

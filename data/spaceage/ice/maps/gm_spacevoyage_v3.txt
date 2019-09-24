@@ -1,1 +1,1 @@
-[{"BlueIce":"10","Type":"Custom","GlareCrust":"4","WhiteGlaze":"10","Krystallos":"2","DarkGlitter":"4","Radius":"4096","Gelidus":"2","Origin":"200 -2800 -1024","ClearIce":"10","GlacialMass":"10"}]
+{"Ring":[],"Custom":[{"Counts":{"White Glaze":10.0,"Krystallos":2.0,"Dark Glitter":4.0,"Gelidus":2.0,"Clear Ice":10.0,"Glare Crust":4.0,"Blue Ice":10.0,"Glacial Mass":10.0},"Config":{"MineralAmountMultiplier":1.0,"Origin":[200.0,-2800.0,-1024.0],"Radius":4096.0}}]}
