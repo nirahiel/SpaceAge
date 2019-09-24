@@ -12,9 +12,9 @@ function ENT:Initialize()
 		self:Remove()
 	end
 
-	self:PhysicsInit( SOLID_VPHYSICS )
-	self:SetMoveType( MOVETYPE_NONE )
-	self:SetSolid( SOLID_VPHYSICS )
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetMoveType(MOVETYPE_NONE)
+	self:SetSolid(SOLID_VPHYSICS)
 
 	local phys = self:GetPhysicsObject()
 	if (phys:IsValid()) then
@@ -27,21 +27,20 @@ function ENT:Initialize()
 end
 
 function ENT:OnRemove()
-	local smokepuff = ents.Create( "env_ar2explosion" )
+	local smokepuff = ents.Create("env_ar2explosion")
 	smokepuff:SetPos(self:GetPos())
-	smokepuff:SetKeyValue( "material", "particle/particle_noisesphere" )
+	smokepuff:SetKeyValue("material", "particle/particle_noisesphere")
 	smokepuff:Spawn()
 	smokepuff:Activate()
 	smokepuff:Fire("explode", "", 0)
-	smokepuff:Fire("kill","",10)
+	smokepuff:Fire("kill", "", 10)
 
 	if self.RespawnDelay > 0 then
-		timer.Simple(self.RespawnDelay, function() SA.Ice.SpawnRoid(self.MineralName, self.data) end)
+		timer.Simple(self.RespawnDelay, function() SA.Ice.SpawnRoid(self.MineralName, self.IceData) end)
 	end
 end
 
 function ENT:Think()
-
 	if self.MineralAmount <= 1 then
 		self:Remove()
 		return false

@@ -40,7 +40,7 @@ function SA.Ice.SpawnRoidRing(iceType, data)
 	ent.MineralRegen = IceData.RegenIce
 	ent.RespawnDelay = math.random(1600,2000)
 
-	ent.data = data
+	ent.IceData = data
 	ent:SetPos(data.Origin + CalcRing(data.InnerRadius,data.OuterRadius,data.Angle))
 	ent:SetAngles(Angle(math.random(-180,180),math.random(-180,180),math.random(-180,180)))
 	ent:Spawn()
@@ -54,13 +54,9 @@ function SA.Ice.SpawnRoidRing(iceType, data)
 end
 
 local function AM_Spawn_Ice(tbl)
-	PrintTable(tbl)
-
 	for _, ring in pairs(tbl.Ring) do
 		ring.Config.Origin = Vector(unpack(ring.Config.Origin))
 		ring.Config.Angle = Angle(unpack(ring.Config.Angle))
-
-		PrintTable(ring)
 
 		for iceType, iceCount in pairs(ring.Counts) do
 			for i = 1, iceCount do
