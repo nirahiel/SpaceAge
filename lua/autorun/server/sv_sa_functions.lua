@@ -115,3 +115,42 @@ function ENT:SetNetworkedColor(name, c)
 	local n = bor(c.r, blshift(c.g, 8), blshift(c.b, 16), 255)
     self:SetNetworkedInt(name, n)
 end
+
+local function explode(s,sep)
+	if(not s) then return s end; -- Fixes issues when giving nil-values
+	local sep = sep or " "; -- Fixes issues when giving nil-values
+	local t = {};
+	if(sep == "") then -- Stops infinite loops
+		for i=1,s:len() do
+			table.insert(t,s:sub(i,i));
+		end
+	else
+	 	local pos = 0;
+		for k,v in function() return s:find(sep,pos,true) end do -- for each divider found
+			table.insert(t,s:sub(pos,k-1)); -- Attach chars left of current divider
+			pos = v + 1;-- Jump past current divider
+		end
+		table.insert(t,s:sub(pos)) -- Attach chars right of last divider
+	end
+	return t;
+end
+string.explode = explode; -- Our function, which can be run as MyString:explode()
+string.Explode = function(sep,s) return explode(s,sep) end; -- Enhances garry's explode function
+
+local function TrimExplode(s,sep)
+	if(sep and s:find(sep)) then
+		if(type(s) == "string") then
+			s=s:gsub("^[%s]+","");
+		end
+		local r = explode(s,sep);
+		for k,v in pairs(r) do
+			if(type(v) == "string") then
+				r[k] = v:Trim();
+			end
+		end
+		return r;
+	else
+		return {s};
+	end
+end
+string.TrimExplode = TrimExplode
