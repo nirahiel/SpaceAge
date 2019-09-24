@@ -68,7 +68,6 @@ end
 
 timer.Simple(1, function()
 	local iceTxt = file.Read("spaceage/ice/maps/" .. game.GetMap():lower() .. ".txt")
-	print(iceTxt)
 	if not iceTxt then
 		return
 	end
