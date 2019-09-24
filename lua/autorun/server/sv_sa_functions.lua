@@ -102,14 +102,6 @@ function SA.Functions.MineThing(ent,hitent,resType)
 	end
 end
 
-local bor = bit.bor
-local blshift = bit.lshift
-local ENT = FindMetaTable("Entity")
-function ENT:SetNetworkedColor(name, c)
-	local n = bor(c.r, blshift(c.g, 8), blshift(c.b, 16), 255)
-	self:SetNWInt(name, n)
-end
-
 local function explode(s,sep)
 	if(not s) then return s end; -- Fixes issues when giving nil-values
 	local sep = sep or " "; -- Fixes issues when giving nil-values

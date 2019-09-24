@@ -5,7 +5,7 @@ if SERVER then
 		for k,pl in pairs(player.GetAll()) do
 			local userid = pl:UniqueID()
 			if pl:Armor() ~= hudaf[userid] then
-				pl:SetNetworkedInt("armor",pl:Armor())
+				pl:SetNWInt("armor",pl:Armor())
 				hudaf[userid] = pl:Armor()
 			end
 		end
@@ -16,7 +16,7 @@ end
 if CLIENT then
 	local meta = FindMetaTable("Player")
 	function meta:Armor()
-		return self:GetNetworkedInt("armor")
+		return self:GetNWInt("armor")
 	end
 	Msg("Armor fix running.\n")
 end
