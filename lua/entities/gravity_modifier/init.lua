@@ -7,6 +7,8 @@ util.PrecacheSound( "common/warning.wav" )
 include("shared.lua")
 local Energy_Increment = 25
 
+local RD = CAF.GetAddon("Resource Distribution")
+
 function ENT:Initialize()
 	self.BaseClass.Initialize(self)
 	self.Active = 0
@@ -95,7 +97,6 @@ end
 function ENT:Think()
 	self.BaseClass.Think(self)
 	if (self.Active == 1) then
-		local RD = CAF.GetAddon("Resource Distribution")
 		local dif = 1
 		if self.environment then
 			if self.environment:GetGravity() < 0.1 then

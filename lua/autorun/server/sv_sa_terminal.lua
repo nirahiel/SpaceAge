@@ -67,10 +67,9 @@ AddResourceBuyPrice("Water",3.0)
 
 local StationPos = Vector(0,0,0)
 local StationSize = 0
-local RD = nil
+local RD = CAF.GetAddon("Resource Distribution")
 
 local function InitSATerminal()
-	RD = CAF.GetAddon("Resource Distribution")
 	local mapname = string.lower(game:GetMap())
 	if mapname == "gm_galactic_rc1" then
 		StationPos = Vector(-8896,10192,768)

@@ -3,6 +3,8 @@ AddCSLuaFile( "shared.lua" )
 
 include("shared.lua")
 
+local RD = CAF.GetAddon("Resource Distribution")
+
 function ENT:Initialize()
 	self.BaseClass.Initialize(self)
 	self.damaged = 0
@@ -45,7 +47,6 @@ function ENT:Think()
 end
 
 function ENT:UpdateWireOutput()
-	local RD = CAF.GetAddon("Resource Distribution")
 	local dm = RD.GetResourceAmount(self, "dark matter")
 	local tc = RD.GetResourceAmount(self, "terracrystal")
 	local pf = RD.GetResourceAmount(self, "permafrost")

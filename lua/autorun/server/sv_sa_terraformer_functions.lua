@@ -1,10 +1,6 @@
 SA.Terraformer = {}
 
-local RD = nil
-local function InitSAFuncs()
-	RD = CAF.GetAddon("Resource Distribution")
-end
-timer.Simple(0,InitSAFuncs)
+local RD = CAF.GetAddon("Resource Distribution")
 
 local function SA_Terraformer_PushAtmosphere(terent,resName,atmoname,amount)
 	RD.ConsumeResource(terent,resName,amount)
@@ -87,7 +83,6 @@ function SA.Terraformer.Run(terent)
 
 	local SB = CAF.GetAddon("Spacebuild")
 	if terent.environment.IsProtected or (not terent.environment:IsPlanet()) or terent.environment == SB.GetSpace() then return end
-	local RD = CAF.GetAddon("Resource Distribution")
 	local energy = RD.GetResourceAmount(terent, "energy")
 	local o2 = RD.GetResourceAmount(terent, "oxygen")
 	local dm = RD.GetResourceAmount(terent, "dark matter")

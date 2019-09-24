@@ -1,11 +1,7 @@
 AddCSLuaFile("autorun/client/cl_sa_givequery.lua")
 AddCSLuaFile("autorun/client/cl_sa_functions.lua")
 
-local RD = nil
-local function InitSAFuncs()
-	RD = CAF.GetAddon("Resource Distribution")
-end
-timer.Simple(0,InitSAFuncs)
+local RD = CAF.GetAddon("Resource Distribution")
 
 SA.Functions = {}
 
@@ -66,7 +62,6 @@ function SA.Functions.PropMoveSlow(ent,endPos,speed)
 end
 
 function SA.Functions.Discharge(ent)
-	local RD = CAF.GetAddon("Resource Distribution")
 	local pos = ent:GetPos()
 	local Ang = ent:GetAngles()
 	local trace = {}
