@@ -800,39 +800,32 @@ local function sa_term_update(ply, tbl)
 	end
 
 	local Researches = SA.Research.Get()
-	local ResearchGroups = SA.Research.GetGroups()
 
 	for k,v in pairs(ResTabl2) do
-		local resname = v[1]
-		local rank = v[2]
-		local group = v[3]
-
-		if not (resname and rank and group) then continue end
+		local resgroup = v[1]
+		local resname = v[2]
+		local rank = v[3]
+		local group = v[4]
 
 		local cost = ""
-		for _,RGroup in pairs(ResearchGroups) do
-			for name,val in pairs(Researches[RGroup]) do
-				if name ~= resname then
-					continue
-				end
-				local ranks = val["ranks"]
-				if (ranks == rank) and (ranks ~= 0) then
-					cost = "Max Rank"
-				else
-					local base = val["cost"]
-					local inc = base * (val["costinc"] / 100)
-					local total = base + (inc * rank)
-					total = total * (SA_DevLimitLevel * SA_DevLimitLevel)
-					if group == "legion" or group == "alliance" then
-						total = math.ceil(total * 0.75)
-					elseif group == "starfleet" then
-						total = math.ceil(total * 0.9175)
-					end
-					cost = "Cost: " .. SA.AddCommasToInt(total)
-				end
-				ResearchPanels[RGroup][name]:Update(rank,cost)
+		local val = Researches[resgroup][resname]
+
+		local ranks = val["ranks"]
+		if (ranks == rank) and (ranks ~= 0) then
+			cost = "Max Rank"
+		else
+			local base = val["cost"]
+			local inc = base * (val["costinc"] / 100)
+			local total = base + (inc * rank)
+			total = total * (SA_DevLimitLevel * SA_DevLimitLevel)
+			if group == "legion" or group == "alliance" then
+				total = math.ceil(total * 0.75)
+			elseif group == "starfleet" then
+				total = math.ceil(total * 0.9175)
 			end
+			cost = "Cost: " .. SA.AddCommasToInt(total)
 		end
+		ResearchPanels[resgroup][resname]:Update(rank,cost)
 	end
 
 	if SA_MaxCrystalCount and SA_CrystalRadius and SA_Max_Roid_Count then

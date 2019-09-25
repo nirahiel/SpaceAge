@@ -1,6 +1,8 @@
 AddCSLuaFile("autorun/client/cl_sa_hud.lua")
 
 timer.Simple(1,function() RD = CAF.GetAddon("Resource Distribution") end)
+local API_BASE = "https://api.spaceage.online/v1"
+local API_HEADERS = {}
 
 local WorldClasses = {}
 local function AddWorldClass(name)
@@ -33,31 +35,28 @@ local sa_faction_only = GetConVar("sa_faction_only")
 
 local PlayerMeta = FindMetaTable("Player")
 function PlayerMeta:AssignFaction(name)
-	if name then self.UserGroup = name end
-	if not self.UserGroup then self.UserGroup = "freelancer" end
-	if self.UserGroup == "alliance" and self.allyuntil < os.time() then self.UserGroup = "freelancer" end
+	if name then self.SAData.FactionName = name end
+	if not self.SAData.FactionName then self.SAData.FactionName = "freelancer" end
+	if self.SAData.FactionName == "alliance" and self.SAData.AllianceMembershipExpiry < os.time() then self.SAData.FactionName = "freelancer" end
 	for k,v in pairs(SA.Factions.Table) do
-		if self.UserGroup == v[2] then
-			self.TeamIndex = k
+		if self.SAData.FactionName == v[2] then
+			self:SetTeam(k)
+			return
 		end
 	end
-	if not self.TeamIndex then
-		self.TeamIndex = 1
-		self.UserGroup = "freelancer"
+	if not self:Team() then
+		self:SetTeam(1)
+		self.SAData.FactionName = "freelancer"
+		return
 	end
-	self:SetTeam(self.TeamIndex)
 end
 
 local LoadRes, LoadFailed
 
 local function SA_InitSpawn(ply)
-	local sid = ply:SteamID()
 	SA.GiveCredits.Remove(ply)
 	print("Loading:", ply:Name())
-	local isok = SA.MySQL:Query("SELECT * FROM players WHERE steamid='" .. SA.MySQL:Escape(sid) .. "'", LoadRes, ply, sid)
-	if not isok then
-		LoadFailed(ply)
-	end
+	http.Fetch(API_BASE .. "/players/" .. ply:SteamID(), function(...) LoadRes(ply, ...) end, function(...) LoadFailed(ply, ...) end, API_HEADERS)
 end
 hook.Add("PlayerInitialSpawn", "SA_LoadPlayer", SA_InitSpawn)
 
@@ -112,269 +111,132 @@ local function NonLeaderRes(data, isok, merror, ply)
 	end
 end
 
+local function AddSAData(ply)
+	if not ply.SAData then
+		ply.SAData = {}
+	end
+	local data = ply.SAData
+	if data.Credits == nil then
+		data.Credits = 0
+	end
+	if data.TotalCredits == nil then
+		data.TotalCredits = 0
+	end
+	if data.IsFactionLader == nil then
+		data.IsFactionLeader = false
+	end
+	data.Loaded = false
+	if data.StationStorage == nil then
+		data.StationStorage = {}
+	end
+	if data.StationStorage.Capacity == nil then
+		data.StationStorage.Capacity = 0
+	end
+	if data.StationStorage.Contents == nil then
+		data.StationStorage.Contents = {}
+	end
+	if data.AllianceMembershipExpiry == nil then
+		data.AllianceMembershipExpiry = 0
+	end
+	if data.FactionName == nil then
+		data.FactionName = "freelancer"
+	end
+	if data.Research == nil then
+		data.Research = {}
+	end
+	SA.Research.InitPlayer(ply)
+	if data.Research.GlobalMultiplier == nil or data.Research.GlobalMultiplier <= 0 then
+		data.Research.GlobalMultiplier = 1
+	end
+end
+
 LoadFailed = function(ply)
-	ply.Loaded = false
-	ply.Credits = 0
-	ply.TotalCredits = 0
-	ply.IsLeader = false
-	ply.TeamIndex = 1
-	ply.MaxCap = 0
-	ply.miningyield = 0
-	ply.miningyield_ii = 0
-	ply.miningyield_iii = 0
-	ply.miningyield_iv = 0
-	ply.miningyield_v = 0
-	ply.miningyield_vi = 0
-	ply.miningtheory = 0
-	ply.miningenergy = 0
-	ply.oremod = 0
-	ply.rta = 0
-	ply.oremod_ii = 0
-	ply.oremod_iii = 0
-	ply.oremod_iv = 0
-	ply.oremod_v = 0
-	ply.oremanage = 0
-	ply.tiberiummod = 0
-	ply.tiberiumyield = 0
-	ply.tiberiummod_ii = 0
-	ply.tiberiumyield_ii = 0
-
-	ply.tibdrillmod = 0
-	ply.tibstoragemod = 0
-
-	ply.icerawmod = 0
-	ply.iceproductmod = 0
-	ply.icerefinerymod = 0
-	ply.icelasermod = 0
-
-	ply.devlimit = 1
-	ply.allyuntil = 0
-
+	AddSAData(ply)
+	ply:SetTeam(1)
 	SA.Terminal.SetupStorage(ply)
 	ply:ChatPrint("There has been an error, changes to your account will not be saved this session to prevent loss of data. Loading will be retried all 30 seconds")
 	ply:AssignFaction()
-	timer.Simple(30,function()
-		if not ply then return end
+	timer.Simple(30, function()
+		if not SA.ValidEntity(ply) then
+			return
+		end
 		SA_InitSpawn(ply)
-		if ply.Loaded == true then
+		if ply.SAData.Loaded then
 			ply:Spawn()
 		end
 	end)
 end
 
-LoadRes = function(data, isok, merror, ply, sid)
-	print("Loaded:", ply:Name(), data, isok, merror)
-	if (isok and sid ~= "STEAM_ID_PENDING") then
-		if (data[1]) then
-			ply.Credits = data[1]["credits"]
-			ply.TotalCredits = data[1]["score"]
-			ply.UserGroup = data[1]["groupname"]
-			ply.IsLeader = (tonumber(data[1]["isleader"]) == 1)
-			ply.MaxCap = tonumber(data[1]["capacity"])
-			ply.miningyield =  tonumber(data[1]["miningyield"])
-			ply.miningenergy =  tonumber(data[1]["miningenergy"])
-			ply.oremod = tonumber(data[1]["oremod"])
-			ply.miningyield_ii =  tonumber(data[1]["miningyield_ii"])
-			ply.miningyield_iii =  tonumber(data[1]["miningyield_iii"])
-			ply.miningyield_iv =  tonumber(data[1]["miningyield_iv"])
-			ply.miningyield_v =  tonumber(data[1]["miningyield_v"])
-			ply.miningyield_vi =  tonumber(data[1]["miningyield_vi"])
-			ply.miningtheory =  tonumber(data[1]["miningtheory"])
-			ply.rta = tonumber(data[1]["rtadevice"])
-			ply.oremod_ii = tonumber(data[1]["oremod_ii"])
-			ply.oremod_iii = tonumber(data[1]["oremod_iii"])
-			ply.oremod_iv = tonumber(data[1]["oremod_iv"])
-			ply.oremod_v = tonumber(data[1]["oremod_v"])
-			ply.oremanage = tonumber(data[1]["oremanage"])
-			ply.tiberiumyield =  tonumber(data[1]["tiberiumyield"])
-			ply.tiberiummod =  tonumber(data[1]["tiberiummod"])
-			ply.tiberiumyield_ii =  tonumber(data[1]["tiberiumyield_ii"])
-			ply.tiberiummod_ii =  tonumber(data[1]["tiberiummod_ii"])
-
-			ply.tibdrillmod = tonumber(data[1]["tibdrillmod"])
-			ply.tibstoragemod = tonumber(data[1]["tibstoragemod"])
-
-			ply.icerawmod = tonumber(data[1]["icerawmod"])
-			ply.iceproductmod = tonumber(data[1]["iceproductmod"])
-			ply.icerefinerymod = tonumber(data[1]["icerefinerymod"])
-			ply.icelasermod = tonumber(data[1]["icelasermod"])
-
-			ply.devlimit = tonumber(data[1]["devlimit"])
-
-			ply.allyuntil = tonumber(data[1]["allyuntil"])
-
-			SA.Terminal.SetupStorage(ply,tbl)
-			ply:ChatPrint("Your account has been loaded, welcome on duty.")
-			ply.Loaded = true
-			ply:AssignFaction()
-		else
-			local username = SA.MySQL:Escape(ply:Name())
-			if username ~= false then
-				SA.MySQL:Query("INSERT INTO players (steamid,name,groupname) VALUES ('" .. sid .. "','" .. username .. "','freelancer')", function() end)
-				ply:ChatPrint("You have not been found in the database, an account has been created for you.")
-				ply.Credits = 0
-				ply.TotalCredits = 0
-				ply.IsLeader = false
-				ply.MaxCap = 0
-				ply.Loaded = true
-				ply.miningyield = 0
-				ply.miningyield_ii = 0
-				ply.miningyield_iii = 0
-				ply.miningyield_iv = 0
-				ply.miningyield_v = 0
-				ply.miningyield_vi = 0
-				ply.miningtheory = 0
-				ply.miningenergy = 0
-				ply.oremod = 0
-				ply.oremod_iii = 0
-				ply.oremod_iv = 0
-				ply.oremod_v = 0
-				ply.rta = 0
-				ply.oremod_ii = 0
-				ply.oremanage = 0
-				ply.tiberiummod = 0
-				ply.tiberiumyield = 0
-				ply.tiberiummod_ii = 0
-				ply.tiberiumyield_ii = 0
-
-				ply.tibdrillmod = 0
-				ply.tibstoragemod = 0
-
-				ply.icerawmod = 0
-				ply.iceproductmod = 0
-				ply.icerefinerymod = 0
-				ply.icelasermod = 0
-
-				ply.allyuntil = 0
-
-				ply.devlimit = 1
-
-				SA.Terminal.SetupStorage(ply)
-
-				ply:AssignFaction()
-
-				SA.SaveUser(ply)
-			end
-		end
+LoadRes = function(ply, body, len, headers, code)
+	print("Loaded:", ply:Name(), code)
+	if code == 404 then
+		AddSAData(ply)
+		ply:ChatPrint("You have not been found in the database, an account has been created for you.")
+		SA.Terminal.SetupStorage(ply)
+		ply:AssignFaction()
+		SA.SaveUser(ply)
+	elseif code == 200 then
+		ply.SAData = util.JSONToTable(body)
+		AddSAData(ply)
+		SA.Terminal.SetupStorage(ply, ply.SAData.StationStorage.Contents)
+		ply:ChatPrint("Your account has been loaded, welcome on duty.")
+		ply.SAData.Loaded = true
+		ply:AssignFaction()
 	else
 		LoadFailed(ply)
 	end
 
 	if sa_faction_only:GetBool() and
-	 ( ply.TeamIndex < SA.Factions.Min or
-	   ply.TeamIndex > SA.Factions.Max or
-	   tonumber(ply.TotalCredits) < 100000000 ) then
+	 ( ply:Team() < SA.Factions.Min or
+	   ply:Team() > SA.Factions.Max or
+	   tonumber(ply.SAData.TotalCredits) < 100000000 ) then
 			ply:Kick("You don't meet the requirements for this server!")
 	end
-
 
 	ply.InvitedTo = false
 	ply.IsAFK = false
 	ply.MayBePoked = false
 
-	ply:SetNWBool("isleader",ply.IsLeader)
-
-	ply:SetNWInt("Score",ply.TotalCredits)
-
-	--[[local mt = ply.miningtheory
-	ply:SetNWInt("LaserMK",mt)
-	local tmp = 0
-	if mt == 0 then
-		tmp = ply.miningyield
-	elseif mt == 1 then
-		tmp = ply.miningyield_ii
-	elseif mt == 2 then
-		tmp = ply.miningyield_iii
-	elseif mt == 3 then
-		tmp = ply.miningyield_iv
-	elseif mt == 4 then
-		tmp = ply.miningyield_v
-	elseif mt == 5 then
-		tmp = ply.miningyield_vi
-	end
-	ply:SetNWInt("LaserLV",tmp)
-	tmp = 0
-	mt = ply.oremanage
-	ply:SetNWInt("OreMK",mt)
-	if mt == 0 then
-		tmp = ply.oremod
-	elseif mt == 1 then
-		tmp = ply.oremod_ii
-	elseif mt == 2 then
-		tmp = ply.oremod_iii
-	elseif mt == 3 then
-		tmp = ply.oremod_iv
-	elseif mt == 4 then
-		tmp = ply.oremod_v
-	end
-	ply:SetNWInt("OreLV",tmp)
-
-	ply:SetNWInt("TibSLV",ply.tiberiummod)
-	ply:SetNWInt("TibDLV",ply.tiberiumyield)
-	ply:SetNWInt("IceLLV",ply.icelasermod)
-	ply:SetNWInt("IceRLV",ply.icerefinerymod)
-	ply:SetNWInt("IceRSLV",ply.icerawmod)
-	ply:SetNWInt("IcePSLV",ply.iceproductmod)
-
-	mt = nil
-	tmp = nil]]
-
-	if ply.devlimit <= 0 then ply.devlimit = 1 end
-
-	--if not ply.Level then ply.Level = 0 end
+	ply:SetNWBool("isleader",ply.SAData.IsFactionLeader)
+	ply:SetNWInt("Score",ply.SAData.TotalCredits)
 
 	timer.Simple(1,function()
-		if not (ply and ply.IsValid and ply:IsValid()) then return end
+		if not SA.ValidEntity(ply) then return end
 		ply.MayBePoked = true
 		SA.SendCreditsScore(ply)
-		if ply.IsLeader then
-			SA.MySQL:Query("SELECT * FROM applications WHERE faction='" .. ply.TeamIndex .. "'", LeaderRes, ply)
+		if ply.SAData.IsFactionLeader then
+			SA.MySQL:Query("SELECT * FROM applications WHERE faction='" .. ply:Team() .. "'", LeaderRes, ply)
 		else
 			local psid = SA.MySQL:Escape(ply:SteamID())
 			if ( psid ) then
 				local psids = tostring(psid)
 				if ( psids ) then
-					data, isok, merror = SA.MySQL:Query("SELECT * FROM applications WHERE steamid='" .. psids .. "'", NonLeaderRes, ply)
+					SA.MySQL:Query("SELECT * FROM applications WHERE steamid='" .. psids .. "'", NonLeaderRes, ply)
 				end
 			end
 		end
+		-- TODO: Faction applications!
 		ply:ChatPrint("Spawn limitations disengaged. Happy travels.")
 	end)
 	ply:SetNWBool("isloaded",true)
-	if ply.Loaded then
+	if ply.SAData.Loaded then
 		ply:Spawn()
 	end
 end
 
 function SA.SaveUser(ply, isautosave)
-	if (isautosave == "sa_autosaver") then
+	if isautosave == "sa_autosaver" then
 		ply:SetNWInt("sa_save_int", autoSaveCVar:GetInt() * 60)
 		ply:SetNWInt("sa_last_saved",CurTime())
 	end
-	local sid = ply:SteamID()
-	if (ply.Loaded == true) then
 
-		local isleader = 0
-		local credits = ply.Credits
-		local totalcred = ply.TotalCredits
-		local group = ply.UserGroup
-		local cap = ply.MaxCap
-		local miningyield = ply.miningyield
-		local miningenergy = ply.miningenergy
-		local oremod = ply.oremod
-		local perm = SA.MySQL:Escape(util.TableToJSON(SA.Terminal.GetPermStorage(ply)))
-		local name = SA.MySQL:Escape(ply:Name())
-
-		if ply.devlimit <= 0 then ply.devlimit = 1 end
-
-		if ply.IsLeader then
-			isleader = 1
-		end
-		if username == false then return end
-		SA.MySQL:Query("UPDATE players SET credits='" .. credits .. "', name='" .. name .. "',score='" .. totalcred .. "', groupname='" .. group .. "', isleader='" .. isleader .. "', capacity='" .. cap .. "', miningyield='" .. miningyield .. "', miningenergy='" .. miningenergy .. "', oremod='" .. oremod .. "', stationres='" .. perm .. "', fighterenergy='" .. fighterenergy .. "', miningyield_ii='" .. ply.miningyield_ii .. "', miningyield_iii='" .. ply.miningyield_iii .. "', miningyield_iv='" .. ply.miningyield_iv .. "', miningyield_v='" .. ply.miningyield_v .. "', miningyield_vi='" .. ply.miningyield_vi .. "', miningtheory='" .. ply.miningtheory .. "', rtadevice='" .. ply.rta .. "', oremod_ii='" .. ply.oremod_ii .. "', oremanage='" .. ply.oremanage .. "', gcombat = '" .. ply.gcombat .. "', oremod_iii='" .. ply.oremod_iii .. "', oremod_iv='" .. ply.oremod_iv .. "', oremod_v='" .. ply.oremod_v .. "', hdpower = '" .. ply.hdpower .. "', tiberiummod = '" .. ply.tiberiummod .. "', tiberiumyield = '" .. ply.tiberiumyield .. "', icelasermod = '" .. ply.icelasermod .. "', icerawmod = '" .. ply.icerawmod .. "', icerefinerymod = '" .. ply.icerefinerymod .. "', iceproductmod = '" .. ply.iceproductmod .. "', tibdrillmod = '" .. ply.tibdrillmod .. "', tibstoragemod = '" .. ply.tibstoragemod .. "', tiberiumyield_ii = '" .. ply.tiberiumyield_ii .. "', tiberiummod_ii = '" .. ply.tiberiummod_ii .. "', devlimit = '" .. ply.devlimit .. "', allyuntil = '" .. ply.allyuntil .. "' WHERE steamid='" .. sid .. "'", SaveDone)
-	else
+	if not ply.SAData.Loaded then
 		return false
 	end
+
+	ply.SAData.StationStorage.Contents = SA.Terminal.GetPermStorage(ply)
+	http.Post(API_BASE .. "/players/" .. ply:SteamID(), {data = util.TableToJSON(ply.SAData)}, nil, nil, API_HEADERS)
+	return true
 end
 hook.Add("PlayerDisconnected", "SA_Save_Disconnect", SA.SaveUser)
 
@@ -382,10 +244,8 @@ local function SA_SaveAllUsers()
 	local autoSaveTime = autoSaveCVar:GetInt()
 	if (autoSaveTime == 1) then
 		timer.Adjust("SA_Autosave", autoSaveTime * 60, 0, SA_SaveAllUsers)
-		SA.MySQL:Query('UPDATE factions AS f SET f.score = (SELECT Round(Avg(p.score)) FROM players AS p WHERE p.groupname = f.name) WHERE f.name ~= "noload"')
-		for k,v in ipairs(player.GetHumans()) do
-			local p = v
-			timer.Simple(k, function() SA.SaveUser(p, "sa_autosaver") end)
+		for _, v in ipairs(player.GetHumans()) do
+			SA.SaveUser(v, "sa_autosaver")
 		end
 		SA.Planets.Save()
 	end
@@ -394,48 +254,51 @@ timer.Create("SA_Autosave", 60, 0, SA_SaveAllUsers)
 concommand.Add("sa_save_players",function(ply) if ply:IsAdmin() then SA_SaveAllUsers() end end)
 
 local function SA_Autospawner(ply)
-	if (GetConVarNumber("sa_autospawner") == 1) then
-		for k,v in ipairs(ents.GetAll()) do
-			if v.RealAutospawned == true then
-				if v.SASound then v.SASound:Stop() end
-				v:Remove()
-			end
+	if (GetConVarNumber("sa_autospawner") ~= 1) then
+		return
+	end
+
+	for k,v in ipairs(ents.GetAll()) do
+		if v.RealAutospawned == true then
+			if v.SASound then v.SASound:Stop() end
+			v:Remove()
 		end
-		local mapname = game.GetMap():lower()
+	end
+	local mapname = game.GetMap():lower()
 
-		local filename = "spaceage/autospawn2/" .. mapname .. ".txt"
-		if file.Exists(filename, "DATA") then
-			for k,v in pairs(util.JSONToTable(file.Read(filename))) do
-				local spawn = ents.Create(v["class"])
-				if not SA.ValidEntity(spawn) then
-					print("Could not create: " .. v["class"])
-					continue
-				end
+	local filename = "spaceage/autospawn2/" .. mapname .. ".txt"
+	if file.Exists(filename, "DATA") then
+		for k,v in pairs(util.JSONToTable(file.Read(filename))) do
+			local spawn = ents.Create(v["class"])
+			if not SA.ValidEntity(spawn) then
+				print("Could not create: " .. v["class"])
+				continue
+			end
 
-				spawn:SetPos(Vector(v["x"],v["y"],v["z"]))
-				spawn:SetAngles(Angle(v["pit"],v["yaw"],v["rol"]))
-				if v["model"] then
-					spawn:SetModel(v["model"])
-				end
-				SA.PP.MakeOwner(spawn)
-				spawn:Spawn()
-				local phys = spawn:GetPhysicsObject()
-				if phys and phys:IsValid() then
-					phys:EnableMotion(false)
-				end
-				spawn.CDSIgnore = true
-				spawn.Autospawned = true
-				spawn.RealAutospawned = true
-				if v["sound"] then
-					local mySND = CreateSound(spawn, Sound(v["sound"]))
-					if mySND then
-						spawn.SASound = mySND
-						spawn.SASound:Play()
-					end
+			spawn:SetPos(Vector(v["x"],v["y"],v["z"]))
+			spawn:SetAngles(Angle(v["pit"],v["yaw"],v["rol"]))
+			if v["model"] then
+				spawn:SetModel(v["model"])
+			end
+			SA.PP.MakeOwner(spawn)
+			spawn:Spawn()
+			local phys = spawn:GetPhysicsObject()
+			if phys and phys:IsValid() then
+				phys:EnableMotion(false)
+			end
+			spawn.CDSIgnore = true
+			spawn.Autospawned = true
+			spawn.RealAutospawned = true
+			if v["sound"] then
+				local mySND = CreateSound(spawn, Sound(v["sound"]))
+				if mySND then
+					spawn.SASound = mySND
+					spawn.SASound:Play()
 				end
 			end
 		end
 	end
+
 	if (ply and ply:IsPlayer()) then
 		SystemSendMSG(ply, "respawned all SpaceAge stuff")
 	end

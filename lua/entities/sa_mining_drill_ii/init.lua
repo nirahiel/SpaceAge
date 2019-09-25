@@ -4,7 +4,7 @@ AddCSLuaFile( "shared.lua" )
 include("shared.lua")
 
 function ENT:GetPlayerLevel(ply)
-	return ply.tiberiumyield_ii
+	return ply.SAData.Research.TiberiumDrillYield[2]
 end
 
 ENT.EnergyBase = 1200
@@ -13,7 +13,7 @@ ENT.YieldIncrement = 20
 ENT.MinTibDrillMod = 1
 
 function ENT:CalcVars(ply)
-	if ply.UserGroup ~= "legion" and ply.UserGroup ~= "alliance" then
+	if ply.SAData.FactionName ~= "legion" and ply.SAData.FactionName ~= "alliance" then
 		self:Remove()
 		return
 	end

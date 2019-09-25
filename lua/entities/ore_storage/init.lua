@@ -11,7 +11,7 @@ ENT.StorageOffset = 50000
 ENT.StorageIncrement = 5000
 
 function ENT:GetPlayerLevel(ply)
-	return ply.oremod
+	return ply.SAData.Research.OreStorageCapacity[1]
 end
 
 function ENT:Initialize()
@@ -37,13 +37,13 @@ function ENT:Initialize()
 end
 
 function ENT:CalcVars(ply)
-	if ply.oremanage < self.MinOreManage then
+	if ply.SAData.Research.OreStorageLevel < self.MinOreManage then
 		self:Remove()
 		return
 	end
 
 	self.IsOreStorage = true
-	RD.AddResource(self, "ore", (self.StorageOffset + (self:GetPlayerLevel(ply) * self.StorageIncrement)) * ply.devlimit, 0)
+	RD.AddResource(self, "ore", (self.StorageOffset + (self:GetPlayerLevel(ply) * self.StorageIncrement)) * ply.SAData.Research.GlobalMultiplier, 0)
 end
 
 function ENT:Think()

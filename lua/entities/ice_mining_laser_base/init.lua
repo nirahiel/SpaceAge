@@ -38,7 +38,7 @@ function ENT:Initialize()
 end
 
 function ENT:CalcVars(ply)
-	if ply.icelasermod < self.IceLaserModeMin then
+	if ply.SAData.Research.IceLaserLevel < self.IceLaserModeMin then
 		self:Remove()
 	end
 end

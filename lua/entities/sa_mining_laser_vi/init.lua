@@ -4,11 +4,11 @@ AddCSLuaFile( "shared.lua" )
 include("shared.lua")
 
 function ENT:GetPlayerLevel(ply)
-	return ply.miningyield_vi
+	return ply.SAData.Research.OreLaserYield[6]
 end
 
 function ENT:CalcVars(ply)
-	if ply.UserGroup ~= "miners" and ply.UserGroup ~= "alliance" then
+	if ply.SAData.FactionName ~= "miners" and ply.SAData.FactionName ~= "alliance" then
 		self:Remove()
 		return
 	end

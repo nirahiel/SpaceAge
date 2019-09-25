@@ -39,12 +39,12 @@ e2function number entity:payCredits(amount)
 end
 
 e2function number entity:credits()
-	if not (this and SA.ValidEntity(this) and this:IsPlayer() and this.Credits) then return 0 end
-	return this.Credits
+	if not (this and SA.ValidEntity(this) and this:IsPlayer() and this.SAData.Credits) then return 0 end
+	return this.SAData.Credits
 end
 
 e2function number credits()
-	return self.player.Credits
+	return self.player.SAData.Credits
 end
 
 e2function entity payGetFrom()

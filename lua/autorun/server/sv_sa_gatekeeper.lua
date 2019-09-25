@@ -1,3 +1,5 @@
+if true then return end --TODO: Fix this!
+
 local FactionCache = {}
 
 local function SA_GK_PlayerCheck(sid64, ip, svPassword, pass, name)

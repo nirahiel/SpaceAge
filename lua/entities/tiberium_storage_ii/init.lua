@@ -4,8 +4,8 @@ AddCSLuaFile( "shared.lua" )
 include("shared.lua")
 
 function ENT:GetCapacity(ply)
-	if not (ply.tibstoragemod > 0 and (ply.UserGroup == "legion" or ply.UserGroup == "alliance")) then
+	if not (ply.SAData.Research.TiberiumStorageLevel > 0 and (ply.SAData.FactionName == "legion" or ply.SAData.FactionName == "alliance")) then
 		self:Remove()
 	end
-	return (1550000 + (ply.tiberiummod * 10000)) * ply.devlimit
+	return (1550000 + (ply.SAData.Research.TiberiumStorageCapacity[1] * 10000)) * ply.SAData.Research.GlobalMultiplier
 end

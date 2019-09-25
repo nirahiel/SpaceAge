@@ -6,12 +6,12 @@ local RD = CAF.GetAddon("Resource Distribution")
 SA.Functions = {}
 
 function SA.SendCreditsScore(ply)
-	ply.Credits = math.floor(ply.Credits)
-	ply.TotalCredits = math.floor(ply.TotalCredits)
-	ply:SetNWInt("Score",ply.TotalCredits)
+	ply.SAData.Credits = math.floor(ply.SAData.Credits)
+	ply.SAData.TotalCredits = math.floor(ply.SAData.TotalCredits)
+	ply:SetNWInt("Score",ply.SAData.TotalCredits)
 	net.Start("SA_CreditsScore")
-		net.WriteString(ply.Credits)
-		net.WriteString(ply.TotalCredits)
+		net.WriteString(ply.SAData.Credits)
+		net.WriteString(ply.SAData.TotalCredits)
 	net.Send(ply)
 end
 

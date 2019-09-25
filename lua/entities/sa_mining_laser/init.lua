@@ -32,25 +32,25 @@ function ENT:Initialize()
 end
 
 function ENT:GetPlayerLevel(ply)
-	return ply.miningyield
+	return ply.SAData.Research.OreLaserYield[1]
 end
 
 function ENT:CalcVars(ply)
-	if ply.miningtheory < self.MinMiningTheory then
+	if ply.SAData.Research.OreLaserLevel < self.MinMiningTheory then
 		self:Remove()
 		return
 	end
 
 	local miningmod = 1
-	if ply.UserGroup == "miners" or ply.UserGroup == "alliance" then
+	if ply.SAData.FactionName == "miners" or ply.SAData.FactionName == "alliance" then
 		miningmod = 1.33
-	elseif ply.UserGroup == "starfleet" then
+	elseif ply.SAData.FactionName == "starfleet" then
 		miningmod = 1.11
 	end
 	local level = self:GetPlayerLevel(ply)
 	self:SetNWInt("level", level)
 
-	local energycost = ply.miningenergy * 50
+	local energycost = ply.SAData.Research.MiningEnergyEfficiency * 50
 	if (energycost > self.EnergyBase * 0.75) then
 		energycost = self.EnergyBase * 0.75
 	end

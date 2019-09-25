@@ -136,7 +136,7 @@ local function LoadFactionResults(data, isok, merror)
 				net.Start("SA_FactionData")
 					net.WriteString(fn)
 					net.WriteString(xs)
-					if ply.UserGroup == fn then
+					if ply.SAData.FactionName == fn then
 						net.WriteString(xc)
 						net.WriteString(xa)
 						net.WriteString(xrs)
@@ -159,11 +159,11 @@ timer.Create("SA_RefreshFactions",30,0,function(fact)
 	end
 end)
 
-local function SA_SetSpawnPos( ply )
-	if ply.Loaded then
-		local idx = ply.TeamIndex
-		local islead = ply.IsLeader
-		if (ply:IsVIP()) then
+local function SA_SetSpawnPos(ply)
+	if ply.SAData and ply.SAData.Loaded then
+		local idx = ply:Team()
+		local islead = ply.SAData.IsFactionLeader
+		if ply:IsVIP() then
 			--DO NOTHING!
 		elseif islead then
 			timer.Simple(2, function() if (ply and ply:IsValid()) then ply:SetModel(SA.Factions.Table[idx][5]) end end)
@@ -184,7 +184,7 @@ end
 hook.Add("PlayerSelectSpawn","SA_ChooseSpawn",SA_SetSpawnPos)
 
 local function SA_FriendlyFire(vic,atk)
-	if ((vic.TeamIndex == atk.TeamIndex) and (GetConVarNumber("sa_friendlyfire") == 0)) then
+	if ((vic:Team() == atk:Team()) and (GetConVarNumber("sa_friendlyfire") == 0)) then
 		return false
 	else
 		return true
@@ -201,7 +201,7 @@ local function DoApplyFactionResRes(data, isok, merror, ply, ffid, pltimexx)
 	net.Broadcast()
 	local toPlayers = {}
 	for k, v in pairs(player.GetAll()) do
-		if v.IsLeader and v.TeamIndex == ffid then
+		if v.SAData.IsFactionLeader and v:Team() == ffid then
 			table.insert(toPlayers,v)
 		end
 	end
@@ -210,7 +210,7 @@ local function DoApplyFactionResRes(data, isok, merror, ply, ffid, pltimexx)
 		net.WriteString(ply:GetName())
 		net.WriteString(sat)
 		net.WriteString(pltimexx)
-		net.WriteInt(ply.TotalCredits)
+		net.WriteInt(ply.SAData.TotalCredits)
 	net.Send(toPlayers)
 	ply:SendLua("SA.Application.Close()")
 end
@@ -252,7 +252,7 @@ local function SA_DoApplyFaction(len, ply)
 	local pltimexx = hrs .. ":" .. mins .. ":" .. secs
 	local pltimex = SA.MySQL:Escape(pltimexx)
 
-	local cscore = SA.MySQL:Escape(ply.TotalCredits)
+	local cscore = SA.MySQL:Escape(ply.SAData.TotalCredits)
 	SA.MySQL:Query("SELECT steamid FROM applications WHERE steamid = '" .. steamid .. "'", DoApplyFactionRes, ply, steamid, plname, ffid, satx, cscore, pltimex)
 end
 net.Receive("SA_DoApplyFaction",SA_DoApplyFaction)
@@ -265,14 +265,14 @@ end
 local function DoAcceptPlayerRes(data, isok, merror, ply, app, appf, args)
 	if (not isok) then return end
 	for k, v in pairs(player.GetAll()) do
-		if v.IsLeader then
+		if v.SAData.IsFactionLeader then
 			net.Start("SA_DoDeleteApplication")
 				net.WriteString(app.steamid)
 			net.Send(v)
 		elseif v:SteamID() == app.steamid then
-			v.TeamIndex = appf
-			v.UserGroup = SA.Factions.Table[appf][2]
-			v.IsLeader = false
+			v:SetTeam(appf)
+			v.SAData.FactionName = SA.Factions.Table[appf][2]
+			v.SAData.IsFactionLeader = false
 			v:Spawn()
 			SA.SendCreditsScore(v)
 			SA_Send_FactionRes(v)
@@ -286,13 +286,13 @@ local function DoAcceptPlayer(data, isok, merror, ply, args)
 	if (not data[1]) then return end
 	local app = data[1]
 	local appf = tonumber(app['faction'])
-	if (appf ~= ply.TeamIndex) then return end
+	if (appf ~= ply:Team()) then return end
 	SA.MySQL:Query("DELETE FROM applications WHERE steamid = '" .. SA.MySQL:Escape(args[1]) .. "'", DoAcceptPlayerRes, ply, app, appf, args)
 end
 
 local function SA_DoAcceptPlayer(ply,cmd,args)
 	if (#args ~= 1) then return end
-	if (not ply.IsLeader) then return end
+	if (not ply.SAData.IsFactionLeader) then return end
 	SA.MySQL:Query("SELECT steamid, faction FROM applications WHERE steamid = '" .. SA.MySQL:Escape(args[1]) .. "'", DoAcceptPlayer, ply, args)
 end
 concommand.Add("sa_application_accept",SA_DoAcceptPlayer)
@@ -300,7 +300,7 @@ concommand.Add("sa_application_accept",SA_DoAcceptPlayer)
 local function DoDenyPlayerResRes(data, isok, merror, ply, app)
 	if (not isok) then return end
 	for k, v in pairs(player.GetAll()) do
-		if v.IsLeader then
+		if v.SAData.IsFactionLeader then
 			net.Start("SA_DoDeleteApplication")
 				net.WriteString(app.steamid)
 			net.Send(v)
@@ -313,13 +313,13 @@ local function DoDenyPlayerRes(data, isok, merror, ply, args)
 	if (not isok) then return end
 	if (not data[1]) then return end
 	app = data[1]
-	if (tonumber(app.faction) ~= ply.TeamIndex) then return end
+	if (tonumber(app.faction) ~= ply:Team()) then return end
 	SA.MySQL:Query("DELETE FROM applications WHERE steamid = '" .. SA.MySQL:Escape(args[1]) .. "'", DoDenyPlayerResRes, ply, app)
 end
 
 local function SA_DoDenyPlayer(ply,cmd,args)
 	if (#args ~= 1) then return end
-	if (not ply.IsLeader) then return end
+	if (not ply.SAData.IsFactionLeader) then return end
 	SA.MySQL:Query("SELECT steamid, faction FROM applications WHERE steamid = '" .. SA.MySQL:Escape(args[1]) .. "'", DoDenyPlayerRes, ply, args)
 end
 concommand.Add("sa_application_deny",SA_DoDenyPlayer)

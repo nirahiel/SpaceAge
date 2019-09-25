@@ -32,7 +32,7 @@ function ENT:CalcVars(ply)
 end
 
 function ENT:GetCapacity(ply)
-	return (50000 + (ply.tiberiummod * 5000)) * ply.devlimit
+	return (50000 + (ply.SAData.Research.TiberiumStorageCapacity[1] * 5000)) * ply.SAData.Research.GlobalMultiplier
 end
 
 function ENT:Think()

@@ -72,7 +72,7 @@ function ENT:Initialize()
 end
 
 function ENT:CalcVars(ply)
-	if ply.icerefinerymod < self.MinIceRefineryMod then
+	if ply.SAData.Research.IceRefineryLevel < self.MinIceRefineryMod then
 		return self:Remove()
 	end
 end

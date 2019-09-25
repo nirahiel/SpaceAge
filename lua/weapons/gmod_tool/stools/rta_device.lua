@@ -5,9 +5,9 @@ TOOL.ConfigName		= ""
 TOOL.Tab = "Custom Addon Framework"
 
 if (CLIENT) then
-	language.Add("tool.rta_device.name", "RTA Device")
-	language.Add("tool.rta_device.desc", "Creates a Remote Terminal Access computer.")
-	language.Add("tool.rta_device.0", "Primary: Create RTA Device.")
+	language.Add("tool.SAData.Research.RTA_device.name", "RTA Device")
+	language.Add("tool.SAData.Research.RTA_device.desc", "Creates a Remote Terminal Access computer.")
+	language.Add("tool.SAData.Research.RTA_device.0", "Primary: Create RTA Device.")
 	language.Add("sboxlimit_rta_devices", "You've hit the RTA devices limit.")
 	language.Add("undone_rta device", "Undone RTA Device")
 end

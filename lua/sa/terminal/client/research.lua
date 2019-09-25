@@ -72,7 +72,7 @@ function PANEL:SetDesc()
 					DescAdd = string.Left(DescAdd,string.len(DescAdd) - 1) .. ")"
 				else
 					local name = ""
-					if self.ResearchTbl["variable"] == v[1] then
+					if self.ResearchTbl.name == v[1] then -- TODO: ???
 						name = n["display"]
 					end
 					if name ~= "" then
@@ -98,7 +98,7 @@ function PANEL:SetDesc()
 							DescAdd = string.Left(DescAdd,string.len(DescAdd) - 1) .. ")"
 						else
 							local name = ""
-							if self.ResearchTbl["variable"] == v[1] then
+							if self.ResearchTbl.name == v[1] then -- TODO: ???
 								name = n["display"]
 							end
 							if name ~= "" then

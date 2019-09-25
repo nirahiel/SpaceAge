@@ -6,14 +6,14 @@ end
 
 local function SA_JoinFaction(ply,txt)
 	if ply.InvitedTo then
-		ply.TeamIndex = ply.InvitedTo
-		ply.UserGroup = SA.Factions.Table[ply.InvitedTo][2]
-		ply.IsLeader = false
+		ply:SetTeam(ply.InvitedTo)
+		ply.SAData.FactionName = SA.Factions.Table[ply.InvitedTo][2]
+		ply.SAData.IsFactionLeader = false
 		ply:Spawn()
 		ply.InvitedTo = false
 		SA.SendCreditsScore(ply)
 		for k,v in pairs(player.GetAll()) do
-			if v.TeamIndex == ply.TeamIndex then
+			if v:Team() == ply:Team() then
 				v:AddHint(ply:Name() .. " has joined the faction!",NOTIFY_GENERIC,5)
 			end
 		end
@@ -25,10 +25,10 @@ SA_RegisterChatCommand("join",SA_JoinFaction)
 
 local function SA_InviteToFaction(ply,txt)
 	local name = string.sub(txt,9)
-	if ply.IsLeader then
+	if ply.SAData.IsFactionLeader then
 		local v = SA.GetPlayerByName(name)
 		if v then
-			v.InvitedTo = ply.TeamIndex
+			v.InvitedTo = ply:Team()
 			ply:AddHint("Invited " .. v:Name() .. " to your faction.",NOTIFY_GENERIC,5)
 			v:AddHint("You have been invited to join " .. SA.Factions.Table[v.InvitedTo][1] .. " type [join to accept the invitation.",NOTIFY_GENERIC,5)
 			SA.SendCreditsScore(v)
@@ -43,16 +43,16 @@ SA_RegisterChatCommand("invite",SA_InviteToFaction)
 
 local function SA_KickFaction(ply,txt)
 	local name = string.sub(txt,7)
-	if ply.IsLeader then
+	if ply.SAData.IsFactionLeader then
 		local v = SA.GetPlayerByName(name)
 		if v then
 			if ply == v then ply:AddHint("You cannot kick yourself.", NOTIFY_CLEANUP, 5) return "" end
-			if v.TeamIndex == ply.TeamIndex then
+			if v:Team() == ply:Team() then
 				ply:ChatPrint("Kicked " .. v:Name() .. " out of your faction.")
-				v:AddHint("You have been kicked out of " .. SA.Factions.Table[v.TeamIndex][1], NOTIFY_CLEANUP, 5)
-				v.TeamIndex = 1
-				v.UserGroup = "freelancer"
-				v.IsLeader = false
+				v:AddHint("You have been kicked out of " .. SA.Factions.Table[v:Team()][1], NOTIFY_CLEANUP, 5)
+				v:SetTeam(1)
+				v.SAData.FactionName = "freelancer"
+				v.SAData.IsFactionLeader = false
 				v:Spawn()
 				SA.SendCreditsScore(v)
 			else
@@ -68,14 +68,14 @@ end
 SA_RegisterChatCommand("kick",SA_KickFaction)
 
 local function SA_LeaveFaction(ply,txt)
-	if (ply.IsLeader) then
+	if (ply.SAData.IsFactionLeader) then
 		ply:AddHint("You are leader of that faction, you can not leave it!", NOTIFY_ERROR, 5)
 		return
 	end
 	ply:AddHint("You have left the faction and are now freelancer again!", NOTIFY_CLEANUP, 5)
-	ply.TeamIndex = 1
-	ply.UserGroup = "freelancer"
-	ply.IsLeader = false
+	ply:SetTeam(1)
+	ply.SAData.FactionName = "freelancer"
+	ply.SAData.IsFactionLeader = false
 	ply:Spawn()
 	SA.SendCreditsScore(ply)
 end

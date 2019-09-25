@@ -24,7 +24,7 @@ function ENT:Initialize()
 	end
 	RD.RegisterNonStorageDevice(self)
 	local pl = self:GetTable().Founder
-	if pl and pl:IsValid() and pl:IsPlayer() and pl.TotalCredits and pl.TotalCredits < 100000000 then
+	if pl and pl:IsValid() and pl:IsPlayer() and pl.SAData.TotalCredits and pl.SAData.TotalCredits < 100000000 then
 		self:Remove()
 		return
 	end

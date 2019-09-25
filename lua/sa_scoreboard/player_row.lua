@@ -31,7 +31,7 @@ function PANEL:Paint()
 
 	if (self.Open or self.Size ~= self.TargetSize) then
 
-		local w, h = this:GetSize()
+		local w, h = self:GetSize()
 
 		draw.RoundedBox(4, 0, 16, w, h - 16, color)
 		draw.RoundedBox(4, 2, 16, w - 4, h - 16 - 2, Color(color.r, color.g, color.b, 255))
