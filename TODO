@@ -10,3 +10,6 @@
 		         8. echoToAdmins - lua/ulx/log.lua:164
 		          9. fn - lua/ulx/log.lua:202
 		           10. unknown - lua/ulib/shared/hook.lua:
+- Remove ResearchGroup nesting from Research, just put it as a value on the table
+- Fix faction applications and faction statistics
+- Remove every trace of MySQL
