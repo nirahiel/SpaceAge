@@ -13,14 +13,7 @@ local SA_Term_StationCap = 0
 local SA_Term_StationMax = 0
 local SA_DevLimitLevel = 1
 
-if (SA_Term_GUI ~= nil) then
-	SA_Term_GUI:SetVisible(false)
-	gui.EnableScreenClicker(false)
-	RunConsoleCommand("sa_terminal_close")
-else
-	SA_Term_GUI = nil
-end
-
+local SA_Term_GUI
 local SA_Term_GoodieList
 local SA_Term_StatList
 local SA_Term_MarketBuy
@@ -110,7 +103,6 @@ end
 
 local function CreateTerminalGUI()
 
-	local guiSizeX,guiSizeY = SA_Term_GUI:GetSize()
 
 	if not LocalPlayer():GetNWBool("isloaded") then
 		return
@@ -135,6 +127,8 @@ local function CreateTerminalGUI()
 
 	SA_Term_GUI = BasePanel
 	SA_Term_GUI.SA_IsTerminalGUI = true
+
+	local guiSizeX,guiSizeY = SA_Term_GUI:GetSize()
 
 	local CloseButton = vgui.Create("DButton", BasePanel)
 	CloseButton:SetText("Close Terminal")
