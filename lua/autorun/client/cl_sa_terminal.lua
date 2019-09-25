@@ -13,7 +13,14 @@ local SA_Term_StationCap = 0
 local SA_Term_StationMax = 0
 local SA_DevLimitLevel = 1
 
-local SA_Term_GUI
+if (SA_Term_GUI ~= nil) then
+	SA_Term_GUI:SetVisible(false)
+	gui.EnableScreenClicker(false)
+	RunConsoleCommand("sa_terminal_close")
+else
+	SA_Term_GUI = nil
+end
+
 local SA_Term_GoodieList
 local SA_Term_StatList
 local SA_Term_MarketBuy
@@ -29,7 +36,13 @@ local SA_MaxCrystalCount
 local SA_CrystalRadius
 local SA_Max_Roid_Count
 
-surface.CreateFont("ServerHUDFontS", { font = "Arial", size = 36, weight = 700, antialias = true, shadow = false})
+local textBackgroundExtraWidth = 15
+local function GetTextBackgroundWidth(_font, _text)
+	surface.SetFont( _font )
+	return select(1,surface.GetTextSize( _text )) + textBackgroundExtraWidth
+end
+
+surface.CreateFont("ServerHUDFontS", { font = "Arial", size = 22, weight = 700, antialias = true, shadow = false})
 
 local ScrX = surface.ScreenWidth()
 local ScrY = surface.ScreenHeight()
@@ -96,6 +109,9 @@ function SA.Application.Refresh()
 end
 
 local function CreateTerminalGUI()
+
+	local guiSizeX,guiSizeY = SA_Term_GUI:GetSize()
+
 	if not LocalPlayer():GetNWBool("isloaded") then
 		return
 	end
@@ -105,7 +121,7 @@ local function CreateTerminalGUI()
 		SA_Term_GUI:Close()
 	end
 
-	local font = "DermaLarge"
+	local font = "ServerHUDFontS"
 	surface.SetFont(font)
 	local BasePanel = vgui.Create( "DFrame" )
 	local x = ScrX / 2
@@ -169,8 +185,10 @@ local function CreateTerminalGUI()
 	StatTab:SetPos(5,25)
 	StatTab:SetSize(790,625)
 	StatTab.Paint = function()
-		draw.RoundedBox(4,355,10,80,30,Color(50,50,50,255))
-		draw.SimpleText("Stats",font,395,25,Color(255,255,255,255),1,1)
+		local text = "Stats"
+		local width = GetTextBackgroundWidth(font, text)
+		draw.RoundedBox(4,guiSizeX/2-width/2,10,width,30,Color(50,50,50,255))
+		draw.SimpleText(text,font,guiSizeX/2,25,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
 	end
 
 	local StatsList = vgui.Create ( "HTML",StatTab )
@@ -182,8 +200,10 @@ local function CreateTerminalGUI()
 	GoodieTab:SetPos(5,25)
 	GoodieTab:SetSize(790,625)
 	GoodieTab.Paint = function()
-		draw.RoundedBox(4,355,10,80,30,Color(50,50,50,255))
-		draw.SimpleText("Goodies",font,395,25,Color(255,255,255,255),1,1)
+		local text = "Goodies"
+		local width = GetTextBackgroundWidth(font, text)
+		draw.RoundedBox(4,guiSizeX/2-width/2,10,width,30,Color(50,50,50,255))
+		draw.SimpleText(text,font,guiSizeX/2,25,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
 	end
 
 	local GoodieList = vgui.Create ( "DPanelList",GoodieTab )
@@ -206,8 +226,12 @@ local function CreateTerminalGUI()
 	MarketTab:SetPos(5,25)
 	MarketTab:SetSize(790,625)
 	MarketTab.Paint = function()
-		draw.RoundedBox(4,355,10,80,30,Color(50,50,50,255))
-		draw.SimpleText("Market",font,395,25,Color(255,255,255,255),1,1)
+
+		local text = "Market"
+		local width = GetTextBackgroundWidth(font, text)
+		draw.RoundedBox(4,guiSizeX/2-width/2,10,width,30,Color(50,50,50,255))
+		draw.SimpleText(text,font,guiSizeX/2,25,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
+
 		draw.RoundedBox(6,30,70,730,240,Color(90,90,90,255))
 		draw.RoundedBox(6,30,330,730,240,Color(90,90,90,255))
 		draw.RoundedBox(6,580,90,150,30,Color(50,50,50,255))
@@ -297,20 +321,22 @@ local function CreateTerminalGUI()
 	ResourceTab:SetPos(5,25)
 	ResourceTab:SetSize(790,625)
 	ResourceTab.Paint = function()
-		draw.RoundedBox(4,350,10,90,30,Color(50,50,50,255))
-		draw.SimpleText("Resources",font,395,25,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
+		local text = "Resources"
+		local width = GetTextBackgroundWidth(font, text)
+		draw.RoundedBox(4,guiSizeX/2-width/2,10,width,30,Color(50,50,50,255))
+		draw.SimpleText(text,font,guiSizeX/2,25,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
 
 		draw.RoundedBox(6,30,70,240,500,Color(90,90,90,255))
 		draw.RoundedBox(6,275,70,240,500,Color(90,90,90,255))
 		draw.RoundedBox(6,520,70,240,500,Color(90,90,90,255))
 
-		draw.RoundedBox(4,35,75,230,30,Color(50,50,50,255))
-		draw.SimpleText("Temporary / Market",font,150,90,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
-		draw.RoundedBox(4,280,75,230,30,Color(50,50,50,255))
-		draw.SimpleText("Station",font,395,82,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
-		draw.SimpleText("(" .. tostring(SA_Term_StationCap) .. " / " .. tostring(SA_Term_StationMax) .. ")","Trebuchet18",395,97,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
-		draw.RoundedBox(4,525,75,230,30,Color(50,50,50,255))
-		draw.SimpleText("Ship / Selected Node",font,640,90,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
+		draw.RoundedBox(4,35,75,230,40,Color(50,50,50,255))
+		draw.SimpleText("Temporary / Market",font,150,90+7,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
+		draw.RoundedBox(4,280,75,230,40,Color(50,50,50,255))
+		draw.SimpleText("Station",font,395,82+5,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
+		draw.SimpleText("(" .. tostring(SA_Term_StationCap) .. " / " .. tostring(SA_Term_StationMax) .. ")","Trebuchet18",395,97+8,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
+		draw.RoundedBox(4,525,75,230,40,Color(50,50,50,255))
+		draw.SimpleText("Ship / Selected Node",font,640,90+5,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
 	end
 
 	local TempStore = vgui.Create("DPanelList",ResourceTab)
@@ -375,7 +401,11 @@ local function CreateTerminalGUI()
 		draw.RoundedBox(4,355,10,80,30,Color(50,50,50,255))
 		draw.RoundedBox(16,25,450,520,100,Color(50,50,50,255))
 		draw.RoundedBox(16,590,450,165,100,Color(50,50,50,255))
-		draw.SimpleText("Research",font,395,25,Color(255,255,255,255),1,1)
+
+		local text = "Research"
+		local width = GetTextBackgroundWidth(font, text)
+		draw.RoundedBox(4,guiSizeX/2-width/2,10,width,30,Color(50,50,50,255))
+		draw.SimpleText(text,font,guiSizeX/2,25,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
 	end
 
 	local UpgradeLevelButton = vgui.Create( "DButton", ResearchTab )
@@ -431,8 +461,10 @@ local function CreateTerminalGUI()
 	ApplicationTab:SetPos(5,25)
 	ApplicationTab:SetSize(790,625)
 	ApplicationTab.Paint = function()
-		draw.RoundedBox(4,350,10,90,30,Color(50,50,50,255))
-		draw.SimpleText("Application",font,395,25,Color(255,255,255,255),1,1)
+		local text = "Application"
+		local width = GetTextBackgroundWidth(font, text)
+		draw.RoundedBox(4,guiSizeX/2-width/2,10,width,30,Color(50,50,50,255))
+		draw.SimpleText(text,font,guiSizeX/2,25,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
 	end
 
 	local plisleader = LocalPlayer():GetNWBool("isleader")
@@ -547,8 +579,10 @@ local function CreateTerminalGUI()
 		DeveloperTab:SetPos(5,25)
 		DeveloperTab:SetSize(790,625)
 		DeveloperTab.Paint = function()
-			draw.RoundedBox(4,345,10,100,30,Color(50,50,50,255))
-			draw.SimpleText("Development",font,395,25,Color(255,255,255,255),1,1)
+			local text = "Development"
+			local width = GetTextBackgroundWidth(font, text)
+			draw.RoundedBox(4,guiSizeX/2-width/2,10,width,30,Color(50,50,50,255))
+			draw.SimpleText(text,font,guiSizeX/2,25,Color(255,255,255,255),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
 		end
 
 		SA_MaxCrystalCount = vgui.Create("DTextEntry", DeveloperTab)
