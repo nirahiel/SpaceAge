@@ -1,12 +1,36 @@
+GET /v1/players/STEAMID
+  Get player object
+
 POST /v1/players/STEAMID/researches/RESEARCHNAME {levels}
-GET /v1/players/STEAMID/researches [NOT NEEDED?]
+  Research <levels> of <RESEARCHNAME>
+GET /v1/players/STEAMID/researches
+  Get .Researches of player object (but this is already in the GET)
+  
+POST /v1/players/STEAMID/token {ttl}
+  Create auth token expiring after <ttl> seconds
+
 GET /v1/players?start=X&count=Y
+  Get best Y players starting at offset X (order by TotalCredits DESC)
+
 GET /v1/players/STEAMID/factions/applications
+  Get faction application for current player
 
 GET /v1/researches [unauth, only lists research data, not current progress]
+  Get all research data (which exist, their cost formulas, etc)
 
 GET /v1/factions [unauth, lists all factions and stats and color]
-POST /v1/factions/FACTION/applications/send {steamid, text}
+  Get factions (color, name, bool if can be applied for, etc)
+
+POST /v1/factions/FACTION/applications/STEAMID {text}
+    Send application to faction
 GET /v1/factions/FACTION/applications
+  Get open applications for faction
 GET /v1/factions/FACTION/applications/STEAMID
+  Get single application
 POST /v1/factions/FACTION/applications/STEAMID/action {deny, accept}
+  Accept or deny application
+
+GET /v1/factions/FACTION/players?start=X&count=Y
+  List players in faction ordered by TotalCredits DESC
+POST /v1/factions/FACTION/players/STEAMID/remove
+  Leave or kick player from faction
