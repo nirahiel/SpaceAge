@@ -134,9 +134,13 @@ local function SA_ReceiveStatsUpdate(ply, decoded)
 		if (not tempColor) then tempColor = Color(255,100,0,255) end
 		SA_StatsTable[i]["factioncolor"] = tempColor
 		tempColor = Color(255,255,255,255)
-		if tcredits < 0 then tempColor = Color(255,0,0,255) end
-		if tcredits > 0 then tempColor = Color(0,255,0,255) end
-		SA_StatsTable[i]["statscolor"] = tempColor
+		if (tcredits) then
+			if tcredits < 0 then tempColor = Color(255,0,0,255) end
+			if tcredits > 0 then tempColor = Color(0,255,0,255) end
+			SA_StatsTable[i]["statscolor"] = tempColor
+		else
+			print("error, variable tcredits does not exist cl_init.lua around line 137 breh")
+		end
 	end
 
 	statsAllowDraw = true
