@@ -1,56 +1,18 @@
 S = ServerAPI only
+U = UnAuth allowed
 
-GET /v1/players/STEAMID
-  Get player object
-POST /v1/players/STEAMID [S]
-  Set player data  
-POST /v1/players/STEAMID/token {ttl} [S]
-  Create auth token expiring after <ttl> seconds
-GET /v1/players?start=X&count=Y
+GET /v1/players/STEAMID [U]
+PUT|PATCH /v1/players/STEAMID [S]
+
+GET /v1/players?start=X&count=Y [U]
   Get best Y players starting at offset X (order by TotalCredits DESC)
 
-GET /v1/players/STEAMID/factions/applications
-  Get faction application for current player
+GET /v1/applications?faction=FACTION [S]
+GET /v1/applications/STEAMID
+PUT /v1/applications/STEAMID
+DELETE /v1/applications/STEAMID
 
-GET /v1/factions [unauth, lists all factions and stats and color]
-  Get factions (color, name, bool if can be applied for, etc)
-
-POST /v1/factions/FACTION/applications/STEAMID {text}
-    Send application to faction
-GET /v1/factions/FACTION/applications
-  Get open applications for faction
-GET /v1/factions/FACTION/applications/STEAMID
-  Get single application
-POST /v1/factions/FACTION/applications/STEAMID/action {deny, accept}
-  Accept or deny application
-
-GET /v1/factions/FACTION/players?start=X&count=Y
-  List players in faction ordered by TotalCredits DESC
-POST /v1/factions/FACTION/players/STEAMID/remove
-  Leave or kick player from faction
-
-
-FUTURE (move logic out of lua into web API)
-
-GET /v1/researches [unauth, only lists research data, not current progress]
-  Get all research data (which exist, their cost formulas, etc)
-POST /v1/players/STEAMID/researches/RESEARCHNAME {levels}
-  Research <levels> of <RESEARCHNAME>
-GET /v1/players/STEAMID/researches
-  Get .Researches of player object (but this is already in the GET)
-POST /v1/players/STEAMID/sendCreditsTo/STEAMID2 {amount}
-  Send credits from {STEAMID} top {STEAMID2}
-POST /v1/players/STEAMID/addCredits {amount, incrementTotalCredits} [S]
-  Add (or remove with negative amount) credits to player. Also change TotalCredits if boolean is true
-
-GET /v1/players/STEAMID/stationStorage
-  Get station storage of player (but this is already in the GET)
-POST /v1/players/STEAMID/stationStorage [S]
-  Set station storage of player
-
-POST /v1/players/STEAMID/market/RESOURCE/buy {amount} [S]
-  Buy <amount> of <RESOURCE> from market
-POST /v1/players/STEAMID/market/RESOURCE/sell {amount} [S]
-  Sell <amount> of <RESOURCE> to market
- GET /v1/market/prices
-  Get market buy & sell prices for resources
+FUTURE
+POST /v1/players/STEAMID/token {ttl} [S]
+  Create auth token expiring after <ttl> seconds
+ 
