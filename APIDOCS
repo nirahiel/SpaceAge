@@ -1,0 +1,12 @@
+POST /v1/players/STEAMID/researches/RESEARCHNAME {levels}
+GET /v1/players/STEAMID/researches [NOT NEEDED?]
+GET /v1/players?start=X&count=Y
+GET /v1/players/STEAMID/factions/applications
+
+GET /v1/researches [unauth, only lists research data, not current progress]
+
+GET /v1/factions [unauth, lists all factions and stats and color]
+POST /v1/factions/FACTION/applications/send {steamid, text}
+GET /v1/factions/FACTION/applications
+GET /v1/factions/FACTION/applications/STEAMID
+POST /v1/factions/FACTION/applications/STEAMID/action {deny, accept}
