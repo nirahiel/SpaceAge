@@ -92,10 +92,9 @@ function ENT:SpawnCrystal(auto)
 		timer.Simple(math.random(1,10),function() ctal:SpawnCrystal(true) end)
 	end
 
-	local SA_MaxCrystalCount = SA.Tiberium.MaxCrystalCount
 	local SA_CrystalRadius = SA.Tiberium.CrystalRadius
 
-	if self.crystalCount >= SA_MaxCrystalCount then return end
+	if self.crystalCount >= SA.Tiberium.MaxCrystalCount then return end
 
 	local p = self:GetPos()
 	local tmpPos = SA.Tiberium.FindWorldFloor(Vector(math.random(-SA_CrystalRadius,SA_CrystalRadius) + p.x,math.random(-SA_CrystalRadius,SA_CrystalRadius) + p.y,p.z + 200),nil,{self})

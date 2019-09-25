@@ -54,7 +54,7 @@ function ENT:Initialize()
 end
 
 function ENT:AutoSpawn()
-	while self.crystalCount < SA_MaxCrystalCount do
+	while self.crystalCount < SA.Tiberium.MaxCrystalCount do
 		self:SpawnCrystal(false)
 	end
 end
@@ -71,7 +71,7 @@ function ENT:FindCrystalPos()
 	local res = nil
 
 	local selfCenter = self:LocalToWorld(self:OBBCenter())
-	local tracedata = {start = selfCenter + Vector(math.random(-1,1),math.random(-1,1),math.random(-1,1)):Normalize() * 2000, endpos = selfCenter, filter = {}}
+	local tracedata = {start = selfCenter + Vector(math.random(-1,1),math.random(-1,1),math.random(-1,1)):GetNormalized() * 2000, endpos = selfCenter, filter = {}}
 	local tries = 0
 	while not res or res.Entity ~= self do
 		res = util.TraceLine(tracedata)
@@ -88,7 +88,7 @@ function ENT:SpawnCrystal(auto)
 	if auto then
 		timer.Simple(math.random(1,10),function() self:SpawnCrystal(true) end)
 	end
-	if self.crystalCount >= SA_MaxCrystalCount then return end
+	if self.crystalCount >= SA.Tiberium.MaxCrystalCount then return end
 
 	local trace = self:FindCrystalPos()
 	if not trace then return end
