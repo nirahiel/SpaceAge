@@ -38,6 +38,10 @@ POST /v1/players/STEAMID/researches/RESEARCHNAME {levels}
   Research <levels> of <RESEARCHNAME>
 GET /v1/players/STEAMID/researches
   Get .Researches of player object (but this is already in the GET)
+POST /v1/players/STEAMID/sendCreditsTo/STEAMID2 {amount}
+  Send credits from {STEAMID} top {STEAMID2}
+POST /v1/players/STEAMID/addCredits {amount, incrementTotalCredits} [S]
+  Add (or remove with negative amount) credits to player. Also change TotalCredits if boolean is true
 
 GET /v1/players/STEAMID/stationStorage
   Get station storage of player (but this is already in the GET)
