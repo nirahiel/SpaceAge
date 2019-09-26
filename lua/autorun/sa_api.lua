@@ -25,7 +25,7 @@ if SERVER then
 	end
 else
 	MakeUserAgent = function()
-		return CommonUserAgent("Client") .. " " .. LocalPlayer():SteamID()
+		return CommonUserAgent("Client")
 	end
 end
 
