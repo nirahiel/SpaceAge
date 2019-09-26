@@ -289,6 +289,10 @@ function SA.Factions.RefreshApplications(plys)
 		local retry = function() timer.Simple(5, function() SA.Factions.RefreshApplications(ply) end) end
 		if ply.SAData.IsFactionLeader then
 			SA.API.Get("/faction/" .. ply.SAData.FactionName .. "/applications", function(body, code)
+				if code == 404 then
+					supernet.Send(ply, "SA_Applications_Player", {})
+					return
+				end
 				if code ~= 200 then
 					return retry()
 				end
@@ -296,6 +300,10 @@ function SA.Factions.RefreshApplications(plys)
 			end, retry)
 		else
 			SA.API.Get("/players/" .. ply:SteamID() .. "/application", function(body, code)
+				if code == 404 then
+					supernet.Send(ply, "SA_Applications_Player", {})
+					return
+				end
 				if code ~= 200 then
 					return retry()
 				end
