@@ -371,12 +371,15 @@ SA_UpdateInfo = function(ply,CanPass)
 end
 concommand.Add("sa_terminal_update",SA_UpdateInfo)
 
-local function SA_UpdateGoodies(data, isok, merror, ply)
+local function SA_UpdateGoodies(ply, body, code)
 	if not SA.ValidEntity(ply) then return end
-	if not isok then ply.SendingGoodieUp = false end
-	ply.Goodies = {}
-	for _,v in pairs(data) do
-		ply.Goodies[v["id"]] = SA.Goodies[v["intid"]]
+	if code ~= 200 then
+		ply.SendingGoodieUp = false
+		return
+	end
+	ply.SAGoodies = {}
+	for _,v in pairs(body) do
+		ply.SAGoodies[v.Id] = SA.Goodies[v.Type]
 	end
 	supernet.Send(ply, "SA_GoodieUpdate", data, function() ply.SendingGoodieUp = false end)
 end
@@ -384,10 +387,7 @@ end
 local function SA_RequestUpdateGoodies(ply)
 	if ply.SendingGoodieUp then return end
 	ply.SendingGoodieUp = true
-	local sid = ply:SteamID()
-	if not SA.MySQL:Query("SELECT id,intid FROM goodies WHERE steamid='" .. SA.MySQL:Escape(sid) .. "'", SA_UpdateGoodies, ply) then
-		ply.SendingGoodieUp = false
-	end
+	SA.API.Get("/players/" .. ply:SteamID() .. "/goodies", function(body, code) SA_UpdateGoodies(ply, body, code) end, function() ply.SendingGoodieUp = false end)
 end
 concommand.Add("sa_goodies_update",SA_RequestUpdateGoodies)
 
@@ -400,10 +400,10 @@ local function SA_UseGoodie(ply,cmd,args)
 
 	goodie.func(ply)
 
-	--FA.SA.MySQL.SavePlayer(ply)
 	SA.SaveUser(ply)
 
-	SA.MySQL:Query("DELETE FROM goodies WHERE id='" .. SA.MySQL:Escape(id) .. "'",function() SA_RequestUpdateGoodies(ply) end)
+	local f = function() SA_RequestUpdateGoodies(ply) end
+	SA.API.Delete("/players/" .. ply:SteamID() .. "/goodies/" .. id, f, f)
 end
 concommand.Add("sa_goodies_use",SA_UseGoodie)
 

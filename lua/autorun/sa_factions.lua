@@ -15,6 +15,9 @@ table.insert(SA.Factions.Table, { "FAILED TO LOAD", "noload", Color(75,75,75,255
 SA.Factions.Min = 2
 SA.Factions.Max = 6
 
+SA.Factions.ApplyMin = 2
+SA.Factions.ApplyMax = 5
+
 SA.Factions.ToLong = {}
 SA.Factions.Colors = {}
 

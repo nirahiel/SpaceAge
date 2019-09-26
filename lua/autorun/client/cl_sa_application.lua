@@ -7,30 +7,10 @@ SA.Application.Faction = "Major Miners"
 
 local CSelID = ""
 
-local function SA_DoSetAppData(len, ply)
-	SA.Application.Faction = net.ReadString()
-	SA.Application.Text = net.ReadString()
-	SA.Application.Refresh()
+local function SA_RefreshApplications(len, ply)
+	-- TODO: This
 end
-net.Receive("SA_DoSetApplicationData",SA_DoSetAppData)
-
-local function SA_DoAddApp(len, ply)
-	local steamid = net.ReadString()
-	local name = net.ReadString()
-	local text = net.ReadString()
-	local playtime = net.ReadString()
-	local score = net.ReadString()
-
-	AppTable[steamid] = {name, text, playtime, SA.AddCommasToInt(score)}
-	SA.Application.Refresh()
-end
-net.Receive("SA_DoAddApplication",SA_DoAddApp)
-
-local function SA_DoDelApp(len, ply)
-	AppTable[net.ReadString()] = nil
-	SA.Application.Refresh()
-end
-net.Receive("SA_DoDeleteApplication",SA_DoDelApp)
+net.Receive("SA_RefreshApplications",SA_RefreshApplications)
 
 local function SApp_ExtractSteamID(optiontext)
 	local temp = string.Explode("|",optiontext)

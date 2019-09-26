@@ -58,22 +58,6 @@ local function SA_InitSpawn(ply)
 end
 hook.Add("PlayerInitialSpawn", "SA_LoadPlayer", SA_InitSpawn)
 
-local function LeaderRes(data, isok, merror, ply)
-	if (isok) then
-		for k, v in pairs(data) do
-			net.Start("SA_DoAddApplication")
-				net.WriteString(v.steamid)
-				net.WriteString(v.name)
-				net.WriteString(v.text)
-				net.WriteString(v.playtime)
-				net.WriteInt(v.score)
-			net.Send(ply)
-		end
-	else
-		ply:ChatPrint(merror)
-	end
-end
-
 hook.Add("Initialize","SA_MapCleanInitialize",function()
 	local map = game.GetMap()
 	if map:lower() == "sb_forlorn_sb3_r2l" or map:lower() == "sb_forlorn_sb3_r3" then
@@ -92,22 +76,6 @@ hook.Add("Initialize","SA_MapCleanInitialize",function()
 		end)
 	end
 end)
-
-local function NonLeaderRes(data, isok, merror, ply)
-	if (isok) then
-		local appfact = "Major Miners"
-		local apptext = "Hi"
-		if (data[1]) then
-			local ffid = tonumber(data[1]["faction"])
-			appfact = SA.Factions.Table[ffid][1]
-			apptext = data[1].text
-		end
-		net.Start("SA_DoSetApplicationData")
-			net.WriteString(appfact)
-			net.WriteString(apptext)
-		net.Send(ply)
-	end
-end
 
 local function AddSAData(ply)
 	if not ply.SAData then
@@ -201,22 +169,14 @@ LoadRes = function(ply, body, code)
 	ply:SetNWBool("isleader",ply.SAData.IsFactionLeader)
 	ply:SetNWInt("Score",ply.SAData.TotalCredits)
 
-	timer.Simple(1,function()
+	timer.Simple(1, function()
 		if not SA.ValidEntity(ply) then return end
 		ply.MayBePoked = true
 		SA.SendCreditsScore(ply)
-		if ply.SAData.IsFactionLeader then
-			SA.MySQL:Query("SELECT * FROM applications WHERE faction='" .. ply:Team() .. "'", LeaderRes, ply)
-		else
-			local psid = SA.MySQL:Escape(ply:SteamID())
-			if ( psid ) then
-				local psids = tostring(psid)
-				if ( psids ) then
-					SA.MySQL:Query("SELECT * FROM applications WHERE steamid='" .. psids .. "'", NonLeaderRes, ply)
-				end
-			end
-		end
-		-- TODO: Faction applications!
+		net.Start("SA_RefreshApplications")
+			net.WriteBool(ply.SAData.IsFactionLeader)
+			net.WriteString("")
+		net.Send(ply)
 		ply:ChatPrint("Spawn limitations disengaged. Happy travels.")
 	end)
 	ply:SetNWBool("isloaded",true)

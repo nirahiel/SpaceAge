@@ -123,7 +123,11 @@ end
 
 local SA_MaxNameLength = 24
 
-local function SA_ReceiveStatsUpdate(ply, decoded)
+local function SA_ReceiveStatsUpdate(body, code)
+	if code ~= 200 then
+		return
+	end
+
 	statsAllowDraw = false
 
 	for i, v in pairs(decoded) do
@@ -145,7 +149,11 @@ local function SA_ReceiveStatsUpdate(ply, decoded)
 
 	statsAllowDraw = true
 end
-supernet.Hook("SA_StatsUpdate",SA_ReceiveStatsUpdate)
+local function SA_RequestStatsUpdate()
+	SA.API.Get("/players", SA_ReceiveStatsUpdate)
+end
+timer.Create("SA_StatsUpdater", 30, 0, SA_RequestStatsUpdate)
+timer.Simple(2, SA_RequestStatsUpdate)
 
 function ENT:IsTranslucent()
 	return true

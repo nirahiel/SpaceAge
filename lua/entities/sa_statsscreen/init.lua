@@ -27,18 +27,3 @@ end
 
 function ENT:Think()
 end
-
-local SA_PlayersToShow = 30
-
-local function SendStatsUpdateRes(data, isok, merror, ply)
-	if (not isok) then print(merror) return end
-	local imax = table.maxn(data)
-	if imax <= 0 then return end
-
-	supernet.Send(ply, "SA_StatsUpdate", data)
-end
-
-local function SA_SendStatsUpdate(ply)
-	SA.MySQL:Query("SELECT name, score, groupname FROM players ORDER BY score DESC LIMIT 0," .. tostring(SA_PlayersToShow), SendStatsUpdateRes, ply)
-end
-timer.Create("SA_SendStatsUpdate", 60, 0, function() SA_SendStatsUpdate() end)
