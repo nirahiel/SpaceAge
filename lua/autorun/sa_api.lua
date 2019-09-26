@@ -51,7 +51,7 @@ function SA.API.Request(url, method, reqBody, onok, onerror)
 		method = method or "GET",
 		url = API_BASE .. url,
 		type = "application/json",
-		body = reqBody and util.JSONToTable(reqBody) or nil
+		body = reqBody and util.TableToJSON(reqBody) or nil
 	}
 
 	HTTP(request)
