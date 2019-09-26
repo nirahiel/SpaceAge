@@ -1,8 +1,6 @@
 AddCSLuaFile("autorun/client/cl_sa_hud.lua")
 
 timer.Simple(1,function() RD = CAF.GetAddon("Resource Distribution") end)
-local API_BASE = "https://api.spaceage.online/v1"
-local API_HEADERS = {}
 
 local WorldClasses = {}
 local function AddWorldClass(name)
@@ -56,7 +54,7 @@ local LoadRes, LoadFailed
 local function SA_InitSpawn(ply)
 	SA.GiveCredits.Remove(ply)
 	print("Loading:", ply:Name())
-	http.Fetch(API_BASE .. "/players/" .. ply:SteamID(), function(...) LoadRes(ply, ...) end, function(...) LoadFailed(ply, ...) end, API_HEADERS)
+	SA.API.Get("/players/" .. ply:SteamID(), function(...) LoadRes(ply, ...) end, function(...) LoadFailed(ply, ...) end)
 end
 hook.Add("PlayerInitialSpawn", "SA_LoadPlayer", SA_InitSpawn)
 
@@ -167,7 +165,7 @@ LoadFailed = function(ply)
 	end)
 end
 
-LoadRes = function(ply, body, len, headers, code)
+LoadRes = function(ply, body, code)
 	print("Loaded:", ply:Name(), code)
 	if code == 404 then
 		AddSAData(ply)
@@ -176,7 +174,7 @@ LoadRes = function(ply, body, len, headers, code)
 		ply:AssignFaction()
 		SA.SaveUser(ply)
 	elseif code == 200 then
-		ply.SAData = util.JSONToTable(body)
+		ply.SAData = body
 		AddSAData(ply)
 		SA.Terminal.SetupStorage(ply, ply.SAData.StationStorage.Contents)
 		ply:ChatPrint("Your account has been loaded, welcome on duty.")
@@ -235,7 +233,7 @@ function SA.SaveUser(ply, isautosave)
 	end
 
 	ply.SAData.StationStorage.Contents = SA.Terminal.GetPermStorage(ply)
-	http.Post(API_BASE .. "/players/" .. ply:SteamID(), {data = util.TableToJSON(ply.SAData)}, nil, nil, API_HEADERS)
+	SA.API.Post("/players/" .. ply:SteamID(), ply.SAData)
 	return true
 end
 hook.Add("PlayerDisconnected", "SA_Save_Disconnect", SA.SaveUser)
