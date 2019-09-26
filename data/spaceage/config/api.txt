@@ -1,1 +1,1 @@
-{"auth":"dummyauthenticationremoveme"}
+{"auth":"Server dummyauthenticationremoveme"}

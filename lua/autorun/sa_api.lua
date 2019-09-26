@@ -14,7 +14,7 @@ if SERVER then
 
 	local apiConfig = util.JSONToTable(file.Read("spaceage/config/api.txt"))
 	if apiConfig.auth then
-		API_HEADERS.Authorization = "Server " .. apiConfig.auth
+		API_HEADERS.Authorization = apiConfig.auth
 	end
 	if apiConfig.url then
 		API_BASE = apiConfig.url
