@@ -36,7 +36,7 @@ function ENT:GetPlayerLevel(ply)
 end
 
 function ENT:CalcVars(ply)
-	if ply.SAData.Research.OreLaserLevel < self.MinMiningTheory then
+	if ply.SAData.Research.OreLaserLevel[1] < self.MinMiningTheory then
 		self:Remove()
 		return
 	end
@@ -50,7 +50,7 @@ function ENT:CalcVars(ply)
 	local level = self:GetPlayerLevel(ply)
 	self:SetNWInt("level", level)
 
-	local energycost = ply.SAData.Research.MiningEnergyEfficiency * 50
+	local energycost = ply.SAData.Research.MiningEnergyEfficiency[1] * 50
 	if (energycost > self.EnergyBase * 0.75) then
 		energycost = self.EnergyBase * 0.75
 	end

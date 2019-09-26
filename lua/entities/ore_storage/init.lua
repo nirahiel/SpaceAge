@@ -37,7 +37,7 @@ function ENT:Initialize()
 end
 
 function ENT:CalcVars(ply)
-	if ply.SAData.Research.OreStorageLevel < self.MinOreManage then
+	if ply.SAData.Research.OreStorageLevel[1] < self.MinOreManage then
 		self:Remove()
 		return
 	end

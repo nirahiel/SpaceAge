@@ -39,7 +39,7 @@ function ENT:Initialize()
 end
 
 function ENT:CalcVars(ply)
-	if ply.SAData.Research.TiberiumDrillLevel < self.MinTibDrillMod then
+	if ply.SAData.Research.TiberiumDrillLevel[1] < self.MinTibDrillMod then
 		self:Remove()
 		return
 	end
@@ -51,7 +51,7 @@ function ENT:CalcVars(ply)
 		miningmod = 1.11
 	end
 	local level = self:GetPlayerLevel(ply)
-	local energycost = ply.SAData.Research.MiningEnergyEfficiency * 50
+	local energycost = ply.SAData.Research.MiningEnergyEfficiency[1] * 50
 	if (energycost > self.EnergyBase * 0.75) then
 		energycost = self.EnergyBase * 0.75
 	end

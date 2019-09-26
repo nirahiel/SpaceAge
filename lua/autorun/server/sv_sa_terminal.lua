@@ -737,7 +737,7 @@ concommand.Add("sa_dev_set_var", SA_DevSetVar)
 
 local function CheckCanDevice(ply, tr, mode)
 	if (mode == "mining_laser_sa") then
-		local lvl = ply.SAData.Research.OreLaserLevel
+		local lvl = ply.SAData.Research.OreLaserLevel[1]
 		local sel = ply:GetActiveWeapon().Tool.mining_laser_sa:GetClientInfo("type")
 		if sel == "sa_mining_laser_ii" then
 			if lvl < 1 then
@@ -768,7 +768,7 @@ local function CheckCanDevice(ply, tr, mode)
 				return false
 			end
 		end
-		local lvl = ply.SAData.Research.IceLaserLevel
+		local lvl = ply.SAData.Research.IceLaserLevel[1]
 		if sel == "ice_mining_laser_2" then
 			if lvl < 1 then
 				ply:AddHint("You must have Rank 1 ICE Lasers to use this!", NOTIFY_CLEANUP, 5)
@@ -780,7 +780,7 @@ local function CheckCanDevice(ply, tr, mode)
 				return false
 			end
 		end
-		local lvl = ply.SAData.Research.IceRefineryLevel
+		local lvl = ply.SAData.Research.IceRefineryLevel[1]
 		if sel == "ice_refinery_imrpoved" then
 			if lvl < 1 then
 				ply:AddHint("You must have Rank 1 ICE Refineries to use this!", NOTIFY_CLEANUP, 5)
@@ -792,7 +792,7 @@ local function CheckCanDevice(ply, tr, mode)
 				return false
 			end
 		end
-		local lvl = ply.SAData.Research.TiberiumDrillLevel
+		local lvl = ply.SAData.Research.TiberiumDrillLevel[1]
 		if sel == "sa_mining_drill_ii" then
 			if ply.SAData.FactionName ~= "legion" and ply.SAData.FactionName ~= "alliance" then
 				ply:AddHint("You must be in The Legion or The Alliance to use this!", NOTIFY_CLEANUP, 5)
@@ -803,7 +803,7 @@ local function CheckCanDevice(ply, tr, mode)
 			end
 		end
 	elseif (mode == "mining_storage") then
-		local lvl = ply.SAData.Research.OreStorageLevel
+		local lvl = ply.SAData.Research.OreStorageLevel[1]
 		local sel = ply:GetActiveWeapon().Tool.mining_storage:GetClientInfo("type")
 		local sel2 = ply:GetActiveWeapon().Tool.mining_storage:GetClientInfo("model")
 		if sel == "ore_storage_ii" then
@@ -830,7 +830,7 @@ local function CheckCanDevice(ply, tr, mode)
 				return false
 			end
 		elseif sel == "storage_ice" then
-			local lvl = ply.SAData.Research.IceRawStorageLevel
+			local lvl = ply.SAData.Research.IceRawStorageLevel[1]
 			local reqLvl = SA.Ice.GetLevelForStorageModel(sel2)
 			if not reqLvl then return false end
 			if lvl < reqLvl then
@@ -838,7 +838,7 @@ local function CheckCanDevice(ply, tr, mode)
 				return false
 			end
 		elseif sel == "storage_ice_product" then
-			local lvl = ply.SAData.Research.IceProductStorageLevel
+			local lvl = ply.SAData.Research.IceProductStorageLevel[1]
 			local reqLvl = SA.Ice.GetLevelForProductStorageModel(sel2)
 			if not reqLvl then return false end
 			if lvl < reqLvl then
@@ -846,7 +846,7 @@ local function CheckCanDevice(ply, tr, mode)
 				return false
 			end
 		end
-		local lvl = ply.SAData.Research.TiberiumStorageLevel
+		local lvl = ply.SAData.Research.TiberiumStorageLevel[1]
 		if (sel == "tiberium_storage_ii" or sel == "tiberium_storage") and (SA.ValidEntity(tr.Entity) and tr.Entity:GetClass() == "tiberium_storage_holder") then return false end
 		if sel == "tiberium_storage_ii" then
 			if ply.SAData.FactionName ~= "legion" and ply.SAData.FactionName ~= "alliance" then
@@ -858,7 +858,7 @@ local function CheckCanDevice(ply, tr, mode)
 			end
 		end
 	elseif (mode == "rta_device") then
-		if ply.SAData.Research.RTA < 1 then
+		if ply.SAData.Research.RTA[1] < 1 then
 			ply:AddHint("You must have Remote Terminal Access to use this!", NOTIFY_CLEANUP, 5)
 			return false
 		end
