@@ -32,7 +32,7 @@ function ENT:CalcVars(ply)
 	local reqLvl = SA.Ice.GetLevelForStorageModel(self:GetModel())
 	if ((reqLvl == nil) or (ply.SAData.Research.IceRawStorageLevel < reqLvl)) then self:Remove() return end
 
-	local Capacity = math.floor(8 * (4.5 ^ reqLvl)) * ply.SAData.Research.GlobalMultiplier
+	local Capacity = math.floor(8 * (4.5 ^ reqLvl)) * ply.SAData.AdvancementLevel
 
 	RD.AddResource(self, "Blue Ice", Capacity)
 	RD.AddResource(self, "Clear Ice", Capacity)

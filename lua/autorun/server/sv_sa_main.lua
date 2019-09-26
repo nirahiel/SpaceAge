@@ -112,8 +112,8 @@ local function AddSAData(ply)
 		data.Research = {}
 	end
 	SA.Research.InitPlayer(ply)
-	if data.Research.GlobalMultiplier == nil or data.Research.GlobalMultiplier <= 0 then
-		data.Research.GlobalMultiplier = 1
+	if data.AdvancementLevel == nil or data.AdvancementLevel <= 0 then
+		data.AdvancementLevel = 1
 	end
 end
 

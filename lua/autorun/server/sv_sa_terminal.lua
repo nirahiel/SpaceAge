@@ -365,7 +365,7 @@ SA_UpdateInfo = function(ply, CanPass)
 		BuyPriceTable,
 		ResTabl2,
 		SA_CanReset(ply),
-		ply.SAData.Research.GlobalMultiplier,
+		ply.SAData.AdvancementLevel,
 		DevVars,
 	}, function() SA_InfoSent(ply) end)
 end
@@ -661,7 +661,7 @@ local function SA_Research(ply, cmd, args)
 	end
 	local cost = Research.cost
 	local inc = Research.costinc / 100
-	local devl = ply.SAData.Research.GlobalMultiplier
+	local devl = ply.SAData.AdvancementLevel
 	local cred = tonumber(ply.SAData.Credits)
 	local total = cost + (cost * inc) * cur
 	total = total * (devl * devl)
@@ -695,16 +695,16 @@ local function SA_ResetMe(ply, cmd, args)
 	local CHECK = args[1]
 	if CHECK ~= HASH then return end
 
-	if ply.SAData.Research.GlobalMultiplier >= 5 then return end
+	if ply.SAData.AdvancementLevel >= 5 then return end
 
-	local devlim = ply.SAData.Research.GlobalMultiplier
+	local devlim = ply.SAData.AdvancementLevel
 	local cost = 5000000000 * (devlim * devlim)
 	if ply.SAData.Credits < cost then return end
 
 	if not SA_CanReset(ply) then return end
 
 	ply.SAData.Credits = ply.SAData.Credits - cost
-	ply.SAData.Research.GlobalMultiplier = ply.SAData.Research.GlobalMultiplier + 1
+	ply.SAData.AdvancementLevel = ply.SAData.AdvancementLevel + 1
 
 	SA_UpdateInfo(ply)
 	SA.SendCreditsScore(ply)
