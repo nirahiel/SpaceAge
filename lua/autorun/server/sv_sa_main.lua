@@ -114,6 +114,7 @@ local function AddSAData(ply)
 		ply.SAData = {}
 	end
 	local data = ply.SAData
+	data.Name = ply:Nick()
 	if data.Credits == nil then
 		data.Credits = 0
 	end
