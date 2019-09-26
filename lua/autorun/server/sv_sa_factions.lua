@@ -126,10 +126,10 @@ local function LoadFactionResults(body, code)
 
 	for _, faction in pairs(body) do
 		local tbl = {}
-		tbl.Credits = tonumber(v.Credits)
-		tbl.Score = tonumber(v.TotalCredits)
+		tbl.Credits = tonumber(faction.Credits)
+		tbl.Score = tonumber(faction.TotalCredits)
 		tbl.AddScore = 0
-		local fn = v.FactionName
+		local fn = faction.FactionName
 		SA_FactionData[fn] = tbl
 
 		for _, ply in pairs(allply) do
@@ -192,9 +192,6 @@ local function SA_FriendlyFire(vic, atk)
 end
 hook.Add("PlayerShouldTakeDamage", "SA_FriendlyFire", SA_FriendlyFire)
 
-
---Chat Commands
-
 local function DoApplyFactionResRes(ply, ffid, code)
 	if code > 299 then
 		return
@@ -231,7 +228,6 @@ local function SA_DoApplyFaction(len, ply)
 	}, function(body, status) DoApplyFactionResRes(ply, ffid, status) end, function() DoApplyFactionResRes(ply, ffid, 500) end)
 end
 net.Receive("SA_DoApplyFaction", SA_DoApplyFaction)
---FA.RegisterDataStream("SA_DoApplyFaction", 0)
 
 local function SA_DoAcceptPlayer(ply, cmd, args)
 	if #args ~= 1 then return end
@@ -296,14 +292,14 @@ function SA.Factions.RefreshApplications(plys)
 				if code ~= 200 then
 					return retry()
 				end
-				-- Send applications to client
+				supernet.Send(ply, "SA_Applications_Faction", body)
 			end, retry)
 		else
 			SA.API.Get("/players/" .. ply:SteamID() .. "/application", function(body, code)
 				if code ~= 200 then
 					return retry()
 				end
-				-- Send application to client
+				supernet.Send(ply, "SA_Applications_Player", body)
 			end, retry)
 		end
 	end
