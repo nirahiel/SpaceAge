@@ -235,6 +235,7 @@ function SA.SaveUser(ply, isautosave)
 		return false
 	end
 
+	ply.SAData.Name = ply:Nick()
 	ply.SAData.StationStorage.Contents = SA.Terminal.GetPermStorage(ply)
 	SA.API.Put("/players/" .. ply:SteamID(), ply.SAData)
 	return true
