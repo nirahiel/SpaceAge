@@ -115,38 +115,38 @@ end
 timer.Simple(0, InitSAFactions)
 
 local function LoadFactionResults(body, code)
-	-- TODO
-	if isok and data then
-		local allply = player.GetAll()
-		for k, v in pairs(allply) do
-			if not v.MayBePoked then allply[k] = nil end
-		end
-		for _, v in pairs(data) do
-			local tbl = {}
-			tbl.Credits = tonumber(v.bank)
-			tbl.Score = tonumber(v.score)
-			tbl.AddScore = tonumber(v.buyscore)
-			local fn = v.name
-			SA_FactionData[fn] = tbl
-			local xrs = tostring(tbl.Score)
-			local xs = tostring(tbl.Score + tbl.AddScore)
-			local xc = tostring(tbl.Credits)
-			local xa = tostring(tbl.AddScore)
-			for _, ply in pairs(allply) do
-				net.Start("SA_FactionData")
-					net.WriteString(fn)
-					net.WriteString(xs)
-					if ply.SAData.FactionName == fn then
-						net.WriteString(xc)
-						net.WriteString(xa)
-						net.WriteString(xrs)
-					else
-						net.WriteString("-1")
-						net.WriteString("-1")
-						net.WriteString("-1")
-					end
-				net.Send(ply)
-			end
+	if code ~= 200 then
+		return
+	end
+
+	local allply = player.GetAll()
+	for k, v in pairs(allply) do
+		if not v.MayBePoked then allply[k] = nil end
+	end
+
+	for _, faction in pairs(body) do
+		local tbl = {}
+		tbl.Credits = tonumber(v.Credits)
+		tbl.Score = tonumber(v.TotalCredits)
+		tbl.AddScore = 0
+		local fn = v.FactionName
+		SA_FactionData[fn] = tbl
+
+		for _, ply in pairs(allply) do
+			if not ply then continue end
+			net.Start("SA_FactionData")
+				net.WriteString(fn)
+				net.WriteString(xs)
+				if ply.SAData.FactionName == fn then
+					net.WriteString(xc)
+					net.WriteString(xa)
+					net.WriteString(xrs)
+				else
+					net.WriteString("-1")
+					net.WriteString("-1")
+					net.WriteString("-1")
+				end
+			net.Send(ply)
 		end
 	end
 end
