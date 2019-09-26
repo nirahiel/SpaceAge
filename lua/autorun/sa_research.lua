@@ -19,7 +19,7 @@ end
 local function ParseResearchName(name)
 	local openBracketIdx = name:find("[", 1, true)
 	if not openBracketIdx then
-		return name
+		return name, 1
 	end
 	local closeBracketIdx = name:find("]", openBracketIdx, true)
 	if not closeBracketIdx then
@@ -34,9 +34,9 @@ function SA.Research.InitPlayer(ply)
 	for _, research in pairs(Researches) do
 		local dname, idx = ParseResearchName(research.name)
 		if ply.SAData.Research[dname] == nil then
-			ply.SAData.Research[dname] = idx and {} or 0
+			ply.SAData.Research[dname] = {}
 		end
-		if idx and ply.SAData.Research[dname][idx] == nil then
+		if ply.SAData.Research[dname][idx] == nil then
 			ply.SAData.Research[dname][idx] = 0
 		end
 	end
@@ -44,18 +44,12 @@ end
 
 function SA.Research.GetFromPlayer(ply, name)
 	local dname, idx = ParseResearchName(name)
-	if idx then
-		return ply.SAData.Research[dname][idx]
-	end
-	return ply.SAData.Research[dname]
+	return ply.SAData.Research[dname][idx]
 end
 
 function SA.Research.SetToPlayer(ply, name, value)
 	local dname, idx = ParseResearchName(name)
-	if idx then
-		ply.SAData.Research[dname][idx] = value
-	end
-	ply.SAData.Research[name] = value
+	ply.SAData.Research[dname][idx] = value
 end
 
 local function SA_VerifyResearchXQINT(res)

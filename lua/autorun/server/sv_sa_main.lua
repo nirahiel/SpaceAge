@@ -148,10 +148,11 @@ local function AddSAData(ply)
 	end
 end
 
-LoadFailed = function(ply)
+LoadFailed = function(ply, err)
 	AddSAData(ply)
 	ply:SetTeam(1)
 	SA.Terminal.SetupStorage(ply)
+	print("Error loading player", err)
 	ply:ChatPrint("There has been an error, changes to your account will not be saved this session to prevent loss of data. Loading will be retried all 30 seconds")
 	ply:AssignFaction()
 	timer.Simple(30, function()
@@ -169,6 +170,7 @@ LoadRes = function(ply, body, code)
 	print("Loaded:", ply:Name(), code)
 	if code == 404 then
 		AddSAData(ply)
+		ply.SAData.Loaded = true
 		ply:ChatPrint("You have not been found in the database, an account has been created for you.")
 		SA.Terminal.SetupStorage(ply)
 		ply:AssignFaction()
@@ -176,9 +178,9 @@ LoadRes = function(ply, body, code)
 	elseif code == 200 then
 		ply.SAData = body
 		AddSAData(ply)
+		ply.SAData.Loaded = true
 		SA.Terminal.SetupStorage(ply, ply.SAData.StationStorage.Contents)
 		ply:ChatPrint("Your account has been loaded, welcome on duty.")
-		ply.SAData.Loaded = true
 		ply:AssignFaction()
 	else
 		LoadFailed(ply)
@@ -249,7 +251,7 @@ local function SA_SaveAllUsers()
 	end
 end
 timer.Create("SA_Autosave", 60, 0, SA_SaveAllUsers)
-concommand.Add("sa_save_players",function(ply) if ply:IsAdmin() then SA_SaveAllUsers() end end)
+concommand.Add("sa_save_players",function(ply) if not ply or ply:IsAdmin() then SA_SaveAllUsers() end end)
 
 local function SA_Autospawner(ply)
 	if (GetConVarNumber("sa_autospawner") ~= 1) then
