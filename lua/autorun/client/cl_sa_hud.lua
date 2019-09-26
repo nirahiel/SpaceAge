@@ -415,25 +415,54 @@ end
 --	table.insert(stylizedLinePoly, {x = 0, y = _lineYPos})
 --end
 
-local function SA_DrawTopBar()
+local function SA_DrawHelmet(color)
 	-- draw fills
 	surface.SetDrawColor( 0, 0, 0, 160 )
 	draw.NoTexture()
 
 	DrawScreenLineWithDip(ScrH()-160, 200, 60, 600, 300, false, true)
-	DrawScreenLineWithDip(-140, 200, 40, 600, 300)
+	DrawScreenLineWithDip(-171, 200, 40, 600, 300)
 
 
 	-- draw border
-	surface.SetDrawColor( 200, 0, 0, 60 )
+	surface.SetDrawColor( color )
 	draw.NoTexture()
 	DrawScreenLineWithDip(ScrH()-160, 5, 60, 600, 300, true, true)
-	DrawScreenLineWithDip(55, 5, 40, 600, 300)
+	DrawScreenLineWithDip(24, 5, 40, 600, 300)
+end
+
+local function SA_DrawTopBar()
+	local topBarSections = 4
+	local ScH = ScrH()
+	local lp = LocalPlayer()
+
+	local yPos = 0
+	--section width
+	local sectionWid = ScrW()/topBarSections
+
+	local section = {
+		sectionWid*1 - sectionWid/2,
+		sectionWid*2 - sectionWid/2,
+		sectionWid*3 - sectionWid/2,
+		sectionWid*4 - sectionWid/2
+	}
+
+	local topBarFont = "ScoreboardDefault"
+
+
+
+	draw.SimpleText("Name:" .. lp:Name(), topBarFont, section[1], yPos, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Total Credits: 50,000,000.00", topBarFont, section[4], yPos, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+
+
+	draw.SimpleText("Faction: " .. team.GetName(LocalPlayer():Team()), topBarFont, ScrW()/2, yPos+8, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Credits: 50,000.00", topBarFont, ScrW()/2, yPos+26+8, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+
 end
 
 local function SA_CustomHUDPaint()
 	if GetConVarNumber("cl_drawhud") == 0 then return end
-
+	SA_DrawHelmet(team.GetColor(LocalPlayer():Team()))
 	SA_DrawTopBar()
 
 	local lp = LocalPlayer()
