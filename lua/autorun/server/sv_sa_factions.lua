@@ -207,16 +207,7 @@ local function DoApplyFactionResRes(ply, ffid, code)
 		end
 	end
 	table.insert(toPlayers, ply)
-	net.Start("SA_RefreshApplications")
-		net.WriteBool(true)
-		net.WriteString(ply:SteamID())
-	net.Send(toPlayers)
-	if not ply.SAData.IsFactionLeader then
-		net.Start("SA_RefreshApplications")
-			net.WriteBool(false)
-			net.WriteString(ply:SteamID())
-		net.Send(ply)
-	end
+	SA.Factions.RefreshApplications(toPlayers)
 	ply:SendLua("SA.Application.Close()")
 end
 
@@ -252,14 +243,7 @@ local function SA_DoAcceptPlayer(ply, cmd, args)
 	local trgPly = player.GetBySteamID(steamId)
 
 	SA.API.Post("/faction/" .. factionName .. "/applications/" .. steamId .. "/accept", {}, function(body, code)
-		net.Start("SA_RefreshApplications")
-			net.WriteBool(true)
-			net.WriteString(steamId)
-		net.Send(ply)
-		net.Start("SA_RefreshApplications")
-			net.WriteBool(false)
-			net.WriteString(sid)
-		net.Send(trgPly)
+		SA.Factions.RefreshApplications({ply,trgPly})
 
 		if code > 299 then
 			return
@@ -275,14 +259,7 @@ local function SA_DoAcceptPlayer(ply, cmd, args)
 		trgPly:Spawn()
 		SA.SendCreditsScore(trgPly)
 	end, function(err)
-		net.Start("SA_RefreshApplications")
-			net.WriteBool(true)
-			net.WriteString(steamId)
-		net.Send(ply)
-		net.Start("SA_RefreshApplications")
-			net.WriteBool(false)
-			net.WriteString(sid)
-		net.Send(trgPly)
+		SA.Factions.RefreshApplications({ply,trgPly})
 	end)
 end
 concommand.Add("sa_application_accept", SA_DoAcceptPlayer)
@@ -295,24 +272,39 @@ local function SA_DoDenyPlayer(ply, cmd, args)
 	local factionName = ply.SAData.FactionName
 	local trgPly = player.GetBySteamID(steamId)
 
-	SA.API.Delete("/faction/" .. factionName .. "/applications/" .. steamId, nil, function(body, code)
-		net.Start("SA_RefreshApplications")
-			net.WriteBool(true)
-			net.WriteString(steamId)
-		net.Send(ply)
-		net.Start("SA_RefreshApplications")
-			net.WriteBool(false)
-			net.WriteString(sid)
-		net.Send(trgPly)
+	SA.API.Delete("/faction/" .. factionName .. "/applications/" .. steamId, function(body, code)
+		SA.Factions.RefreshApplications({ply,trgPly})
 	end, function(err)
-		net.Start("SA_RefreshApplications")
-			net.WriteBool(true)
-			net.WriteString(steamId)
-		net.Send(ply)
-		net.Start("SA_RefreshApplications")
-			net.WriteBool(false)
-			net.WriteString(sid)
-		net.Send(trgPly)
+		SA.Factions.RefreshApplications({ply,trgPly})
 	end)
 end
 concommand.Add("sa_application_deny", SA_DoDenyPlayer)
+
+function SA.Factions.RefreshApplications(plys)
+	if not plys then
+		plys = player.GetHumans()
+	end
+	if plys.IsPlayer and plys:IsPlayer() then
+		plys = {plys}
+	end
+
+	for _, xply in pairs(plys) do
+		local ply = xply
+		local retry = function() timer.Simple(5, function() SA.Factions.RefreshApplications(ply) end) end
+		if ply.SAData.IsFactionLeader then
+			SA.API.Get("/faction/" .. ply.SAData.FactionName .. "/applications", function(body, code)
+				if code ~= 200 then
+					return retry()
+				end
+				-- Send applications to client
+			end, retry)
+		else
+			SA.API.Get("/players/" .. ply:SteamID() .. "/application", function(body, code)
+				if code ~= 200 then
+					return retry()
+				end
+				-- Send application to client
+			end, retry)
+		end
+	end
+end

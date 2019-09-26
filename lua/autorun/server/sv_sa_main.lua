@@ -173,10 +173,7 @@ LoadRes = function(ply, body, code)
 		if not SA.ValidEntity(ply) then return end
 		ply.MayBePoked = true
 		SA.SendCreditsScore(ply)
-		net.Start("SA_RefreshApplications")
-			net.WriteBool(ply.SAData.IsFactionLeader)
-			net.WriteString("")
-		net.Send(ply)
+		SA.Factions.RefreshApplications(ply)
 		ply:ChatPrint("Spawn limitations disengaged. Happy travels.")
 	end)
 	ply:SetNWBool("isloaded", true)
