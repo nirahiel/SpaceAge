@@ -184,6 +184,10 @@ end
 hook.Add("PlayerSelectSpawn","SA_ChooseSpawn",SA_SetSpawnPos)
 
 local function SA_FriendlyFire(vic,atk)
+	if not vik:IsPlayer() or not atk:IsPlayer() then
+		return true
+	end
+
 	if ((vic:Team() == atk:Team()) and (GetConVarNumber("sa_friendlyfire") == 0)) then
 		return false
 	else
