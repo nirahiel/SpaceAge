@@ -233,7 +233,7 @@ function SA.SaveUser(ply, isautosave)
 	end
 
 	ply.SAData.StationStorage.Contents = SA.Terminal.GetPermStorage(ply)
-	SA.API.Post("/players/" .. ply:SteamID(), ply.SAData)
+	SA.API.Put("/players/" .. ply:SteamID(), ply.SAData)
 	return true
 end
 hook.Add("PlayerDisconnected", "SA_Save_Disconnect", SA.SaveUser)
