@@ -417,10 +417,10 @@ local function CreateTerminalGUI()
 	local Researches = SA.Research.Get()
 	local ResearchGroups = SA.Research.GetGroups()
 
+	local GroupPanels = {}
+	local GroupPanelItems = {}
+
 	for _,RGroup in pairs(ResearchGroups) do
-		if not ResearchPanels[RGroup] then
-			ResearchPanels[RGroup] = {}
-		end
 		local GroupPanel = vgui.Create( "DPanel" )
 		GroupPanel:SetPos(5,5)
 		GroupPanel:SetSize(720,444)
@@ -432,23 +432,28 @@ local function CreateTerminalGUI()
 		GroupList:EnableVerticalScrollbar(true)
 		GroupList:SetSpacing(5)
 
-		local tbl = {}
-		for k,v in pairs(Researches[RGroup]) do
-			tbl[v["pos"]] = k
-		end
+		GroupPanels[RGroup] = GroupList
+		GroupPanelItems[RGroup] = {}
 
-		for k,v in pairs(tbl) do
-			local ResearchData = Researches[RGroup][v]
-			local ResearchPanel = vgui.Create("SA_Terminal_Research")
-			ResearchPanel:SetSize(700,74)
-			ResearchPanel:SetResearch(ResearchData)
-			ResearchPanel.UpgradeCommand = function()
-				RunConsoleCommand("sa_buy_research",v,HASH)
-			end
-			ResearchPanels[RGroup][v] = ResearchPanel
-			GroupList:AddItem(ResearchPanel)
-		end
 		SubResearchTab:AddSheet( RGroup, GroupPanel, "VGUI/application-monitor", false, false, RGroup )
+	end
+
+	for _, ResearchData in pairs(Researches) do
+		local ResearchPanel = vgui.Create("SA_Terminal_Research")
+		ResearchPanel:SetSize(700,74)
+		ResearchPanel:SetResearch(ResearchData)
+		ResearchPanel.UpgradeCommand = function()
+			RunConsoleCommand("sa_buy_research",v,HASH)
+		end
+		ResearchPanels[ResearchData.name] = ResearchPanel
+		GroupPanelItems[ResearchData.group][ResearchData.pos] = ResearchPanel
+	end
+
+	for group, items in pairs(GroupPanelItems) do
+		local panel = GroupPanels[group]
+		for i = 1, #items do
+			panel:AddItem(items[i])
+		end
 	end
 
 	local ApplicationTab = vgui.Create ( "DPanel" )
@@ -830,13 +835,12 @@ local function sa_term_update(ply, tbl)
 	local Researches = SA.Research.Get()
 
 	for k,v in pairs(ResTabl2) do
-		local resgroup = v[1]
-		local resname = v[2]
-		local rank = v[3]
-		local group = v[4]
+		local resname = v[1]
+		local rank = v[2]
+		local group = v[3]
 
 		local cost = ""
-		local val = Researches[resgroup][resname]
+		local val = Researches[resname]
 
 		local ranks = val["ranks"]
 		if (ranks == rank) and (ranks ~= 0) then
@@ -853,7 +857,7 @@ local function sa_term_update(ply, tbl)
 			end
 			cost = "Cost: " .. SA.AddCommasToInt(total)
 		end
-		ResearchPanels[resgroup][resname]:Update(rank,cost)
+		ResearchPanels[resname]:Update(rank,cost)
 	end
 
 	if SA_MaxCrystalCount and SA_CrystalRadius and SA_Max_Roid_Count then

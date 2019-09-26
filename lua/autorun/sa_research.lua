@@ -31,15 +31,13 @@ local function ParseResearchName(name)
 end
 
 function SA.Research.InitPlayer(ply)
-	for _, researchGroup in pairs(Researches) do
-		for _, research in pairs(researchGroup) do
-			local dname, idx = ParseResearchName(research.name)
-			if ply.SAData.Research[dname] == nil then
-				ply.SAData.Research[dname] = idx and {} or 0
-			end
-			if idx and ply.SAData.Research[dname][idx] == nil then
-				ply.SAData.Research[dname][idx] = 0
-			end
+	for _, research in pairs(Researches) do
+		local dname, idx = ParseResearchName(research.name)
+		if ply.SAData.Research[dname] == nil then
+			ply.SAData.Research[dname] = idx and {} or 0
+		end
+		if idx and ply.SAData.Research[dname][idx] == nil then
+			ply.SAData.Research[dname][idx] = 0
 		end
 	end
 end
@@ -71,6 +69,7 @@ local function SA_AddResearch(name,group,displayname,ranks,cost,costinc,desc,req
 	local tbl = {}
 	image = image or "sa_research_icon"
 	tbl["name"] = name
+	tbl.group = group
 	tbl["display"] = displayname
 	tbl["ranks"] = ranks
 	tbl["cost"] = cost
@@ -93,10 +92,7 @@ local function SA_AddResearch(name,group,displayname,ranks,cost,costinc,desc,req
 	tbl["resetreq"] = resetreq
 
 	ResearchIcons[image] = true
-	if not Researches[group] then
-		Researches[group] = {}
-	end
-	Researches[group][name] = tbl
+	Researches[name] = tbl
 end
 
 

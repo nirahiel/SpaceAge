@@ -152,10 +152,8 @@ end
 
 local function SA_CanReset(ply)
 	local Researches = SA.Research.Get()
-	for _,vv in pairs(Researches) do
-		for _,v in pairs(vv) do
-			if SA.Research.GetFromPlayer(ply, v.name) < v.resetreq then return false end
-		end
+	for _,v in pairs(Researches) do
+		if SA.Research.GetFromPlayer(ply, v.name) < v.resetreq then return false end
 	end
 	return true
 end
@@ -345,14 +343,11 @@ SA_UpdateInfo = function(ply,CanPass)
 	end
 
 	local Researches = SA.Research.Get()
-	local ResearchGroups = SA.Research.GetGroups()
 
 	local ResTabl2 = {}
 
-	for _,RGroup in pairs(ResearchGroups) do
-		for k,v in pairs(Researches[RGroup]) do
-			ResTabl2[k] = {RGroup,k,SA.Research.GetFromPlayer(ply, v.name),ply.SAData.FactionName}
-		end
+	for k,v in pairs(Researches) do
+		ResTabl2[k] = {k,SA.Research.GetFromPlayer(ply, v.name),ply.SAData.FactionName}
 	end
 
 	local DevVars = {0,0,0}
@@ -613,19 +608,13 @@ local function SA_Research(ply, cmd, args)
 	if not ply.AtTerminal then return end
 	if ply.IsAFK then return end
 	local Researches = SA.Research.Get()
-	local ResearchGroups = SA.Research.GetGroups()
 	local res = args[1]
 	local CHECK = args[2]
 	if CHECK ~= HASH then return end
 	local Research = nil
-	for _,RGroup in pairs(ResearchGroups) do
-		for k,v in pairs(Researches[RGroup]) do
-			if (k == res) then
-				Research = v
-				break
-			end
-		end
-		if (Research) then
+	for k,v in pairs(Researches) do
+		if (k == res) then
+			Research = v
 			break
 		end
 	end
