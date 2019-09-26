@@ -1,11 +1,13 @@
 local API_BASE = "https://api.spaceage.online/v1"
-local API_HEADERS = {
-	["User-Agent"] = "SpaceAge GMod " .. (SERVER and "Server" or "Client")
-}
+local API_HEADERS = {}
 
 SA.API = {}
 
 local MakeUserAgent
+
+local function CommonUserAgent(side)
+	return "SpaceAge/GMod-" .. side .. " " .. game.GetIPAddress()
+end
 
 if SERVER then
 	AddCSLuaFile()
@@ -19,15 +21,17 @@ if SERVER then
 	end
 
 	MakeUserAgent = function()
-		return "SpaceAge/GMod-Server"
+		return CommonUserAgent("Server")
 	end
 else
 	MakeUserAgent = function()
-		return "SpaceAge/GMod-Client"
+		return CommonUserAgent("Client") .. " " .. LocalPlayer():SteamID()
 	end
 end
 
-API_HEADERS["User-Agent"] = MakeUserAgent()
+timer.Simple(1, function()
+	API_HEADERS["Client-ID"] = MakeUserAgent()
+end)
 
 function SA.API.Request(url, method, reqBody, onok, onerror)
 	local request = {
