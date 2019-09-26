@@ -46,7 +46,7 @@ end
 
 function ENT:SpawnFunction(ply, tr)
 	if (not tr.Hit) then return end
-	local ent = ents.Create("mining_laser_base")
+	local ent = ents.Create("storage_ice")
 	ent:SetPos(tr.HitPos + tr.HitNormal * 100)
 	ent:Spawn()
 	ent:Activate()
