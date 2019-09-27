@@ -469,7 +469,7 @@ local function SA_DrawTopBar()
 
 
 
-	draw.SimpleText("Name:" .. lp:Name(), topBarFont, section[1], yPos, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Name: " .. lp:Name(), topBarFont, section[1], yPos, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 	draw.SimpleText("Playtime: " .. formattedPlaytime, topBarFont, section[5], yPos, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 	draw.SimpleText("Score: " .. totalCredits, topBarFont, section[6], yPos, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 
