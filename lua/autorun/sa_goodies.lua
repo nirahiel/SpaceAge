@@ -46,7 +46,7 @@ SA.Goodies = {
 		func = function(ply)
 			--if ply.Level < 1 then ply:SetLevel(1) end
 			--if ply.PLevel < 1 then ply.PLevel = 1 end
-			ply.donator = true
+			ply.SAData.IsDonator = true
 		end
 	}
 }

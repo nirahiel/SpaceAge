@@ -23,7 +23,7 @@ end
 
 local PlayerMeta = FindMetaTable("Player")
 function PlayerMeta:IsVIP()
-	return self.donator
+	return self.SAData.IsDonator
 end
 
 function PlayerMeta:GetLevel()

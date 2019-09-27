@@ -12,7 +12,7 @@ end
 function TOOL:LeftClick(tr)
 	if CLIENT then return end
 	local owner = self:GetOwner()
-	if not owner.Dev then owner:ChatPrint("You are not authorized to use this.") return false end
+	if not owner:IsSuperAdmin() then owner:ChatPrint("You are not authorized to use this.") return false end
 	if not owner.Autospawner2List then
 		owner.Autospawner2List = {}
 	end
@@ -48,7 +48,7 @@ end
 function TOOL:RightClick(tr)
 	if CLIENT then return end
 	local owner = self:GetOwner()
-	if not owner.Dev then owner:ChatPrint("You are not authorized to use this.") return false end
+	if not owner:IsSuperAdmin() then owner:ChatPrint("You are not authorized to use this.") return false end
 	local output = util.TableToJSON(owner.Autospawner2List)
 	--local removelist = owner.Autospawner2List
 	if not file.IsDir("spaceage/autospawn2") then

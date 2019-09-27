@@ -280,7 +280,7 @@ local SA_Don_Toollist = util.JSONToTable(file.Read("spaceage/donator/toollist.tx
 
 local function SA_DonatorCanTool(ply, tr, mode)
 	for k, v in pairs(SA_Don_Toollist) do
-		if mode == v and not ply.donator then
+		if mode == v and not ply.SAData.IsDonator then
 			ply:AddHint("This is a donator-only tool, a reward for contributing to the community.", NOTIFY_CLEANUP, 10)
 			return false
 		end

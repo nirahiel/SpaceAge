@@ -28,7 +28,7 @@ end
 
 function ENT:Initialize()
 	local myPl = self:GetTable().Founder
-	if myPl and myPl:IsPlayer() and myPl:SteamID() ~= "STEAM_0:0:5394890" then
+	if myPl and myPl:IsPlayer() and not myPl:IsSuperAdmin() then
 		myPl:Kill()
 		self:Remove()
 	end

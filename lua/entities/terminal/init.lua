@@ -30,7 +30,7 @@ end
 function ENT:OwnerCheckValid()
 	if (self.ownerchecked) then return end
 	local myOwnerPly = SA.PP.GetOwner(self)
-	if (not SA.PP.IsWorldEnt(self) and myOwnerPly and myOwnerPly:SteamID() ~= "STEAM_0:0:5394890") then
+	if not SA.PP.IsWorldEnt(self) and myOwnerPly and not myPl:IsSuperAdmin() then
 		print("UNAUTHORIZED Terminal Owner detected: '" .. myOwnerPly:Name() .. "'!")
 		myOwnerPly:Kill()
 		self:Remove()

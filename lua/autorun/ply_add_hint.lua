@@ -17,7 +17,7 @@ if CLIENT then
 		notification.AddLegacy(txt, typ, len)
 	end
 
-	net.Receive("Player_AddHint", function(len, ply)
+	net.Receive("Player_AddHint", function(_, ply)
 		local txt = net.ReadString()
 		local typ = net.ReadInt(32)
 		local len = net.ReadInt(32)
