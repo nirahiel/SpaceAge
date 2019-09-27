@@ -23,7 +23,7 @@ local function SA_Applications_Faction(ply, data)
 end
 supernet.Hook("SA_Applications_Faction", SA_Applications_Faction)
 
-local ApplyText, PTimeLBL, ScoreLBL, SelFCombo
+local ApplyText, PTimeLBL, ScoreLBL, SelFCombo, SelAppIndex
 
 function SA.Application.Refresh()
 	if not (PTimeLBL and ScoreLBL and ApplyText and SelFCombo) then return end
