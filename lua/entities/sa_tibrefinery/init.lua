@@ -3,6 +3,8 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
+DEFINE_BASECLASS("base_gmodentity")
+
 local RD = CAF.GetAddon("Resource Distribution")
 local SA_TheWorld
 
