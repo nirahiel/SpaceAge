@@ -129,7 +129,6 @@ function SA.Application.CreateGUI(BasePanel)
 			if not index then
 				return
 			end
-			print(index)
 			ApplyText:SetValue(SA.Application.Table[index].Text)
 			PTimeLBL:SetText("Playtime: " .. SA.FormatTime(SA.Application.Table[index].Player.Playtime))
 			ScoreLBL:SetText("Score: " .. SA.Application.Table[index].Player.TotalCredits)
