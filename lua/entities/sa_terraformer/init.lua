@@ -6,10 +6,12 @@ include("shared.lua")
 util.PrecacheSound("apc_engine_start")
 util.PrecacheSound("apc_engine_stop")
 
+DEFINE_BASECLASS("base_rd3_entity")
+
 local SB = CAF.GetAddon("Spacebuild")
 
 function ENT:Initialize()
-	self.BaseClass.Initialize(self)
+	BaseClass.Initialize(self)
 	self.Active = 0
 	self.Stability = 1000
 	self.FinalSpazzed = false
@@ -41,7 +43,7 @@ end
 
 function ENT:TriggerInput(iname, value)
 	if (iname == "On") then
-		self.BaseClass.SetActive(self, value)
+		BaseClass.SetActive(self, value)
 	end
 end
 
@@ -89,7 +91,7 @@ function ENT:OnTakeDamage(DmgInfo)
 end
 
 function ENT:Repair()
-	self.BaseClass.Repair(self)
+	BaseClass.Repair(self)
 	self:SetColor(Color(255, 255, 255, 255))
 end
 
@@ -101,11 +103,11 @@ end
 
 function ENT:OnRemove()
 	self:StopSound("apc_engine_start")
-	self.BaseClass.OnRemove(self)
+	BaseClass.OnRemove(self)
 end
 
 function ENT:Think()
-	self.BaseClass.Think(self)
+	BaseClass.Think(self)
 	self.StateTicks = self.StateTicks + 1
 	if (self.Active == 1) then
 		if self.environment.IsProtected or (not self.environment:IsPlanet()) or self.environment == SB.GetSpace() then

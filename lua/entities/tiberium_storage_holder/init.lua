@@ -16,7 +16,7 @@ end
 
 function ENT:Initialize()
 	self:SetModel("models/slyfo/sat_rtankstand.mdl")
-	self.BaseClass.Initialize(self)
+	BaseClass.Initialize(self)
 	self.Active = 0
 	self.TouchTable = {}
 	if WireAddon ~= nil then
@@ -57,7 +57,7 @@ end
 
 function ENT:TriggerInput(iname, value)
 	if (iname == "On") then
-		self.BaseClass.SetActive(self, value)
+		BaseClass.SetActive(self, value)
 	end
 end
 
@@ -94,7 +94,7 @@ function ENT:ReleaseStorage(ent)
 end
 
 function ENT:Repair()
-	self.BaseClass.Repair(self)
+	BaseClass.Repair(self)
 	self:SetColor(Color(255, 255, 255, 255))
 end
 
@@ -105,7 +105,7 @@ function ENT:Destruct()
 end
 
 function ENT:Think()
-	self.BaseClass.Think(self)
+	BaseClass.Think(self)
 	if WireAddon ~= nil then
 		self:UpdateWireOutput()
 	end

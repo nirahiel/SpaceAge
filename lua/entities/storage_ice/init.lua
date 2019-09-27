@@ -5,7 +5,7 @@ include("shared.lua")
 local RD = CAF.GetAddon("Resource Distribution")
 
 function ENT:Initialize()
-	self.BaseClass.Initialize(self)
+	BaseClass.Initialize(self)
 	self:CalcVars(self:GetTable().Founder)
 	self.damaged = 0
 	self.WireDebugName = self.PrintName
@@ -54,7 +54,7 @@ function ENT:SpawnFunction(ply, tr)
 end
 
 function ENT:Think()
-	self.BaseClass.Think(self)
+	BaseClass.Think(self)
 	self:UpdateWireOutput()
 end
 

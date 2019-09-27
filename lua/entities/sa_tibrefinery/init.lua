@@ -52,7 +52,7 @@ function ENT:StartTouch(ent)
 end
 
 function ENT:Think()
-	self.BaseClass.Think(self)
+	BaseClass.Think(self)
 	for k, v in pairs(self.TouchTable) do
 		if not v.IsTiberiumStorage then
 			self.TouchTable[k] = nil
