@@ -4,6 +4,8 @@ include("shared.lua")
 
 local RD = CAF.GetAddon("Resource Distribution")
 
+DEFINE_BASECLASS("base_rd3_entity")
+
 function ENT:Initialize()
 	BaseClass.Initialize(self)
 	self:CalcVars(self:GetTable().Founder)

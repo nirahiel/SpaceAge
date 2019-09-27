@@ -4,6 +4,8 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 local RD = CAF.GetAddon("Resource Distribution")
 
+DEFINE_BASECLASS("base_rd3_entity")
+
 function ENT:SpawnFunction(ply, tr)
 	if (not tr.Hit) then return end
 	local ent = ents.Create("tiberium_storage_holder")
