@@ -8,8 +8,6 @@ ENT.allowDraw = false
 
 local SA_PosColors = { Color(255, 255, 0, 255), Color(128, 128, 128, 255), Color(128, 50, 0, 255) }
 
-local SA_StatsTable = {}
-
 function ENT:Initialize()
 	self.scrollPos = 0
 	self.doScroll = false
@@ -79,7 +77,7 @@ function ENT:Draw()
 
 		surface.DrawRect(x, y, w / RatioX, h)
 
-		local imax = table.maxn(SA_StatsTable)
+		local imax = table.maxn(SA.StatsTable)
 		if imax > 0 then
 			for i = 0, imax + 1 do
 				local lowLinePos = y + 107 + ((i-1) * ySpace)
@@ -92,13 +90,13 @@ function ENT:Draw()
 						self.doScroll = false
 						self.scrollSpeed = -1
 					end
-					if SA_StatsTable[i] then
-						local FactionColor = SA_StatsTable[i].factioncolor
+					if SA.StatsTable[i] then
+						local FactionColor = SA.StatsTable[i].FactionColor
 						local PosColor = white
 						if (SA_PosColors[i]) then PosColor = SA_PosColors[i] end
 						draw.DrawText(tostring(i), "textScreenfont10", xColumns[1], linePos, PosColor, 0)
-						draw.DrawText(SA_StatsTable[i].name, "textScreenfont10", xColumns[2], linePos, FactionColor, 0)
-						draw.DrawText(SA_StatsTable[i].score, "textScreenfont10", xColumns[3], linePos, PosColor, 0)
+						draw.DrawText(SA.StatsTable[i].Name, "textScreenfont10", xColumns[2], linePos, FactionColor, 0)
+						draw.DrawText(SA.StatsTable[i].TotalCredits, "textScreenfont10", xColumns[3], linePos, PosColor, 0)
 					end
 				end
 			end
@@ -118,36 +116,6 @@ function ENT:Draw()
 	cam.End3D2D()
 	Wire_Render(self)
 end
-
-local SA_MaxNameLength = 24
-
-local function SA_ReceiveStatsUpdate(body, code)
-	if code ~= 200 then
-		return
-	end
-
-	for i, v in pairs(body) do
-		SA_StatsTable[i] = {}
-		SA_StatsTable[i].name = string.Left(v.Name, SA_MaxNameLength)
-		SA_StatsTable[i].score = SA.AddCommasToInt(v.TotalCredits)
-		local tempColor = SA.Factions.Colors[v.FactionName]
-		if (not tempColor) then tempColor = Color(255, 100, 0, 255) end
-		SA_StatsTable[i].factioncolor = tempColor
-		SA_StatsTable[i].statscolor = Color(255, 255, 255, 255)
-		--[[ if (tcredits) then
-			if tcredits < 0 then tempColor = Color(255, 0, 0, 255) end
-			if tcredits > 0 then tempColor = Color(0, 255, 0, 255) end
-			SA_StatsTable[i].statscolor = tempColor
-		else
-			print("error, variable tcredits does not exist cl_init.lua around line 137 breh")
-		end ]]
-	end
-end
-local function SA_RequestStatsUpdate()
-	SA.API.Get("/players", SA_ReceiveStatsUpdate)
-end
-timer.Create("SA_StatsUpdater", 30, 0, SA_RequestStatsUpdate)
-timer.Simple(2, SA_RequestStatsUpdate)
 
 function ENT:IsTranslucent()
 	return true
