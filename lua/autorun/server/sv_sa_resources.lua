@@ -1,0 +1,7 @@
+resource.AddFile("materials/spaceage/res_icon_crystal.png")
+resource.AddFile("materials/spaceage/res_icon_energy.png")
+resource.AddFile("materials/spaceage/res_icon_gas.png")
+resource.AddFile("materials/spaceage/res_icon_isotope.png")
+resource.AddFile("materials/spaceage/res_icon_liquid.png")
+resource.AddFile("materials/spaceage/res_icon_solid.png")
+resource.AddFile("materials/spaceage/res_icon_valuableminerals.png")
