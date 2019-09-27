@@ -8,7 +8,6 @@ ENT.allowDraw = false
 
 local SA_PosColors = { Color(255, 255, 0, 255), Color(128, 128, 128, 255), Color(128, 50, 0, 255) }
 
-local statsAllowDraw = false
 local SA_StatsTable = {}
 
 function ENT:Initialize()
@@ -25,8 +24,7 @@ local white = Color(255, 255, 255, 255)
 function ENT:Draw()
 	self:DrawModel()
 	if (not self.allowDraw) then return true end
-	--if (not statsAllowDraw) then return true end --Nah, well, we still draw while refreshing, flashes get annoying
-	--nighteagle screen vector rotation and positioning legacy code
+
 	local OF = 0
 	local OU = 0
 	local OR = 0
@@ -128,13 +126,11 @@ local function SA_ReceiveStatsUpdate(body, code)
 		return
 	end
 
-	statsAllowDraw = false
-
-	for i, v in pairs(decoded) do
+	for i, v in pairs(body) do
 		SA_StatsTable[i] = {}
-		SA_StatsTable[i].name = string.Left(v.name, SA_MaxNameLength)
-		SA_StatsTable[i].score = SA.AddCommasToInt(v.score)
-		local tempColor = SA.Factions.Colors[v.groupname]
+		SA_StatsTable[i].name = string.Left(v.Name, SA_MaxNameLength)
+		SA_StatsTable[i].score = SA.AddCommasToInt(v.TotalCredits)
+		local tempColor = SA.Factions.Colors[v.FactionName]
 		if (not tempColor) then tempColor = Color(255, 100, 0, 255) end
 		SA_StatsTable[i].factioncolor = tempColor
 		tempColor = Color(255, 255, 255, 255)
@@ -146,8 +142,6 @@ local function SA_ReceiveStatsUpdate(body, code)
 			print("error, variable tcredits does not exist cl_init.lua around line 137 breh")
 		end
 	end
-
-	statsAllowDraw = true
 end
 local function SA_RequestStatsUpdate()
 	SA.API.Get("/players", SA_ReceiveStatsUpdate)
