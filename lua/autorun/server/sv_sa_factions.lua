@@ -1,5 +1,6 @@
 AddCSLuaFile("autorun/client/cl_sa_application.lua")
 
+require("supernet")
 local SA_FactionData = {}
 
 local function SetFactionSpawn(...)
@@ -158,13 +159,12 @@ end)
 local function SA_SetSpawnPos(ply)
 	if ply.SAData and ply.SAData.Loaded then
 		local idx = ply:Team()
-		local islead = ply.SAData.IsFactionLeader
-		if ply:IsVIP() then
-			--DO NOTHING!
-		elseif islead then
-			timer.Simple(2, function() if (ply and ply:IsValid()) then ply:SetModel(SA.Factions.Table[idx][5]) end end)
-		else
-			timer.Simple(2, function() if (ply and ply:IsValid()) then ply:SetModel(SA.Factions.Table[idx][4]) end end)
+		if not ply:IsVIP() then
+			local modelIdx = 4
+			if ply.SAData.IsFactionLeader then
+				modelIdx = 5
+			end
+			timer.Simple(2, function() if (ply and ply:IsValid()) then ply:SetModel(SA.Factions.Table[idx][modelIdx]) end end)
 		end
 		ply:SetTeam(idx)
 		if SA.Factions.Table[idx][6] then
@@ -290,7 +290,7 @@ function SA.Factions.RefreshApplications(plys)
 		if ply.SAData.IsFactionLeader then
 			SA.API.Get("/faction/" .. ply.SAData.FactionName .. "/applications", function(body, code)
 				if code == 404 then
-					supernet.Send(ply, "SA_Applications_Player", {})
+					supernet.Send(ply, "SA_Applications_Faction", {})
 					return
 				end
 				if code ~= 200 then

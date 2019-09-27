@@ -70,40 +70,7 @@ local function SA_DevSetVal(vnum, vval)
 	RunConsoleCommand("sa_dev_set_var", vnum, tonumber(vval:GetValue()))
 end
 
-function SA.Application.Refresh()
-	if not (SA_AppBasePanel and SA_PTimeLBL and SA_ScoreLBL and SA_ApplyText and SA_SelFCombo) then return end
-	local plisleader = LocalPlayer():GetNWBool("isleader")
-
-	if plisleader then
-		local fValue = false
-		SA_SelFCombo:Clear()
-		for k, v in pairs(AppTable) do
-			SA_SelFCombo:AddChoice(v[1] .. " | " .. k)
-			fValue = true
-		end
-		if (fValue) then
-			SA_SelFCombo:ChooseOptionID(1)
-			CSelID = SApp_ExtractSteamID(SA_SelFCombo:GetOptionText(1))
-			if (CSelID and AppTable[CSelID]) then
-				SA_ApplyText:SetValue(AppTable[CSelID][2])
-				SA_PTimeLBL:SetText("Playtime: " .. AppTable[CSelID][3])
-				SA_ScoreLBL:SetText("Score: " .. AppTable[CSelID][4])
-			end
-		else
-			CSelID = ""
-			SA_ApplyText:SetValue("")
-			SA_PTimeLBL:SetText("Playtime: NOTHING SELECTED")
-			SA_ScoreLBL:SetText("Score: NOTHING SELECTED")
-		end
-	else
-		SA_SelFCombo:ChooseOption(SA.Application.Faction)
-		SA_ApplyText:SetValue(SA.Application.Text)
-	end
-end
-
 local function CreateTerminalGUI()
-
-
 	if not LocalPlayer():GetNWBool("isloaded") then
 		return
 	end
@@ -472,109 +439,7 @@ local function CreateTerminalGUI()
 		draw.SimpleText(text, font, guiSizeX/2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	end
 
-	local plisleader = LocalPlayer():GetNWBool("isleader")
-
-	local ApplyText = vgui.Create("DTextEntry", ApplicationTab)
-	ApplyText:SetMultiline(true)
-	ApplyText:SetNumeric(false)
-	ApplyText:SetEnterAllowed(true)
-
-	SA_ApplyText = ApplyText
-
-	if (not plisleader) then
-		ApplyText:SetPos(15, 85)
-		ApplyText:SetSize(ApplicationTab:GetWide() - 40, 410)
-		ApplyText:SetUpdateOnType(true)
-		ApplyText.OnTextChanged = function()
-			SA.Application.Text = ApplyText:GetValue()
-		end
-	else
-		ApplyText:SetPos(15, 110)
-		ApplyText:SetSize(BasePanel:GetWide() - 40, 385)
-		ApplyText:SetEditable(false)
-	end
-
-	local SelFCombo = vgui.Create("DComboBox", ApplicationTab)
-	--SelFCombo:SetEditable(false)
-	SelFCombo:SetPos(15, 60)
-	SelFCombo:SetSize(ApplicationTab:GetWide() - 40, 20)
-
-	SA_SelFCombo = SelFCombo
-
-	if (not plisleader) then
-		SelFCombo:AddChoice("Major Miners")
-		SelFCombo:AddChoice("The Legion")
-		SelFCombo:AddChoice("The Corporation")
-		SelFCombo:AddChoice("Star Fleet")
-
-		SelFCombo.OnSelect = function(index, value, data)
-			SA.Application.Faction = data
-		end
-
-		local ClearButton = vgui.Create("DButton", ApplicationTab)
-		ClearButton:SetText("Clear")
-		ClearButton:SetPos((ApplicationTab:GetWide() / 2) + 5, ApplicationTab:GetTall() - 85)
-		ClearButton:SetSize(100, 40)
-
-		ClearButton.DoClick = function()
-			SA.Application.Text = "Hi"
-			SA.Application.Faction = "Major Miners"
-			SA.Application.Refresh()
-		end
-
-		local ApplyButton = vgui.Create("DButton", ApplicationTab)
-		ApplyButton:SetText("Submit")
-		ApplyButton:SetPos((ApplicationTab:GetWide() / 2) - 105, ApplicationTab:GetTall() - 85)
-		ApplyButton:SetSize(100, 40)
-
-		ApplyButton.DoClick = SA.Application.Do
-
-	else
-
-		local PTimeLBL = vgui.Create("DLabel", ApplicationTab)
-		PTimeLBL:SetPos(20, 85)
-		PTimeLBL:SetSize((ApplicationTab:GetWide() / 2) - 30, 20)
-		PTimeLBL:SetText("Playtime: NOTHING SELECTED")
-
-		SA_PTimeLBL = PTimeLBL
-
-		local ScoreLBL = vgui.Create("DLabel", ApplicationTab)
-		ScoreLBL:SetPos(ApplicationTab:GetWide() / 2, 85)
-		ScoreLBL:SetSize((ApplicationTab:GetWide() / 2) - 30, 20)
-		ScoreLBL:SetText("Score: NOTHING SELECTED")
-
-		SA_ScoreLBL = ScoreLBL
-
-		SelFCombo.OnSelect = function(index, value, data)
-		CSelID = SApp_ExtractSteamID(data)
-			if (CSelID and AppTable[CSelID]) then
-				ApplyText:SetValue(AppTable[CSelID][2])
-				PTimeLBL:SetText("Playtime: " .. AppTable[CSelID][3])
-				ScoreLBL:SetText("Score: " .. AppTable[CSelID][4])
-			end
-		end
-
-		local AcceptButton = vgui.Create("DButton", ApplicationTab)
-		AcceptButton:SetText("Accept")
-		AcceptButton:SetPos((ApplicationTab:GetWide() / 2) - 105, ApplicationTab:GetTall() - 85)
-		AcceptButton:SetSize(100, 40)
-		AcceptButton.DoClick = function()
-			if CSelID ~= "" and AppTable[CSelID] then
-				RunConsoleCommand("sa_application_accept", CSelID)
-			end
-		end
-		local DenyButton = vgui.Create("DButton", ApplicationTab)
-		DenyButton:SetText("Deny")
-		DenyButton:SetPos((ApplicationTab:GetWide() / 2) + 5, ApplicationTab:GetTall() - 85)
-		DenyButton:SetSize(100, 40)
-		DenyButton.DoClick = function()
-			if CSelID ~= "" and AppTable[CSelID] then
-				RunConsoleCommand("sa_application_deny", CSelID)
-			end
-		end
-	end
-
-
+	SA.Application.CreateGUI(ApplicationTab)
 	SA_AppBasePanel = ApplicationTab
 
 	local DeveloperTab = nil

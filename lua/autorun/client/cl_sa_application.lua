@@ -1,16 +1,29 @@
 local AppPanel = nil
 
+require("supernet")
+
+local defaultText = "Hi"
+local defaultFaction = "Major Miners"
+
 SA.Application = {}
+SA.Application.Me = {}
 SA.Application.Table = {}
-SA.Application.Text = "Hi"
-SA.Application.Faction = "Major Miners"
+SA.Application.Me.Text = defaultText
+SA.Application.Me.Faction = defaultFaction
 
 local CSelID = ""
 
-local function SA_RefreshApplications(len, ply)
-	-- TODO: This
+local function SA_Applications_Player(ply, data)
+	SA.Application.Me = data
+	SA.Application.Refresh()
 end
-net.Receive("SA_RefreshApplications", SA_RefreshApplications)
+supernet.Hook("SA_Applications_Player", SA_Applications_Player)
+
+local function SA_Applications_Faction(ply, data)
+	SA.Application.Table = data
+	SA.Application.Refresh()
+end
+supernet.Hook("SA_Applications_Faction", SA_Applications_Faction)
 
 local function SApp_ExtractSteamID(optiontext)
 	local temp = string.Explode("|", optiontext)
@@ -18,7 +31,41 @@ local function SApp_ExtractSteamID(optiontext)
 	return string.Trim(temp[#temp])
 end
 
-local function CreateAppGUI(BasePanel)
+local ApplyText, PTimeLBL, ScoreLBL, SelFCombo
+
+function SA.Application.Refresh()
+	if not (PTimeLBL and ScoreLBL and ApplyText and SelFCombo) then return end
+
+	local plisleader = LocalPlayer():GetNWBool("isleader")
+
+	if plisleader then
+		local fValue = false
+		SelFCombo:Clear()
+		for k, v in pairs(SA.Application.Table) do
+			SelFCombo:AddChoice(v.Player.Name .. " | " .. v.SteamID)
+			fValue = true
+		end
+		if (fValue) then
+			SelFCombo:ChooseOptionID(1)
+			CSelID = SApp_ExtractSteamID(SA_SelFCombo:GetOptionText(1))
+			if (CSelID and SA.Application.Table[CSelID]) then
+				ApplyText:SetValue(SA.Application.Table[CSelID].Text)
+				PTimeLBL:SetText("Playtime: " .. SA.Application.Table[CSelID].Player.Playtime)
+				ScoreLBL:SetText("Score: " .. SA.Application.Table[CSelID].Player.TotalCredits)
+			end
+		else
+			CSelID = ""
+			ApplyText:SetValue("")
+			PTimeLBL:SetText("Playtime: NOTHING SELECTED")
+			ScoreLBL:SetText("Score: NOTHING SELECTED")
+		end
+	else
+		SelFCombo:ChooseOption(SA.Application.Faction)
+		ApplyText:SetValue(SA.Application.Text)
+	end
+end
+
+function SA.Application.CreateGUI(BasePanel)
 	local ScrX = surface.ScreenWidth()
 	local ScrY = surface.ScreenHeight()
 	local bPanelGiven = true
@@ -43,100 +90,98 @@ local function CreateAppGUI(BasePanel)
 	end
 	local plisleader = LocalPlayer():GetNWBool("isleader")
 
-	local ApplyText = vgui.Create("DTextEntry", BasePanel)
+	ApplyText = vgui.Create("DTextEntry", BasePanel)
 
-	if (not plisleader) then
-		ApplyText:SetValue(SA.Application.Text)
+	if not plisleader then
+		ApplyText:SetValue(SA.Application.Me.Text or defaultText)
 	end
 
 	ApplyText:SetMultiline(true)
 	ApplyText:SetNumeric(false)
 	ApplyText:SetEnterAllowed(true)
 
-	if (not plisleader) then
-		ApplyText:SetPos(20, 55)
-		ApplyText:SetSize(BasePanel:GetWide() - 40, 380)
+	SelFCombo = vgui.Create("DComboBox", BasePanel)
+	--SelFCombo:SetEditable(false)
+	SelFCombo:SetPos(15, 60)
+	SelFCombo:SetSize(BasePanel:GetWide() - 40, 20)
+
+	if not plisleader then
+		ApplyText:SetPos(15, 85)
+		ApplyText:SetSize(BasePanel:GetWide() - 40, 410)
 		ApplyText:SetUpdateOnType(true)
 		ApplyText.OnTextChanged = function()
-			SA.Application.Text = ApplyText:GetValue()
+			SA.Application.Me.Text = ApplyText:GetValue()
 		end
-	else
-		ApplyText:SetPos(20, 80)
-		ApplyText:SetSize(BasePanel:GetWide() - 40, 355)
-		ApplyText:SetEditable(false)
-	end
 
-	local SelFCombo = vgui.Create("DMultiChoice", BasePanel)
-	SelFCombo:SetEditable(false)
-	SelFCombo:SetPos(20, 30)
-	SelFCombo:SetSize(BasePanel:GetWide() - 40, 20)
-	if (not plisleader) then
 		SelFCombo:AddChoice("Major Miners")
 		SelFCombo:AddChoice("The Guild")
 		SelFCombo:AddChoice("The Corporation")
 		SelFCombo:AddChoice("Star Fleet")
-		SelFCombo:ChooseOption(SA.Application.Faction)
+
+		SelFCombo:ChooseOption(SA.Application.Me.FactionName or defaultFaction)
 		SelFCombo.OnSelect = function(index, value, data)
-			SA.Application.Faction = data
+			SA.Application.Me.FactionName = data
 		end
+
+		local ApplyButton = vgui.Create("DButton", BasePanel)
+		ApplyButton:SetText("Submit")
+		ApplyButton:SetPos((BasePanel:GetWide() / 2) - 50, BasePanel:GetTall() - 85)
+		ApplyButton:SetSize(100, 40)
+		ApplyButton.DoClick = SA.Application.Do
 	else
-		local PTimeLBL = vgui.Create("DLabel", BasePanel)
-		PTimeLBL:SetPos(20, 55)
+		ApplyText:SetPos(15, 110)
+		ApplyText:SetSize(BasePanel:GetWide() - 40, 385)
+		ApplyText:SetEditable(false)
+
+		PTimeLBL = vgui.Create("DLabel", BasePanel)
+		PTimeLBL:SetPos(20, 85)
 		PTimeLBL:SetSize((BasePanel:GetWide() / 2) - 30, 20)
 		PTimeLBL:SetText("Playtime: NOTHING SELECTED")
-		local ScoreLBL = vgui.Create("DLabel", BasePanel)
-		ScoreLBL:SetPos(BasePanel:GetWide() / 2, 55)
+		ScoreLBL = vgui.Create("DLabel", BasePanel)
+		ScoreLBL:SetPos(BasePanel:GetWide() / 2, 85)
 		ScoreLBL:SetSize((BasePanel:GetWide() / 2) - 30, 20)
 		ScoreLBL:SetText("Score: NOTHING SELECTED")
 
 		local fValue = false
-		for k, v in pairs(AppTable) do
-			SelFCombo:AddChoice(v[1] .. " | " .. k)
+		for k, v in pairs(SA.Application.Table) do
+			SelFCombo:AddChoice(v.Player.Name .. " | " .. v.SteamID)
 			fValue = true
 		end
 		if (fValue) then
 			SelFCombo:ChooseOptionID(1)
 			CSelID = SApp_ExtractSteamID(SelFCombo:GetOptionText(1))
-			if (CSelID and AppTable[CSelID]) then
-				ApplyText:SetValue(AppTable[CSelID][2])
-				PTimeLBL:SetText("Playtime: " .. AppTable[CSelID][3])
-				ScoreLBL:SetText("Score: " .. AppTable[CSelID][4])
+			if (CSelID and SA.Application.Table[CSelID]) then
+				ApplyText:SetValue(SA.Application.Table[CSelID].Text)
+				PTimeLBL:SetText("Playtime: " .. SA.Application.Table[CSelID].Player.Playtime)
+				ScoreLBL:SetText("Score: " .. SA.Application.Table[CSelID].Player.TotalCredits)
 			end
 		else
 			CSelID = ""
 		end
 		SelFCombo.OnSelect = function(index, value, data)
 			CSelID = SApp_ExtractSteamID(data)
-			if (CSelID and AppTable[CSelID]) then
-				ApplyText:SetValue(AppTable[CSelID][2])
-				PTimeLBL:SetText("Playtime: " .. AppTable[CSelID][3])
-				ScoreLBL:SetText("Score: " .. AppTable[CSelID][4])
+			if (CSelID and SA.Application.Table[CSelID]) then
+				ApplyText:SetValue(SA.Application.Table[CSelID].Text)
+				PTimeLBL:SetText("Playtime: " .. SA.Application.Table[CSelID].Player.Playtime)
+				ScoreLBL:SetText("Score: " .. SA.Application.Table[CSelID].Player.TotalCredits)
 			end
 		end
-	end
 
-	if (not plisleader) then
-		local ApplyButton = vgui.Create("DButton", BasePanel)
-		ApplyButton:SetText("Submit")
-		ApplyButton:SetPos((BasePanel:GetWide() / 2) - 50, BasePanel:GetTall() - 45)
-		ApplyButton:SetSize(100, 40)
-		ApplyButton.DoClick = DoApply
-	else
 		local AcceptButton = vgui.Create("DButton", BasePanel)
 		AcceptButton:SetText("Accept")
-		AcceptButton:SetPos((BasePanel:GetWide() / 2) - 105, BasePanel:GetTall() - 45)
+		AcceptButton:SetPos((BasePanel:GetWide() / 2) - 105, BasePanel:GetTall() - 85)
 		AcceptButton:SetSize(100, 40)
 		AcceptButton.DoClick = function()
-			if CSelID ~= "" and AppTable[CSelID] then
+			if CSelID ~= "" and SA.Application.Table[CSelID] then
 				RunConsoleCommand("sa_application_accept", CSelID)
 			end
 		end
 		local DenyButton = vgui.Create("DButton", BasePanel)
 		DenyButton:SetText("Deny")
-		DenyButton:SetPos((BasePanel:GetWide() / 2) + 5, BasePanel:GetTall() - 45)
+		DenyButton:SetPos((BasePanel:GetWide() / 2) + 5, BasePanel:GetTall() - 85)
 		DenyButton:SetSize(100, 40)
 		DenyButton.DoClick = function()
-			if CSelID ~= "" and AppTable[CSelID] then
+			if CSelID ~= "" and SA.Application.Table[CSelID] then
 				RunConsoleCommand("sa_application_deny", CSelID)
 			end
 		end
@@ -165,7 +210,7 @@ end
 
 function SA.Application.Do()
 	net.Start("SA_DoApplyFaction")
-		net.WriteString(SA.Application.Text)
-		net.WriteString(SA.Application.Faction)
+		net.WriteString(SA.Application.Me.Text)
+		net.WriteString(SA.Application.Me.FactionName)
 	net.SendToServer()
 end
