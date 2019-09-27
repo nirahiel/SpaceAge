@@ -52,8 +52,6 @@ local function SA_RecvFactionData(len, ply)
 	local tbl = {}
 	tbl.Score = tonumber(net.ReadString())
 	tbl.Credits = tonumber(net.ReadString())
-	tbl.AddScore = tonumber(net.ReadString())
-	tbl.RealScore = tonumber(net.ReadString())
 	SA_FactionData[fn] = tbl
 end
 net.Receive("SA_FactionData", SA_RecvFactionData)

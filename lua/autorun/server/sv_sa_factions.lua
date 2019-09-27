@@ -137,14 +137,10 @@ local function LoadFactionResults(body, code)
 			if not ply then continue end
 			net.Start("SA_FactionData")
 				net.WriteString(fn)
-				net.WriteString(xs)
+				net.WriteString(tbl.Score)
 				if ply.SAData.FactionName == fn then
-					net.WriteString(xc)
-					net.WriteString(xa)
-					net.WriteString(xrs)
+					net.WriteString(tbl.Credits)
 				else
-					net.WriteString("-1")
-					net.WriteString("-1")
 					net.WriteString("-1")
 				end
 			net.Send(ply)
