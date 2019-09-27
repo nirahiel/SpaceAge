@@ -170,7 +170,7 @@ function PANEL:Think()
 	if (self.Size ~= self.TargetSize) then
 
 		self.Size = math.Approach(self.Size, self.TargetSize, (math.abs(self.Size - self.TargetSize) + 1) * 10 * FrameTime())
-		self:PerformLayout()
+		self:PerformLayout(self:GetWide(), self:GetTall())
 		SA.ScoreBoard:InvalidateLayout()
 	--	self:GetParent():InvalidateLayout()
 
@@ -185,9 +185,11 @@ function PANEL:Think()
 
 end
 
-function PANEL:PerformLayout(w)
-
-	self:SetSize(w, self.Size)
+function PANEL:PerformLayout(w, h)
+	if h ~= self.Size then
+		self:SetSize(w, self.Size)
+		h = self.Size
+	end
 
 	self.lblName:SizeToContents()
 	self.lblName:SetPos(24, 2)
