@@ -54,8 +54,13 @@ local LoadRes, LoadFailed
 
 local function SA_InitSpawn(ply)
 	SA.GiveCredits.Remove(ply)
-	print("Loading:", ply:Name())
-	SA.API.Get("/players/" .. ply:SteamID(), function(...) LoadRes(ply, ...) end, function(...) LoadFailed(ply, ...) end)
+	local sid = ply:SteamID()
+	if sid == "STEAM_0:0:0" or sid == "STEAM_ID_PENDING" then
+		print("Skip loading because bad SteamID: ", ply:Name(), sid)
+		return
+	end
+	print("Loading:", ply:Name(), sid)
+	SA.API.Get("/players/" .. sid, function(...) LoadRes(ply, ...) end, function(...) LoadFailed(ply, ...) end)
 end
 hook.Add("PlayerInitialSpawn", "SA_LoadPlayer", SA_InitSpawn)
 
