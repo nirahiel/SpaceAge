@@ -52,10 +52,17 @@ end
 
 local LoadRes, LoadFailed
 
+local function SA_IsValidSteamID(sid)
+	if not sid or sid == "" or sid == "STEAM_0:0:0" or sid == "STEAM_ID_PENDING" then
+		return false
+	end
+	return true
+end
+
 local function SA_InitSpawn(ply)
 	SA.GiveCredits.Remove(ply)
 	local sid = ply:SteamID()
-	if sid == "STEAM_0:0:0" or sid == "STEAM_ID_PENDING" then
+	if not SA_IsValidSteamID(sid) then
 		print("Skip loading because bad SteamID: ", ply:Name(), sid)
 		return
 	end
@@ -205,13 +212,14 @@ function SA.SaveUser(ply, isautosave)
 		ply:SetNWInt("sa_last_saved", CurTime())
 	end
 
-	if not ply.SAData.Loaded then
+	local sid = ply:SteamID()
+	if not ply.SAData.Loaded or not SA_IsValidSteamID(sid) then
 		return false
 	end
 
 	ply.SAData.Name = ply:Nick()
 	ply.SAData.StationStorage.Contents = SA.Terminal.GetPermStorage(ply)
-	SA.API.Put("/players/" .. ply:SteamID(), ply.SAData)
+	SA.API.Put("/players/" .. sid, ply.SAData)
 	return true
 end
 hook.Add("PlayerDisconnected", "SA_Save_Disconnect", SA.SaveUser)
