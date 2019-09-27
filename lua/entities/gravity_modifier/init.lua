@@ -4,6 +4,8 @@ util.PrecacheSound("apc_engine_start")
 util.PrecacheSound("apc_engine_stop")
 util.PrecacheSound("common/warning.wav")
 
+DEFINE_BASECLASS("base_sb_environment")
+
 include("shared.lua")
 local Energy_Increment = 25
 
@@ -11,7 +13,7 @@ local RD = CAF.GetAddon("Resource Distribution")
 local SB = CAF.GetAddon("Spacebuild")
 
 function ENT:Initialize()
-	self.BaseClass.Initialize(self)
+	BaseClass.Initialize(self)
 	self.Active = 0
 	self.damaged = 0
 	self:CreateEnvironment(1, 1, 1, 0, 0, 0, 0, 0)
@@ -79,7 +81,7 @@ end
 local colWhite = Color(255, 255, 255, 255)
 
 function ENT:Repair()
-	self.BaseClass.Repair(self)
+	BaseClass.Repair(self)
 	self:SetColor(colWhite)
 	self.damaged = 0
 end
@@ -91,12 +93,12 @@ end
 
 function ENT:OnRemove()
 	SB.RemoveEnvironment(self)
-	self.BaseClass.OnRemove(self)
+	BaseClass.OnRemove(self)
 	self:StopSound("apc_engine_start")
 end
 
 function ENT:Think()
-	self.BaseClass.Think(self)
+	BaseClass.Think(self)
 	if (self.Active == 1) then
 		local dif = 1
 		if self.environment then

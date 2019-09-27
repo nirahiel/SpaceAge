@@ -2,6 +2,7 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 
 include("shared.lua")
+DEFINE_BASECLASS("base_gmodentity")
 
 ENT.WorldInternal = true
 
@@ -14,7 +15,7 @@ function ENT:Initialize()
 end
 
 function ENT:Think()
-	self.BaseClass.Think(self)
+	BaseClass.Think(self)
 	for k, v in pairs(ents.FindInSphere(self:GetPos(), 450)) do
 		local myDmg = math.ceil(math.random(1000, 2000) * ((801 - v:GetPos():Distance(self:GetPos())) / 100))
 		if (v:IsPlayer() or v:IsNPC()) and (not (v.InVehicle and v:InVehicle())) then

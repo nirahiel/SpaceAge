@@ -2,12 +2,14 @@ include("shared.lua")
 
 language.Add("sa_mining_laser", "Mining Laser")
 
+DEFINE_BASECLASS("base_rd3_entity")
+
 local mat = Material("trails/laser")
 local sprite = Material("sprites/animglow02")
 local BeamColor = {Color(255, 0, 0, 255), Color(0, 255, 0, 255), Color(0, 0, 255, 255)}
 
 function ENT:Draw()
-	self.BaseClass.Draw(self)
+	BaseClass.Draw(self)
 	if self:GetNWBool("o") == true then
 		self:DrawLaser()
 	end

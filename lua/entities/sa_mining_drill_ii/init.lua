@@ -3,6 +3,8 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
+DEFINE_BASECLASS("sa_mining_drill")
+
 function ENT:GetPlayerLevel(ply)
 	return ply.SAData.Research.TiberiumDrillYield[2]
 end
@@ -17,5 +19,5 @@ function ENT:CalcVars(ply)
 		self:Remove()
 		return
 	end
-	return self.BaseClass.CalcVars(ply)
+	return BaseClass.CalcVars(ply)
 end

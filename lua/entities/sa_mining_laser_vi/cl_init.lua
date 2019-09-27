@@ -2,8 +2,10 @@ include("shared.lua")
 
 language.Add("sa_mining_laser_vi", "Mining Laser")
 
+DEFINE_BASECLASS("sa_mining_laser")
+
 function ENT:Initialize()
-	self.BaseClass.Initialize(self)
+	BaseClass.Initialize(self)
 
 	self.color = Color(255, 255, 255, 255)
 	self.colord = Color(math.random(-1, -0.5), math.random(-1, -0.5), math.random(-1, -0.5), 1)
@@ -12,7 +14,7 @@ function ENT:Initialize()
 end
 
 function ENT:Think()
-	self.BaseClass.Think(self)
+	BaseClass.Think(self)
 
 	self.color.r = (math.random(1, 7) * self.colord.r) + self.color.r
 	if self.color.r >= 255 then

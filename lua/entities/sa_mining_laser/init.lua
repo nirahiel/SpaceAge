@@ -4,12 +4,14 @@ AddCSLuaFile("shared.lua")
 util.PrecacheSound("common/warning.wav")
 util.PrecacheSound("ambient/energy/electric_loop.wav")
 
+DEFINE_BASECLASS("base_rd3_entity")
+
 include("shared.lua")
 
 local RD = CAF.GetAddon("Resource Distribution")
 
 function ENT:Initialize()
-	self.BaseClass.Initialize(self)
+	BaseClass.Initialize(self)
 	RD.AddResource(self, "energy", 0, 0)
 	RD.AddResource(self, "ore", 0, 0)
 	self.Active = 0
@@ -97,7 +99,7 @@ function ENT:TriggerInput(iname, value)
 end
 
 function ENT:Think()
-	self.BaseClass.Think(self)
+	BaseClass.Think(self)
 	if (self.Active == 1) then
 			if (RD.GetResourceAmount(self, "energy") >= self.consume) then
 				RD.ConsumeResource(self, "energy", self.consume)

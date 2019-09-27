@@ -3,6 +3,8 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
+DEFINE_BASECLASS("sa_mining_laser")
+
 function ENT:GetPlayerLevel(ply)
 	return ply.SAData.Research.OreLaserYield[6]
 end
@@ -12,5 +14,5 @@ function ENT:CalcVars(ply)
 		self:Remove()
 		return
 	end
-	return self.BaseClass.CalcVars(self, ply)
+	return BaseClass.CalcVars(self, ply)
 end

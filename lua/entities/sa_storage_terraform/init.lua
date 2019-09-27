@@ -5,8 +5,10 @@ include("shared.lua")
 
 local RD = CAF.GetAddon("Resource Distribution")
 
+DEFINE_BASECLASS("base_rd3_entity")
+
 function ENT:Initialize()
-	self.BaseClass.Initialize(self)
+	BaseClass.Initialize(self)
 	self.damaged = 0
 	self.vent = false
 	if WireAddon ~= nil then
@@ -37,7 +39,7 @@ function ENT:UpdateMass()
 end
 
 function ENT:Think()
-	self.BaseClass.Think(self)
+	BaseClass.Think(self)
 
 	if WireAddon ~= nil then
 		self:UpdateWireOutput()

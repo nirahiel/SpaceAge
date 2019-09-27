@@ -3,10 +3,12 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
+DEFINE_BASECLASS("base_rd3_entity")
+
 local RD = CAF.GetAddon("Resource Distribution")
 
 function ENT:Initialize()
-	self.BaseClass.Initialize(self)
+	BaseClass.Initialize(self)
 	RD.AddResource(self, "energy", 0, 0)
 	self.Active = 0
 	if (WireAddon ~= nil) then
@@ -70,7 +72,7 @@ function ENT:UpdateWireOutput(result)
 end
 
 function ENT:Think()
-	self.BaseClass.Think(self)
+	BaseClass.Think(self)
 	if (self.Active == 1) then
 			if (RD.GetResourceAmount(self, "energy") >= self.consume) then
 				RD.ConsumeResource(self, "energy", self.consume)

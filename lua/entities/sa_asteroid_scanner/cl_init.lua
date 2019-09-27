@@ -4,8 +4,10 @@ language.Add("sa_asteroid_scanner", "Mining Scanner")
 
 local mat = Material("trails/laser")
 
+DEFINE_BASECLASS("base_rd3_entity")
+
 function ENT:Draw()
-	self.BaseClass.Draw(self)
+	BaseClass.Draw(self)
 	if self:GetNWBool("o") == true then
 		self:DrawLaser()
 	end

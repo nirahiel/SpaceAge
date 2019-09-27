@@ -52,8 +52,11 @@ end
 
 local LoadRes, LoadFailed
 
-local function SA_IsValidSteamID(sid)
-	if not sid or sid == "" or sid == "STEAM_0:0:0" or sid == "STEAM_ID_PENDING" then
+local function SA_IsValidSteamID(sid, allowzero)
+	if not sid or sid == "" or sid == "STEAM_ID_PENDING" then
+		return false
+	end
+	if not allowzero and sid == "STEAM_0:0:0" then
 		return false
 	end
 	return true
@@ -62,7 +65,7 @@ end
 local function SA_InitSpawn(ply)
 	SA.GiveCredits.Remove(ply)
 	local sid = ply:SteamID()
-	if not SA_IsValidSteamID(sid) then
+	if not SA_IsValidSteamID(sid, true) then
 		print("Skip loading because bad SteamID: ", ply:Name(), sid)
 		return
 	end

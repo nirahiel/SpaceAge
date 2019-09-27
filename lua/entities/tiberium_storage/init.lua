@@ -4,8 +4,10 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 local RD = CAF.GetAddon("Resource Distribution")
 
+DEFINE_BASECLASS("base_rd3_entity")
+
 function ENT:Initialize()
-	self.BaseClass.Initialize(self)
+	BaseClass.Initialize(self)
 
 	local ply = self:GetTable().Founder
 
@@ -49,7 +51,7 @@ function ENT:UpdateWireOutput()
 end
 
 function ENT:OnRemove()
-	if RD.GetResourceAmount(self, "tiberium") < 1000 then return self.BaseClass.OnRemove(self) end
+	if RD.GetResourceAmount(self, "tiberium") < 1000 then return BaseClass.OnRemove(self) end
 
 	local wreck = ents.Create("wreckedstuff")
 	wreck:SetSolid(SOLID_NONE)
@@ -62,7 +64,7 @@ function ENT:OnRemove()
 
 	self:Leak()
 
-	self.BaseClass.OnRemove(self)
+	BaseClass.OnRemove(self)
 end
 
 function ENT:Leak()

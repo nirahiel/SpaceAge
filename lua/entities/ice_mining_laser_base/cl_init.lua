@@ -1,5 +1,7 @@
 include("shared.lua")
 
+DEFINE_BASECLASS("base_rd3_entity")
+
 local laserMat = CreateMaterial("sc_blue_beam02", "UnLitGeneric", {
 	["$basetexture"] = "sprites/physbeam",
 	["$nocull"] = 1,
@@ -26,7 +28,7 @@ local hitspotMat = CreateMaterial("sc_blue_ball01", "UnLitGeneric", {
 
 local col = Color(255, 0, 0, 255)
 function ENT:Draw()
-	self.BaseClass.Draw(self)
+	BaseClass.Draw(self)
 
 	if (not self:GetNWBool("o")) then
 		return

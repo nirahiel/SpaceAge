@@ -3,6 +3,8 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
+DEFINE_BASECLASS("base_rd3_entity")
+
 function ENT:GetPlayerLevel(ply)
 	return ply.SAData.Research.TiberiumDrillYield[1]
 end
@@ -15,7 +17,7 @@ ENT.MinTibDrillMod = 0
 local RD = CAF.GetAddon("Resource Distribution")
 
 function ENT:Initialize()
-	self.BaseClass.Initialize(self)
+	BaseClass.Initialize(self)
 	RD.AddResource(self, "energy", 0, 0)
 	RD.AddResource(self, "tiberium", 0, 0)
 	self.Active = 0
@@ -109,7 +111,7 @@ function ENT:EndTouch(ent)
 end
 
 function ENT:Think()
-	self.BaseClass.Think(self)
+	BaseClass.Think(self)
 	if (self.Active == 1) then
 		if (RD.GetResourceAmount(self, "energy") >= self.consume) then
 			RD.ConsumeResource(self, "energy", self.consume)

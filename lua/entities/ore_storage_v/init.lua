@@ -3,6 +3,8 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
+DEFINE_BASECLASS("ore_storage")
+
 ENT.ForcedModel = "models/slyfo/crate_resource_large.mdl"
 ENT.MinOreManage = 4
 ENT.StorageOffset = 19600000
@@ -13,5 +15,5 @@ function ENT:CalcVars(ply)
 		self:Remove()
 		return
 	end
-	return self.BaseClass.CalcVars(self, ply)
+	return self.CalcVars(self, ply)
 end

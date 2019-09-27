@@ -1,5 +1,6 @@
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
+DEFINE_BASECLASS("base_gmodentity")
 
 include("shared.lua")
 
@@ -20,7 +21,7 @@ function ENT:SpawnFunction(ply, tr)
 end
 
 function ENT:Think()
-	self.BaseClass.Think(self)
+	BaseClass.Think(self)
 	SA.Tiberium.RemoveIntersecting(self, {"sa_crystaltower", "sa_mining_drill"})
 	self:NextThink(CurTime() + 2)
 	return true

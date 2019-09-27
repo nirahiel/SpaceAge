@@ -3,6 +3,8 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
+DEFINE_BASECLASS("base_rd3_entity")
+
 local RD = CAF.GetAddon("Resource Distribution")
 
 ENT.ForcedModel = "models/slyfo/sat_resourcetank.mdl"
@@ -15,7 +17,7 @@ function ENT:GetPlayerLevel(ply)
 end
 
 function ENT:Initialize()
-	self.BaseClass.Initialize(self)
+	BaseClass.Initialize(self)
 
 	local ply = self:GetTable().Founder
 
