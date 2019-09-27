@@ -1,5 +1,5 @@
 ENT.Type = "anim"
-ENT.Base = "base_wire_entity"
+ENT.Base = "base_rd3_entity"
 ENT.PrintName = "Ice Refinery Basic"
 ENT.Author = "Zup"
 ENT.Category = "Asteroid"
@@ -16,3 +16,5 @@ ENT.CycleVol = 1
 ENT.RefineEfficiency = 0.5
 
 ENT.MinIceRefineryMod = 0
+
+list.Set("LSEntOverlayText" , "ice_refinery_basic", {HasOOO = true, num = 1, strings = {"ICE Mining Laser", "\nEnergy: "}, resnames = {"energy"}})

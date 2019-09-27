@@ -26,7 +26,8 @@ local hitspotMat = CreateMaterial("sc_blue_ball01", "UnLitGeneric", {
 
 local col = Color(255, 0, 0, 255)
 function ENT:Draw()
-	self:DrawModel()
+	self.BaseClass.Draw(self)
+
 	if (not self:GetNWBool("o")) then
 		return
 	end

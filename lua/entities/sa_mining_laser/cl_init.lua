@@ -7,7 +7,7 @@ local sprite = Material("sprites/animglow02")
 local BeamColor = {Color(255, 0, 0, 255), Color(0, 255, 0, 255), Color(0, 0, 255, 255)}
 
 function ENT:Draw()
-	self:DrawModel()
+	self.BaseClass.Draw(self)
 	if self:GetNWBool("o") == true then
 		self:DrawLaser()
 	end

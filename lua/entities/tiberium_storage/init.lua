@@ -48,11 +48,6 @@ function ENT:UpdateWireOutput()
 	Wire_TriggerOutput(self, "Max Tiberium", RD.GetNetworkCapacity(self, "tiberium"))
 end
 
-function ENT:OnTakeDamage(dmginfo)
-	local dmg = dmginfo:GetDamage()
-	if math.Rand(0, (dmg * 0.3) + 18) >= 20 then self:Remove() end
-end
-
 function ENT:OnRemove()
 	if RD.GetResourceAmount(self, "tiberium") < 1000 then return self.BaseClass.OnRemove(self) end
 
