@@ -33,8 +33,18 @@ function SA.GetPlayerByName(name)
 	return nil
 end
 
+local function dString(num)
+	if num < 10 then
+		return "0" .. tostring(num)
+	end
+	return tostring(num)
+end
+
 function SA.FormatTime(time)
-	return tostring(time)
+	local seconds = time % 60
+	local minutes = math.floor(time / 60) % 60
+	local hours = math.floor(time / 3600)
+	return hours .. ":" .. dString(minutes) .. ":" .. dString(seconds)
 end
 
 function SA.ValidEntity(ent)

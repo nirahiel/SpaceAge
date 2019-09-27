@@ -84,7 +84,7 @@ function ENT:Think()
 					end
 				end
 				ply.SAData.TotalCredits = ply.SAData.TotalCredits + creds
-				SA.SendCreditsScore(ply)
+				SA.SendBasicInfo(ply)
 			end
 		else
 			v:Remove()

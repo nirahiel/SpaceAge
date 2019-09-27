@@ -3,7 +3,7 @@ local AppPanel = nil
 require("supernet")
 
 local defaultText = "Hi"
-local defaultFaction = "majorminers"
+local defaultFaction = "miners"
 
 SA.Application = {}
 SA.Application.Me = {}
@@ -99,10 +99,11 @@ function SA.Application.CreateGUI(BasePanel)
 		SelFCombo:AddChoice("The Corporation")
 		SelFCombo:AddChoice("Star Fleet")
 
-		SelFCombo:ChooseOption(SA.Factions.ToLong[SA.Application.Me.FactionName] or defaultFaction)
-		SelFCombo.OnSelect = function(index, value, data)
+		function SelFCombo:OnSelect(index, value, data)
 			SA.Application.Me.FactionName = SA.Factions.ToShort[data]
 		end
+
+		SelFCombo:ChooseOption(SA.Factions.ToLong[SA.Application.Me.FactionName or defaultFaction])
 
 		local ApplyButton = vgui.Create("DButton", BasePanel)
 		ApplyButton:SetText("Submit")

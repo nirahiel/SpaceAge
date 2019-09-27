@@ -24,8 +24,8 @@ function SA.GiveCredits.Do(ply, v, amt)
 	local num = SA.AddCommasToInt(amt)
 	ply:AddHint("You have given " .. v:Name() .. " " .. num .. " credits.", NOTIFY_GENERIC, 5)
 	v:AddHint(ply:Name() .. " has given you " .. num .. " credits.", NOTIFY_GENERIC, 5)
-	SA.SendCreditsScore(ply)
-	SA.SendCreditsScore(v)
+	SA.SendBasicInfo(ply)
+	SA.SendBasicInfo(v)
 
 	return true
 end

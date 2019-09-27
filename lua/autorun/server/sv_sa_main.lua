@@ -86,6 +86,9 @@ local function AddSAData(ply)
 	if data.Credits == nil then
 		data.Credits = 0
 	end
+	if data.Playtime == nil then
+		data.Playtime = 0
+	end
 	if data.TotalCredits == nil then
 		data.TotalCredits = 0
 	end
@@ -116,6 +119,14 @@ local function AddSAData(ply)
 		data.AdvancementLevel = 1
 	end
 end
+
+timer.Create("SA_PlayTimeTracker", 1, 0, function()
+	for _, ply in pairs(player.GetHumans()) do
+		if ply.SAData and ply.SAData.Loaded then
+			ply.SAData.Playtime = ply.SAData.Playtime + 1
+		end
+	end
+end)
 
 LoadFailed = function(ply, err)
 	AddSAData(ply)
@@ -156,9 +167,9 @@ LoadRes = function(ply, body, code)
 	end
 
 	if sa_faction_only:GetBool() and
-	 (ply:Team() < SA.Factions.Min or
-	   ply:Team() > SA.Factions.Max or
-	   tonumber(ply.SAData.TotalCredits) < 100000000) then
+		(ply:Team() < SA.Factions.Min or
+		ply:Team() > SA.Factions.Max or
+		tonumber(ply.SAData.TotalCredits) < 100000000) then
 			ply:Kick("You don't meet the requirements for this server!")
 	end
 
@@ -172,7 +183,7 @@ LoadRes = function(ply, body, code)
 	timer.Simple(1, function()
 		if not SA.ValidEntity(ply) then return end
 		ply.MayBePoked = true
-		SA.SendCreditsScore(ply)
+		SA.SendBasicInfo(ply)
 		SA.Factions.RefreshApplications(ply)
 		ply:ChatPrint("Spawn limitations disengaged. Happy travels.")
 	end)

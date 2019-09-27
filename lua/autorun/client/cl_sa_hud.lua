@@ -431,8 +431,24 @@ local function SA_DrawHelmet(color)
 	DrawScreenLineWithDip(24, 5, 40, 600, 300)
 end
 
+local credits = "LOADING"
+local totalCredits = "LOADING"
+local playtime = 0
+local formattedPlaytime = "LOADING"
+local function sa_info_msg_credsc(len, ply)
+	credits = SA.AddCommasToInt(net.ReadString())
+	totalCredits = SA.AddCommasToInt(net.ReadString())
+	playtime = net.ReadInt(32)
+	formattedPlaytime = SA.FormatTime(playtime)
+end
+net.Receive("SA_SendBasicInfo", sa_info_msg_credsc)
+timer.Create("SA_IncPlayTime", 1, 0, function()
+	playtime = playtime + 1
+	formattedPlaytime = SA.FormatTime(playtime)
+end)
+
 local function SA_DrawTopBar()
-	local topBarSections = 4
+	local topBarSections = 6
 	local ScH = ScrH()
 	local lp = LocalPlayer()
 
@@ -444,7 +460,9 @@ local function SA_DrawTopBar()
 		sectionWid*1 - sectionWid/2,
 		sectionWid*2 - sectionWid/2,
 		sectionWid*3 - sectionWid/2,
-		sectionWid*4 - sectionWid/2
+		sectionWid*4 - sectionWid/2,
+		sectionWid*5 - sectionWid/2,
+		sectionWid*6 - sectionWid/2
 	}
 
 	local topBarFont = "ScoreboardDefault"
@@ -452,11 +470,11 @@ local function SA_DrawTopBar()
 
 
 	draw.SimpleText("Name:" .. lp:Name(), topBarFont, section[1], yPos, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-	draw.SimpleText("Total Credits: 50,000,000.00", topBarFont, section[4], yPos, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-
+	draw.SimpleText("Playtime: " .. formattedPlaytime, topBarFont, section[5], yPos, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Score: " .. totalCredits, topBarFont, section[6], yPos, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 
 	draw.SimpleText("Faction: " .. team.GetName(LocalPlayer():Team()), topBarFont, ScrW()/2, yPos+8, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-	draw.SimpleText("Credits: 50,000.00", topBarFont, ScrW()/2, yPos+26+8, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Credits: " .. credits, topBarFont, ScrW()/2, yPos+26+8, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 
 end
 

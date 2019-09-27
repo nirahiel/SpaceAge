@@ -249,7 +249,7 @@ local function SA_DoAcceptPlayer(ply, cmd, args)
 		trgPly.SAData.FactionName = factionName
 		trgPly.SAData.IsFactionLeader = false
 		trgPly:Spawn()
-		SA.SendCreditsScore(trgPly)
+		SA.SendBasicInfo(trgPly)
 	end, function(err)
 		SA.Factions.RefreshApplications({ply,trgPly})
 	end)
