@@ -214,7 +214,7 @@ local function SA_DoApplyFaction(len, ply)
 
 	local ffid = 0
 	for k, v in pairs(SA.Factions.Table) do
-		if (v[1] == faction) then
+		if (v[2] == faction) then
 			ffid = k
 			break
 		end

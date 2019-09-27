@@ -3,7 +3,7 @@ local AppPanel = nil
 require("supernet")
 
 local defaultText = "Hi"
-local defaultFaction = "Major Miners"
+local defaultFaction = "majorminers"
 
 SA.Application = {}
 SA.Application.Me = {}
@@ -60,8 +60,8 @@ function SA.Application.Refresh()
 			ScoreLBL:SetText("Score: NOTHING SELECTED")
 		end
 	else
-		SelFCombo:ChooseOption(SA.Application.Faction)
-		ApplyText:SetValue(SA.Application.Text)
+		SelFCombo:ChooseOption(SA.Factions.ToLong[SA.Application.Me.FactionName])
+		ApplyText:SetValue(SA.Application.Me.Text)
 	end
 end
 
@@ -118,9 +118,9 @@ function SA.Application.CreateGUI(BasePanel)
 		SelFCombo:AddChoice("The Corporation")
 		SelFCombo:AddChoice("Star Fleet")
 
-		SelFCombo:ChooseOption(SA.Application.Me.FactionName or defaultFaction)
+		SelFCombo:ChooseOption(SA.Factions.ToLong[SA.Application.Me.FactionName] or defaultFaction)
 		SelFCombo.OnSelect = function(index, value, data)
-			SA.Application.Me.FactionName = data
+			SA.Application.Me.FactionName = SA.Factions.ToShort[data]
 		end
 
 		local ApplyButton = vgui.Create("DButton", BasePanel)

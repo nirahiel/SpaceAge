@@ -89,7 +89,7 @@ local function AddSAData(ply)
 	if data.TotalCredits == nil then
 		data.TotalCredits = 0
 	end
-	if data.IsFactionLader == nil then
+	if data.IsFactionLeader == nil then
 		data.IsFactionLeader = false
 	end
 	data.Loaded = false

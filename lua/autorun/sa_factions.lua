@@ -19,10 +19,12 @@ SA.Factions.ApplyMin = 2
 SA.Factions.ApplyMax = 5
 
 SA.Factions.ToLong = {}
+SA.Factions.ToShort = {}
 SA.Factions.Colors = {}
 
 for k, v in pairs(SA.Factions.Table) do
 	SA.Factions.ToLong[v[2]] = v[1]
+	SA.Factions.ToShort[v[1]] = v[2]
 	SA.Factions.Colors[v[2]] = v[3]
 	team.SetUp(k, v[1], Color(v[3].r, v[3].g, v[3].b, 255))
 end
