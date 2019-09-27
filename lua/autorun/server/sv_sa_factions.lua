@@ -238,7 +238,7 @@ local function SA_DoAcceptPlayer(ply, cmd, args)
 	local factionId = ply:Team()
 	local trgPly = player.GetBySteamID(steamId)
 
-	SA.API.Post("/faction/" .. factionName .. "/applications/" .. steamId .. "/accept", {}, function(body, code)
+	SA.API.Post("/factions/" .. factionName .. "/applications/" .. steamId .. "/accept", {}, function(body, code)
 		SA.Factions.RefreshApplications({ply,trgPly})
 
 		if code > 299 then
@@ -268,7 +268,7 @@ local function SA_DoDenyPlayer(ply, cmd, args)
 	local factionName = ply.SAData.FactionName
 	local trgPly = player.GetBySteamID(steamId)
 
-	SA.API.Delete("/faction/" .. factionName .. "/applications/" .. steamId, function(body, code)
+	SA.API.Delete("/factions/" .. factionName .. "/applications/" .. steamId, function(body, code)
 		SA.Factions.RefreshApplications({ply,trgPly})
 	end, function(err)
 		SA.Factions.RefreshApplications({ply,trgPly})
@@ -288,7 +288,7 @@ function SA.Factions.RefreshApplications(plys)
 		local ply = xply
 		local retry = function() timer.Simple(5, function() SA.Factions.RefreshApplications(ply) end) end
 		if ply.SAData.IsFactionLeader then
-			SA.API.Get("/faction/" .. ply.SAData.FactionName .. "/applications", function(body, code)
+			SA.API.Get("/factions/" .. ply.SAData.FactionName .. "/applications", function(body, code)
 				if code == 404 then
 					supernet.Send(ply, "SA_Applications_Faction", {})
 					return
