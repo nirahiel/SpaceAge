@@ -532,6 +532,7 @@ local function SA_MoveResource(ply, cmd, args, notagain)
 	if CHECK ~= HASH then return end
 	if num <= 0 then return end
 	local maxamt = 0
+	local netid
 	if (from == "temp") then
 		maxamt = TempStorage[uid][res]
 	elseif (from == "perm") then
