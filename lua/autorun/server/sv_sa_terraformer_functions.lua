@@ -322,22 +322,23 @@ function SA.Terraformer.SpazzOut(terent, forcekill)
 			shake:Fire("StartShake", "", "0.6")
 			shake:Fire("kill", "", "8")
 			terent:EmitSound("explode_9")
+			for k, v in pairs(player.GetAll()) do
+				if v.environment ~= terent.environment then
+					continue
+				end
+
+				v:Kill()
+			end
 			for k, v in pairs(ents.GetAll()) do
 				if (v.Autospawned or v.CDSIgnore or v.environment ~= terent.environment) then
 					continue
 				end
+
 				if v:IsPlayer() or v:IsNPC() then
-					v:Kill()
-				elseif v:IsVehicle() then
-					for _, pass in pairs({ v:GetPassenger(), v:GetDriver() }) do
-						if (pass and pass:IsValid() and (pass:IsPlayer() or pass:IsNPC())) then
-							pass:Kill()
-						end
-					end
-					v:Remove()
-				else
-					v:Remove()
+					continue
 				end
+
+				v:Remove()
 			end
 			terent:Remove()
 		end

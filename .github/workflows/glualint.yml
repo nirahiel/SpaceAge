@@ -1,0 +1,24 @@
+name: GLuaLint
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js 12
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+    - name: npm for Lua lint
+      run: |
+        export PATH=$PATH:/tmp/bin
+        mkdir -p /tmp/bin
+        wget -q https://doridian.net/glualint -O /tmp/bin/glualint
+        chmod +x /tmp/bin/glualint
+        echo "Running linter..."
+        node gluaLintEx.js
+      env:
+        CI: true
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
