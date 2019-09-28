@@ -12,7 +12,7 @@ end)
 
 local BadSENTs = {"sent_ball"}
 
-hook.Add ("PlayerSpawnedSENT", "SA_StopBadProps", function (ply, ent)
+hook.Add("PlayerSpawnedSENT", "SA_StopBadProps", function(ply, ent)
 	for k, v in  pairs(BadSENTs) do
 		if v == ent:GetClass() then
 			ply:ChatPrint ("Sorry you can't spawn this SENT "  .. v)
