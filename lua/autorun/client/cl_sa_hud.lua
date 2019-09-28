@@ -412,7 +412,7 @@ local function SA_DrawTopBar()
 end
 
 local function SA_CustomHUDPaint()
-	if drawHud:GetBool() then return end
+	if drawHud:GetInt() == 0 then return end
 	SA_DrawHelmet(team.GetColor(LocalPlayer():Team()))
 	SA_DrawTopBar()
 
