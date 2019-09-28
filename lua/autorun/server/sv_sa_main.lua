@@ -75,20 +75,26 @@ end
 hook.Add("PlayerInitialSpawn", "SA_LoadPlayer", SA_InitSpawn)
 
 hook.Add("Initialize", "SA_MapCleanInitialize", function()
-	local map = game.GetMap()
-	if map:lower() == "sb_forlorn_sb3_r2l" or map:lower() == "sb_forlorn_sb3_r3" then
+	local map = game.GetMap():lower()
+	if map == "sb_forlorn_sb3_r2l" or map == "sb_forlorn_sb3_r3" then
 		timer.Simple(5, function()
 			for k, v in pairs(ents.FindByClass("func_breakable")) do
 				v:Remove()
 			end
 		end)
-	elseif map:lower() == "gm_galactic_rc1" then
+	elseif map == "gm_galactic_rc1" then
 		timer.Simple(5, function()
 			for k, v in pairs(ents.FindByClass("prop_physics_multiplayer")) do
 				v:Remove()
 			end
 			ents.FindInSphere(Vector(1046, -7648, -3798.2813), 5)[1]:Fire("kill", "", 0) --:Remove() -- Remove Teleporter Button (Spawns Hula Dolls)
 			ents.FindInSphere(Vector(556, -7740, -3798.2813), 5)[1]:Fire("kill", "", 0) --:Remove() -- Remove Jet Engine Button (Spams console with errors after a while)
+		end)
+	elseif map == "sb_gooniverse_v4" or map == "sb_gooniverse" then
+		timer.Simple(5, function()
+			for k, v in pairs(ents.FindByClass("func_physbox_multiplayer")) do
+				v:Remove()
+			end
 		end)
 	end
 end)
