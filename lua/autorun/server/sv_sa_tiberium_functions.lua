@@ -108,6 +108,8 @@ function SA.Tiberium.DestroyConstraints(Ent1, Ent2, Bone1, Bone2, cType)
 		Ent2 = thirdEnt
 	end
 
+	local foundConstraint
+
 	--Next, run through all of the constraints on the entity
 	--There's already a function for this, but it doesn't
 	--really take into account choosing the world first
