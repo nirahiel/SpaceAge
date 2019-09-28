@@ -9,3 +9,14 @@ timer.Simple(1, function()
 		SA_OLD_REG(ent)
 	end
 end)
+
+local BadSENTs = {"sent_ball"}
+
+hook.Add ("PlayerSpawnedSENT", "SA_StopBadProps", function (ply, sent)
+	for k, v in  pairs(BadSENTs) do
+		if v == sent then
+			ply:ChatPrint ("Sorry you can't spawn this SENT "  .. v)
+			return false
+		end
+	end
+end)
