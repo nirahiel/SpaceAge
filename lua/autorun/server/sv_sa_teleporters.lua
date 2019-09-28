@@ -99,7 +99,7 @@ function SA.Teleporter.Open(ply, TeleKey)
 	net.Send(ply)
 
 	hook.Add("KeyPress", "SA_TeleAbortMove_" .. ply:EntIndex(), function(_, key)
-		if key ~= IN_US then
+		if key ~= IN_USE then
 			AbortTeleport(ply)
 			hook.Remove("KeyPress", "SA_TeleAbortMove_" .. ply:EntIndex())
 		end
