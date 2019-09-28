@@ -75,9 +75,6 @@ local function InitSATerminal()
 	elseif mapname == "sb_forlorn_sb3_r2l" or mapname == "sb_forlorn_sb3_r3" then
 		StationPos = Vector(9447, 9824, 461)
 		StationSize = 2650
-	elseif mapname == "sb_forlorn_sb3_r3" then
-		StationPos = Vector(9447, 9824, 461)
-		StationSize = 2650
 	elseif mapname == "sb_new_worlds_2" then
 		StationPos = Vector(-8253, -9771, -11041)
 		StationSize = 3000
