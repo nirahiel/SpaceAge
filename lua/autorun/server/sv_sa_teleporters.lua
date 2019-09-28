@@ -90,15 +90,15 @@ concommand.Add("sa_teleporter_do", function(ply, cmd, args)
 	ply:SetPos(table.Random(TeleTBL))
 end)
 
-function SA.Teleporter.Open(ply, TeleKey)
-	if not (ply and ply.IsValid and ply:IsValid()) then return end
-	if ply.AtTeleporter then return end
-	ply.AtTeleporter = TeleKey
+function SA.Teleporter.Open(tply, TeleKey)
+	if not (tply and tply.IsValid and tply:IsValid()) then return end
+	if tply.AtTeleporter then return end
+	tply.AtTeleporter = TeleKey
 	net.Start("SA_OpenTeleporter")
 		net.WriteString(TeleKey)
-	net.Send(ply)
+	net.Send(tply)
 
-	hook.Add("KeyPress", "SA_TeleAbortMove_" .. ply:EntIndex(), function(_, key)
+	hook.Add("KeyPress", "SA_TeleAbortMove_" .. tply:EntIndex(), function(ply, key)
 		if key ~= IN_USE then
 			AbortTeleport(ply)
 			hook.Remove("KeyPress", "SA_TeleAbortMove_" .. ply:EntIndex())
