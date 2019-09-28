@@ -118,12 +118,14 @@ function PANEL:UpdatePlayerData()
 	local ply = self.Player
 	if not IsValid( ply ) then return end
 
-	local nick = ply:Nick()
-	if ply:GetNWBool("isleader") then
-		nick = nick .. " [Leader]"
+	self.lblName:SetText(ply:Nick())
+	if ulibcheck then
+		local teamName = team.GetName(ply:Team())
+		if ply:GetNWBool("isleader") then
+			teamName = teamName .. " [Leader]"
+		end
+		self.lblTeam:SetText(teamName)
 	end
-	self.lblName:SetText(nick)
-	if ulibcheck then self.lblTeam:SetText( team.GetName( ply:Team() ) ) end
 	if utimecheck then self.lblHours:SetText( math.floor( ply:GetUTimeTotalTime() / 3600 ) ) end
 	self.lblHealth:SetText( ply:Health() )
 	self.lblFrags:SetText( ply:Frags() )
