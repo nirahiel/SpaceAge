@@ -383,7 +383,7 @@ end
 local function SA_RequestUpdateGoodies(ply)
 	if ply.SendingGoodieUp then return end
 	ply.SendingGoodieUp = true
-	SA.API.GetPlayerGoodies(function(body, code) SA_UpdateGoodies(ply, body, code) end, function() ply.SendingGoodieUp = false end)
+	SA.API.GetPlayerGoodies(ply, function(body, code) SA_UpdateGoodies(ply, body, code) end, function() ply.SendingGoodieUp = false end)
 end
 concommand.Add("sa_goodies_update", SA_RequestUpdateGoodies)
 

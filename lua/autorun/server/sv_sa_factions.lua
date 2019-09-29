@@ -269,7 +269,7 @@ function SA.Factions.RefreshApplications(plys)
 				supernet.Send(ply, "SA_Applications_Faction", body)
 			end, retry)
 		else
-			SA.API.GetPlayerApplication(function(body, code)
+			SA.API.GetPlayerApplication(ply, function(body, code)
 				if code == 404 then
 					supernet.Send(ply, "SA_Applications_Player", {})
 					return
