@@ -24,7 +24,7 @@ local function SA_ReceiveStatsUpdate(body, code)
 	hook.Run("SA_StatsUpdate", SA.StatsTable)
 end
 local function SA_RequestStatsUpdate()
-	SA.API.Get("/players", SA_ReceiveStatsUpdate)
+	SA.API.ListPlayers(SA_ReceiveStatsUpdate)
 end
 timer.Create("SA_StatsUpdater", 30, 0, SA_RequestStatsUpdate)
 timer.Simple(2, SA_RequestStatsUpdate)
