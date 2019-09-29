@@ -58,7 +58,7 @@ end
 
 timer.Simple(2, InitSATeleporters)
 
-concommand.Add("sa_teleporter_respawn", function(ply)\
+concommand.Add("sa_teleporter_respawn", function(ply)
 	if not (ply and ply:IsSuperAdmin()) then
 		return
 	end
