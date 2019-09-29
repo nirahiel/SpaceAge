@@ -123,7 +123,7 @@ local function LoadFactionResults(body, code)
 end
 
 timer.Create("SA_RefreshFactions", 30, 0, function()
-	SA.API.Get("/factions", LoadFactionResults)
+	SA.API.ListFactions(LoadFactionResults)
 end)
 
 local function SA_SetSpawnPos(ply)
@@ -192,7 +192,7 @@ local function SA_DoApplyFaction(len, ply)
 	if ffid < SA.Factions.ApplyMin then return end
 	if ffid > SA.Factions.ApplyMax then return end
 
-	SA.API.Put("/players/" .. ply:SteamID() .. "/application", {
+	SA.API.PutPlayerApplication(ply, {
 		Text = text,
 		FactionName = faction,
 	}, function(body, status) DoApplyFactionResRes(ply, ffid, status) end, function() DoApplyFactionResRes(ply, ffid, 500) end)
@@ -208,7 +208,7 @@ local function SA_DoAcceptPlayer(ply, cmd, args)
 	local factionId = ply:Team()
 	local trgPly = player.GetBySteamID(steamId)
 
-	SA.API.Post("/factions/" .. factionName .. "/applications/" .. steamId .. "/accept", {}, function(body, code)
+	SA.API.AcceptFactionApplication(factionName, steamId, function(body, code)
 		SA.Factions.RefreshApplications({ply,trgPly})
 
 		if code > 299 then
@@ -238,7 +238,7 @@ local function SA_DoDenyPlayer(ply, cmd, args)
 	local factionName = ply.SAData.FactionName
 	local trgPly = player.GetBySteamID(steamId)
 
-	SA.API.Delete("/factions/" .. factionName .. "/applications/" .. steamId, function(body, code)
+	SA.API.DeleteFactionApplication(factionName, steamId, function(body, code)
 		SA.Factions.RefreshApplications({ply,trgPly})
 	end, function(err)
 		SA.Factions.RefreshApplications({ply,trgPly})
@@ -258,7 +258,7 @@ function SA.Factions.RefreshApplications(plys)
 		local ply = xply
 		local retry = function() timer.Simple(5, function() SA.Factions.RefreshApplications(ply) end) end
 		if ply.SAData.IsFactionLeader then
-			SA.API.Get("/factions/" .. ply.SAData.FactionName .. "/applications", function(body, code)
+			SA.API.ListFactionApplications(ply.SAData.FactionName, function(body, code)
 				if code == 404 then
 					supernet.Send(ply, "SA_Applications_Faction", {})
 					return
@@ -269,7 +269,7 @@ function SA.Factions.RefreshApplications(plys)
 				supernet.Send(ply, "SA_Applications_Faction", body)
 			end, retry)
 		else
-			SA.API.Get("/players/" .. ply:SteamID() .. "/application", function(body, code)
+			SA.API.GetPlayerApplication(function(body, code)
 				if code == 404 then
 					supernet.Send(ply, "SA_Applications_Player", {})
 					return

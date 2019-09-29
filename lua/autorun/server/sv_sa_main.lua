@@ -70,7 +70,7 @@ local function SA_InitSpawn(ply)
 		return
 	end
 	print("Loading:", ply:Name(), sid)
-	SA.API.Get("/players/" .. sid, function(...) LoadRes(ply, ...) end, function(...) LoadFailed(ply, ...) end)
+	SA.API.GetPlayer(ply, function(...) LoadRes(ply, ...) end, function(...) LoadFailed(ply, ...) end)
 end
 hook.Add("PlayerInitialSpawn", "SA_LoadPlayer", SA_InitSpawn)
 
@@ -228,7 +228,7 @@ function SA.SaveUser(ply, isautosave)
 
 	ply.SAData.Name = ply:Nick()
 	ply.SAData.StationStorage.Contents = SA.Terminal.GetPermStorage(ply)
-	SA.API.Put("/players/" .. sid, ply.SAData)
+	SA.API.PutPlayer(ply)
 	return true
 end
 hook.Add("PlayerDisconnected", "SA_Save_Disconnect", SA.SaveUser)
