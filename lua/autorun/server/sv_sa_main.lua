@@ -228,7 +228,7 @@ function SA.SaveUser(ply, isautosave)
 
 	ply.SAData.Name = ply:Nick()
 	ply.SAData.StationStorage.Contents = SA.Terminal.GetPermStorage(ply)
-	SA.API.PutPlayer(ply)
+	SA.API.UpsertPlayer(ply)
 	return true
 end
 hook.Add("PlayerDisconnected", "SA_Save_Disconnect", SA.SaveUser)

@@ -120,7 +120,7 @@ function SA.API.GetPlayer(ply, onok, onerror)
 	return SA.API.Get(url, onok, onerror)
 end
 
-function SA.API.PutPlayer(ply, onok, onerror)
+function SA.API.UpsertPlayer(ply, onok, onerror)
 	return SA.API.Put(url, ply.SAData, onok, onerror)
 end
 
@@ -129,11 +129,7 @@ function SA.API.GetPlayerApplication(ply, onok, onerror)
 	return SA.API.Get(MakePlayerResURL(ply, "application"), onok, onerror)
 end
 
-function SA.API.PutPlayerApplication(ply, body, onok, onerror)
-	return SA.API.Put(MakePlayerResURL(ply, "application"), body, onok, onerror)
-end
-
-function SA.API.PutPlayerApplication(ply, body, onok, onerror)
+function SA.API.UpsertPlayerPlayerApplication(ply, body, onok, onerror)
 	return SA.API.Put(MakePlayerResURL(ply, "application"), body, onok, onerror)
 end
 

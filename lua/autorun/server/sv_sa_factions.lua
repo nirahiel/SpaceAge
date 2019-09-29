@@ -192,7 +192,7 @@ local function SA_DoApplyFaction(len, ply)
 	if ffid < SA.Factions.ApplyMin then return end
 	if ffid > SA.Factions.ApplyMax then return end
 
-	SA.API.PutPlayerApplication(ply, {
+	SA.API.UpsertPlayerApplication(ply, {
 		Text = text,
 		FactionName = faction,
 	}, function(body, status) DoApplyFactionResRes(ply, ffid, status) end, function() DoApplyFactionResRes(ply, ffid, 500) end)
