@@ -277,7 +277,7 @@ end
 local function DrawScreenLineWithDip(lineYPos, lineWidth, dipHeight, dipWidth, dipPlateu, isOutline, isBottom)
 
 	local scrW = ScrW()
-	local scrWCenter = scrWCenter
+	local scrWCenter = scrW / 2
 
 	local healthAreaOffsetH = 210
 	local healthAreaOffsetW = 110
