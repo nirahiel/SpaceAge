@@ -13,7 +13,10 @@ local function AddSATeleporter(name, TeleportLocs, TeleporterLocs)
 end
 
 local function InitSATeleporters()
-	for k, v in pairs(ents.FindByClass("teleport_panel")) do v:Remove() end
+	for k, v in pairs(ents.FindByClass("teleport_panel")) do
+		v:Remove()
+	end
+
 	local mapname = string.lower(game:GetMap())
 	if mapname == "sb_gooniverse" or mapname == "sb_gooniverse_v4" then
 		AddSATeleporter("Terminal planet", {Vector(-107.3, 363.4, 4624), Vector(-242, 335.8, 4624), Vector(-388, 295.5, 4624) }, { { Vector(-464.3, 226, 4692.4), Angle(0, 15, 90) } })
@@ -52,7 +55,15 @@ local function InitSATeleporters()
 		end
 	end
 end
+
 timer.Simple(2, InitSATeleporters)
+
+concommand.Add("sa_teleporter_respawn", function(ply)\
+	if not (ply and ply:IsSuperAdmin()) then
+		return
+	end
+	InitSATeleporters()
+end)
 
 concommand.Add("sa_teleporter_update", function(ply, cmd, args)
 	if not (ply and ply.IsValid and ply:IsValid() and ply.AtTeleporter) then return end
