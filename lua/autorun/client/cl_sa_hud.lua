@@ -97,6 +97,7 @@ local WeaponMaxAmmo = {
 	weapon_frag = 0,
 	weapon_rpg = 0,
 	weapon_crowbar = 0,
+	weapon_stunstick = 0,
 	weapon_physcannon = 0,
 	weapon_physgun = 0
 }
@@ -109,7 +110,7 @@ local function GetMaxAmmo(SWEP)
 	local MAmmo = WeaponMaxAmmo[SWEP:GetClass()]
 	if MAmmo then return MAmmo end
 
-	LocalPlayer():ChatPrint("UNKOWN WEAPON: " .. SWEP:GetClass() .. "|" .. tostring(SWEP:Clip1()))
+	LocalPlayer():ChatPrint("UNKNOWN WEAPON: " .. SWEP:GetClass() .. "|" .. tostring(SWEP:Clip1()))
 
 	return SWEP:Clip1()
 end
