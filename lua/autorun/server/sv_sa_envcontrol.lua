@@ -244,3 +244,8 @@ concommand.Add("sa_print_environment", function(ply)
 	ply:ChatPrint(tostring(ply:GetPos().z - pos.z))
 end)
 
+timer.Simple(1, function()
+	for k,v in pairs(ents.FindByModel("models/props_lab/huladoll.mdl")) do
+		v:SetRenderMode(RENDERMODE_NONE)
+	end
+end)
