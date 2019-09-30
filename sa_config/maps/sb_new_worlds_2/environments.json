@@ -1,0 +1,39 @@
+{
+  "Add": [
+    {
+      "Position": [
+        -9275,
+        -9818,
+        -11428
+      ],
+      "Name": "Naar'ak Asteroid Base",
+      "Radius": 900
+    },
+    {
+      "Position": [
+        -8257,
+        -8609,
+        -11229
+      ],
+      "Name": "Naar'ak Asteroid Base",
+      "Radius": 600
+    },
+    {
+      "Position": [
+        8872,
+        -7112,
+        -7624
+      ],
+      "Name": "Kestrel",
+      "Radius": 600
+    }
+  ],
+  "Protect": [
+    "maldoran",
+    "naar'ak asteroid base",
+    "kestrel"
+  ],
+  "Terraform": [
+    "naar'ak asteroid base"
+  ]
+}
