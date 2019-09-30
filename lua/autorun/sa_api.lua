@@ -121,7 +121,7 @@ function SA.API.GetPlayer(ply, onok, onerror)
 end
 
 function SA.API.UpsertPlayer(ply, onok, onerror)
-	return SA.API.Put(url, ply.SAData, onok, onerror)
+	return SA.API.Put(MakePlayerURL(ply), ply.SAData, onok, onerror)
 end
 
 -- PLAYER -> APPLICATION functions
