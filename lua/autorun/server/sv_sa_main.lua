@@ -24,8 +24,7 @@ local function SetupConvars(name)
 	end
 	return GetConVar(name)
 end
-SetupConvars("sa_autosave")
-local autoSaveCVar = SetupConvars("sa_autosave_time")
+local autoSaveTimeCVar = SetupConvars("sa_autosave_time")
 CreateConVar("sa_autospawner", "1")
 SetupConvars("sa_friendlyfire")
 CreateConVar("sa_pirating", "1", { FCVAR_NOTIFY, FCVAR_REPLICATED })
@@ -211,7 +210,7 @@ end
 
 function SA.SaveUser(ply, isautosave)
 	if isautosave == "sa_autosaver" then
-		ply:SetNWInt("sa_save_int", autoSaveCVar:GetInt() * 60)
+		ply:SetNWInt("sa_save_int", autoSaveTimeCVar:GetInt() * 60)
 		ply:SetNWInt("sa_last_saved", CurTime())
 	end
 
@@ -228,8 +227,8 @@ end
 hook.Add("PlayerDisconnected", "SA_Save_Disconnect", SA.SaveUser)
 
 local function SA_SaveAllUsers()
-	local autoSaveTime = autoSaveCVar:GetInt()
-	if (autoSaveTime == 1) then
+	local autoSaveTime = autoSaveTimeCVar:GetInt()
+	if autoSaveTime > 0 then
 		timer.Adjust("SA_Autosave", autoSaveTime * 60, 0, SA_SaveAllUsers)
 		for _, v in ipairs(player.GetHumans()) do
 			SA.SaveUser(v, "sa_autosaver")
