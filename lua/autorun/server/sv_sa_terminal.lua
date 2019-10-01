@@ -626,8 +626,11 @@ local function SA_Research(ply, cmd, args)
 			local tbl = Research.prereq[idx]
 			if tbl and #tbl > 0 then
 				for k, v in pairs(tbl) do
-					if v[1] == "faction" and not table.HasValue(v[2], ply.SAData.FactionName) then
-						return
+					if v[1] == "faction" then
+						--glualint:ignore-next-line
+						if not table.HasValue(v[2], ply.SAData.FactionName) then
+							return
+						end
 					elseif SA.Research.GetFromPlayer(ply, v[1]) < v[2] then
 						return
 					end
