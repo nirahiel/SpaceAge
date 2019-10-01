@@ -10,6 +10,9 @@ local function InitSATeleporters()
 		v:Remove()
 	end
 
+	SA_TeleportLocs = {}
+	SA_TeleportNames = {}
+
 	local teleporters = SA.Config.Load("teleporters")
 	if not teleporters then
 		return
@@ -31,7 +34,7 @@ local function InitSATeleporters()
 			end
 			tele:SetPos(Vector(unpack(v.Position)))
 			tele:SetAngles(Angle(unpack(v.Angle)))
-			tele.TeleKey = ke
+			tele.TeleKey = name
 			SA.PP.MakeOwner(tele)
 			tele.Autospawned = true
 			tele.CDSIgnore = true
