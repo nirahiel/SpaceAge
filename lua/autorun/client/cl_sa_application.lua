@@ -106,7 +106,7 @@ function SA.Application.CreateGUI(BasePanel)
 		end
 
 		SelFCombo:AddChoice("Major Miners")
-		SelFCombo:AddChoice("The Guild")
+		SelFCombo:AddChoice("The Legion")
 		SelFCombo:AddChoice("The Corporation")
 		SelFCombo:AddChoice("Star Fleet")
 
