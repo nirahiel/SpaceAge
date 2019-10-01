@@ -55,6 +55,9 @@ end
 
 local function InitHabitablePlanets()
 	local dirname = "sa_planetsave/" .. game.GetMap():lower() .. "/"
+	if not file.Exists(dirname, "DATA") then
+		file.CreateDir(dirname)
+	end
 
 	local config = SA.Config.Load("environments")
 	if not config then
@@ -183,6 +186,7 @@ function SA.Planets.Save()
 	if not file.Exists(dirname, "DATA") then
 		file.CreateDir(dirname)
 	end
+
 	for k, v in pairs(SA_MyPlanets) do
 		local envname = string.lower(v.sbenvironment.name)
 		if envname ~= "no name" then
