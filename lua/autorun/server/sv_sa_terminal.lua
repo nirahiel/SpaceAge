@@ -617,7 +617,7 @@ local function SA_Research(ply, cmd, args)
 					if not table.HasValue(v[2], ply.SAData.FactionName) then
 						return
 					end
-				elseif ply[v[1]] < v[2] then
+				elseif SA.Research.GetFromPlayer(ply, v[1]) < v[2] then
 					return
 				end
 			end
