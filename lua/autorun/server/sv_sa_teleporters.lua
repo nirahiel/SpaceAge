@@ -35,7 +35,6 @@ local function InitSATeleporters()
 			tele:SetPos(Vector(unpack(v.Position)))
 			tele:SetAngles(Angle(unpack(v.Angle)))
 			tele.TeleKey = name
-			SA.PP.MakeOwner(tele)
 			tele.Autospawned = true
 			tele.CDSIgnore = true
 			tele:Spawn()

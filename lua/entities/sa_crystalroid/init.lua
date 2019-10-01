@@ -119,8 +119,6 @@ function ENT:SpawnCrystal(auto)
 	crystal.health = cHealth
 	crystal.maxhealth = cHealth
 
-	SA.PP.MakeOwner(crystal)
-
 	local phys = crystal:GetPhysicsObject()
 	if (not phys:IsValid()) then return end
 	phys:SetMass(50000)

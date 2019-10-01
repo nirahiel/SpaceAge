@@ -267,7 +267,7 @@ local function SA_Autospawner(ply)
 			if v.model then
 				spawn:SetModel(v.model)
 			end
-			SA.PP.MakeOwner(spawn)
+
 			spawn:Spawn()
 			local phys = spawn:GetPhysicsObject()
 			if phys and phys:IsValid() then

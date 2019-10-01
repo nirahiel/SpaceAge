@@ -22,7 +22,6 @@ function ENT:Initialize()
 	self.UpdateEnts = CurTime()
 	self.MainSpawnedBy = NULL
 
-	SA.PP.MakeOwner(self)
 	self.Autospawned = true
 	self.CDSIgnore = true
 end

@@ -8,10 +8,6 @@ function SA.PP.GetOwner(ent)
 	return ent:CPPIGetOwner()
 end
 
-function SA.PP.MakeOwner(ent, owner)
-	return ent:CPPISetOwner(owner)
-end
-
 function SA.PP.IsWorldEnt(ent)
 	local _, ownerId = ent:CPPISetOwner()
 	return not ownerId

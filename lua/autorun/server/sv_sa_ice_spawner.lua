@@ -46,7 +46,6 @@ function SA.Ice.SpawnRoidRing(iceType, data)
 	ent:Spawn()
 	ent:Activate()
 	ent.Autospawned = true
-	SA.PP.MakeOwner(ent)
 
 	ent.MineralAmount = ent.MineralAmount * data.MineralAmountMultiplier
 
