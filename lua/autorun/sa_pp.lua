@@ -9,7 +9,7 @@ function SA.PP.GetOwner(ent)
 end
 
 function SA.PP.IsWorldEnt(ent)
-	local _, ownerId = ent:CPPISetOwner()
+	local _, ownerId = ent:CPPIGetOwner()
 	return not ownerId
 end
 
