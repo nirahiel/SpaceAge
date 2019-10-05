@@ -42,19 +42,18 @@ local function LoadFactionResults(body, code)
 
 	for _, faction in pairs(body) do
 		local tbl = {}
-		tbl.Credits = tonumber(faction.Credits)
-		tbl.Score = tonumber(faction.TotalCredits)
-		tbl.AddScore = 0
-		local fn = faction.FactionName
+		tbl.credits = tonumber(faction.credits)
+		tbl.score = tonumber(faction.score)
+		local fn = faction.faction_name
 		SA_FactionData[fn] = tbl
 
 		for _, ply in pairs(allply) do
 			if not ply then continue end
 			net.Start("SA_FactionData")
 				net.WriteString(fn)
-				net.WriteString(tbl.Score)
-				if ply.SAData.FactionName == fn then
-					net.WriteString(tbl.Credits)
+				net.WriteString(tbl.score)
+				if ply.sa_data.faction_name == fn then
+					net.WriteString(tbl.credits)
 				else
 					net.WriteString("-1")
 				end
@@ -68,11 +67,11 @@ timer.Create("SA_RefreshFactions", 30, 0, function()
 end)
 
 local function SA_SetSpawnPos(ply)
-	if ply.SAData and ply.SAData.Loaded then
+	if ply.sa_data and ply.sa_data.loaded then
 		local idx = ply:Team()
 		if not ply:IsVIP() then
 			local modelIdx = 4
-			if ply.SAData.IsFactionLeader then
+			if ply.sa_data.is_faction_leader then
 				modelIdx = 5
 			end
 			timer.Simple(2, function() if (ply and ply:IsValid()) then ply:SetModel(SA.Factions.Table[idx][modelIdx]) end end)
@@ -110,7 +109,7 @@ local function DoApplyFactionResRes(ply, ffid, code)
 
 	local toPlayers = {}
 	for k, v in pairs(player.GetAll()) do
-		if v.SAData.IsFactionLeader and v:Team() == ffid then
+		if v.sa_data.is_faction_leader and v:Team() == ffid then
 			table.insert(toPlayers, v)
 		end
 	end
@@ -134,18 +133,18 @@ local function SA_DoApplyFaction(len, ply)
 	if ffid > SA.Factions.ApplyMax then return end
 
 	SA.API.UpsertPlayerApplication(ply, {
-		Text = text,
-		FactionName = faction,
+		text = text,
+		faction_name = faction,
 	}, function(body, status) DoApplyFactionResRes(ply, ffid, status) end, function() DoApplyFactionResRes(ply, ffid, 500) end)
 end
 net.Receive("SA_DoApplyFaction", SA_DoApplyFaction)
 
 local function SA_DoAcceptPlayer(ply, cmd, args)
 	if #args ~= 1 then return end
-	if not ply.SAData.IsFactionLeader then return end
+	if not ply.sa_data.is_faction_leader then return end
 
 	local steamId = args[1]
-	local factionName = ply.SAData.FactionName
+	local factionName = ply.sa_data.faction_name
 	local factionId = ply:Team()
 	local trgPly = player.GetBySteamID(steamId)
 
@@ -161,8 +160,8 @@ local function SA_DoAcceptPlayer(ply, cmd, args)
 		end
 
 		trgPly:SetTeam(factionId)
-		trgPly.SAData.FactionName = factionName
-		trgPly.SAData.IsFactionLeader = false
+		trgPly.sa_data.faction_name = factionName
+		trgPly.sa_data.is_faction_leader = false
 		trgPly:Spawn()
 		SA.SendBasicInfo(trgPly)
 	end, function(err)
@@ -173,10 +172,10 @@ concommand.Add("sa_application_accept", SA_DoAcceptPlayer)
 
 local function SA_DoDenyPlayer(ply, cmd, args)
 	if (#args ~= 1) then return end
-	if (not ply.SAData.IsFactionLeader) then return end
+	if (not ply.sa_data.is_faction_leader) then return end
 
 	local steamId = args[1]
-	local factionName = ply.SAData.FactionName
+	local factionName = ply.sa_data.faction_name
 	local trgPly = player.GetBySteamID(steamId)
 
 	SA.API.DeleteFactionApplication(factionName, steamId, function(body, code)
@@ -198,8 +197,8 @@ function SA.Factions.RefreshApplications(plys)
 	for _, xply in pairs(plys) do
 		local ply = xply
 		local retry = function() timer.Simple(5, function() SA.Factions.RefreshApplications(ply) end) end
-		if ply.SAData.IsFactionLeader then
-			SA.API.ListFactionApplications(ply.SAData.FactionName, function(body, code)
+		if ply.sa_data.is_faction_leader then
+			SA.API.ListFactionApplications(ply.sa_data.faction_name, function(body, code)
 				if code == 404 then
 					supernet.Send(ply, "SA_Applications_Faction", {})
 					return

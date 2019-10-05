@@ -9,16 +9,16 @@ local function CommonUserAgent(side)
 	return "SpaceAge/GMod-" .. side .. " " .. game.GetIPAddress()
 end
 
+local apiConfig = SA.Config.Load("api", true) or {}
+if apiConfig.auth then
+	API_HEADERS.Authorization = apiConfig.auth
+end
+if apiConfig.url then
+	API_BASE = apiConfig.url
+end
+
 if SERVER then
 	AddCSLuaFile()
-
-	local apiConfig = SA.Config.Load("api", true)
-	if apiConfig.auth then
-		API_HEADERS.Authorization = apiConfig.auth
-	end
-	if apiConfig.url then
-		API_BASE = apiConfig.url
-	end
 
 	MakeUserAgent = function()
 		return CommonUserAgent("Server")
@@ -121,7 +121,7 @@ function SA.API.GetPlayer(ply, onok, onerror)
 end
 
 function SA.API.UpsertPlayer(ply, onok, onerror)
-	return SA.API.Put(MakePlayerURL(ply), ply.SAData, onok, onerror)
+	return SA.API.Put(MakePlayerURL(ply), ply.sa_data, onok, onerror)
 end
 
 -- PLAYER -> APPLICATION functions
@@ -139,7 +139,7 @@ function SA.API.GetPlayerGoodies(ply, onok, onerror)
 end
 
 function SA.API.DeletePlayerGoodie(ply, id, onok, onerror)
-	return SA.API.Get(MakePlayerResIDURL(ply, "goodies", id), onok, onerror)
+	return SA.API.Delete(MakePlayerResIDURL(ply, "goodies", id), onok, onerror)
 end
 
 -- FACTION -> APPLICATION functions
