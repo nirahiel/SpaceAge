@@ -140,9 +140,13 @@ function SA.Application.CreateGUI(BasePanel)
 			if not index then
 				return
 			end
-			ApplyText:SetValue(SA.Application.Table[index].text)
-			PTimeLBL:SetText("Playtime: " .. SA.FormatTime(SA.Application.Table[index].player.playtime))
-			ScoreLBL:SetText("Score: " .. SA.Application.Table[index].player.score)
+			local app = SA.Application.Table[index]
+			ApplyText:SetValue(app.text)
+
+			if app.player then
+				PTimeLBL:SetText("Playtime: " .. SA.FormatTime(app.player.playtime))
+				ScoreLBL:SetText("Score: " .. app.player.score)
+			end
 		end
 
 		local fValue = false
