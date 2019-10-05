@@ -1,4 +1,4 @@
-local API_BASE = "https://api.spaceage.online/v1"
+local API_BASE = "https://api.spaceage.online/v2"
 local API_HEADERS = {}
 
 SA.API = {}
