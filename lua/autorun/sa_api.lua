@@ -33,23 +33,46 @@ timer.Simple(1, function()
 	API_HEADERS["Client-ID"] = MakeUserAgent()
 end)
 
-function SA.API.Request(url, method, reqBody, onok, onerror)
+local retryBackoffTable = {1, 5, 10, 15, 30, 60}
+
+local function SA_API_Retry(code, url, method, reqBody, callback, retries)
+	local delay = retryBackoffTable[retries]
+	print("API request to ", method, url, " failed, retrying in ", delay, " seconds")
+
+	if not delay then
+		callback(nil, 503)
+		return
+	end
+
+	timer.Simple(delay, function()
+		SA.API.Request(url, method, reqBody, callback)
+	end)
+end
+
+function SA.API.Request(url, method, reqBody, callback, retries)
+	if not retries then
+		retries = 0
+	end
+
 	local request = {
-		failed = function(err)
-			if not onerror then
+		failed = function(_err)
+			SA_API_Retry(503, url, method, reqBody, callback, retries + 1)
+		end,
+		success = function(code, body, _headers)
+			if code > 499 then
+				SA_API_Retry(code, url, method, reqBody, callback, retries + 1)
 				return
 			end
-			onerror(err)
-		end,
-		success = function(code, body, headers)
-			if not onok then
+
+			if not callback then
 				return
 			end
 
 			if body then
 				body = util.JSONToTable(body)
 			end
-			onok(body, code)
+
+			callback(body, code)
 		end,
 		headers = API_HEADERS,
 		method = method or "GET",
@@ -66,15 +89,15 @@ local bodyful = {"Post", "Patch", "Put"}
 
 for _, v in pairs(bodyless) do
 	local method = v:upper()
-	SA.API[v] = function(url, onok, onerror)
-		return SA.API.Request(url, method, nil, onok, onerror)
+	SA.API[v] = function(url, callback, onerror)
+		return SA.API.Request(url, method, nil, callback, onerror)
 	end
 end
 
 for _, v in pairs(bodyful) do
 	local method = v:upper()
-	SA.API[v] = function(url, body, onok, onerror)
-		return SA.API.Request(url, method, body, onok, onerror)
+	SA.API[v] = function(url, body, callback, onerror)
+		return SA.API.Request(url, method, body, callback, onerror)
 	end
 end
 
@@ -103,54 +126,54 @@ local function MakeFactionResIDURL(faction, res, id)
 end
 
 -- Basic LIST calls (scoreboard style)
-function SA.API.ListPlayers(onok, onerror)
-	return SA.API.Get("/players", onok, onerror)
+function SA.API.ListPlayers(callback)
+	return SA.API.Get("/players", callback)
 end
 
-function SA.API.ListFactions(onok, onerror)
-	return SA.API.Get("/factions", onok, onerror)
+function SA.API.ListFactions(callback)
+	return SA.API.Get("/factions", callback)
 end
 
 -- PLAYER functions
-function SA.API.GetPlayer(ply, onok, onerror)
+function SA.API.GetPlayer(ply, callback)
 	local url = MakePlayerURL(ply)
 	if SERVER then
 		url = url .. "/full"
 	end
-	return SA.API.Get(url, onok, onerror)
+	return SA.API.Get(url, callback)
 end
 
-function SA.API.UpsertPlayer(ply, onok, onerror)
-	return SA.API.Put(MakePlayerURL(ply), ply.sa_data, onok, onerror)
+function SA.API.UpsertPlayer(ply, callback)
+	return SA.API.Put(MakePlayerURL(ply), ply.sa_data, callback)
 end
 
 -- PLAYER -> APPLICATION functions
-function SA.API.GetPlayerApplication(ply, onok, onerror)
-	return SA.API.Get(MakePlayerResURL(ply, "application"), onok, onerror)
+function SA.API.GetPlayerApplication(ply, callback)
+	return SA.API.Get(MakePlayerResURL(ply, "application"), callback)
 end
 
-function SA.API.UpsertPlayerApplication(ply, body, onok, onerror)
-	return SA.API.Put(MakePlayerResURL(ply, "application"), body, onok, onerror)
+function SA.API.UpsertPlayerApplication(ply, body, callback)
+	return SA.API.Put(MakePlayerResURL(ply, "application"), body, callback)
 end
 
 -- PLAYER -> GOODIE functions
-function SA.API.GetPlayerGoodies(ply, onok, onerror)
-	return SA.API.Get(MakePlayerResURL(ply, "goodies"), onok, onerror)
+function SA.API.GetPlayerGoodies(ply, callback)
+	return SA.API.Get(MakePlayerResURL(ply, "goodies"), callback)
 end
 
-function SA.API.DeletePlayerGoodie(ply, id, onok, onerror)
-	return SA.API.Delete(MakePlayerResIDURL(ply, "goodies", id), onok, onerror)
+function SA.API.DeletePlayerGoodie(ply, id, callback)
+	return SA.API.Delete(MakePlayerResIDURL(ply, "goodies", id), callback)
 end
 
 -- FACTION -> APPLICATION functions
-function SA.API.ListFactionApplications(faction, onok, onerror)
-	return SA.API.Get(MakeFactionResURL(faction, "applications"), onok, onerror)
+function SA.API.ListFactionApplications(faction, callback)
+	return SA.API.Get(MakeFactionResURL(faction, "applications"), callback)
 end
 
-function SA.API.DeleteFactionApplication(faction, steamid, onok, onerror)
-	return SA.API.Delete(MakeFactionResIDURL(faction, "applications", steamid), onok, onerror)
+function SA.API.DeleteFactionApplication(faction, steamid, callback)
+	return SA.API.Delete(MakeFactionResIDURL(faction, "applications", steamid), callback)
 end
 
-function SA.API.AcceptFactionApplication(faction, steamid, onok, onerror)
-	return SA.API.Post(MakeFactionResIDURL(faction, "applications", steamid) .. "/accept", {}, onok, onerror)
+function SA.API.AcceptFactionApplication(faction, steamid, callback)
+	return SA.API.Post(MakeFactionResIDURL(faction, "applications", steamid) .. "/accept", {}, callback)
 end

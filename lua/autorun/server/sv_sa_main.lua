@@ -36,20 +36,17 @@ function PlayerMeta:AssignFaction(name)
 	if name then self.sa_data.faction_name = name end
 	if not self.sa_data.faction_name then self.sa_data.faction_name = "freelancer" end
 	if self.sa_data.faction_name == "alliance" and self.sa_data.alliance_membership_expiry < os.time() then self.sa_data.faction_name = "freelancer" end
-	for k, v in pairs(SA.Factions.Table) do
-		if self.sa_data.faction_name == v[2] then
-			self:SetTeam(k)
-			return
-		end
-	end
+
+	local idx = SA.Factions.IndexByShort[self.sa_data.faction_name or "noload"]
+	self:SetTeam(idx)
+
 	if not self:Team() then
-		self:SetTeam(1)
-		self.sa_data.faction_name = "freelancer"
-		return
+		self:SetTeam(7)
+		self.sa_data.faction_name = "noload"
 	end
 end
 
-local LoadRes, LoadFailed
+local LoadRes, SA_AddSAData
 
 local function SA_IsValidSteamID(sid, allowzero)
 	if not sid or sid == "" or sid == "STEAM_ID_PENDING" then
@@ -65,8 +62,13 @@ local function SA_InitSpawn(ply)
 		print("Skip loading because bad SteamID: ", ply:Name(), sid)
 		return
 	end
-	print("Loading:", ply:Name(), sid)
-	SA.API.GetPlayer(ply, function(...) LoadRes(ply, ...) end, function(...) LoadFailed(ply, ...) end)
+	print("Loading: ", ply:Name(), sid)
+
+	SA_AddSAData(ply)
+	SA.Terminal.SetupStorage(ply)
+	ply:AssignFaction()
+
+	SA.API.GetPlayer(ply, function(body, code) LoadRes(ply, body, code) end)
 end
 hook.Add("PlayerInitialSpawn", "SA_LoadPlayer", SA_InitSpawn)
 
@@ -89,7 +91,7 @@ hook.Add("Initialize", "SA_MapCleanInitialize", function()
 	timer.Simple(5, SA_MapCleanInitialize)
 end)
 
-local function SA_AddSAData(ply)
+SA_AddSAData = function(ply)
 	if not ply.sa_data then
 		ply.sa_data = {}
 	end
@@ -124,7 +126,7 @@ local function SA_AddSAData(ply)
 		data.alliance_membership_expiry = 0
 	end
 	if data.faction_name == nil then
-		data.faction_name = "freelancer"
+		data.faction_name = "noload"
 	end
 	if data.research == nil then
 		data.research = {}
@@ -143,28 +145,11 @@ timer.Create("SA_PlayTimeTracker", 1, 0, function()
 	end
 end)
 
-LoadFailed = function(ply, err)
-	SA_AddSAData(ply)
-	ply:SetTeam(1)
-	SA.Terminal.SetupStorage(ply)
-	print("Error loading player", err)
-	ply:ChatPrint("There has been an error, changes to your account will not be saved this session to prevent loss of data. Loading will be retried all 30 seconds")
-	ply:AssignFaction()
-	timer.Simple(30, function()
-		if not SA.ValidEntity(ply) then
-			return
-		end
-		SA_InitSpawn(ply)
-		if ply.sa_data.loaded then
-			ply:Spawn()
-		end
-	end)
-end
-
 LoadRes = function(ply, body, code)
 	print("Loaded:", ply:Name(), code)
 	if code == 404 then
 		SA_AddSAData(ply)
+		ply.sa_data.faction_name = "freelancer"
 		ply.sa_data.loaded = true
 		ply:ChatPrint("You have not been found in the database, an account has been created for you.")
 		SA.Terminal.SetupStorage(ply)
@@ -177,8 +162,6 @@ LoadRes = function(ply, body, code)
 		SA.Terminal.SetupStorage(ply, ply.sa_data.station_storage.contents)
 		ply:ChatPrint("Your account has been loaded, welcome on duty.")
 		ply:AssignFaction()
-	else
-		LoadFailed(ply)
 	end
 
 	if sa_faction_only:GetBool() and

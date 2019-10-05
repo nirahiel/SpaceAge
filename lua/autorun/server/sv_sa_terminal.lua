@@ -353,7 +353,7 @@ end
 local function SA_RequestUpdateGoodies(ply)
 	if ply.SendingGoodieUp then return end
 	ply.SendingGoodieUp = true
-	SA.API.GetPlayerGoodies(ply, function(body, code) SA_UpdateGoodies(ply, body, code) end, function() ply.SendingGoodieUp = false end)
+	SA.API.GetPlayerGoodies(ply, function(body, code) SA_UpdateGoodies(ply, body, code) end)
 end
 concommand.Add("sa_goodies_update", SA_RequestUpdateGoodies)
 
@@ -368,8 +368,7 @@ local function SA_UseGoodie(ply, cmd, args)
 
 	SA.SaveUser(ply)
 
-	local f = function() SA_RequestUpdateGoodies(ply) end
-	SA.API.DeletePlayerGoodie(ply, id, f, f)
+	SA.API.DeletePlayerGoodie(ply, id, function() SA_RequestUpdateGoodies(ply) end)
 end
 concommand.Add("sa_goodies_use", SA_UseGoodie)
 

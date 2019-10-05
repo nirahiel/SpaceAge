@@ -135,7 +135,7 @@ local function SA_DoApplyFaction(len, ply)
 	SA.API.UpsertPlayerApplication(ply, {
 		text = text,
 		faction_name = faction,
-	}, function(body, status) DoApplyFactionResRes(ply, ffid, status) end, function() DoApplyFactionResRes(ply, ffid, 500) end)
+	}, function(_body, status) DoApplyFactionResRes(ply, ffid, status) end)
 end
 net.Receive("SA_DoApplyFaction", SA_DoApplyFaction)
 
@@ -148,9 +148,10 @@ local function SA_DoAcceptPlayer(ply, cmd, args)
 	local factionId = ply:Team()
 	local trgPly = player.GetBySteamID(steamId)
 
-	SA.API.AcceptFactionApplication(factionName, steamId, function(body, code)
+	SA.API.AcceptFactionApplication(factionName, steamId, function(_body, code)
 		SA.Factions.RefreshApplications({ply,trgPly})
 
+		-- TODO: Reload player on error codes
 		if code > 299 then
 			return
 		end
@@ -164,8 +165,6 @@ local function SA_DoAcceptPlayer(ply, cmd, args)
 		trgPly.sa_data.is_faction_leader = false
 		trgPly:Spawn()
 		SA.SendBasicInfo(trgPly)
-	end, function(err)
-		SA.Factions.RefreshApplications({ply,trgPly})
 	end)
 end
 concommand.Add("sa_application_accept", SA_DoAcceptPlayer)
@@ -178,10 +177,8 @@ local function SA_DoDenyPlayer(ply, cmd, args)
 	local factionName = ply.sa_data.faction_name
 	local trgPly = player.GetBySteamID(steamId)
 
-	SA.API.DeleteFactionApplication(factionName, steamId, function(body, code)
-		SA.Factions.RefreshApplications({ply,trgPly})
-	end, function(err)
-		SA.Factions.RefreshApplications({ply,trgPly})
+	SA.API.DeleteFactionApplication(factionName, steamId, function(_body, _code)
+		SA.Factions.RefreshApplications({ply, trgPly})
 	end)
 end
 concommand.Add("sa_application_deny", SA_DoDenyPlayer)
@@ -196,29 +193,22 @@ function SA.Factions.RefreshApplications(plys)
 
 	for _, xply in pairs(plys) do
 		local ply = xply
-		local retry = function() timer.Simple(5, function() SA.Factions.RefreshApplications(ply) end) end
 		if ply.sa_data.is_faction_leader then
 			SA.API.ListFactionApplications(ply.sa_data.faction_name, function(body, code)
 				if code == 404 then
 					supernet.Send(ply, "SA_Applications_Faction", {})
 					return
 				end
-				if code ~= 200 then
-					return retry()
-				end
 				supernet.Send(ply, "SA_Applications_Faction", body)
-			end, retry)
+			end)
 		else
 			SA.API.GetPlayerApplication(ply, function(body, code)
 				if code == 404 then
 					supernet.Send(ply, "SA_Applications_Player", {})
 					return
 				end
-				if code ~= 200 then
-					return retry()
-				end
 				supernet.Send(ply, "SA_Applications_Player", body)
-			end, retry)
+			end)
 		end
 	end
 end
