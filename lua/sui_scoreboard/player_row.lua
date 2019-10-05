@@ -205,7 +205,7 @@ end
 function PANEL:Think()
 	if self.Size ~= self.TargetSize then
 		self.Size = math.Approach(self.Size, self.TargetSize, (math.abs(self.Size - self.TargetSize) + 1) * 10 * FrameTime())
-		self:PerformLayout()
+		self:PerformLayout(self:GetSize())
 		SCOREBOARD:InvalidateLayout()
 	end
 
