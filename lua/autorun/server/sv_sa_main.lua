@@ -89,7 +89,7 @@ hook.Add("Initialize", "SA_MapCleanInitialize", function()
 	timer.Simple(5, SA_MapCleanInitialize)
 end)
 
-local function Addsa_data(ply)
+local function SA_AddSAData(ply)
 	if not ply.sa_data then
 		ply.sa_data = {}
 	end
@@ -144,7 +144,7 @@ timer.Create("SA_PlayTimeTracker", 1, 0, function()
 end)
 
 LoadFailed = function(ply, err)
-	Addsa_data(ply)
+	SA_AddSAData(ply)
 	ply:SetTeam(1)
 	SA.Terminal.SetupStorage(ply)
 	print("Error loading player", err)
@@ -164,7 +164,7 @@ end
 LoadRes = function(ply, body, code)
 	print("Loaded:", ply:Name(), code)
 	if code == 404 then
-		Addsa_data(ply)
+		SA_AddSAData(ply)
 		ply.sa_data.loaded = true
 		ply:ChatPrint("You have not been found in the database, an account has been created for you.")
 		SA.Terminal.SetupStorage(ply)
@@ -172,7 +172,7 @@ LoadRes = function(ply, body, code)
 		SA.SaveUser(ply)
 	elseif code == 200 then
 		ply.sa_data = body
-		Addsa_data(ply)
+		SA_AddSAData(ply)
 		ply.sa_data.loaded = true
 		SA.Terminal.SetupStorage(ply, ply.sa_data.station_storage.contents)
 		ply:ChatPrint("Your account has been loaded, welcome on duty.")
@@ -215,7 +215,7 @@ function SA.SaveUser(ply, isautosave)
 	end
 
 	local sid = ply:SteamID()
-	if not ply.sa_data.loaded or not SA_IsValidSteamID(sid) then
+	if not ply.sa_data or not ply.sa_data.loaded or not SA_IsValidSteamID(sid) then
 		return false
 	end
 
