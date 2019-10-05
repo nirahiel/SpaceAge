@@ -33,20 +33,38 @@ timer.Simple(1, function()
 	API_HEADERS["Client-ID"] = MakeUserAgent()
 end)
 
-local retryBackoffTable = {1, 5, 10, 15, 30, 60}
+local requestQueue = {}
+local requestInProgress = false
 
-local function SA_API_Retry(code, url, method, reqBody, callback, retries)
-	local delay = retryBackoffTable[retries]
-	print("API request to ", method, url, " failed, retrying in ", delay, " seconds")
+local failureCount = 0
+local backoffTimings = {1, 5, 10, 15, 30}
+local backoffMax = backoffTimings[#backoffTimings]
 
-	if not delay then
-		callback(nil, 503)
+local function processNextRequest()
+	if requestInProgress then
 		return
 	end
+	local request = table.remove(requestQueue, 1)
+	if not request then
+		return
+	end
+	requestInProgress = true
+	HTTP(request)
+end
 
-	timer.Simple(delay, function()
-		SA.API.Request(url, method, reqBody, callback)
-	end)
+local function successRequest(request)
+	failureCount = 0
+	requestInProgress = false
+	timer.Simple(0, processNextRequest)
+end
+
+local function requeueRequest(request)
+	failureCount = failureCount + 1
+	local timing = backoffTimings[failureCount] or backoffMax
+	print("Requeueing ", request.url, request.method, " for ", timing, " seconds after ", failureCount, " failures")
+	requestInProgress = false
+	table.insert(requestQueue, 1, request)
+	timer.Simple(timing, processNextRequest)
 end
 
 function SA.API.Request(url, method, reqBody, callback, retries)
@@ -55,25 +73,6 @@ function SA.API.Request(url, method, reqBody, callback, retries)
 	end
 
 	local request = {
-		failed = function(_err)
-			SA_API_Retry(503, url, method, reqBody, callback, retries + 1)
-		end,
-		success = function(code, body, _headers)
-			if code > 499 then
-				SA_API_Retry(code, url, method, reqBody, callback, retries + 1)
-				return
-			end
-
-			if not callback then
-				return
-			end
-
-			if body then
-				body = util.JSONToTable(body)
-			end
-
-			callback(body, code)
-		end,
 		headers = API_HEADERS,
 		method = method or "GET",
 		url = API_BASE .. url,
@@ -81,7 +80,31 @@ function SA.API.Request(url, method, reqBody, callback, retries)
 		body = reqBody and util.TableToJSON(reqBody) or nil
 	}
 
-	HTTP(request)
+	request.failure = function(_err)
+		requeueRequest(request)
+	end
+
+	request.success = function(code, body, _headers)
+		if code > 499 then
+			return requeueRequest(request)
+		end
+
+		successRequest(request)
+
+		if not callback then
+			return
+		end
+
+		if body then
+			body = util.JSONToTable(body)
+		end
+
+		callback(body, code)
+	end
+
+	table.insert(requestQueue, request)
+
+	processNextRequest()
 end
 
 local bodyless = {"Get", "Head", "Delete", "Options"}
