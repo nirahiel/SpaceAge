@@ -53,19 +53,22 @@ local function fixE2Finder()
 end
 
 timer.Create("SA_Fix_E2_Finder", 1, 0, function()
-	if registerCallback then
-		SA.OldE2RegisterCallback = SA.OldE2RegisterCallback or registerCallback
-
-		-- Overwrite E2 registerCallback function with hooked version
-		function registerCallback(name, func)
-			if name == "construct" then
-				fixE2FinderCB(func)
-			end
-			return SA.OldE2RegisterCallback(name, func)
-		end
+	if not registerCallback then
+		return
 	end
+
+	SA.OldE2RegisterCallback = SA.OldE2RegisterCallback or registerCallback
+
+	-- Overwrite E2 registerCallback function with hooked version
+	function registerCallback(name, func)
+		if name == "construct" then
+			fixE2FinderCB(func)
+		end
+		return SA.OldE2RegisterCallback(name, func)
+	end
+
 	if fixE2Finder() then
 		timer.Remove("SA_Fix_E2_Finder")
-		wire_expression2_reload()
+		RunConsoleCommand("wire_expression2_reload")
 	end
 end)
