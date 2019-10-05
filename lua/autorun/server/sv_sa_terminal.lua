@@ -19,7 +19,6 @@ local RefinedResources = {{}, {}, {}, {}}
 local PriceTable = {}
 local BuyPriceTable = {}
 local TempStorage = {}
-local PermStorage = {}
 
 local function AddRefineRes(res, rarity)
 	table.insert(RefinedResources[rarity], res)
@@ -105,7 +104,7 @@ local function UpdateCapacity(ply)
 	local maxcap = ply.sa_data.station_storage.capacity
 	local uid = ply:UniqueID()
 	local count = 0
-	for k, v in pairs(PermStorage[uid]) do
+	for k, v in pairs(ply.sa_data.station_storage.contents[uid]) do
 		count = count + v
 	end
 	ply.sa_data.station_storage.remaining = maxcap - count
@@ -116,18 +115,17 @@ function SA.Terminal.SetupStorage(ply, tbl)
 	if not TempStorage[uid] then
 		TempStorage[uid] = {}
 	end
-	if tbl then
-		PermStorage[uid] = tbl
-	end
-	if not PermStorage[uid] then
-		PermStorage[uid] = {}
-	end
 	UpdateCapacity(ply)
 end
 
 function SA.Terminal.GetPermStorage(ply)
-	local uid = ply:UniqueID()
-	return PermStorage[uid]
+	local contents = ply.sa_data.station_storage.contents
+	for k, v in pairs(contents) do
+		if v <= 0 then
+			contents[k] = nil
+		end
+	end
+	return contents
 end
 
 local function SA_CanReset(ply)
@@ -248,16 +246,6 @@ local function SA_GetTempStorage(ply)
 	return TempStorage[uid]
 end
 
-local function SA_GetPermStorage(ply)
-	local uid = ply:UniqueID()
-	for k, v in pairs(PermStorage[uid]) do
-		if v <= 0 then
-			PermStorage[uid][k] = nil
-		end
-	end
-	return PermStorage[uid]
-end
-
 function SA.Terminal.SetVisible(ply, status)
 	net.Start("SA_Terminal_SetVisible")
 		net.WriteBool(status)
@@ -296,7 +284,7 @@ SA_UpdateInfo = function(ply, CanPass)
 	local orecount = SA_GetResource(ply, "ore")
 	local tempore = TempStorageU.ore
 
-	local PermStorageU = SA_GetPermStorage(ply)
+	local PermStorageU = SA.Terminal.GetPermStorage(ply)
 	local ShipStorageU = SA_GetShipResources(ply)
 
 	net.Start("SA_TerminalUpdateSmall")
@@ -358,7 +346,7 @@ local function SA_UpdateGoodies(ply, body, code)
 	end
 	ply.SAGoodies = {}
 	for _, v in pairs(body) do
-		ply.SAGoodies[v.Id] = SA.Goodies[v.Type]
+		ply.SAGoodies[v.id] = SA.Goodies[v.type]
 	end
 	supernet.Send(ply, "SA_GoodieUpdate", body, function() ply.SendingGoodieUp = false end)
 end
@@ -372,10 +360,10 @@ concommand.Add("sa_goodies_update", SA_RequestUpdateGoodies)
 
 local function SA_UseGoodie(ply, cmd, args)
 	local id = tonumber(args[1])
-	local goodie = ply.Goodies[id]
+	local goodie = ply.SAGoodies[id]
 	if not goodie then return end
 
-	ply.Goodies[id] = nil
+	ply.SAGoodies[id] = nil
 
 	goodie.func(ply)
 
@@ -519,7 +507,7 @@ local function SA_MoveResource(ply, cmd, args, notagain)
 	if (from == "temp") then
 		maxamt = TempStorage[uid][res]
 	elseif (from == "perm") then
-		maxamt = PermStorage[uid][res]
+		maxamt = ply.sa_data.station_storage.contents[res]
 	elseif (from == "ship") then
 		maxamt, netid = SA_GetResource(ply, res)
 	end
@@ -539,11 +527,11 @@ local function SA_MoveResource(ply, cmd, args, notagain)
 		local count = TempStorage[uid][res] or 0
 		TempStorage[uid][res] = count + tomove
 	elseif (to == "perm") then
-		local count = PermStorage[uid][res] or 0
+		local count = ply.sa_data.station_storage.contents[res] or 0
 		if tomove > ply.sa_data.station_storage.remaining then
 			tomove = ply.sa_data.station_storage.remaining
 		end
-		PermStorage[uid][res] = math.floor(count + tomove)
+		ply.sa_data.station_storage.contents[res] = math.floor(count + tomove)
 	elseif (to == "ship") then
 		local shipcap = SA_FindCapacity(ply, res) or 0
 		local maxshi = shipcap - SA_GetResource(ply, res)
@@ -555,7 +543,7 @@ local function SA_MoveResource(ply, cmd, args, notagain)
 	if (from == "temp") then
 		TempStorage[uid][res] = TempStorage[uid][res] - tomove
 	elseif (from == "perm") then
-		PermStorage[uid][res] = PermStorage[uid][res] - tomove
+		ply.sa_data.station_storage.contents[res] = ply.sa_data.station_storage.contents[res] - tomove
 	elseif (from == "ship") then
 		RD.ConsumeNetResource(netid, res, tomove)
 	end
