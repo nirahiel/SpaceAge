@@ -45,7 +45,7 @@ function SA.Application.Refresh()
 		local fValue = false
 		SelFCombo:Clear()
 		for k, v in pairs(SA.Application.Table) do
-			SelFCombo:AddChoice(v.player.Name .. " | " .. v.steamid)
+			SelFCombo:AddChoice(v.player.name .. " | " .. v.steamid)
 			fValue = true
 		end
 		if fValue then
@@ -143,15 +143,13 @@ function SA.Application.CreateGUI(BasePanel)
 			local app = SA.Application.Table[index]
 			ApplyText:SetValue(app.text)
 
-			if app.player then
-				PTimeLBL:SetText("Playtime: " .. SA.FormatTime(app.player.playtime))
-				ScoreLBL:SetText("Score: " .. app.player.score)
-			end
+			PTimeLBL:SetText("Playtime: " .. SA.FormatTime(app.player.playtime))
+			ScoreLBL:SetText("Score: " .. app.player.score)
 		end
 
 		local fValue = false
 		for k, v in pairs(SA.Application.Table) do
-			SelFCombo:AddChoice(v.player.Name .. " | " .. v.steamid)
+			SelFCombo:AddChoice(v.player.name .. " | " .. v.steamid)
 			fValue = true
 		end
 		if fValue then
