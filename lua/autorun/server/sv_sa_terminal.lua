@@ -102,9 +102,8 @@ hook.Add("PlayerInitialSpawn", "SA_SendHash", SendHash)
 
 local function UpdateCapacity(ply)
 	local maxcap = ply.sa_data.station_storage.capacity
-	local uid = ply:UniqueID()
 	local count = 0
-	for k, v in pairs(ply.sa_data.station_storage.contents[uid]) do
+	for k, v in pairs(ply.sa_data.station_storage.contents) do
 		count = count + v
 	end
 	ply.sa_data.station_storage.remaining = maxcap - count
