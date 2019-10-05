@@ -77,7 +77,7 @@ elseif (CLIENT) then
 	function ents.GetByIndex(index)
 		local Ent = GBI(index)
 		if SA.ValidEntity(Ent) and Ent:GetClass() == "iceroid" then
-			return NullEntity()
+			return NULL
 		end
 		return Ent
 	end
@@ -86,7 +86,7 @@ elseif (CLIENT) then
 	function Entity(idx)
 		local Ent = E(idx)
 		if SA.ValidEntity(Ent) and Ent:GetClass() == "iceroid" then
-			return NullEntity()
+			return NULL
 		end
 		return Ent
 	end
