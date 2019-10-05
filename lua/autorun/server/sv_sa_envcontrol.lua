@@ -133,7 +133,7 @@ local function InitHabitablePlanets()
 			v.sbenvironment.pressure = 1
 			v.sbenvironment.atmosphere = 1
 			print("Protecting planet \"" .. v.sbenvironment.name .. "\"!")
-		elseif envname ~= "no name" then
+		elseif envname ~= "no name" and not v.IsProtected then
 			local filename = dirname .. envname
 			SA_DefEnvsA[envname] = v.sbenvironment.air
 			SA_DefEnvs[envname] = v.sbenvironment
