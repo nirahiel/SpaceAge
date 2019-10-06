@@ -1,6 +1,3 @@
-local API_BASE = "https://api.spaceage.online/v2"
-local API_HEADERS = {}
-
 SA.API = {}
 
 local MakeUserAgent
@@ -10,12 +7,7 @@ local function CommonUserAgent(side)
 end
 
 local apiConfig = SA.Config.Load("api", true) or {}
-if apiConfig.auth then
-	API_HEADERS.Authorization = apiConfig.auth
-end
-if apiConfig.url then
-	API_BASE = apiConfig.url
-end
+apiConfig.url = apiConfig.url or "https://api.spaceage.online/v2"
 
 if SERVER then
 	AddCSLuaFile()
@@ -29,9 +21,7 @@ else
 	end
 end
 
-timer.Simple(1, function()
-	API_HEADERS["Client-ID"] = MakeUserAgent()
-end)
+local clientID = MakeUserAgent()
 
 local requestQueue = {}
 local requestInProgress = false
@@ -67,13 +57,22 @@ local function requeueRequest(request)
 	timer.Simple(timing, processNextRequest)
 end
 
-function SA.API.Request(url, method, reqBody, callback, retries)
+function SA.API.Request(url, method, reqBody, options, callback, retries)
 	if not retries then
 		retries = 0
 	end
+	if not options then
+		options = {}
+	end
+
+	local headers = {}
+	if not options.noauth then
+		headers.Authorization = apiConfig.auth
+	end
+	headers["Client-ID"] = clientID or "N/A"
 
 	local request = {
-		headers = API_HEADERS,
+		headers = headers,
 		method = method or "GET",
 		url = API_BASE .. url,
 		type = "application/json",
@@ -112,15 +111,15 @@ local bodyful = {"Post", "Patch", "Put"}
 
 for _, v in pairs(bodyless) do
 	local method = v:upper()
-	SA.API[v] = function(url, callback, onerror)
-		return SA.API.Request(url, method, nil, callback, onerror)
+	SA.API[v] = function(url, callback, options)
+		return SA.API.Request(url, method, nil, options, callback)
 	end
 end
 
 for _, v in pairs(bodyful) do
 	local method = v:upper()
-	SA.API[v] = function(url, body, callback, onerror)
-		return SA.API.Request(url, method, body, callback, onerror)
+	SA.API[v] = function(url, body, callback, options)
+		return SA.API.Request(url, method, body, options, callback)
 	end
 end
 
@@ -148,22 +147,24 @@ local function MakeFactionResIDURL(faction, res, id)
 	return MakeFactionResURL(faction, res) .. "/" .. id
 end
 
+local OPTIONS_NOAUTH = { noauth = true }
+
 -- Basic LIST calls (scoreboard style)
 function SA.API.ListPlayers(callback)
-	return SA.API.Get("/players", callback)
+	return SA.API.Get("/players", callback, OPTIONS_NOAUTH)
 end
 
 function SA.API.ListFactions(callback)
-	return SA.API.Get("/factions", callback)
+	return SA.API.Get("/factions", callback, OPTIONS_NOAUTH)
 end
 
 -- PLAYER functions
 function SA.API.GetPlayer(ply, callback)
-	local url = MakePlayerURL(ply)
-	if SERVER then
-		url = url .. "/full"
-	end
-	return SA.API.Get(url, callback)
+	return SA.API.Get(MakePlayerURL(ply), callback, OPTIONS_NOAUTH)
+end
+
+function SA.API.GetPlayerFull(ply, callback)
+	return SA.API.Get(akePlayerURL(ply) .. "/full", callback)
 end
 
 function SA.API.UpsertPlayer(ply, callback)

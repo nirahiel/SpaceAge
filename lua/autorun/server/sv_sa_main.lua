@@ -68,7 +68,7 @@ local function SA_InitSpawn(ply)
 	SA.Terminal.SetupStorage(ply)
 	ply:AssignFaction()
 
-	SA.API.GetPlayer(ply, function(body, code) LoadRes(ply, body, code) end)
+	SA.API.GetPlayerFull(ply, function(body, code) LoadRes(ply, body, code) end)
 end
 hook.Add("PlayerInitialSpawn", "SA_LoadPlayer", SA_InitSpawn)
 
