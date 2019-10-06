@@ -22,6 +22,9 @@ else
 end
 
 local clientID = MakeUserAgent()
+timer.Simple(1, function()
+	clientID = MakeUserAgent()
+end)
 
 local requestQueue = {}
 local requestInProgress = false
