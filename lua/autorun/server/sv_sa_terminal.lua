@@ -128,8 +128,8 @@ function SA.Terminal.GetPermStorage(ply)
 end
 
 local function SA_CanReset(ply)
-	local Researches = SA.Research.Get()
-	for _, v in pairs(Researches) do
+	local researches = SA.Research.Get()
+	for _, v in pairs(researches) do
 		if SA.Research.GetFromPlayer(ply, v.name) < v.resetreq then return false end
 	end
 	return true
@@ -670,6 +670,11 @@ local function SA_ResetMe(ply, cmd, args)
 
 	ply.sa_data.credits = ply.sa_data.credits - cost
 	ply.sa_data.advancement_level = ply.sa_data.advancement_level + 1
+
+	local researches = SA.Research.Get()
+	for _, v in pairs(researches) do
+		SA.Research.SetToPlayer(ply, v.name, 0)
+	end
 
 	SA_UpdateInfo(ply)
 	SA.SendBasicInfo(ply)
