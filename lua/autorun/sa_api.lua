@@ -167,7 +167,7 @@ function SA.API.GetPlayer(ply, callback)
 end
 
 function SA.API.GetPlayerFull(ply, callback)
-	return SA.API.Get(akePlayerURL(ply) .. "/full", callback)
+	return SA.API.Get(MakePlayerURL(ply) .. "/full", callback)
 end
 
 function SA.API.UpsertPlayer(ply, callback)
