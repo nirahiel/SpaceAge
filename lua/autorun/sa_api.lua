@@ -77,7 +77,7 @@ function SA.API.Request(url, method, reqBody, options, callback, retries)
 	local request = {
 		headers = headers,
 		method = method or "GET",
-		url = API_BASE .. url,
+		url = apiConfig.url .. url,
 		type = "application/json",
 		body = reqBody and util.TableToJSON(reqBody) or nil
 	}
