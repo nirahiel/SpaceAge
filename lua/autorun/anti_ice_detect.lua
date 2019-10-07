@@ -1,6 +1,8 @@
 local SERVER = SERVER
 local dgetinfo = debug.getinfo
 local pairs = pairs
+local tinsert = table.insert
+local sfind = string.find
 local GetEntityClass = FindMetaTable("Entity").GetClass
 
 local CALLED_IDX = 2
@@ -30,13 +32,13 @@ local function SkipFilter()
 	local caller = dgetinfo(CALLER_IDX, "S")
 
 	for _, v in pairs(OKAY_CALLERS) do
-		if caller.short_src:find(v, 1, true) == 1 then
+		if sfind(caller.short_src, v, 1, true) == 1 then
 			return true
 		end
 	end
 
 	if SA.RunAntiIceDebug then
-		local funcCalled = dgetinfo(CALLED_IDX).name
+		local funcCalled = dgetinfo(CALLED_IDX, "n").name
 		file.Append("findlog.txt", funcCalled .. "\n" .. util.TableToJSON(caller) .. "\n\n")
 	end
 
@@ -49,7 +51,7 @@ local function FilterTable(tbl)
 	local out = {}
 	for _, ent in pairs(tbl) do
 		if IsOkay(ent) then
-			table.insert(out, ent)
+			tinsert(out, ent)
 		end
 	end
 	return out
@@ -92,7 +94,7 @@ local function IsIceroidWildcard(cls)
 		return true
 	end
 
-	return cls:find("[^A-Za-z0-9_]")
+	return sfind(cls, "[^A-Za-z0-9_]")
 end
 
 local oldFindByClass = ents.FindByClass
