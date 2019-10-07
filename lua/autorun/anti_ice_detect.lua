@@ -1,93 +1,56 @@
-if (SERVER) then
+if SERVER then
 	AddCSLuaFile()
-elseif (CLIENT) then
-	local FBM = ents.FindByModel
-	function ents.FindByModel(str)
-		local Table = FBM(str)
-		if not Table then return {} end
-		for k, v in pairs(Table) do
-			if SA.ValidEntity(v) and v:GetClass() == "iceroid" then
-				Table[k] = nil
-			end
-		end
-		return Table
+	return
+end
+
+local function IsOkay(ent)
+	if SA.ValidEntity(ent) and ent:GetClass() == "iceroid" then
+		return false
 	end
 
-	local FBC = ents.FindByClass
-	function ents.FindByClass(str)
-		local Table = FBC(str)
-		if not Table then return {} end
-		for k, v in pairs(Table) do
-			if SA.ValidEntity(v) and v:GetClass() == "iceroid" then
-				Table[k] = nil
-			end
-		end
-		return Table
-	end
+	return true
+end
 
-	local FIB = ents.FindInBox
-	function ents.FindInBox(min, max)
-		local Table = FIB(min, max)
-		if not Table then return {} end
-		for k, v in pairs(Table) do
-			if SA.ValidEntity(v) and v:GetClass() == "iceroid" then
-				Table[k] = nil
-			end
-		end
-		return Table
-	end
+local function FilterTable(tbl)
+	if not tbl then return tbl end
 
-	local FIC = ents.FindInCone
-	function ents.FindInCone(pos, dir, dist, radius)
-		local Table = FIC(pos, dir, dist, radius)
-		if not Table then return {} end
-		for k, v in pairs(Table) do
-			if SA.ValidEntity(v) and v:GetClass() == "iceroid" then
-				Table[k] = nil
-			end
+	local out = {}
+	for _, ent in pairs(tbl) do
+		if IsOkay(ent) then
+			table.insert(out, ent)
 		end
-		return Table
 	end
+	return out
+end
 
-	local FIS = ents.FindInSphere
-	function ents.FindInSphere(center, radius)
-		local Table = FIS(center, radius)
-		if not Table then return {} end
-		for k, v in pairs(Table) do
-			if SA.ValidEntity(v) and v:GetClass() == "iceroid" then
-				Table[k] = nil
-			end
-		end
-		return Table
-	end
+local function OverwriteTableFunc(idx, tbl)
+	if not tbl then tbl = ents end
 
-	local GA = ents.GetAll
-	function ents.GetAll()
-		local Table = GA()
-		if not Table then return {} end
-		for k, v in pairs(Table) do
-			if SA.ValidEntity(v) and v:GetClass() == "iceroid" then
-				Table[k] = nil
-			end
-		end
-		return Table
-	end
-
-	local GBI = ents.GetByIndex
-	function ents.GetByIndex(index)
-		local Ent = GBI(index)
-		if SA.ValidEntity(Ent) and Ent:GetClass() == "iceroid" then
-			return NULL
-		end
-		return Ent
-	end
-
-	local E = Entity
-	function Entity(idx)
-		local Ent = E(idx)
-		if SA.ValidEntity(Ent) and Ent:GetClass() == "iceroid" then
-			return NULL
-		end
-		return Ent
+	local old = tbl[idx]
+	tbl[idx] = function(...)
+		return FilterTable(old(...))
 	end
 end
+
+local function OverwriteSingleFunc(idx, tbl)
+	if not tbl then tbl = ents end
+
+	local old = tbl[idx]
+	tbl[idx] = function(...)
+		local ent = old(...)
+		if IsOkay(ent) then
+			return ent
+		end
+		return NULL
+	end
+end
+
+OverwriteTableFunc("FindByModel")
+OverwriteTableFunc("FindByClass")
+OverwriteTableFunc("FindInBox")
+OverwriteTableFunc("FindInCone")
+OverwriteTableFunc("FindInSphere")
+OverwriteTableFunc("GetAll")
+
+OverwriteSingleFunc("GetByIndex")
+OverwriteSingleFunc("Entity", _G)
