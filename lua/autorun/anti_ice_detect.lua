@@ -74,13 +74,14 @@ local function OverwriteSingleFunc(idx, tbl)
 	local old = tbl[idx]
 	tbl[idx] = function(...)
 		local ent = old(...)
+		if IsOkay(ent) then
+			return ent
+		end
+
 		if SkipFilter() then
 			return ent
 		end
 
-		if IsOkay(ent) then
-			return ent
-		end
 		return NULL
 	end
 end
