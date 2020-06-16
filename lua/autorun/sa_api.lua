@@ -31,6 +31,7 @@ local requestInProgress = false
 
 local failureCount = 0
 local backoffTimings = {1, 5, 10, 15, 30}
+local httpTimeout = 30
 local backoffMax = backoffTimings[#backoffTimings]
 
 local function processNextRequest()
@@ -41,22 +42,44 @@ local function processNextRequest()
 	if not request then
 		return
 	end
+
 	requestInProgress = true
-	HTTP(request)
+	HTTP(request.http)
+
+	timer.Create("SA_API_HTTPTimeout", httpTimeout, 1, function()
+		requeueRequest(request)
+	end)
 end
 
 local function successRequest(request)
+	if request.done then
+		return
+	end
+	request.done = true
+
 	failureCount = 0
 	requestInProgress = false
+	timer.Remove("SA_API_HTTPTimeout")
+
 	timer.Simple(0, processNextRequest)
 end
 
 local function requeueRequest(request)
+	if request.done then
+		return
+	end
+	request.done = true
+
 	failureCount = failureCount + 1
-	local timing = backoffTimings[failureCount] or backoffMax
-	print("Requeueing ", request.url, request.method, " for ", timing, " seconds after ", failureCount, " failures")
 	requestInProgress = false
-	table.insert(requestQueue, 1, request)
+	timer.Remove("SA_API_HTTPTimeout")
+
+	local timing = backoffTimings[failureCount] or backoffMax
+	print("Requeueing ", request.http.url, request.http.method, " for ", timing, " seconds after ", failureCount, " failures")
+	table.insert(requestQueue, 1, {
+		http = request.http,
+		done = false
+	})
 	timer.Simple(timing, processNextRequest)
 end
 
@@ -74,7 +97,7 @@ function SA.API.Request(url, method, reqBody, options, callback, retries)
 	end
 	headers["Client-ID"] = clientID or "N/A"
 
-	local request = {
+	local httprequest = {
 		headers = headers,
 		method = method or "GET",
 		url = apiConfig.url .. url,
@@ -82,11 +105,16 @@ function SA.API.Request(url, method, reqBody, options, callback, retries)
 		body = reqBody and util.TableToJSON(reqBody) or nil
 	}
 
-	request.failure = function(_err)
+	local request = {
+		http = httprequest,
+		done = false
+	}
+
+	httprequest.failure = function(_err)
 		requeueRequest(request)
 	end
 
-	request.success = function(code, body, _headers)
+	httprequest.success = function(code, body, _headers)
 		if code > 499 then
 			return requeueRequest(request)
 		end
