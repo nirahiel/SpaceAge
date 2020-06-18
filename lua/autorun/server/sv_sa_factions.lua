@@ -193,22 +193,24 @@ function SA.Factions.RefreshApplications(plys)
 
 	for _, xply in pairs(plys) do
 		local ply = xply
-		if ply.sa_data.is_faction_leader then
-			SA.API.ListFactionApplications(ply.sa_data.faction_name, function(body, code)
-				if code == 404 then
-					supernet.Send(ply, "SA_Applications_Faction", {})
-					return
-				end
-				supernet.Send(ply, "SA_Applications_Faction", body)
-			end)
-		else
-			SA.API.GetPlayerApplication(ply, function(body, code)
-				if code == 404 then
-					supernet.Send(ply, "SA_Applications_Player", {})
-					return
-				end
-				supernet.Send(ply, "SA_Applications_Player", body)
-			end)
+		if ply then
+			if ply.sa_data.is_faction_leader then
+				SA.API.ListFactionApplications(ply.sa_data.faction_name, function(body, code)
+					if code == 404 then
+						supernet.Send(ply, "SA_Applications_Faction", {})
+						return
+					end
+					supernet.Send(ply, "SA_Applications_Faction", body)
+				end)
+			else
+				SA.API.GetPlayerApplication(ply, function(body, code)
+					if code == 404 then
+						supernet.Send(ply, "SA_Applications_Player", {})
+						return
+					end
+					supernet.Send(ply, "SA_Applications_Player", body)
+				end)
+			end
 		end
 	end
 end
