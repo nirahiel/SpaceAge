@@ -40,6 +40,7 @@ function SA.Ice.SpawnRoidRing(iceType, data)
 	ent.MineralRegen = IceData.RegenIce
 	ent.RespawnDelay = math.random(1600, 2000)
 
+	ent.IcePattern = "ring"
 	ent.IceData = data
 	ent:SetPos(data.Origin + CalcRing(data.InnerRadius, data.OuterRadius, data.Angle))
 	ent:SetAngles(Angle(math.random(-180, 180), math.random(-180, 180), math.random(-180, 180)))
@@ -50,6 +51,14 @@ function SA.Ice.SpawnRoidRing(iceType, data)
 	ent.MineralAmount = ent.MineralAmount * data.MineralAmountMultiplier
 
 	return ent
+end
+
+function SA.Ice.SpawnRoid(iceType, pattern, data)
+	if pattern == "ring" then
+		return SA.Ice.SpawnRoidRing(iceType, data)
+	end
+
+	error("Unknown Ice pattern " .. pattern)
 end
 
 local function AM_Spawn_Ice(tbl)
