@@ -34,7 +34,28 @@ local backoffTimings = {1, 5, 10, 15, 30}
 local httpTimeout = 30
 local backoffMax = backoffTimings[#backoffTimings]
 
-local function processNextRequest()
+local processNextRequest
+
+local function requeueRequest(request)
+	if request.done then
+		return
+	end
+	request.done = true
+
+	failureCount = failureCount + 1
+	requestInProgress = false
+	timer.Remove("SA_API_HTTPTimeout")
+
+	local timing = backoffTimings[failureCount] or backoffMax
+	print("Requeueing ", request.http.url, request.http.method, " for ", timing, " seconds after ", failureCount, " failures")
+	table.insert(requestQueue, 1, {
+		http = request.http,
+		done = false
+	})
+	timer.Simple(timing, processNextRequest)
+end
+
+processNextRequest = function()
 	if requestInProgress then
 		return
 	end
@@ -62,25 +83,6 @@ local function successRequest(request)
 	timer.Remove("SA_API_HTTPTimeout")
 
 	timer.Simple(0, processNextRequest)
-end
-
-local function requeueRequest(request)
-	if request.done then
-		return
-	end
-	request.done = true
-
-	failureCount = failureCount + 1
-	requestInProgress = false
-	timer.Remove("SA_API_HTTPTimeout")
-
-	local timing = backoffTimings[failureCount] or backoffMax
-	print("Requeueing ", request.http.url, request.http.method, " for ", timing, " seconds after ", failureCount, " failures")
-	table.insert(requestQueue, 1, {
-		http = request.http,
-		done = false
-	})
-	timer.Simple(timing, processNextRequest)
 end
 
 function SA.API.Request(url, method, reqBody, options, callback, retries)
