@@ -58,8 +58,8 @@ function SA.Application.Refresh()
 end
 
 function SA.Application.CreateGUI(BasePanel)
-	local ScrX = surface.ScreenWidth()
-	local ScrY = surface.ScreenHeight()
+	local ScrX = ScrW()
+	local ScrY = ScrH()
 	local bPanelGiven = true
 	if not BasePanel then
 		bPanelGiven = false

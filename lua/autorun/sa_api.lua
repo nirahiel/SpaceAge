@@ -265,7 +265,7 @@ if CLIENT then
 	net.Receive("SA_PlayerJWT", function(len, ply)
 		apiConfig.auth = "Client " .. net.ReadString()
 		local expiry = net.ReadInt(32)
-		local validTime = net.ReadInt(32)
+		local _validTime = net.ReadInt(32)
 		timer.Remove("SA_RenewJWT")
 		timer.Create("SA_RenewJWT", expiry / 2, 1, SA_API_RenewPlayerJWT)
 	end)

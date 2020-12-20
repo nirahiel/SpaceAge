@@ -34,8 +34,6 @@ end
 
 surface.CreateFont("ServerHUDFontS", { font = "Arial", size = 22, weight = 700, antialias = true, shadow = false})
 
-local ScrX = surface.ScreenWidth()
-local ScrY = surface.ScreenHeight()
 local HASH = ""
 
 local function SA_RecvFactionData(len, ply)
@@ -81,8 +79,8 @@ local function CreateTerminalGUI()
 	local font = "ServerHUDFontS"
 	surface.SetFont(font)
 	local BasePanel = vgui.Create("DFrame")
-	local x = ScrX / 2
-	local y = ScrY / 2
+	local x = ScrW() / 2
+	local y = ScrH() / 2
 	BasePanel:SetPos(x - 400, y - 350)
 	BasePanel:SetSize(800, 700)
 	BasePanel:SetTitle("Terminal v3, Powered by Intel Pentium IV 3.2 GHz Processor!")
