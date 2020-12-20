@@ -589,6 +589,8 @@ local function SA_DrawTerminalError()
 end
 hook.Add("PostRenderVGUI", "SA_DrawTerminalError", SA_DrawTerminalError)
 
+local ReloadingGoodies = false
+
 local function SA_RefreshGoodiesRecv(ply, decoded)
 	if not SA_Term_GoodieList then return end
 
@@ -601,12 +603,28 @@ local function SA_RefreshGoodiesRecv(ply, decoded)
 		SA_Term_GoodieList:AddItem(goodie)
 	end
 end
-supernet.Hook("SA_GoodieUpdate", SA_RefreshGoodiesRecv)
+
+local function SA_Goodies_Refresh()
+	if ReloadingGoodies then
+		return
+	end
+	ReloadingGoodies = true
+
+	local ply = LocalPlayer()
+	SA.API.GetPlayerGoodies(ply, function(body, code)
+		ReloadingGoodies = false
+		if code ~= 200 then
+			return
+		end
+		SA_RefreshGoodiesRecv(ply, body)
+	end)
+end
 
 local function sa_terminal_msg(len, ply)
 	local active = net.ReadBool()
 	if active then
 		SA.Application.Refresh()
+		SA_Goodies_Refresh()
 		if not SA_Term_GUI then
 			CreateTerminalGUI()
 			if not SA_Term_GUI then

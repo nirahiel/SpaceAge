@@ -345,7 +345,7 @@ local function SA_UpdateGoodies(ply, body, code)
 	for _, v in pairs(body) do
 		ply.SAGoodies[v.id] = SA.Goodies[v.type]
 	end
-	supernet.Send(ply, "SA_GoodieUpdate", body, function() ply.SendingGoodieUp = false end)
+	ply.SendingGoodieUp = false
 end
 
 local function SA_RequestUpdateGoodies(ply)

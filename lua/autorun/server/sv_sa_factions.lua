@@ -1,6 +1,5 @@
 AddCSLuaFile("autorun/client/cl_sa_application.lua")
 
-require("supernet")
 local SA_FactionData = {}
 
 local function SA_RefreshApplications(ply1, ply2)
