@@ -22,7 +22,18 @@ InitSelfApplication()
 local function SA_RefreshApplications()
 	local ply = LocalPlayer()
 	local isleader = ply:GetNWBool("isleader")
-	local faction_name = SA.Factions.Table[ply:Team()][2]
+
+	local faction = SA.Factions.Table[ply:Team()]
+	if not faction then
+		timer.Simple(1, SA_RefreshApplications)
+		return
+	end
+	local faction_name = faction[2]
+	if not faction_name then
+		timer.Simple(1, SA_RefreshApplications)
+		return
+	end
+
 	if isleader then
 		SA.API.ListFactionApplications(faction_name, function(body, code)
 			if code == 401 then
