@@ -48,5 +48,13 @@ SA.Goodies = {
 			--if ply.PLevel < 1 then ply.PLevel = 1 end
 			ply.sa_data.is_donator = true
 		end
+	},
+	test = {
+		name = "Test",
+		desc = "Test",
+		image = "SA_Research_Icon",
+		func = function(ply)
+			print("Test goodie used on", ply)
+		end
 	}
 }
