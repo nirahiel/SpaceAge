@@ -335,38 +335,18 @@ SA_UpdateInfo = function(ply, CanPass)
 end
 concommand.Add("sa_terminal_update", SA_UpdateInfo)
 
-local function SA_UpdateGoodies(ply, body, code)
-	if not SA.ValidEntity(ply) then return end
-	if code ~= 200 then
-		ply.SendingGoodieUp = false
-		return
-	end
-	ply.SAGoodies = {}
-	for _, v in pairs(body) do
-		ply.SAGoodies[v.id] = SA.Goodies[v.type]
-	end
-	ply.SendingGoodieUp = false
-end
-
-local function SA_RequestUpdateGoodies(ply)
-	if ply.SendingGoodieUp then return end
-	ply.SendingGoodieUp = true
-	SA.API.GetPlayerGoodies(ply, function(body, code) SA_UpdateGoodies(ply, body, code) end)
-end
-concommand.Add("sa_goodies_update", SA_RequestUpdateGoodies)
-
 local function SA_UseGoodie(ply, cmd, args)
 	local id = tonumber(args[1])
-	local goodie = ply.SAGoodies[id]
-	if not goodie then return end
 
-	ply.SAGoodies[id] = nil
-
-	goodie.func(ply)
-
-	SA.SaveUser(ply)
-
-	SA.API.DeletePlayerGoodie(ply, id, function() SA_RequestUpdateGoodies(ply) end)
+	SA.API.DeletePlayerGoodie(ply, id, function(body, code)
+		if code > 299 then
+			return
+		end
+		local goodie = SA.Goodies[body.type]
+		if not goodie then return end
+		goodie.func(ply)
+		SA.SaveUser(ply)
+	end)
 end
 concommand.Add("sa_goodies_use", SA_UseGoodie)
 

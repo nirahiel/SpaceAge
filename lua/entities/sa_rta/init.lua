@@ -17,7 +17,6 @@ local function OpenTerminal(ent, ply, founder)
 	SA.Terminal.SetVisible(ply, true)
 	ply:Freeze(true)
 	ply:ConCommand("sa_terminal_update")
-	ply:ConCommand("sa_goodies_update")
 end
 
 function ENT:Initialize()
