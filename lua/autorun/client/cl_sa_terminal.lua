@@ -619,6 +619,7 @@ local function SA_Goodies_Refresh()
 		SA_RefreshGoodiesRecv(ply, body)
 	end)
 end
+net.Receive("SA_GoodieUpdate", SA_Goodies_Refresh)
 
 local function sa_terminal_msg(len, ply)
 	local active = net.ReadBool()

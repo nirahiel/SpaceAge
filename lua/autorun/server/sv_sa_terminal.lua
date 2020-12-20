@@ -351,6 +351,9 @@ local function SA_UseGoodie(ply, cmd, args)
 		goodie.func(ply)
 		SA.SaveUser(ply)
 	end)
+
+	net.Start("SA_GoodieUpdate")
+	net.Send(ply)
 end
 concommand.Add("sa_goodies_use", SA_UseGoodie)
 
