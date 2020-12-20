@@ -92,13 +92,11 @@ function SA.Terminal.GetStationSize()
 end
 
 local function SendHash(ply)
-	timer.Simple(5, function()
-		net.Start("SA_LoadHash")
-			net.WriteString(HASH)
-		net.Send(ply)
-	end)
+	net.Start("SA_LoadHash")
+		net.WriteString(HASH)
+	net.Send(ply)
 end
-hook.Add("PlayerInitialSpawn", "SA_SendHash", SendHash)
+hook.Add("PlayerFullLoad", "SA_SendHash", SendHash)
 
 local function UpdateCapacity(ply)
 	local maxcap = ply.sa_data.station_storage.capacity

@@ -743,6 +743,6 @@ supernet.Hook("SA_TerminalUpdate", sa_term_update)
 local function SetHash(len, ply)
 	HASH = net.ReadString()
 	SA.SetResourceItemPanelHash(HASH)
+	print("SALH received")
 end
 net.Receive("SA_LoadHash", SetHash)
-

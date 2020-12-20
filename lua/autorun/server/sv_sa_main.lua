@@ -70,7 +70,7 @@ local function SA_InitSpawn(ply)
 
 	SA.API.GetPlayerFull(ply, function(body, code) LoadRes(ply, body, code) end)
 end
-hook.Add("PlayerInitialSpawn", "SA_LoadPlayer", SA_InitSpawn)
+hook.Add("PlayerFullLoad", "SA_LoadPlayer", SA_InitSpawn)
 
 local function SA_MapCleanInitialize()
 	local entityToRemove = SA.Config.Load("remove_entities")

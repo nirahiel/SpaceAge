@@ -43,7 +43,7 @@ local function SA_RefreshApplications()
 	end
 end
 net.Receive("SA_Applications_Refresh", SA_RefreshApplications)
-timer.Simple(1, SA_RefreshApplications)
+hook.Add("InitPostEntity", "SA_Applications_Refresh_InitPostEntity", SA_RefreshApplications)
 
 local ApplyText, PTimeLBL, ScoreLBL, SelFCombo, SelAppIndex
 
@@ -91,11 +91,11 @@ function SA.Application.CreateGUI(BasePanel)
 		BPanel:SetPos(0, 25)
 		BPanel:SetSize(BasePanel:GetWide(), BasePanel:GetTall() - 25)
 	end
-	local plisleader = LocalPlayer():GetNWBool("isleader")
+	local isleader = LocalPlayer():GetNWBool("isleader")
 
 	ApplyText = vgui.Create("DTextEntry", BasePanel)
 
-	if not plisleader then
+	if not isleader then
 		ApplyText:SetValue(SA.Application.Me.text or defaultText)
 	end
 
@@ -108,7 +108,7 @@ function SA.Application.CreateGUI(BasePanel)
 	SelFCombo:SetPos(15, 60)
 	SelFCombo:SetSize(BasePanel:GetWide() - 40, 20)
 
-	if not plisleader then
+	if not isleader then
 		ApplyText:SetPos(15, 85)
 		ApplyText:SetSize(BasePanel:GetWide() - 40, 410)
 		ApplyText:SetUpdateOnType(true)
