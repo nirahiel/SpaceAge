@@ -39,6 +39,16 @@ local backoffMax = backoffTimings[#backoffTimings]
 
 local processNextRequest
 
+local function SetRequestHeaders(request)
+	local headers = {}
+	if not request.options.noauth then
+		headers.Authorization = apiConfig.auth
+	end
+	headers["Client-ID"] = clientID or "N/A"
+
+	request.http.headers = headers
+end
+
 local function requeueRequest(request)
 	if request.done then
 		return
@@ -50,9 +60,11 @@ local function requeueRequest(request)
 	timer.Remove("SA_API_HTTPTimeout")
 
 	local timing = backoffTimings[failureCount] or backoffMax
+	SetRequestHeaders(request.http)
 	print("Requeueing ", request.http.url, request.http.method, " for ", timing, " seconds after ", failureCount, " failures")
 	table.insert(requestQueue, 1, {
 		http = request.http,
+		options = request.options,
 		done = false
 	})
 	timer.Simple(timing, processNextRequest)
@@ -96,14 +108,7 @@ function SA.API.Request(url, method, reqBody, options, callback, retries)
 		options = {}
 	end
 
-	local headers = {}
-	if not options.noauth then
-		headers.Authorization = apiConfig.auth
-	end
-	headers["Client-ID"] = clientID or "N/A"
-
 	local httprequest = {
-		headers = headers,
 		method = method or "GET",
 		url = apiConfig.url .. url,
 		type = "application/json",
@@ -112,8 +117,10 @@ function SA.API.Request(url, method, reqBody, options, callback, retries)
 
 	local request = {
 		http = httprequest,
+		options = options,
 		done = false
 	}
+	SetRequestHeaders(request)
 
 	httprequest.failure = function(_err)
 		requeueRequest(request)
