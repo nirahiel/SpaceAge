@@ -1,5 +1,7 @@
 SA.API = {}
 
+local JWT_VALID_TIME = 1800
+
 local MakeUserAgent
 
 local function CommonUserAgent(side)
@@ -139,6 +141,7 @@ function SA.API.Request(url, method, reqBody, options, callback, retries)
 	processNextRequest()
 end
 
+-- Request generate helper functions
 local bodyless = {"Get", "Head", "Delete", "Options"}
 local bodyful = {"Post", "Patch", "Put"}
 
@@ -197,7 +200,7 @@ function SA.API.GetPlayer(ply, callback)
 end
 
 function SA.API.GetPlayerFull(ply, callback)
-	return SA.API.Get(MakePlayerURL(ply) .. "/full", callback)
+	return SA.API.Get(MakePlayerResURL(ply, "full"), callback)
 end
 
 function SA.API.UpsertPlayer(ply, callback)
@@ -233,4 +236,39 @@ end
 
 function SA.API.AcceptFactionApplication(faction, steamid, callback)
 	return SA.API.Post(MakeFactionResIDURL(faction, "applications", steamid) .. "/accept", {}, callback)
+end
+
+
+-- Player auth handling
+if SERVER then
+	local function SA_API_MakePlayerJWT(ply, callback)
+		return SA.API.Post(MakePlayerResURL(ply, "jwt"), {valid_time = JWT_VALID_TIME}, callback)
+	end
+
+	local function SA_API_MakePlayerTokenCMD(ply)
+		SA_API_MakePlayerJWT(ply, function (data)
+			net.Start("SA_PlayerJWT")
+				net.WriteString(data.token)
+				net.WriteInt(data.expiry, 32)
+				net.WriteInt(JWT_VALID_TIME, 32)
+			net.Send(ply)
+		end)
+	end
+
+	concommand.Add("sa_api_player_maketoken", SA_API_MakePlayerTokenCMD)
+end
+
+if CLIENT then
+	local function SA_API_RenewPlayerJWT()
+		RunConsoleCommand("sa_api_player_maketoken")
+	end
+	net.Receive("SA_PlayerJWT", function(len, ply)
+		apiConfig.auth = "Client " .. net.ReadString()
+		local expiry = net.ReadInt(32)
+		local validTime = net.ReadInt(32)
+		timer.Remove("SA_RenewJWT")
+		timer.Create("SA_RenewJWT", expiry / 2, SA_API_RenewPlayerJWT)
+	end)
+
+	timer.Simple(0, SA_API_RenewPlayerJWT)
 end
