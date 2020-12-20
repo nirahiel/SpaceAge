@@ -38,6 +38,7 @@ local function SA_RefreshApplications()
 		SA.API.ListFactionApplications(faction_name, function(body, code)
 			if code == 401 then
 				timer.Simple(5, SA_RefreshApplications)
+				return
 			end
 			if code == 404 then
 				body = {}
@@ -49,6 +50,7 @@ local function SA_RefreshApplications()
 		SA.API.GetPlayerApplication(ply, function(body, code)
 			if code == 401 then
 				timer.Simple(5, SA_RefreshApplications)
+				return
 			end
 			if code == 404 then
 				body = {}
