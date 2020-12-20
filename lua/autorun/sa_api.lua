@@ -62,8 +62,10 @@ local function requeueRequest(request)
 	setRequestParams(newRequest)
 	print("Requeueing ", newRequest.http.url, newRequest.http.method, " for ", timing, " seconds after ", failureCount, " failures")
 
-	table.insert(requestQueue, 1, newRequest)
-	timer.Simple(timing, processNextRequest)
+	timer.Simple(timing, function()
+		table.insert(requestQueue, newRequest)
+		processNextRequest()
+	end)
 end
 
 processNextRequest = function()
