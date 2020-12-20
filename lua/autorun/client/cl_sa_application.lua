@@ -60,7 +60,7 @@ local function SA_RefreshApplications()
 	end
 end
 net.Receive("SA_Applications_Refresh", SA_RefreshApplications)
-hook.Add("InitPostEntity", "SA_Applications_Refresh_InitPostEntity", SA_RefreshApplications)
+hook.Add("SA_PlayerLoaded", "SA_Applications_Refresh_PlayerLoaded", SA_RefreshApplications)
 
 local ApplyText, PTimeLBL, ScoreLBL, SelFCombo, SelAppIndex
 

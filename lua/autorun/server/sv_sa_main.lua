@@ -188,6 +188,8 @@ LoadRes = function(ply, body, code)
 	if ply.sa_data.loaded then
 		ply:Spawn()
 	end
+
+	hook.Run("SA_PlayerLoaded", ply)
 end
 
 function SA.SaveUser(ply, isautosave)

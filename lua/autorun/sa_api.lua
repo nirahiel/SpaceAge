@@ -292,5 +292,5 @@ if CLIENT then
 		timer.Create("SA_RenewJWT", expiry / 2, 1, SA_API_RenewPlayerJWT)
 	end)
 
-	hook.Add("InitPostEntity", "SA_API_RenewPlayerJWT_InitPostEntity", SA_API_RenewPlayerJWT)
+	hook.Add("SA_PlayerLoaded", "SA_API_RenewPlayerJWT_InitPostEntity", SA_API_RenewPlayerJWT)
 end
