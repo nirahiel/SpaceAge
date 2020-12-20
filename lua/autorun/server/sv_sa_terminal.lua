@@ -340,10 +340,14 @@ local function SA_UseGoodie(ply, cmd, args)
 
 	SA.API.DeletePlayerGoodie(ply, id, function(body, code)
 		if code > 299 then
+			print(ply, "tried to use goodie", id, "and got code", code)
 			return
 		end
 		local goodie = SA.Goodies[body.type]
-		if not goodie then return end
+		if not goodie then
+			print(ply, "tried to use goodie", id, "and got unknown type", body.type)
+			return
+		end
 		goodie.func(ply)
 		SA.SaveUser(ply)
 	end)
