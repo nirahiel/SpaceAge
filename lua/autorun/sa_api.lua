@@ -267,7 +267,7 @@ if CLIENT then
 		local expiry = net.ReadInt(32)
 		local validTime = net.ReadInt(32)
 		timer.Remove("SA_RenewJWT")
-		timer.Create("SA_RenewJWT", expiry / 2, SA_API_RenewPlayerJWT)
+		timer.Create("SA_RenewJWT", expiry / 2, 1, SA_API_RenewPlayerJWT)
 	end)
 
 	timer.Simple(0, SA_API_RenewPlayerJWT)
