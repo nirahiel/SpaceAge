@@ -3,6 +3,22 @@ AddCSLuaFile("autorun/client/cl_sa_application.lua")
 require("supernet")
 local SA_FactionData = {}
 
+local function SA_RefreshApplications(ply1, ply2)
+	local plys
+	if ply1 and ply2 then
+		plys = {ply1, ply2}
+	else if ply1 then
+		plys = ply1
+	else if ply2 then
+		plys = ply2
+	else
+		return
+	end
+
+	net.Start("SA_Applications_Refresh")
+	net.Send(plys)
+end
+
 local function SetFactionSpawn(tbl)
 	local ent = {}
 	for _, pos in ipairs(tbl) do
@@ -107,14 +123,13 @@ local function DoApplyFactionResRes(ply, ffid, code)
 		return
 	end
 
-	local toPlayers = {}
 	for k, v in pairs(player.GetAll()) do
 		if v.sa_data.is_faction_leader and v:Team() == ffid then
-			table.insert(toPlayers, v)
+			plyLeader = v
+			break
 		end
 	end
-	table.insert(toPlayers, ply)
-	SA.Factions.RefreshApplications(toPlayers)
+	SA_RefreshApplications(ply, plyLeader)
 	ply:SendLua("SA.Application.Close()")
 end
 
@@ -149,7 +164,7 @@ local function SA_DoAcceptPlayer(ply, cmd, args)
 	local trgPly = player.GetBySteamID(steamId)
 
 	SA.API.AcceptFactionApplication(factionName, steamId, function(_body, code)
-		SA.Factions.RefreshApplications({ply,trgPly})
+		SA_RefreshApplications(ply, trgPly)
 
 		-- TODO: Reload player on error codes
 		if code > 299 then
@@ -178,39 +193,7 @@ local function SA_DoDenyPlayer(ply, cmd, args)
 	local trgPly = player.GetBySteamID(steamId)
 
 	SA.API.DeleteFactionApplication(factionName, steamId, function(_body, _code)
-		SA.Factions.RefreshApplications({ply, trgPly})
+		SA_RefreshApplications(ply, trgPly)
 	end)
 end
 concommand.Add("sa_application_deny", SA_DoDenyPlayer)
-
-function SA.Factions.RefreshApplications(plys)
-	if not plys then
-		plys = player.GetHumans()
-	end
-	if plys.IsPlayer and plys:IsPlayer() then
-		plys = {plys}
-	end
-
-	for _, xply in pairs(plys) do
-		local ply = xply
-		if ply then
-			if ply.sa_data.is_faction_leader then
-				SA.API.ListFactionApplications(ply.sa_data.faction_name, function(body, code)
-					if code == 404 then
-						supernet.Send(ply, "SA_Applications_Faction", {})
-						return
-					end
-					supernet.Send(ply, "SA_Applications_Faction", body)
-				end)
-			else
-				SA.API.GetPlayerApplication(ply, function(body, code)
-					if code == 404 then
-						supernet.Send(ply, "SA_Applications_Player", {})
-						return
-					end
-					supernet.Send(ply, "SA_Applications_Player", body)
-				end)
-			end
-		end
-	end
-end

@@ -1,7 +1,5 @@
 include("shared.lua")
 
-require("supernet")
-
 ENT.RenderGroup = RENDERGROUP_BOTH
 
 ENT.allowDraw = false

@@ -119,7 +119,7 @@ function SA.API.Request(url, method, reqBody, options, callback, retries)
 	end
 
 	httprequest.success = function(code, body, _headers)
-		if code > 499 then
+		if code > 499 or code == 401 then
 			return requeueRequest(request)
 		end
 

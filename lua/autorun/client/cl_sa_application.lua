@@ -1,7 +1,5 @@
 local AppPanel = nil
 
-require("supernet")
-
 local defaultText = "Hi"
 local defaultFaction = "miners"
 
@@ -21,27 +19,40 @@ local function InitSelfApplication()
 end
 InitSelfApplication()
 
-local function SA_Applications_Player(ply, data)
-	SA.Application.Me = data
-	InitSelfApplication()
-	SA.Application.Refresh()
+local function SA_RefreshApplications()
+	local ply = LocalPlayer()
+	local isleader = ply:GetNWBool("isleader")
+	local faction_name = SA.Factions.Table[ply:Team()][2]
+	if isleader then
+		SA.API.ListFactionApplications(faction_name, function(body, code)
+			if code == 404 then
+				body = {}
+			end
+			SA.Application.Table = body
+			SA.Application.Refresh()
+		end)
+	else
+		SA.API.GetPlayerApplication(ply, function(body, code)
+			if code == 404 then
+				body = {}
+			end
+			SA.Application.Me = body
+			InitSelfApplication()
+			SA.Application.Refresh()
+		end)
+	end
 end
-supernet.Hook("SA_Applications_Player", SA_Applications_Player)
-
-local function SA_Applications_Faction(ply, data)
-	SA.Application.Table = data
-	SA.Application.Refresh()
-end
-supernet.Hook("SA_Applications_Faction", SA_Applications_Faction)
+net.Receive("SA_Applications_Refresh", SA_RefreshApplications)
+timer.Simple(1, SA_RefreshApplications)
 
 local ApplyText, PTimeLBL, ScoreLBL, SelFCombo, SelAppIndex
 
 function SA.Application.Refresh()
 	if not (PTimeLBL and ScoreLBL and ApplyText and SelFCombo) then return end
 
-	local plisleader = LocalPlayer():GetNWBool("isleader")
+	local isleader = LocalPlayer():GetNWBool("isleader")
 
-	if plisleader then
+	if isleader then
 		local fValue = false
 		SelFCombo:Clear()
 		for k, v in pairs(SA.Application.Table) do

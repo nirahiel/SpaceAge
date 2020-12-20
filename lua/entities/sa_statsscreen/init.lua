@@ -2,8 +2,6 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
-require("supernet")
-
 ENT.WireDebugName = "SpaceAge Stats Display"
 
 function ENT:SpawnFunction(ply, tr)
