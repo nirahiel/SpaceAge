@@ -70,6 +70,7 @@ local function requeueRequest(request)
 	SetRequestHeaders(newRequest)
 	print("Requeueing ", newRequest.http.url, newRequest.http.method, " for ", timing, " seconds after ", failureCount, " failures")
 	table.insert(requestQueue, 1, newRequest)
+
 	timer.Simple(timing, processNextRequest)
 end
 
@@ -125,12 +126,14 @@ function SA.API.Request(url, method, reqBody, options, callback, retries)
 	}
 	SetRequestHeaders(request)
 
-	httprequest.failure = function(_err)
+	httprequest.failure = function(err)
+		print("Request ", newRequest.http.url, newRequest.http.method, " failed with error ", err)
 		requeueRequest(request)
 	end
 
 	httprequest.success = function(code, body, _headers)
 		if code > 499 or (code == 401 and JWT_IN_RENEWAL) then
+			print("Request ", newRequest.http.url, newRequest.http.method, " failed with code ", code)
 			return requeueRequest(request)
 		end
 
