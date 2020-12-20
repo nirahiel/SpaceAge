@@ -599,7 +599,7 @@ local function SA_RefreshGoodiesRecv(ply, decoded)
 	for _, v in pairs(decoded) do
 		goodie = vgui.Create("SA_Terminal_Goodie")
 		goodie:SetSize(700, 74)
-		goodie:SetNameDescID(v.intid, v.id)
+		goodie:SetNameDescID(v.type, v.id)
 		SA_Term_GoodieList:AddItem(goodie)
 	end
 end

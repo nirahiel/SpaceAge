@@ -36,12 +36,12 @@ function PANEL:Init()
 	end
 end
 
-function PANEL:SetNameDescID(intid, goodieid)
-	intid = SA.Goodies[intid]
-	self.GoodieName:SetText(intid.name)
-	self.GoodieDesc:SetText(intid.desc)
+function PANEL:SetNameDescID(goodietype, goodieid)
+	local goodie = SA.Goodies[goodietype]
+	self.GoodieName:SetText(goodie.name)
+	self.GoodieDesc:SetText(goodie.desc)
 	self.GoodieID = goodieid
-	self.Image:SetImage("spaceage/" .. intid.image)
+	self.Image:SetImage("spaceage/" .. goodie.image)
 end
 
 function PANEL:Paint(w, h)
