@@ -60,13 +60,16 @@ local function requeueRequest(request)
 	timer.Remove("SA_API_HTTPTimeout")
 
 	local timing = backoffTimings[failureCount] or backoffMax
-	SetRequestHeaders(request.http)
-	print("Requeueing ", request.http.url, request.http.method, " for ", timing, " seconds after ", failureCount, " failures")
-	table.insert(requestQueue, 1, {
+
+	local newRequest = {
 		http = request.http,
 		options = request.options,
 		done = false
-	})
+	}
+
+	SetRequestHeaders(newRequest)
+	print("Requeueing ", newRequest.http.url, newRequest.http.method, " for ", timing, " seconds after ", failureCount, " failures")
+	table.insert(requestQueue, 1, newRequest)
 	timer.Simple(timing, processNextRequest)
 end
 
