@@ -1,6 +1,7 @@
 SA.API = {}
 
 local JWT_VALID_TIME = 1800
+local JWT_IN_RENEWAL = true
 
 local MakeUserAgent
 
@@ -119,7 +120,7 @@ function SA.API.Request(url, method, reqBody, options, callback, retries)
 	end
 
 	httprequest.success = function(code, body, _headers)
-		if code > 499 or code == 401 then
+		if code > 499 or (code == 401 and JWT_IN_RENEWAL) then
 			return requeueRequest(request)
 		end
 
@@ -260,12 +261,14 @@ end
 
 if CLIENT then
 	local function SA_API_RenewPlayerJWT()
+		JWT_IN_RENEWAL = true
 		RunConsoleCommand("sa_api_player_maketoken")
 	end
 	net.Receive("SA_PlayerJWT", function(len, ply)
 		apiConfig.auth = "Client " .. net.ReadString()
 		local expiry = net.ReadInt(32)
 		local _validTime = net.ReadInt(32)
+		JWT_IN_RENEWAL = false
 		timer.Remove("SA_RenewJWT")
 		timer.Create("SA_RenewJWT", expiry / 2, 1, SA_API_RenewPlayerJWT)
 	end)

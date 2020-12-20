@@ -25,6 +25,9 @@ local function SA_RefreshApplications()
 	local faction_name = SA.Factions.Table[ply:Team()][2]
 	if isleader then
 		SA.API.ListFactionApplications(faction_name, function(body, code)
+			if code == 401 then
+				timer.Simple(5, SA_RefreshApplications)
+			end
 			if code == 404 then
 				body = {}
 			end
@@ -33,6 +36,9 @@ local function SA_RefreshApplications()
 		end)
 	else
 		SA.API.GetPlayerApplication(ply, function(body, code)
+			if code == 401 then
+				timer.Simple(5, SA_RefreshApplications)
+			end
 			if code == 404 then
 				body = {}
 			end
