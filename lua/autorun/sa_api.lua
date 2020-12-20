@@ -38,16 +38,7 @@ local httpTimeout = 30
 local backoffMax = backoffTimings[#backoffTimings]
 
 local processNextRequest
-
-local function SetRequestHeaders(request)
-	local headers = {}
-	if not request.options.noauth then
-		headers.Authorization = apiConfig.auth
-	end
-	headers["Client-ID"] = clientID or "N/A"
-
-	request.http.headers = headers
-end
+local setRequestParams
 
 local function requeueRequest(request)
 	if request.done then
@@ -64,13 +55,14 @@ local function requeueRequest(request)
 	local newRequest = {
 		http = request.http,
 		options = request.options,
+		callback = request.callback,
 		done = false
 	}
 
-	SetRequestHeaders(newRequest)
+	setRequestParams(newRequest)
 	print("Requeueing ", newRequest.http.url, newRequest.http.method, " for ", timing, " seconds after ", failureCount, " failures")
-	table.insert(requestQueue, 1, newRequest)
 
+	table.insert(requestQueue, 1, newRequest)
 	timer.Simple(timing, processNextRequest)
 end
 
@@ -87,6 +79,7 @@ processNextRequest = function()
 	HTTP(request.http)
 
 	timer.Create("SA_API_HTTPTimeout", httpTimeout, 1, function()
+		print("Request ", request.http.url, request.http.method, " failed with timeout")
 		requeueRequest(request)
 	end)
 end
@@ -102,6 +95,42 @@ local function successRequest(request)
 	timer.Remove("SA_API_HTTPTimeout")
 
 	timer.Simple(0, processNextRequest)
+end
+
+setRequestParams = function(request)
+	local headers = {}
+	local callback = request.callback
+
+	if not request.options.noauth then
+		headers.Authorization = apiConfig.auth
+	end
+	headers["Client-ID"] = clientID or "N/A"
+
+	request.http.headers = headers
+
+	request.http.failure = function(err)
+		print("Request ", request.http.url, request.http.method, " failed with error ", err)
+		requeueRequest(request)
+	end
+
+	request.http.success = function(code, body, _headers)
+		if code > 499 or (code == 401 and JWT_IN_RENEWAL) then
+			print("Request ", request.http.url, request.http.method, " failed with code ", code)
+			return requeueRequest(request)
+		end
+
+		successRequest(request)
+
+		if not callback then
+			return
+		end
+
+		if body then
+			body = util.JSONToTable(body)
+		end
+
+		callback(body, code)
+	end
 end
 
 function SA.API.Request(url, method, reqBody, options, callback, retries)
@@ -122,33 +151,10 @@ function SA.API.Request(url, method, reqBody, options, callback, retries)
 	local request = {
 		http = httprequest,
 		options = options,
+		callback = callback,
 		done = false
 	}
-	SetRequestHeaders(request)
-
-	httprequest.failure = function(err)
-		print("Request ", request.http.url, request.http.method, " failed with error ", err)
-		requeueRequest(request)
-	end
-
-	httprequest.success = function(code, body, _headers)
-		if code > 499 or (code == 401 and JWT_IN_RENEWAL) then
-			print("Request ", request.http.url, request.http.method, " failed with code ", code)
-			return requeueRequest(request)
-		end
-
-		successRequest(request)
-
-		if not callback then
-			return
-		end
-
-		if body then
-			body = util.JSONToTable(body)
-		end
-
-		callback(body, code)
-	end
+	setRequestParams(request)
 
 	table.insert(requestQueue, request)
 
