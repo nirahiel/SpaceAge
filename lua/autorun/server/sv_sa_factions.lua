@@ -7,9 +7,9 @@ local function SA_RefreshApplications(ply1, ply2)
 	local plys
 	if ply1 and ply2 then
 		plys = {ply1, ply2}
-	else if ply1 then
+	elseif ply1 then
 		plys = ply1
-	else if ply2 then
+	elseif ply2 then
 		plys = ply2
 	else
 		return
