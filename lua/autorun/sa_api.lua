@@ -248,7 +248,7 @@ function SA.API.GetPlayerGoodies(ply, callback)
 end
 
 function SA.API.UsePlayerGoodie(ply, id, callback)
-	return SA.API.Post(MakePlayerResIDResURL(ply, "goodies", id, "use"), callback)
+	return SA.API.Post(MakePlayerResIDResURL(ply, "goodies", id, "use"), {}, callback)
 end
 
 -- FACTION -> APPLICATION functions
