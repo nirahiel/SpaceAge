@@ -193,6 +193,10 @@ local function MakePlayerResIDURL(ply, res, id)
 	return MakePlayerResURL(ply, res) .. "/" .. id
 end
 
+local function MakePlayerResIDResURL(ply, res, id, res2)
+	return MakePlayerResIDURL(ply, res, id) .. "/" .. res2
+end
+
 local function MakeFactionURL(faction)
 	return "/factions/" .. faction
 end
@@ -243,8 +247,8 @@ function SA.API.GetPlayerGoodies(ply, callback)
 	return SA.API.Get(MakePlayerResURL(ply, "goodies"), callback)
 end
 
-function SA.API.DeletePlayerGoodie(ply, id, callback)
-	return SA.API.Delete(MakePlayerResIDURL(ply, "goodies", id), callback)
+function SA.API.UsePlayerGoodie(ply, id, callback)
+	return SA.API.Post(MakePlayerResIDResURL(ply, "goodies", id, "use"), callback)
 end
 
 -- FACTION -> APPLICATION functions
