@@ -338,7 +338,7 @@ concommand.Add("sa_terminal_update", SA_UpdateInfo)
 local function SA_UseGoodie(ply, cmd, args)
 	local id = tonumber(args[1])
 
-	SA.API.DeletePlayerGoodie(ply, id, function(body, code)
+	SA.API.UsePlayerGoodie(ply, id, function(body, code)
 		if code > 299 then
 			print(ply, "tried to use goodie", id, "and got code", code)
 			return
