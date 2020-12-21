@@ -67,10 +67,6 @@ end
 hook.Add("SA_StatsUpdate", "SA_Term_UpdateStats", SA_Term_UpdateStats)
 
 local function CreateTerminalGUI()
-	if not LocalPlayer():GetNWBool("isloaded") then
-		return
-	end
-	timer.Remove("SA_RecreateTermGUI")
 	if SA_Term_GUI and SA_Term_GUI.Close then
 		SA_Term_GUI:SetDeleteOnClose(true)
 		SA_Term_GUI:Close()
@@ -573,7 +569,7 @@ local function CreateTerminalGUI()
 	BasePanel:MakePopup()
 	BasePanel:SetVisible(false)
 end
-timer.Create("SA_RecreateTermGUI", 1, 0, CreateTerminalGUI)
+hook.Add("SA_PlayerLoaded", "SA_RecreateTermGUI", CreateTerminalGUI)
 
 local function SA_DrawTerminalError()
 	if (SA_ErrorAlpha > 0) then
