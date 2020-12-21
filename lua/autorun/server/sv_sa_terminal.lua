@@ -339,21 +339,25 @@ local function SA_UseGoodie(ply, cmd, args)
 	local id = tonumber(args[1])
 
 	SA.API.UsePlayerGoodie(ply, id, function(body, code)
+		net.Start("SA_GoodieUpdate")
+		net.Send(ply)
+
 		if code > 299 then
 			print(ply, "tried to use goodie", id, "and got code", code)
 			return
 		end
+
 		local goodie = SA.Goodies[body.type]
 		if not goodie then
 			print(ply, "tried to use goodie", id, "and got unknown type", body.type)
 			return
 		end
+
+		print(ply, "used goodie type", body.type)
+
 		goodie.func(ply)
 		SA.SaveUser(ply)
 	end)
-
-	net.Start("SA_GoodieUpdate")
-	net.Send(ply)
 end
 concommand.Add("sa_goodies_use", SA_UseGoodie)
 
