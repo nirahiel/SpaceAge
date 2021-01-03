@@ -10,7 +10,7 @@ local function CommonUserAgent(side)
 end
 
 local apiConfig = SA.Config.Load("api", true) or {}
-apiConfig.url = apiConfig.url or "https://spaceage-api.doridian.net/v2"
+apiConfig.url = apiConfig.url or "https://api.spaceage.mp/v2"
 
 if SERVER then
 	AddCSLuaFile()
