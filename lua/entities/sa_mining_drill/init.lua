@@ -6,7 +6,7 @@ include("shared.lua")
 DEFINE_BASECLASS("base_rd3_entity")
 
 function ENT:GetPlayerLevel(ply)
-	return ply.sa_data.research.tiberium_drill_yield[MinTibDrillMod + 1]
+	return ply.sa_data.research.tiberium_drill_yield[self.MinTibDrillMod + 1]
 end
 
 local RD = CAF.GetAddon("Resource Distribution")
