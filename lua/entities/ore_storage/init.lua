@@ -7,13 +7,8 @@ DEFINE_BASECLASS("base_rd3_entity")
 
 local RD = CAF.GetAddon("Resource Distribution")
 
-ENT.ForcedModel = "models/slyfo/sat_resourcetank.mdl"
-ENT.MinOreManage = 0
-ENT.StorageOffset = 50000
-ENT.StorageIncrement = 5000
-
 function ENT:GetPlayerLevel(ply)
-	return ply.sa_data.research.ore_storage_capacity[1]
+	return ply.sa_data.research.ore_storage_capacity[self.MinOreManage + 1]
 end
 
 function ENT:Initialize()
