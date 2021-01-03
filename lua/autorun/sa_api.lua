@@ -1,6 +1,6 @@
 SA.API = {}
 
-local JWT_VALID_TIME = 1800
+local JWT_VALID_TIME = 7200
 local JWT_IN_RENEWAL = true
 
 local MakeUserAgent
@@ -291,11 +291,11 @@ if CLIENT then
 	end
 	net.Receive("SA_PlayerJWT", function(len, ply)
 		apiConfig.auth = "Client " .. net.ReadString()
-		local expiry = net.ReadInt(32)
-		local _validTime = net.ReadInt(32)
+		local _expiry = net.ReadInt(32)
+		local validTime = net.ReadInt(32)
 		JWT_IN_RENEWAL = false
 		timer.Remove("SA_RenewJWT")
-		timer.Create("SA_RenewJWT", expiry / 2, 1, SA_API_RenewPlayerJWT)
+		timer.Create("SA_RenewJWT", validTime / 2, 1, SA_API_RenewPlayerJWT)
 	end)
 
 	hook.Add("SA_PlayerLoaded", "SA_API_RenewPlayerJWT_InitPostEntity", SA_API_RenewPlayerJWT)
