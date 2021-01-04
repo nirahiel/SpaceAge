@@ -100,7 +100,8 @@ SA_AddResearch(Research Name,
 			Description,
 			Pre-Requisite,
 			Position on List,
-			Class types to update with new values)
+			Class types to update with new values,
+			icon)
 ]]
 
 SA_AddResearch("ore_laser_yield[1]", "Asteroid Mining", "Augmented Mining Lasers I", 300, 10000, 25, "Each rank increases the amount of ore mined by the MkI laser by 6.25 a second.", "none", {}, 1, {"sa_mining_laser"}, "laser_icon_i.png")
@@ -132,5 +133,5 @@ SA_AddResearch("ice_product_storage_level", "Ice Mining", "Ice Product Storages"
 for k, v in pairs(ResearchIcons) do
 	--resource.AddFile("materials/spaceage/" .. k .. ".vmt")
 	--resource.AddFile("materials/spaceage/" .. k .. ".vmf")
-	resource.AddFile("materials/spaceage/" .. k .. ".png")
+	resource.AddFile("materials/spaceage/" .. k)
 end
