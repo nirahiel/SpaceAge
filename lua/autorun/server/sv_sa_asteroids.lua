@@ -14,14 +14,14 @@ SA.Asteroids.MaxCount = 0
 local SA_Roid_Count = 0
 
 function SA.Asteroids.OnRemove(ent)
-	if (ent.RespOnRemove == true) then
+	if ent.RespOnRemove == true then
 		ent.RespOnRemove = false
 		SA_Roid_Count = SA_Roid_Count - 1
 	end
 end
 
 local function SpawnAsteroid(model, pos, size)
-	if (SA_Roid_Count >= SA.Asteroids.MaxCount) then
+	if SA_Roid_Count >= SA.Asteroids.MaxCount then
 		return
 	end
 	SA_Roid_Count = SA_Roid_Count + 1
@@ -81,7 +81,7 @@ local LastSpawn = 0
 timer.Create("SA_AsteroidReplenishment", 1, 0, function()
 	if SA_Roid_Count >= SA.Asteroids.MaxCount then return end
 	local DelayFactor = (SA_Roid_Count ^ 2) / 10
-	if ((LastSpawn + DelayFactor) < CurTime()) then
+	if (LastSpawn + DelayFactor) < CurTime() then
 		CreateAsteroids(1)
 		LastSpawn = CurTime()
 	end
