@@ -268,7 +268,7 @@ end
 -- Player auth handling
 if SERVER then
 	local function SA_API_MakePlayerJWT(ply, callback)
-		return SA.API.Post(MakePlayerResURL(ply, "jwt"), {valid_time = JWT_VALID_TIME}, callback)
+		return SA.API.Post(MakePlayerResURL(ply, "jwt"), {}, callback)
 	end
 
 	local function SA_API_MakePlayerTokenCMD(ply)
@@ -276,7 +276,7 @@ if SERVER then
 			net.Start("SA_PlayerJWT")
 				net.WriteString(data.token)
 				net.WriteInt(data.expiry, 32)
-				net.WriteInt(JWT_VALID_TIME, 32)
+				net.WriteInt(data.valid_time, 32)
 			net.Send(ply)
 		end)
 	end
