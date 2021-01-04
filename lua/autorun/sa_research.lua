@@ -130,8 +130,8 @@ SA_AddResearch("ice_laser_level", "Ice Mining", "Ice Lasers", 2, 1000000000, 150
 SA_AddResearch("ice_raw_storage_level", "Ice Mining", "Ice Storages", 4, 300000000, 150, "Allows using better raw Ice Storages.", "none", {}, 3, {}, "storage_icon_research.png")
 SA_AddResearch("ice_product_storage_level", "Ice Mining", "Ice Product Storages", 6, 300000000, 150, "Allows using better ice product storages.", "none", {}, 4, {}, "storage_icon_research.png")
 
-for k, v in pairs(ResearchIcons) do
-	--resource.AddFile("materials/spaceage/" .. k .. ".vmt")
-	--resource.AddFile("materials/spaceage/" .. k .. ".vmf")
-	resource.AddFile("materials/spaceage/" .. k)
+if SERVER then
+	for k, v in pairs(ResearchIcons) do
+		resource.AddFile("materials/spaceage/" .. k)
+	end
 end
