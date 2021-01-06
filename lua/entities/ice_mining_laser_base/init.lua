@@ -115,19 +115,3 @@ function ENT:TriggerInput(iname, value)
 		end
 	end
 end
-
-function ENT:PreEntityCopy()
-	RD.BuildDupeInfo(self)
-	local DupeInfo = self:BuildDupeInfo()
-	if DupeInfo then
-		duplicator.StoreEntityModifier(self, "WireDupeInfo", DupeInfo)
-	end
-end
-
-function ENT:PostEntityPaste(ply, Ent, CreatedEntities)
-	RD.ApplyDupeInfo(Ent, CreatedEntities)
-	if Ent.EntityMods and Ent.EntityMods.WireDupeInfo then
-		self.Owner = ply
-		Ent:ApplyDupeInfo(ply, Ent, Ent.EntityMods.WireDupeInfo, function(id) return CreatedEntities[id] end)
-	end
-end
