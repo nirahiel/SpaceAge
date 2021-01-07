@@ -6,6 +6,10 @@ if SERVER then
 	AddCSLuaFile()
 end
 
+function bool_to_number(val)
+	return val and 1 or 0
+end
+
 if not SA then
 	SA = {}
 end

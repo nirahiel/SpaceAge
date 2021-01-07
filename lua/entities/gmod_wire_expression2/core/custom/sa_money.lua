@@ -36,7 +36,8 @@ e2function number entity:payCredits(amount)
 	return bool_to_number(SA.GiveCredits.Confirm(this, self.player, amount,
 		function(resultTable, allowed)
 			callMyselfGive(self, resultTable, allowed)
-		end))
+		end)
+	)
 end
 
 e2function number entity:credits()
