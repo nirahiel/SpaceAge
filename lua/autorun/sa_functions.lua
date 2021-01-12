@@ -52,5 +52,7 @@ function SA.ValidEntity(ent)
 end
 
 function SA.IsInsideMap(vector)
-	return vector.x >= 0 and vector.y >= 0 and vector.z >= 0 and vector.x <= 32768 and vector.y <= 32768 and vector.z <= 32768
+	local ok = vector.x >= 0 and vector.y >= 0 and vector.z >= 0 and vector.x <= 32768 and vector.y <= 32768 and vector.z <= 32768
+	print(vector, ok)
+	return ok
 end
