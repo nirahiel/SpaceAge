@@ -738,9 +738,9 @@ local function sa_term_update(ply, tbl)
 			local total = base + (inc * rank)
 			total = total * (SA_DevLimitLevel * SA_DevLimitLevel)
 			if group == "legion" or group == "alliance" then
-				total = math.ceil(total * 0.75)
+				total = math.ceil(total * 0.66)
 			elseif group == "starfleet" then
-				total = math.ceil(total * 0.9175)
+				total = math.ceil(total * 0.88)
 			end
 			cost = "Cost: " .. SA.AddCommasToInt(total)
 		end
