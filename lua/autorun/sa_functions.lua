@@ -51,10 +51,8 @@ function SA.ValidEntity(ent)
 	return ent and ent:IsValid()
 end
 
-local MAP_MIN = -16384
-local MAX_MAX = 16384
 function SA.IsInsideMap(vector)
-	local ok = vector.x >= MAP_MIN and vector.y >= MAP_MIN and vector.z >= MAP_MIN and vector.x <= MAX_MAX and vector.y <= MAX_MAX and vector.z <= MAX_MAX
+	local ok = util.IsInWorld(vector)
 	print(vector, ok)
 	return ok
 end
