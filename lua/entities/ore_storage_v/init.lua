@@ -10,5 +10,5 @@ function ENT:CalcVars(ply)
 		self:Remove()
 		return
 	end
-	return self.CalcVars(self, ply)
+	return BaseClass.CalcVars(self, ply)
 end
