@@ -51,8 +51,10 @@ function SA.ValidEntity(ent)
 	return ent and ent:IsValid()
 end
 
+local MAP_MIN = -32767
+local MAX_MAX = 32768
 function SA.IsInsideMap(vector)
-	local ok = vector.x >= 32768 and vector.y >= 32768 and vector.z >= 32768 and vector.x <= 32768 and vector.y <= 32768 and vector.z <= 32768
+	local ok = vector.x >= MAP_MIN and vector.y >= MAP_MIN and vector.z >= MAP_MIN and vector.x <= MAX_MAX and vector.y <= MAX_MAX and vector.z <= MAX_MAX
 	print(vector, ok)
 	return ok
 end
