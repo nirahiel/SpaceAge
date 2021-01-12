@@ -42,7 +42,13 @@ function SA.Ice.SpawnRoidRing(iceType, data)
 
 	ent.IcePattern = "ring"
 	ent.IceData = data
-	ent:SetPos(data.Origin + CalcRing(data.InnerRadius, data.OuterRadius, data.Angle))
+
+	local pos
+	repeat
+		pos = data.Origin + CalcRing(data.InnerRadius, data.OuterRadius, data.Angle)
+	until SA.IsInsideMap(pos)
+
+	ent:SetPos(pos)
 	ent:SetAngles(Angle(math.random(-180, 180), math.random(-180, 180), math.random(-180, 180)))
 	ent:Spawn()
 	ent:Activate()

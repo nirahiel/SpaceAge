@@ -58,7 +58,11 @@ local function CreateAsteroids(cnt, noamount)
 	end
 	for k = 1, roids.amount do
 		local picked = math.random(1, table.Count(AllAsteroids))
-		SpawnAsteroid(AllAsteroids[picked][1], Vector(roids.x + math.random(-roids.radius, roids.radius), roids.y + math.random(-roids.radius, roids.radius), roids.z + (math.random(-roids.radius, roids.radius) / 2)), AllAsteroids[picked][2])
+		local pos
+		repeat
+			pos = Vector(roids.x + math.random(-roids.radius, roids.radius), roids.y + math.random(-roids.radius, roids.radius), roids.z + (math.random(-roids.radius, roids.radius) / 2))
+		until SA.IsInsideMap(pos)
+		SpawnAsteroid(AllAsteroids[picked][1], pos, AllAsteroids[picked][2])
 	end
 end
 timer.Simple(5, function() CreateAsteroids(0) end)

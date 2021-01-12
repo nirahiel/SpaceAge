@@ -50,3 +50,7 @@ end
 function SA.ValidEntity(ent)
 	return ent and ent:IsValid()
 end
+
+function SA.IsInsideMap(vector)
+	return vector.x >= 0 and vector.y >= 0 and vector.z >= 0 and vector.x <= 32768 and vector.y <= 32768 and vector.z <= 32768
+end
