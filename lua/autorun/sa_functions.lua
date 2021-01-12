@@ -52,7 +52,5 @@ function SA.ValidEntity(ent)
 end
 
 function SA.IsInsideMap(vector)
-	local ok = util.IsInWorld(vector)
-	print(vector, ok)
-	return ok
+	return util.IsInWorld(vector)
 end
