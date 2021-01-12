@@ -44,6 +44,9 @@ function ENT:CalcVars(ply)
 end
 
 function ENT:Mine()
+	local own = SA.PP.GetOwner(self)
+	if own and own.IsAFK then return end
+
 	--Before we do anything, lets make sure they have power!
 	local EnergyUse = self.LaserConsume / self.LaserCycle
 	local CurEnergy = RD.GetResourceAmount(self, "energy")

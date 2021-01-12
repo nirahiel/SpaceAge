@@ -78,6 +78,9 @@ function ENT:CalcVars(ply)
 end
 
 function ENT:Refine()
+	local own = SA.PP.GetOwner(self)
+	if own and own.IsAFK then return end
+
 	local CurEnergy = RD.GetResourceAmount(self, "energy")
 	local EnergyReq = self.CycleEnergy / self.CycleTime
 
