@@ -159,7 +159,6 @@ local function SA_DoAcceptPlayer(ply, cmd, args)
 
 	local steamId = args[1]
 	local factionName = ply.sa_data.faction_name
-	local factionId = ply:Team()
 	local trgPly = player.GetBySteamID(steamId)
 
 	SA.API.AcceptFactionApplication(factionName, steamId, function(_body, code)
@@ -174,21 +173,14 @@ local function SA_DoAcceptPlayer(ply, cmd, args)
 			return
 		end
 
-		trgPly:SetTeam(factionId)
-		trgPly.sa_data.faction_name = factionName
-		trgPly.sa_data.is_faction_leader = false
-		trgPly:Spawn()
-		SA.SendBasicInfo(trgPly)
-		SA.SaveUser(trgPly, nil, function()
-			HTTP.Fetch("https://spaceage.mp/sa_group_sync.php?steam_id=" .. steamId .. "&authkey=TwB8a4yUKkF13bpI")
-		end)
+		trgPly:AssignFaction(factionName)
 	end)
 end
 concommand.Add("sa_application_accept", SA_DoAcceptPlayer)
 
 local function SA_DoDenyPlayer(ply, cmd, args)
-	if (#args ~= 1) then return end
-	if (not ply.sa_data.is_faction_leader) then return end
+	if #args ~= 1 then return end
+	if not ply.sa_data.is_faction_leader then return end
 
 	local steamId = args[1]
 	local factionName = ply.sa_data.faction_name
@@ -199,3 +191,18 @@ local function SA_DoDenyPlayer(ply, cmd, args)
 	end)
 end
 concommand.Add("sa_application_deny", SA_DoDenyPlayer)
+
+local function SA_DoKickPlayer(ply, cmd, args)
+	if args ~= 1 then return end
+	if not ply.sa_data.is_faction_leader then return end
+
+	local steamId = args[1]
+	local trgPly = player.GetBySteamID(steamId)
+
+	if not trgPly or not trgPly:IsValid() or trgPly == ply or trgPly.sa_data.is_faction_leader or trgPly.sa_data.faction_name ~= ply.sa_data.faction_name then
+		return
+	end
+
+	trgPly:AssignFaction("freelancer")
+end
+concommand.Add("sa_faction_kick", SA_DoKickPlayer)

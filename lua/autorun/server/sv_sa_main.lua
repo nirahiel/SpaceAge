@@ -32,17 +32,38 @@ CreateConVar("sa_faction_only", "0", { FCVAR_NOTIFY })
 local sa_faction_only = GetConVar("sa_faction_only")
 
 local PlayerMeta = FindMetaTable("Player")
-function PlayerMeta:AssignFaction(name)
-	if name then self.sa_data.faction_name = name end
-	if not self.sa_data.faction_name then self.sa_data.faction_name = "freelancer" end
-	if self.sa_data.faction_name == "alliance" and self.sa_data.alliance_membership_expiry < os.time() then self.sa_data.faction_name = "freelancer" end
+function PlayerMeta:AssignFaction(name, cb)
+	local old_name = self.sa_data.faction_name
 
-	local idx = SA.Factions.IndexByShort[self.sa_data.faction_name or "noload"]
+	if name then
+		self.sa_data.faction_name = name
+	end
+	if not self.sa_data.faction_name then
+		self.sa_data.faction_name = "freelancer"
+	end
+	if self.sa_data.faction_name == "alliance" and self.sa_data.alliance_membership_expiry < os.time() then
+		self.sa_data.faction_name = "freelancer"
+	end
+
+	local idx = SA.Factions.IndexByShort[self.sa_data.faction_name]
 	self:SetTeam(idx)
 
 	if not self:Team() then
 		self:SetTeam(7)
 		self.sa_data.faction_name = "noload"
+		return
+	end
+
+	if name then
+		self:Spawn()
+		SA.SendBasicInfo(self)
+	end
+
+	if self.sa_data.faction_name ~= old_name then
+		self.sa_data.is_faction_leader = false
+		SA.SaveUser(self, nil, function()
+			HTTP.Fetch("https://spaceage.mp/sa_group_sync.php?steam_id=" .. steamId .. "&authkey=TwB8a4yUKkF13bpI")
+		end)
 	end
 end
 
