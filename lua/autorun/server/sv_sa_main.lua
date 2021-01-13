@@ -192,7 +192,7 @@ LoadRes = function(ply, body, code)
 	hook.Run("SA_PlayerLoaded", ply)
 end
 
-function SA.SaveUser(ply, isautosave)
+function SA.SaveUser(ply, isautosave, cb)
 	if isautosave == "sa_autosaver" then
 		ply:SetNWInt("sa_save_int", autoSaveTimeCVar:GetInt() * 60)
 		ply:SetNWInt("sa_last_saved", CurTime())
@@ -205,7 +205,7 @@ function SA.SaveUser(ply, isautosave)
 
 	ply.sa_data.name = ply:Nick()
 	ply.sa_data.station_storage.contents = SA.Terminal.GetPermStorage(ply)
-	SA.API.UpsertPlayer(ply)
+	SA.API.UpsertPlayer(ply, cb)
 	return true
 end
 hook.Add("PlayerDisconnected", "SA_Save_Disconnect", SA.SaveUser)

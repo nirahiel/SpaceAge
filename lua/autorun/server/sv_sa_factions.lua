@@ -179,6 +179,9 @@ local function SA_DoAcceptPlayer(ply, cmd, args)
 		trgPly.sa_data.is_faction_leader = false
 		trgPly:Spawn()
 		SA.SendBasicInfo(trgPly)
+		SA.SaveUser(trgPly, nil, function()
+			HTTP.Fetch("https://spaceage.mp/sa_group_sync.php?steam_id=" .. steamId .. "&authkey=TwB8a4yUKkF13bpI")
+		end)
 	end)
 end
 concommand.Add("sa_application_accept", SA_DoAcceptPlayer)
