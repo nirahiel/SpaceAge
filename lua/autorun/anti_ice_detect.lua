@@ -88,6 +88,20 @@ local function OverwriteSingleFunc(idx, tbl)
 	end
 end
 
+local function OverwriteTraceFunc(idx, tbl)
+	local old = tbl[idx]
+	tbl[idx] = function(...)
+		local tr = old(...)
+		if not IsOkay(tr.Entity) then
+			if SkipFilter() then
+				return tr
+			end
+			tr.Entity = NULL
+		end
+		return tr
+	end
+end
+
 local ICEROID = "iceroid"
 local function IsIceroidWildcard(cls)
 	if cls == ICEROID then
@@ -117,3 +131,5 @@ OverwriteTableFunc("GetAll")
 
 OverwriteSingleFunc("GetByIndex")
 OverwriteSingleFunc("Entity", _G)
+
+OverwriteTraceFunc("TraceHull", util)
