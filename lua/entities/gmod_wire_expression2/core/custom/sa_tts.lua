@@ -3,8 +3,9 @@ AddCSLuaFile("autorun/client/cl_sa_tts.lua")
 
 E2Lib.RegisterExtension("sa_tts", false)
 
+__e2setcost(50)
 e2function void playTTS(string text)
-	HTTP.Post("https://tts.spaceage.mp/make.php", { q = text }, function (body, length, headers, code)
+	http.Post("https://tts.spaceage.mp/make.php", { q = text }, function (body, length, headers, code)
 		if code ~= 200 then
 			return
 		end

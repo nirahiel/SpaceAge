@@ -61,6 +61,7 @@ local function ls_get_res_by_ent(this)
 	return nettable.resources
 end
 
+__e2setcost(5)
 e2function table entity:lsInfo()
 	if (not SA.ValidEntity(this)) then return {} end
 	return e2_ls_info(this)
@@ -82,6 +83,7 @@ e2function array entity:lsGetResources()
 	return aTab
 end
 
+__e2setcost(2)
 e2function string lsGetName(string key)
 	return RD.GetProperResourceName(key)
 end
