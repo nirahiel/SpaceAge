@@ -1,12 +1,11 @@
 SA.API = {}
 
-local JWT_VALID_TIME = 7200
 local JWT_IN_RENEWAL = true
 
 local MakeUserAgent
 
-local function CommonUserAgent(side)
-	return "SpaceAge/GMod-" .. side .. " " .. game.GetIPAddress()
+local function CommonUserAgent(side, id)
+	return "SpaceAge/GMod-" .. side .. " " .. game.GetIPAddress() .. " " .. id
 end
 
 local apiConfig = SA.Config.Load("api", true) or {}
@@ -16,17 +15,33 @@ if SERVER then
 	AddCSLuaFile()
 
 	MakeUserAgent = function()
-		return CommonUserAgent("Server")
+		return CommonUserAgent("Server", "")
 	end
 else
 	MakeUserAgent = function()
-		return CommonUserAgent("Client")
+		local sid = LocalPlayer():SteamID()
+		if not sid or sid == "STEAM_0:0:0" or sid == "" then
+			error("Invalid SteamID")
+		end
+		return CommonUserAgent("Client", sid)
 	end
 end
 
-local clientID = MakeUserAgent()
-timer.Simple(1, function()
-	clientID = MakeUserAgent()
+local clientID = CommonUserAgent("Client", "N/A")
+
+local function TryMakeUserAgent()
+	res, ok = pcall(MakeUserAgent)
+	if ok then
+		clientID = res
+	end
+	return ok
+end
+
+timer.Create("SA_API_Make_ClientID", 1, 0, function()
+	ok = TryMakeUserAgent()
+	if ok then
+		timer.Remove("SA_API_Make_ClientID")
+	end
 end)
 
 local requestQueue = {}
