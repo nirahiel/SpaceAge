@@ -2,8 +2,12 @@
 local RD = CAF.GetAddon("Resource Distribution")
 E2Lib.RegisterExtension("lifesupport", false)
 
+local function e2defaulttable()
+	return {n={},ntypes={},s={},stypes={},size=0}
+end
+
 local function convert_table_to_e2_table(tab)
-	local newTab = {n={},ntypes={},s={},stypes={},size=0}
+	local newTab = e2defaulttable()
 	for k, v in pairs(tab) do
 		local ty = string.lower(type(v))
 		local validType = true
@@ -40,7 +44,7 @@ local function ls_table_to_e2_table(sbenv)
 end
 
 local function e2_ls_info(ent)
-	local retTab = {n={},ntypes={},s={},stypes={},size=0}
+	local retTab = e2defaulttable()
 	if ent.sbenvironment then
 		retTab = ls_table_to_e2_table(ent.sbenvironment)
 		if SA.ValidEntity(ent) then
@@ -79,7 +83,7 @@ end
 
 __e2setcost(5)
 e2function table entity:lsInfo()
-	if not SA.ValidEntity(this) then return {} end
+	if not SA.ValidEntity(this) then return e2defaulttable() end
 	return e2_ls_info(this)
 end
 
