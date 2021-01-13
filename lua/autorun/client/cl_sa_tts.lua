@@ -5,8 +5,6 @@ local function CleanupTTS()
 	for _, v in pairs(playingSounds) do
 		if v:GetState() ~= GMOD_CHANNEL_STOPPED then
 			table.insert(stillPlaying, v)
-		else
-			print("Cleaned up", v)
 		end
 	end
 	playingSounds = stillPlaying
