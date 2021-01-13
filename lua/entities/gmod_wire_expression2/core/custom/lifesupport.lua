@@ -6,12 +6,19 @@ local function convert_table_to_e2_table(tab)
 	local newTab = {}
 	for k, v in pairs(tab) do
 		local ty = string.lower(type(v))
+		local validType = true
 		if ty == "string" then
-			newTab["s"..k] = v
+			newTab.stypes[k] = "s"
 		elseif ty == "number" then
-			newTab["n"..k] = v
+			newTab.stypes[k] = "n"
 		elseif ty == "entity" then
-			newTab["e"..k] = v
+			newTab.stypes[k] = "e"
+		else
+			validType = false
+		end
+		if validType then
+			newTab.s[k] = v
+			newTab.size = newTab.size + 1
 		end
 	end
 	return newTab
@@ -22,7 +29,10 @@ local function ls_table_to_e2_table(sbenv)
 	if sbenv.air then
 		for k, v in pairs(sbenv.air) do
 			if type(v) == "number" then
-				retTab["nair"..k] = v
+				k = "air"..k
+				retTab.s[k] = v
+				retTab.stypes[k] = "n"
+				retTab.size = retTab.size + 1
 			end
 		end
 	end
@@ -30,22 +40,28 @@ local function ls_table_to_e2_table(sbenv)
 end
 
 local function e2_ls_info(ent)
-	local retTab = {}
+	local retTab = {n={},ntypes={},s={},stypes={},size=0}
 	if ent.sbenvironment then
 		retTab = ls_table_to_e2_table(ent.sbenvironment)
 		if SA.ValidEntity(ent) then
-			retTab.eentity = ent
+			retTab.s.entity = ent
+			retTab.stypes.entity = "e"
+			retTab.size = retTab.size + 1
 		end
 	end
 	if ent.environment and ent.environment.sbenvironment then
 		if ent.sbenvironment then
 			if ent.environment ~= ent and SA.ValidEntity(ent.environment) then
-				retTab.eparent = ent.environment
+				retTab.s.parent = ent.environment
+				retTab.stypes.parent = "e"
+				retTab.size = retTab.size + 1
 			end
 		else
 			retTab = ls_table_to_e2_table(ent.environment.sbenvironment)
 			if SA.ValidEntity(ent.environment) then
-				retTab.eentity = ent.environment
+				retTab.s.entity = ent.environment
+				retTab.stypes.entity = "e"
+				retTab.size = retTab.size + 1
 			end
 		end
 	end
