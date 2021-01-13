@@ -100,7 +100,7 @@ local function InitHabitablePlanets()
 		local plSB = closestPlan.sbenvironment
 		planet.sbenvironment.bloom = table.Copy(plSB.bloom)
 		planet.sbenvironment.color = table.Copy(plSB.color)
-		planet:CreateEnvironment(planet, 0, 0, 0, 0, 0, 0, 0, 0, v[1])
+		planet:CreateEnvironment(0, 0, 0, 0, 0, 0, 0, 0, v.Name)
 		planet:UpdateSize(0, v.Radius)
 		planet:PhysicsInit(SOLID_NONE)
 		planet:SetMoveType(MOVETYPE_NONE)
