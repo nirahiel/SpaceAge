@@ -3,7 +3,7 @@ local RD = CAF.GetAddon("Resource Distribution")
 E2Lib.RegisterExtension("lifesupport", false)
 
 local function convert_table_to_e2_table(tab)
-	local newTab = {}
+	local newTab = {n={},ntypes={},s={},stypes={},size=0}
 	for k, v in pairs(tab) do
 		local ty = string.lower(type(v))
 		local validType = true
@@ -69,7 +69,7 @@ local function e2_ls_info(ent)
 end
 
 local function ls_get_res_by_ent(this)
-	if (not SA.ValidEntity(this)) then return nil end
+	if not SA.ValidEntity(this) then return nil end
 	local netid = this:GetNWInt("netid")
 	if netid <= 0 then return nil end
 	local nettable = RD.GetNetTable(netid)
@@ -79,7 +79,7 @@ end
 
 __e2setcost(5)
 e2function table entity:lsInfo()
-	if (not SA.ValidEntity(this)) then return {} end
+	if not SA.ValidEntity(this) then return {} end
 	return e2_ls_info(this)
 end
 
