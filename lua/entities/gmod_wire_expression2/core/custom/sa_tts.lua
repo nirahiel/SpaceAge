@@ -11,11 +11,11 @@ e2function void playTTS(string text)
 		end
 		local url = body
 
-		net.Start("E2_TTS_PlayURL")
+		net.Start("SA_TTS_PlayURL")
 			net.WriteString(url)
 			net.WriteVector(self.entity:GetPos())
 		net.Broadcast()
 	end)
 end
 
-util.AddNetworkString("E2_TTS_PlayURL")
+util.AddNetworkString("SA_TTS_PlayURL")
