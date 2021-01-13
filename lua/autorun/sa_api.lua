@@ -45,13 +45,15 @@ local function TryMakeUserAgent()
 	return pcallOk and isOk
 end
 
-timer.Create("SA_API_Make_ClientID", 1, 0, function()
-	ok = TryMakeUserAgent()
+local function TryMakeUserAgentTimer()
+	local ok = TryMakeUserAgent()
 	if ok then
 		print("API Client-ID stabilized!")
 		timer.Remove("SA_API_Make_ClientID")
 	end
-end)
+end
+timer.Create("SA_API_Make_ClientID", 1, 0, TryMakeUserAgentTimer)
+TryMakeUserAgentTimer()
 
 local requestQueue = {}
 local requestInProgress = false
