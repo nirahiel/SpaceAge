@@ -5,7 +5,12 @@ local JWT_IN_RENEWAL = true
 local MakeUserAgent
 
 local function CommonUserAgent(side, id)
-	return "SpaceAge/GMod-" .. side .. " " .. game.GetIPAddress() .. " " .. id
+	local ip = game.GetIPAddress()
+	local ipOk = true
+	if ip:find("0.0.0.0", 1, true) then
+		ipOk = false
+	end
+	return "SpaceAge/GMod-" .. side .. " " .. ip .. " " .. id, ipOk
 end
 
 local apiConfig = SA.Config.Load("api", true) or {}
@@ -20,21 +25,24 @@ if SERVER then
 else
 	MakeUserAgent = function()
 		local sid = LocalPlayer():SteamID()
+		local sidOk = true
 		if not sid or sid == "STEAM_0:0:0" or sid == "" then
-			error("Invalid SteamID")
+			sid = "N/A"
+			sidOk = false
 		end
-		return CommonUserAgent("Client", sid)
+		local res, ok = CommonUserAgent("Client", sid)
+		return res, ok and sidOk
 	end
 end
 
 local clientID = CommonUserAgent("Client", "N/A")
 
 local function TryMakeUserAgent()
-	res, ok = pcall(MakeUserAgent)
-	if ok then
+	local pcallOk, res, isOk = pcall(MakeUserAgent)
+	if pcallOk then
 		clientID = res
 	end
-	return ok
+	return pcallOk and isOk
 end
 
 timer.Create("SA_API_Make_ClientID", 1, 0, function()
