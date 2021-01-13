@@ -35,7 +35,7 @@ else
 	end
 end
 
-local clientID = CommonUserAgent("Client", "N/A")
+local clientID = CommonUserAgent("N/A", "N/A")
 
 local function TryMakeUserAgent()
 	local pcallOk, res, isOk = pcall(MakeUserAgent)
