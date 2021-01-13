@@ -68,7 +68,7 @@ e2function table entity:lsInfo()
 end
 
 e2function table lsInfo()
-	return e2_ls_info(self)
+	return e2_ls_info(self.entity)
 end
 
 

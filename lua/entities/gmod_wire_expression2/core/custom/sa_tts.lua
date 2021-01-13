@@ -13,7 +13,7 @@ e2function void playTTS(string text)
 
 		net.Start("E2_TTS_PlayURL")
 			net.WriteString(url)
-			net.WriteVector(self:GetPos())
+			net.WriteVector(self.entity:GetPos())
 		net.Broadcast()
 	end)
 end
