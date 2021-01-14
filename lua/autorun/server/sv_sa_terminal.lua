@@ -618,46 +618,14 @@ local function SA_Research_Int(ply, Research)
 	end
 end
 
-local function SA_Buy_Research(ply, cmd, args)
+local function SA_Buy_Research_Cmd(ply, cmd, args)
 	if not ply.AtTerminal then return end
 	if ply.IsAFK then return end
 	local res = args[1]
-	local CHECK = args[2]
+	local limit = tonumber(args[2])
+	local CHECK = args[3]
 	if CHECK ~= HASH then return end
-
-	local Researches = SA.Research.Get()
-	local Research = nil
-	for k, v in pairs(Researches) do
-		if k == res then
-			Research = v
-			break
-		end
-	end
-	if not Research then return end
-
-	local ok = SA_Research_Int(ply, Research)
-	if not ok then return end
-
-	SA_UpdateInfo(ply)
-	local retro = Research.classes
-	for l, b in pairs(retro) do
-		for k, v in pairs(ents.FindByClass(b)) do
-			if (SA.PP.GetOwner(v) == ply) then
-				v:CalcVars(ply)
-			end
-		end
-	end
-
-	SA.SendBasicInfo(ply)
-end
-concommand.Add("sa_buy_research", SA_Buy_Research)
-
-local function SA_Buy_All_Research(ply, cmd, args)
-	if not ply.AtTerminal then return end
-	if ply.IsAFK then return end
-	local res = args[1]
-	local CHECK = args[2]
-	if CHECK ~= HASH then return end
+	if limit < 1 then return end
 
 	local Researches = SA.Research.Get()
 	local Research = nil
@@ -672,6 +640,10 @@ local function SA_Buy_All_Research(ply, cmd, args)
 	local ok = false
 	while SA_Research_Int(ply, Research) do
 		ok = true
+		limit = limit - 1
+		if limit < 1 then
+			break
+		end
 	end
 	if not ok then return end
 
@@ -687,7 +659,8 @@ local function SA_Buy_All_Research(ply, cmd, args)
 
 	SA.SendBasicInfo(ply)
 end
-concommand.Add("sa_buy_all_research", SA_Buy_All_Research)
+
+concommand.Add("sa_buy_research", SA_Buy_Research_Cmd)
 
 local function SA_ResetMe(ply, cmd, args)
 	if not ply.AtTerminal then return end

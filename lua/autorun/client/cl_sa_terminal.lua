@@ -415,10 +415,10 @@ local function CreateTerminalGUI()
 		ResearchPanel:SetSize(700, 74)
 		ResearchPanel:SetResearch(ResearchData)
 		ResearchPanel.UpgradeCommand = function()
-			RunConsoleCommand("sa_buy_research", ResearchData.name, HASH)
+			RunConsoleCommand("sa_buy_research", ResearchData.name, "1", HASH)
 		end
 		ResearchPanel.UpgradeAllCommand = function()
-			RunConsoleCommand("sa_buy_all_research", ResearchData.name, HASH)
+			RunConsoleCommand("sa_buy_research", ResearchData.name, "9999", HASH)
 		end
 		ResearchPanels[ResearchData.name] = ResearchPanel
 		GroupPanelItems[ResearchData.group][ResearchData.pos] = ResearchPanel
