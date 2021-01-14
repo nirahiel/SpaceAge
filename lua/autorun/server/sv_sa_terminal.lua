@@ -635,7 +635,7 @@ local function SA_Buy_Research(ply, cmd, args)
 	end
 	if not Research then return end
 
-	local ok = SA_Research_Int(ply,Researchres)
+	local ok = SA_Research_Int(ply, Research)
 	if not ok then return end
 
 	SA_UpdateInfo(ply)
