@@ -559,31 +559,16 @@ local function SA_BuyPermStorage(ply, cmd, args)
 end
 concommand.Add("sa_buy_perm_storage", SA_BuyPermStorage)
 
-local function SA_Research(ply, cmd, args)
-	if not ply.AtTerminal then return end
-	if ply.IsAFK then return end
-	local Researches = SA.Research.Get()
-	local res = args[1]
-	local CHECK = args[2]
-	if CHECK ~= HASH then return end
-	local Research = nil
-	for k, v in pairs(Researches) do
-		if (k == res) then
-			Research = v
-			break
-		end
-	end
-	if not Research then return end
-
+local function SA_Research_Int(ply, Research)
 	local cur = SA.Research.GetFromPlayer(ply, Research.name)
 	local cap = Research.ranks
 	if (cap ~= 0) and cap == cur then
 		return
 	end
-	if (Research.faction and #Research.faction > 0) and not table.HasValue(Research.faction, ply.sa_data.faction_name) then
+	if Research.faction and #Research.faction > 0 and not table.HasValue(Research.faction, ply.sa_data.faction_name) then
 		return
 	end
-	if (Research.type ~= "none") then
+	if Research.type ~= "none" then
 		local prereq = Research.prereq
 		local reqtype = Research.type
 		if reqtype == "unlock" then
@@ -629,19 +614,80 @@ local function SA_Research(ply, cmd, args)
 	if cred >= total then
 		SA.Research.SetToPlayer(ply, Research.name, cur + 1)
 		ply.sa_data.credits = ply.sa_data.credits - total
-		SA_UpdateInfo(ply)
-		local retro = Research.classes
-		for l, b in pairs(retro) do
-			for k, v in pairs(ents.FindByClass(b)) do
-				if (SA.PP.GetOwner(v) == ply) then
-					v:CalcVars(ply)
-				end
+		return true
+	end
+end
+
+local function SA_Buy_Research(ply, cmd, args)
+	if not ply.AtTerminal then return end
+	if ply.IsAFK then return end
+	local res = args[1]
+	local CHECK = args[2]
+	if CHECK ~= HASH then return end
+
+	local Researches = SA.Research.Get()
+	local Research = nil
+	for k, v in pairs(Researches) do
+		if k == res then
+			Research = v
+			break
+		end
+	end
+	if not Research then return end
+
+	local ok = SA_Research_Int(ply,Researchres)
+	if not ok then return end
+
+	SA_UpdateInfo(ply)
+	local retro = Research.classes
+	for l, b in pairs(retro) do
+		for k, v in pairs(ents.FindByClass(b)) do
+			if (SA.PP.GetOwner(v) == ply) then
+				v:CalcVars(ply)
 			end
 		end
 	end
+
 	SA.SendBasicInfo(ply)
 end
-concommand.Add("sa_buy_research", SA_Research)
+concommand.Add("sa_buy_research", SA_Buy_Research)
+
+local function SA_Buy_All_Research(ply, cmd, args)
+	if not ply.AtTerminal then return end
+	if ply.IsAFK then return end
+	local res = args[1]
+	local CHECK = args[2]
+	if CHECK ~= HASH then return end
+
+	local Researches = SA.Research.Get()
+	local Research = nil
+	for k, v in pairs(Researches) do
+		if k == res then
+			Research = v
+			break
+		end
+	end
+	if not Research then return end
+
+	local ok = false
+	while SA_Research_Int(ply, Research) do
+		ok = true
+	end
+	if not ok then return end
+
+	SA_UpdateInfo(ply)
+	local retro = Research.classes
+	for l, b in pairs(retro) do
+		for k, v in pairs(ents.FindByClass(b)) do
+			if (SA.PP.GetOwner(v) == ply) then
+				v:CalcVars(ply)
+			end
+		end
+	end
+
+	SA.SendBasicInfo(ply)
+end
+concommand.Add("sa_buy_all_research", SA_Buy_All_Research)
 
 local function SA_ResetMe(ply, cmd, args)
 	if not ply.AtTerminal then return end

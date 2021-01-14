@@ -417,6 +417,9 @@ local function CreateTerminalGUI()
 		ResearchPanel.UpgradeCommand = function()
 			RunConsoleCommand("sa_buy_research", ResearchData.name, HASH)
 		end
+		ResearchPanel.UpgradeAllCommand = function()
+			RunConsoleCommand("sa_buy_all_research", ResearchData.name, HASH)
+		end
 		ResearchPanels[ResearchData.name] = ResearchPanel
 		GroupPanelItems[ResearchData.group][ResearchData.pos] = ResearchPanel
 	end

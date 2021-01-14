@@ -48,11 +48,19 @@ function PANEL:Init()
 	self.ResearchCost:SetColor(ResearchCostColor)
 
 	self.UpgradeButton = vgui.Create("DButton", self)
-	self.UpgradeButton:SetPos(590, 38)
-	self.UpgradeButton:SetSize(100, 28)
+	self.UpgradeButton:SetPos(590, 28)
+	self.UpgradeButton:SetSize(100, 18)
 	self.UpgradeButton:SetText("Upgrade")
 	self.UpgradeButton.DoClick = function()
 		self:UpgradeCommand()
+	end
+
+	self.UpgradeAllButton = vgui.Create("DButton", self)
+	self.UpgradeAllButton:SetPos(590, 48)
+	self.UpgradeAllButton:SetSize(100, 18)
+	self.UpgradeAllButton:SetText("Upgrade All")
+	self.UpgradeAllButton.DoClick = function()
+		self:UpgradeAllCommand()
 	end
 end
 
@@ -140,8 +148,10 @@ function PANEL:Update(Rank, Cost)
 		self.ResearchCost:SetText(Cost)
 		if (Cost == "Max Rank") then
 			self.UpgradeButton:SetDisabled(true)
+			self.UpgradeAllButton:SetDisabled(true)
 		else
 			self.UpgradeButton:SetDisabled(false)
+			self.UpgradeAllButton:SetDisabled(false)
 		end
 	end
 end
