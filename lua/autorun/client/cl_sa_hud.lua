@@ -369,15 +369,14 @@ local function SA_DrawHelmet(color)
 	-- draw fills
 	surface.SetDrawColor(0, 0, 0, 160)
 	draw.NoTexture()
-
-	DrawScreenLineWithDip(ScrH() - 160, 200, 60, 600, 300, false, true)
+	--DrawScreenLineWithDip(ScrH() - 160, 200, 60, 600, 300, false, true)
 	DrawScreenLineWithDip(-171, 200, 40, 600, 300)
 
 
 	-- draw border
 	surface.SetDrawColor(color)
 	draw.NoTexture()
-	DrawScreenLineWithDip(ScrH() - 160, 5, 60, 600, 300, true, true)
+	--DrawScreenLineWithDip(ScrH() - 160, 5, 60, 600, 300, true, true)
 	DrawScreenLineWithDip(24, 5, 40, 600, 300)
 end
 
