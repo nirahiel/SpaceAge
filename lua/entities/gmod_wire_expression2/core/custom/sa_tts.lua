@@ -5,7 +5,7 @@ E2Lib.RegisterExtension("sa_tts", false)
 
 __e2setcost(50)
 e2function void playTTS(string text)
-	http.Post("https://tts.spaceage.mp/make.php", { q = text }, function (body, length, headers, code)
+	http.Post("https://api.spaceage.mp/tts/mp3", { q = text }, function (body, length, headers, code)
 		if code ~= 200 then
 			return
 		end
