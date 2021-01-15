@@ -89,6 +89,13 @@ local function CreateTerminalGUI()
 
 	local guiSizeX = SA_Term_GUI:GetSize()
 
+	-- close SA_Term_GUI when 'Q' is pressed --
+	function SA_Term_GUI:OnKeyCodePressed(KeyCode)
+		if KeyCode == KEY_Q then
+			RunConsoleCommand("sa_terminal_close")
+		end
+	end
+
 	local CloseButton = vgui.Create("DButton", BasePanel)
 	CloseButton:SetText("Close Terminal")
 	CloseButton:SetPos(370, 660)
