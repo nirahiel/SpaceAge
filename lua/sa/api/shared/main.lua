@@ -324,5 +324,5 @@ if CLIENT then
 		timer.Create("SA_RenewJWT", validTime / 2, 1, SA_API_RenewPlayerJWT)
 	end)
 
-	hook.Add("SA_PlayerLoaded", "SA_API_RenewPlayerJWT_InitPostEntity", SA_API_RenewPlayerJWT)
+	hook.Add("SA_PlayerLoaded", "SA_API_RenewPlayerJWT_Initial", SA_API_RenewPlayerJWT)
 end

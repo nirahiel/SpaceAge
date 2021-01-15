@@ -12,11 +12,11 @@ end
 if CLIENT then
 	local function SA_CheckLoad()
 		local ply = LocalPlayer()
-		if not ply:GetNWBool("isloaded") then
+		if not ply or not ply:GetNWBool("isloaded") then
 			timer.Simple(1, SA_CheckLoad)
 			return
 		end
 		hook.Run("SA_PlayerLoaded", ply)
 	end
-	hook.Add("InitPostEntity", "SA_InitPostEntity_Load", SA_CheckLoad)
+	SA_CheckLoad()
 end
