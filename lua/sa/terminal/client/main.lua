@@ -4,6 +4,7 @@ SA_REQUIRE("misc.player_full_load")
 SA_REQUIRE("terminal.research")
 SA_REQUIRE("terminal.resource")
 SA_REQUIRE("terminal.goodies")
+SA_REQUIRE("faction.application")
 
 require("supernet")
 
