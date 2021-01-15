@@ -46,6 +46,8 @@ local function TryLoadModule(moduleName, loadChain)
 			SA_CurrentLoadChain = oldLoadChain
 		end
 	end
+
+	print("Loaded module " .. moduleName)
 end
 
 local function Local_SA_REQUIRE(moduleName)
