@@ -2,6 +2,7 @@ supernet = {}
 
 if SERVER then
 	AddCSLuaFile()
+	util.AddNetworkString("SuperNet_MSG")
 end
 
 local table = table
@@ -11,6 +12,7 @@ local util = util
 local TOTAL_SIZE_MAX = SERVER and 2000000 or nil
 local SIZE_MAX = 60000
 local MSGCOUNT_MAX = TOTAL_SIZE_MAX and math.floor(TOTAL_SIZE_MAX / SIZE_MAX) or nil
+local ENABLE_RECEIPT = false
 
 local queue = {}
 local inqueue = {}
@@ -18,24 +20,6 @@ local hooks = {}
 local msgid = 0
 
 print("supernet, TOTAL_SIZE_MAX = ", TOTAL_SIZE_MAX, ", SIZE_MAX = ", SIZE_MAX, ", MSGCOUNT_MAX = ", MSGCOUNT_MAX)
-
-if SERVER then
-	util.AddNetworkString("SuperNet_MSG")
-end
-
-function supernet.Send(trg, name, data, cb)
-	msgid = msgid + 1
-	if msgid > 4095 then
-		msgid = 1
-	end
-	local dJSON = util.TableToJSON(data)
-	local dComp = util.Compress(dJSON)
-	table.insert(queue, {msgid, trg, name, dComp, cb, 1, dComp:len()})
-end
-
-function supernet.Hook(name, cb)
-	hooks[name] = cb
-end
 
 local function callCB(cb, ply, str)
 	local decomp = util.Decompress(str, TOTAL_SIZE_MAX)
@@ -110,7 +94,6 @@ local function NetReceive(len, ply)
 		callCB(data[1], ply, table.concat(bits))
 	end
 end
-net.Receive("SuperNet_MSG", NetReceive)
 
 local current
 local function FinishQueue()
@@ -178,3 +161,22 @@ local function RunQueue()
 	current[7] = left - SIZE_MAX
 end
 timer.Create("supernet_RunQueue", 0, 0, RunQueue)
+
+function supernet.Send(trg, name, data, cb)
+	msgid = msgid + 1
+	if msgid > 4095 then
+		msgid = 1
+	end
+	local dJSON = util.TableToJSON(data)
+	local dComp = util.Compress(dJSON)
+	table.insert(queue, {msgid, trg, name, dComp, cb, 1, dComp:len()})
+end
+
+function supernet.Hook(name, cb)
+	hooks[name] = cb
+	if not ENABLE_RECEIPT then
+		net.Receive("SuperNet_MSG", NetReceive)
+		ENABLE_RECEIPT = true
+		print("[supernet] Enabled receiving messages!")
+	end
+end
