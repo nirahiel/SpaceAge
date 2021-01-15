@@ -40,9 +40,10 @@ local function TryLoadModule(moduleName, loadChain)
 		for _, fileName in pairs(module.fileNames) do
 			print("Loading module file " .. fileName)
 
+			local oldLoadChain = SA_CurrentLoadChain
 			SA_CurrentLoadChain = loadChain
 			include(fileName)
-			SA_CurrentLoadChain = nil
+			SA_CurrentLoadChain = oldLoadChain
 		end
 	end
 end
