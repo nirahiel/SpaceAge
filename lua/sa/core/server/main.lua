@@ -1,7 +1,5 @@
 SA_REQUIRE("config")
 
-timer.Simple(1, function() RD = CAF.GetAddon("Resource Distribution") end)
-
 local WorldClasses = {}
 local function AddWorldClass(name)
 	table.insert(WorldClasses, name)

@@ -2,9 +2,6 @@ SA.Planets = {}
 
 SA_REQUIRE("config")
 
-local SB
-timer.Simple(1, function() SB = CAF.GetAddon("Spacebuild") end)
-
 local SB_Terraforming_Target = {o2 = 29, co2 = 0.6, h = 0.4, n = 70, empty = 0}
 
 local SA_MyPlanets = {}
@@ -99,7 +96,7 @@ local function InitHabitablePlanets()
 		planet:SetPos(position)
 		planet:Spawn()
 
-		local closestPlan = SB.FindClosestPlanet(position, false)
+		local closestPlan = SA.SB.FindClosestPlanet(position, false)
 		local plSB = closestPlan.sbenvironment
 		planet.sbenvironment.bloom = table.Copy(plSB.bloom)
 		planet.sbenvironment.color = table.Copy(plSB.color)
@@ -218,7 +215,7 @@ end)
 
 concommand.Add("sa_print_environment", function(ply)
 	if ply:GetLevel() < 3 then return end
-	local env = SB.FindClosestPlanet(ply:GetPos(), false)
+	local env = SA.SB.FindClosestPlanet(ply:GetPos(), false)
 	local name = env:GetEnvironmentName()
 	local pos = env:GetPos()
 	local size = env:GetSize()

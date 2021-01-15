@@ -8,9 +8,6 @@ if SecureRandomString then
 end
 print("SA security hash: ", HASH)
 
-local RD
-timer.Simple(1, function() RD = CAF.GetAddon("Resource Distribution") end)
-
 SA.Terminal = {}
 
 local SA_UpdateInfo
@@ -71,13 +68,13 @@ local function InitSATerminal()
 		StationSize = config.Station.Size
 	end
 
-	RD.AddProperResourceName("valuable minerals", "Valuable Minerals")
-	RD.AddProperResourceName("dark matter", "Dark Matter")
-	RD.AddProperResourceName("terracrystal", "Terracrystal")
-	RD.AddProperResourceName("permafrost", "Permafrost")
-	RD.AddProperResourceName("ore", "Ore")
-	RD.AddProperResourceName("tiberium", "Tiberium")
-	RD.AddProperResourceName("metals", "Metals")
+	SA.RD.AddProperResourceName("valuable minerals", "Valuable Minerals")
+	SA.RD.AddProperResourceName("dark matter", "Dark Matter")
+	SA.RD.AddProperResourceName("terracrystal", "Terracrystal")
+	SA.RD.AddProperResourceName("permafrost", "Permafrost")
+	SA.RD.AddProperResourceName("ore", "Ore")
+	SA.RD.AddProperResourceName("tiberium", "Tiberium")
+	SA.RD.AddProperResourceName("metals", "Metals")
 end
 timer.Simple(0, InitSATerminal)
 
@@ -195,7 +192,7 @@ end
 local function SA_GetResource(ply, res)
 	local SelNode = SA_SelectedNode(ply)
 	if (SA.ValidEntity(SelNode)) then
-		local count = RD.GetNetResourceAmount(SelNode.netid, res)
+		local count = SA.RD.GetNetResourceAmount(SelNode.netid, res)
 		if count > 0 then
 			return count, SelNode.netid
 		end
@@ -206,7 +203,7 @@ end
 local function SA_FindCapacity(ply, res)
 	local SelNode = SA_SelectedNode(ply)
 	if (SA.ValidEntity(SelNode)) then
-		local capacity = RD.GetNetNetworkCapacity(SelNode.netid, res)
+		local capacity = SA.RD.GetNetNetworkCapacity(SelNode.netid, res)
 		if (capacity > 0) then
 			return capacity, SelNode.netid
 		end
@@ -217,7 +214,7 @@ end
 local function SA_SupplyResource(ply, res, num)
 	local SelNode = SA_SelectedNode(ply)
 	if (SA.ValidEntity(SelNode)) then
-		RD.SupplyNetResource(SelNode.netid, res, num)
+		SA.RD.SupplyNetResource(SelNode.netid, res, num)
 	end
 	return 0
 end
@@ -225,7 +222,7 @@ end
 local function SA_GetShipResources(ply)
 	local SelNode = SA_SelectedNode(ply)
 	if (SA.ValidEntity(SelNode)) then
-		local tbl = RD.GetNetTable(SelNode.netid).resources
+		local tbl = SA.RD.GetNetTable(SelNode.netid).resources
 		return tbl, SelNode.netid
 	end
 	return {}
@@ -379,7 +376,7 @@ local function SA_RefineOre(ply, cmd, args)
 				TempStorage[uid][n] = count + yield
 			end
 		end
-		RD.ConsumeNetResource(netid, "ore", orecount)
+		SA.RD.ConsumeNetResource(netid, "ore", orecount)
 		TempStorage[uid].ore = 0
 	end
 	SA_UpdateInfo(ply)
@@ -530,7 +527,7 @@ local function SA_MoveResource(ply, cmd, args, notagain)
 	elseif (from == "perm") then
 		ply.sa_data.station_storage.contents[res] = ply.sa_data.station_storage.contents[res] - tomove
 	elseif (from == "ship") then
-		RD.ConsumeNetResource(netid, res, tomove)
+		SA.RD.ConsumeNetResource(netid, res, tomove)
 	end
 	UpdateCapacity(ply)
 	SA_UpdateInfo(ply)
