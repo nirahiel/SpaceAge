@@ -20,9 +20,6 @@ if (CLIENT) then
 	language.Add("SBoxLimit_terraforming", "Maximum Terraforming Devices Reached")
 end
 
-if not CAF or not CAF.GetAddon("Resource Distribution") then Error("Please Install Resource Distribution Addon.") return end
-if not CAF or not CAF.GetAddon("Life Support") then return end
-
 local terraforming_models = {
 		{ "Terraformer", "models/chipstiks_ls3_models/Terraformer/terraformer.mdl", "sa_terraformer" },
 		{ "Terraforming Storage", "models/Slyfo/barrel_unrefined.mdl", "sa_storage_terraform" }

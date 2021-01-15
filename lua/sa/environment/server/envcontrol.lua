@@ -2,7 +2,8 @@ SA.Planets = {}
 
 SA_REQUIRE("config")
 
-local SB = CAF.GetAddon("Spacebuild")
+local SB
+timer.Simple(1, function() SB = CAF.GetAddon("Spacebuild") end)
 
 local SB_Terraforming_Target = {o2 = 29, co2 = 0.6, h = 0.4, n = 70, empty = 0}
 
@@ -217,7 +218,7 @@ end)
 
 concommand.Add("sa_print_environment", function(ply)
 	if ply:GetLevel() < 3 then return end
-	local env = CAF.GetAddon("Spacebuild").FindClosestPlanet(ply:GetPos(), false)
+	local env = SB.FindClosestPlanet(ply:GetPos(), false)
 	local name = env:GetEnvironmentName()
 	local pos = env:GetPos()
 	local size = env:GetSize()

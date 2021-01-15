@@ -1,4 +1,5 @@
-local RD = CAF.GetAddon("Resource Distribution")
+local RD
+timer.Simple(1, function() RD = CAF.GetAddon("Resource Distribution") end)
 
 SA.Functions = {}
 

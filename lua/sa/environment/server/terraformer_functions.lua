@@ -1,7 +1,10 @@
 SA.Terraformer = {}
 
-local RD = CAF.GetAddon("Resource Distribution")
-local SB = CAF.GetAddon("Spacebuild")
+local RD, SB
+timer.Simple(1, function()
+	RD = CAF.GetAddon("Resource Distribution")
+	SB = CAF.GetAddon("Spacebuild")
+end)
 
 local function SA_Terraformer_PushAtmosphere(terent, resName, atmoname, amount)
 	RD.ConsumeResource(terent, resName, amount)

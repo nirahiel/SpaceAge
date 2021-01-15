@@ -8,6 +8,9 @@ if SecureRandomString then
 end
 print("SA security hash: ", HASH)
 
+local RD
+timer.Simple(1, function() RD = CAF.GetAddon("Resource Distribution") end)
+
 SA.Terminal = {}
 
 local SA_UpdateInfo
@@ -58,10 +61,8 @@ AddResourceBuyPrice("Hydrogen", 0.8)
 AddResourceBuyPrice("Energy", 1.0)
 AddResourceBuyPrice("Water", 3.0)
 
-
 local StationPos = Vector(0, 0, 0)
 local StationSize = 0
-local RD = CAF.GetAddon("Resource Distribution")
 
 local function InitSATerminal()
 	local config = SA.Config.Load("terminals")

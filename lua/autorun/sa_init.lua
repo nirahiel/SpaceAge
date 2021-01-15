@@ -48,7 +48,7 @@ local function TryLoadModule(moduleName, loadChain)
 	end
 end
 
-function SA_REQUIRE(moduleName)
+local function Local_SA_REQUIRE(moduleName)
 	TryLoadModule(moduleName, SA_CurrentLoadChain)
 end
 
@@ -85,7 +85,7 @@ local function LoadAllFilesForModule(module, side)
 	end
 end
 
-function SA_LoadAllModules()
+local function SA_LoadAllModules()
 	_, modules = file.Find("sa/*", "LUA")
 	for _, module in pairs(modules) do
 		SA_ModuleList[module] = {
@@ -96,8 +96,9 @@ function SA_LoadAllModules()
 		LoadAllFilesForModule(module, "server")
 	end
 
+	SA_REQUIRE = Local_SA_REQUIRE
 	LoadModuleTree()
-
 	SA_REQUIRE = nil
-	SA_LoadAllModules = nil
 end
+
+SA_LoadAllModules()
