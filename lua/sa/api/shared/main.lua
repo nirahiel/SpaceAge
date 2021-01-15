@@ -1,6 +1,7 @@
 SA.API = {}
 
 SA_REQUIRE("config")
+SA_REQUIRE("misc.player_full_load")
 
 local JWT_IN_RENEWAL = true
 
@@ -324,5 +325,5 @@ if CLIENT then
 		timer.Create("SA_RenewJWT", validTime / 2, 1, SA_API_RenewPlayerJWT)
 	end)
 
-	hook.Add("SA_PlayerLoaded", "SA_API_RenewPlayerJWT_Initial", SA_API_RenewPlayerJWT)
+	SA.RunOnLoaded("SA_API_RenewPlayerJWT_Initial", SA_API_RenewPlayerJWT)
 end

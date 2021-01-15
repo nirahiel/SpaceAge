@@ -1,8 +1,9 @@
 SA.Terminal = {}
 
-include("sa/terminal/client/research.lua")
-include("sa/terminal/client/resource.lua")
-include("sa/terminal/client/goodies.lua")
+SA_REQUIRE("misc.player_full_load")
+SA_REQUIRE("terminal.research")
+SA_REQUIRE("terminal.resource")
+SA_REQUIRE("terminal.goodies")
 
 require("supernet")
 
@@ -579,7 +580,7 @@ local function CreateTerminalGUI()
 	BasePanel:MakePopup()
 	BasePanel:SetVisible(false)
 end
-hook.Add("SA_PlayerLoaded", "SA_RecreateTermGUI", CreateTerminalGUI)
+SA.RunOnLoaded("SA_RecreateTermGUI", CreateTerminalGUI)
 
 local function SA_DrawTerminalError()
 	if (SA_ErrorAlpha > 0) then

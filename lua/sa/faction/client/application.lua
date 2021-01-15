@@ -1,3 +1,5 @@
+SA_REQUIRE("misc.player_full_load")
+
 local AppPanel = nil
 
 local defaultText = "Hi"
@@ -62,7 +64,7 @@ local function SA_RefreshApplications()
 	end
 end
 net.Receive("SA_Applications_Refresh", SA_RefreshApplications)
-hook.Add("SA_PlayerLoaded", "SA_Applications_Refresh_PlayerLoaded", SA_RefreshApplications)
+SA.RunOnLoaded("SA_Applications_Refresh_PlayerLoaded", SA_RefreshApplications)
 
 local ApplyText, PTimeLBL, ScoreLBL, SelFCombo, SelAppIndex
 
