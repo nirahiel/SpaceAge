@@ -46,19 +46,14 @@ local function SpawnAsteroid(model, pos, size)
 	asteroid.maxhealth = size * 3
 end
 
-local function CreateAsteroids(cnt, noamount)
-	local roids = SA.Config.Load("asteroids")
-	if not roids then
-		return
+local roids
+
+local function CreateAsteroids(cnt)
+	if cnt == 0 then
+		cnt = SA.Asteroids.MaxCount
 	end
 
-	if not noamount then
-		SA.Asteroids.MaxCount = roids.amount
-	end
-	if cnt ~= 0 then
-		roids.amount = cnt
-	end
-	for k = 1, roids.amount do
+	for k = 1, cnt do
 		local picked = math.random(1, table.Count(AllAsteroids))
 		local pos
 		repeat
@@ -67,17 +62,29 @@ local function CreateAsteroids(cnt, noamount)
 		SpawnAsteroid(AllAsteroids[picked][1], pos, AllAsteroids[picked][2])
 	end
 end
-timer.Simple(5, function() CreateAsteroids(0) end)
 
+local function RespawnAllAsteroids()
+	roids = SA.Config.Load("asteroids")
+	if not roids then
+		return
+	end
 
-concommand.Add("sa_respawn_asteroids", function(ply)
-	if ply:GetLevel() < 3 then return end
+	SA.Asteroids.MaxCount = roids.amount
+
 	for k, v in pairs(ents.FindByClass("sa_roid")) do
 		v.RespOnRemove = false
 		v:Remove()
 	end
 	SA_Roid_Count = 0
-	CreateAsteroids(0, true)
+
+	CreateAsteroids(0)
+end
+timer.Simple(5, RespawnAllAsteroids)
+
+
+concommand.Add("sa_respawn_asteroids", function(ply)
+	if ply:GetLevel() < 3 then return end
+	RespawnAllAsteroids()
 	if (ply and ply:IsPlayer()) then
 		SystemSendMSG(ply, "respawned all asteroids")
 	end
