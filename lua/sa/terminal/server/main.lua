@@ -67,14 +67,6 @@ local function InitSATerminal()
 		StationPos = Vector(unpack(config.Station.Position))
 		StationSize = config.Station.Size
 	end
-
-	SA.RD.AddProperResourceName("valuable minerals", "Valuable Minerals")
-	SA.RD.AddProperResourceName("dark matter", "Dark Matter")
-	SA.RD.AddProperResourceName("terracrystal", "Terracrystal")
-	SA.RD.AddProperResourceName("permafrost", "Permafrost")
-	SA.RD.AddProperResourceName("ore", "Ore")
-	SA.RD.AddProperResourceName("tiberium", "Tiberium")
-	SA.RD.AddProperResourceName("metals", "Metals")
 end
 timer.Simple(0, InitSATerminal)
 
