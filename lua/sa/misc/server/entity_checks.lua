@@ -6,5 +6,8 @@ function EntityMeta:KillIfSpawned()
 		myPl:Kill()
 		self.RespawnDelay = 0
 		self:Remove()
+		return true
 	end
+
+	return false
 end
