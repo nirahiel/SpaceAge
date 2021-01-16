@@ -9,6 +9,7 @@ local AllAsteroids = {
 	{ "models/ce_ls3additional/asteroids/asteroid_450.mdl", 900 },
 	{ "models/ce_ls3additional/asteroids/asteroid_500.mdl", 1000 },
 }
+local AllAsteroidsCount = table.Count(AllAsteroids)
 
 SA.Asteroids = {}
 SA.Asteroids.MaxCount = 0
@@ -54,7 +55,7 @@ local function CreateAsteroids(cnt)
 	end
 
 	for k = 1, cnt do
-		local picked = math.random(1, table.Count(AllAsteroids))
+		local picked = math.random(1, AllAsteroidsCount)
 		local pos
 		repeat
 			pos = Vector(roids.x + math.random(-roids.radius, roids.radius), roids.y + math.random(-roids.radius, roids.radius), roids.z + (math.random(-roids.radius, roids.radius) / 2))
