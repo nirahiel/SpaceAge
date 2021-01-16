@@ -88,6 +88,10 @@ local function LoadAllFilesForModule(module, side)
 end
 
 local function SA_LoadAllModules()
+	if SA_ALL_MODULES_LOADED then
+		return
+	end
+
 	_, modules = file.Find("sa/*", "LUA")
 	for _, module in pairs(modules) do
 		SA_ModuleList[module] = {
@@ -100,7 +104,9 @@ local function SA_LoadAllModules()
 
 	SA_REQUIRE = Local_SA_REQUIRE
 	LoadModuleTree()
-	SA_REQUIRE = nil
+
+	SA_REQUIRE = function() end
+	SA_ALL_MODULES_LOADED = true
 end
 
 SA_LoadAllModules()
