@@ -1,8 +1,5 @@
 SA_REQUIRE("config")
-
-if not SA.Ice then
-	SA.Ice = {}
-end
+SA_REQUIRE("ice.main")
 
 local IceTypes = {}
 local IceModels = {"models/props_wasteland/rockgranite04a.mdl", "models/props_wasteland/rockgranite04b.mdl"}

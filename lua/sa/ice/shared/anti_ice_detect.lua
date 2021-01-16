@@ -1,3 +1,5 @@
+SA_REQUIRE("ice.main")
+
 local SERVER = SERVER
 local dgetinfo = debug.getinfo
 local pairs = pairs
@@ -9,7 +11,7 @@ local CALLED_IDX = 2
 local CALLER_IDX = 3
 local OKAY_CALLERS = { "addons/spaceage/", "lua/fpp/", "lua/ulib/" }
 
-SA.RunAntiIceDebug = false
+SA.Ice.RunAntiIceDebug = false
 
 local function IsOkay(ent)
 	if SA.ValidEntity(ent) and GetEntityClass(ent) == "iceroid" then
@@ -33,7 +35,7 @@ local function SkipFilter()
 		end
 	end
 
-	if SA.RunAntiIceDebug then
+	if SA.Ice.RunAntiIceDebug then
 		local funcCalled = dgetinfo(CALLED_IDX, "n").name
 		file.Append("findlog.txt", funcCalled .. "\n" .. util.TableToJSON(caller) .. "\n\n")
 	end
