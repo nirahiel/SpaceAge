@@ -1,4 +1,5 @@
 #!/bin/sh
+# Loads addons into a lua file for easy resource adding
 
 set -e
 

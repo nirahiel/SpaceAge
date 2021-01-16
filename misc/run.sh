@@ -1,4 +1,5 @@
 #!/bin/bash
+# Main server runscript
 
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
 export LD_LIBRARY_PATH=".:bin:$LD_LIBRARY_PATH"
