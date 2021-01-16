@@ -13,6 +13,6 @@ popd
 
 steamcmd +runscript "$HOME/s/garrysmod/addons/spaceage/misc/install.txt"
 
-./grabaddons.sh
+"$HOME/s/garrysmod/addons/spaceage/misc/grabaddons.sh"
 
 exec ./srcds_linux -usercon -autoupdate -tickrate 20 -game garrysmod +ip 0.0.0.0 +maxplayers 32 +map sb_gooniverse_v4 +host_workshop_collection "$WORKSHOP_COLLECTION" +gamemode spaceage -disableluarefresh -console
