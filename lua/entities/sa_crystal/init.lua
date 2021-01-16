@@ -7,8 +7,9 @@ DEFINE_BASECLASS("base_gmodentity")
 ENT.WorldInternal = true
 
 function ENT:Initialize()
+	if self:KillIfSpawned() then return end
+
 	self.CrystalResistant = true
-	self.MayNotBeFound = true
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)

@@ -16,6 +16,8 @@ function ENT:SpawnFunction(ply, tr)
 end
 
 function ENT:Initialize()
+	if self:KillIfSpawned() then return end
+
 	self.isopen = 0
 	self.fullyopen = 0
 	self.fullyclosed = 0
@@ -26,7 +28,6 @@ function ENT:Initialize()
 	local xuuid = "sa_dchecker_" .. tostring(CurTime())
 
 	self:Fire("addoutput", "targetname " .. xuuid, 0)
-
 
 	self:Think()
 

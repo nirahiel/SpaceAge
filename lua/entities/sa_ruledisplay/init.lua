@@ -13,6 +13,8 @@ function ENT:SpawnFunction(ply, tr)
 end
 
 function ENT:Initialize()
+	if self:KillIfSpawned() then return end
+
 	self:SetModel("models/props_canal/canal_bridge02.mdl")
 	self:DrawShadow(false)
 

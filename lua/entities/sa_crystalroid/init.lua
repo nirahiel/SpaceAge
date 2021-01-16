@@ -37,7 +37,6 @@ function ENT:Initialize()
 		self:Remove()
 	end
 	self:SetModel(table.Random(modelTbl))
-	self.MayNotBeFound = true
 	self.CrystalResistant = true
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)

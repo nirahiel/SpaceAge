@@ -18,15 +18,12 @@ function ENT:SpawnFunction(ply, tr)
 end
 
 function ENT:Initialize()
+	if self:KillIfSpawned() then return end
+
 	if not SA_TheWorld then
 		SA_TheWorld = ents.FindByClass("worldspawn")[1]
 	end
 
-	local myPl = self:GetTable().Founder
-	if myPl and myPl:IsPlayer() and not myPl:IsSuperAdmin() then
-		myPl:Kill()
-		self:Remove()
-	end
 	self:SetModel("models/slyfo/sat_rtankstand.mdl")
 	self.TouchTable = {}
 	--self.TouchNetTable = {}

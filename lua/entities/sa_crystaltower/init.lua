@@ -21,13 +21,9 @@ function ENT:Think()
 end
 
 function ENT:Initialize()
-	local myPl = self:GetTable().Founder
-	if myPl and myPl:IsPlayer() and not myPl:IsSuperAdmin() then
-		myPl:Kill()
-		self:Remove()
-	end
+	if self:KillIfSpawned() then return end
+
 	self:SetModel("models/ce_mining/tiberium/ce_tib_500_200.mdl")
-	self.MayNotBeFound = true
 	self.CrystalResistant = true
 	self:SetSkin(math.random(0, 1))
 	self:PhysicsInit(SOLID_VPHYSICS)

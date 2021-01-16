@@ -6,11 +6,8 @@ include("shared.lua")
 ENT.WorldInternal = true
 
 function ENT:Initialize()
-	local myPl = self:GetTable().Founder
-	if myPl and myPl:IsPlayer() then
-		myPl:Kill()
-		self:Remove()
-	end
+	if self:KillIfSpawned() then return end
+
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)

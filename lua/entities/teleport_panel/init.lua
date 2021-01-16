@@ -6,6 +6,8 @@ include("shared.lua")
 ENT.WorldInternal = true
 
 function ENT:Initialize()
+	if self:KillIfSpawned() then return end
+
 	self:SetModel("models/props_combine/combine_intwallunit.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
@@ -19,8 +21,6 @@ function ENT:Initialize()
 
 	if not self.TeleKey then self.TeleKey = "default" end
 	self.LastUse = 0
-	local ply = self:GetTable().Founder
-	if ply and ply.IsValid and ply:IsValid() then self:Remove() return end
 end
 
 function ENT:Use(ply, called)

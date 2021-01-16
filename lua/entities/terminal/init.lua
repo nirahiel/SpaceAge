@@ -13,6 +13,8 @@ function ENT:SpawnFunction(ply, tr)
 end
 
 function ENT:Initialize()
+	if self:KillIfSpawned() then return end
+
 	self:SetModel("models/props/terminal.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
@@ -24,25 +26,9 @@ function ENT:Initialize()
 	end
 	local physobj = self:GetPhysicsObject()
 	if physobj:IsValid() then physobj:SetMass("50000") end
-	self:OwnerCheckValid()
-end
-
-function ENT:OwnerCheckValid()
-	if (self.ownerchecked) then return end
-	local myOwnerPly = SA.PP.GetOwner(self)
-	if not SA.PP.IsWorldEnt(self) and myOwnerPly and not myPl:IsSuperAdmin() then
-		print("UNAUTHORIZED Terminal Owner detected: '" .. myOwnerPly:Name() .. "'!")
-		myOwnerPly:Kill()
-		self:Remove()
-		return true
-	end
-	self.ownerchecked = true
 end
 
 function ENT:Use(ply, called)
-	if (self:OwnerCheckValid()) then
-		return
-	end
 	if not ply.TempStorage then
 		ply.TempStorage = {}
 	end
