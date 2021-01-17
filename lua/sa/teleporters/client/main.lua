@@ -2,18 +2,23 @@ if SA.Teleporter then SA.Teleporter.Close() end
 
 SA.Teleporter = {}
 
-local screenW, screenH, screenFOV
-local drawTeleporterUI = false
-local drawnPlanets = {}
-
-local MAX_MAP_SIZE = 300
-local BIGGER_THAN_MAP = 9999999999
-
 local SPHERE_MODEL = "models/holograms/hq_icosphere.mdl"
 local SPHERE_MATERIAL = "models/wireframe"
 local SPHERE_MODEL_SIZE = 12.0
 local ZERO_ANGLE = Angle(0,0,0)
 local ZERO_VECTOR = Vector(0,0,0)
+
+local screenW, screenH, screenFOV
+local drawTeleporterUI = false
+local drawnPlanets = {}
+local drawAngle = ZERO_ANGLE
+
+local MAX_MAP_SIZE = 300
+local BIGGER_THAN_MAP = 9999999999
+
+function LOLANGLE(ang)
+	drawAngle = ang
+end
 
 local function MakePlanetModel(planetData)
 	if planetData.model then
@@ -35,6 +40,7 @@ function SA.Teleporter.Open(ent)
 	screenW = ScrW()
 	screenH = ScrH()
 	screenFOV = LocalPlayer():GetFOV()
+	drawAngle = ZERO_ANGLE
 
 	drawnPlanets = {}
 
@@ -155,6 +161,7 @@ function SA.Teleporter.Close(dontNotifyServer)
 		end
 	end
 	drawnPlanets = {}
+
 	gui.EnableScreenClicker(false)
 end
 
@@ -164,7 +171,7 @@ local function DrawTeleporterUI()
 	local planetMouseOver = nil
 
 	local cursorX, cursorY = gui.MousePos()
-	local aimVector = util.AimVector(ZERO_ANGLE, screenFOV, cursorX, cursorY, screenW, screenH)
+	local aimVector = util.AimVector(drawAngle, screenFOV, cursorX, cursorY, screenW, screenH)
 
 	-- u = aimVector
 	-- c = planetData.position
@@ -183,7 +190,7 @@ local function DrawTeleporterUI()
 		end
 	end
 
-	cam.Start3D(ZERO_VECTOR, ZERO_ANGLE, screenFOV)
+	cam.Start3D(ZERO_VECTOR, drawAngle, screenFOV)
 		for _, planetData in pairs(drawnPlanets) do
 			if not planetData.textCenterPos then
 				planetData.textCenterPos = (planetData.position + Vector(0, 0, -planetData.r)):ToScreen()
