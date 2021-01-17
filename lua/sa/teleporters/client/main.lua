@@ -5,7 +5,6 @@ SA.Teleporter = {}
 local screenW, screenH, screenFOV
 local drawTeleporterUI = false
 local drawnPlanets = {}
-local lastMouseOverPlanet = nil
 
 local MAX_MAP_SIZE = 300
 local BIGGER_THAN_MAP = 9999999999
@@ -36,7 +35,6 @@ function SA.Teleporter.Open(ent)
 	screenW = ScrW()
 	screenH = ScrH()
 	screenFOV = LocalPlayer():GetFOV()
-	lastMouseOverPlanet = nil
 
 	drawnPlanets = {}
 
@@ -164,7 +162,6 @@ local function DrawTeleporterUI()
 	if not drawTeleporterUI then return end
 
 	local planetMouseOver = nil
-	local planetMouseOverName = nil
 
 	local cursorX, cursorY = gui.MousePos()
 	local aimVector = util.AimVector(ZERO_ANGLE, screenFOV, cursorX, cursorY, screenW, screenH)
@@ -183,18 +180,6 @@ local function DrawTeleporterUI()
 		local delta = (uoc * uoc) - (oclen2 - r2)
 		if delta >= 0 then
 			planetMouseOver = planetData
-			planetMouseOverName = planetMouseOver.name
-		end
-	end
-
-	if planetMouseOverName ~= lastMouseOverPlanet then
-		lastMouseOverPlanet = planetMouseOverName
-		if planetMouseOver then
-			if planetMouseOver.canTeleportTo then
-				surface.PlaySound("buttons/button15.wav")
-			else
-				surface.PlaySound("buttons/button10.wav")
-			end
 		end
 	end
 
