@@ -124,6 +124,8 @@ function ENT:Refine()
 end
 
 function ENT:Think()
+	BaseClass.Think(self)
+
 	if (self.ShouldRefine and self.NextCycle < CurTime()) then
 		self:Refine()
 		self.NextCycle = CurTime() + 1

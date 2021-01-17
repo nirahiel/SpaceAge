@@ -106,6 +106,8 @@ function ENT:OnRemove()
 end
 
 function ENT:Think()
+	BaseClass.Think(self)
+
 	if self.ShouldMine and self.NextPulse < CurTime() then
 		self:Mine()
 		self.NextPulse = CurTime() + 1
