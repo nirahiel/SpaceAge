@@ -223,7 +223,29 @@ local function DrawTeleporterUI()
 		local uoc = aimVector:Dot(oc)
 
 		local delta = (uoc * uoc) - (oclen2 - r2)
-		if delta >= 0 and (not planetMouseOver or planetMouseOver.oclen2 > oclen2) then
+
+		if delta < 0 then
+			continue
+		end
+
+		local isPreferred = false
+		if planetMouseOver then
+			if not planetData.canTeleportTo and planetMouseOver.canTeleportTo then
+				continue
+			end
+
+			if planetData.canTeleportTo and not planetMouseOver.canTeleportTo then
+				isPreferred = true
+			end
+
+			if planetMouseOver.oclen2 > oclen2 then
+				isPreferred = true
+			end
+		else
+			isPreferred = true
+		end
+
+		if isPreferred then
 			planetMouseOver = planetData
 		end
 	end
@@ -237,6 +259,7 @@ local function DrawTeleporterUI()
 				mdl = MakePlanetModel(planetData)
 			end
 			mdl:SetPos(planetData.drawPos)
+			mdl:SetAngles(drawAngle)
 
 			local col = planetData.color
 
