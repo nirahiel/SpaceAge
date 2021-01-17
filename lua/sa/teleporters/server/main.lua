@@ -52,7 +52,7 @@ concommand.Add("sa_teleporter_do", function(ply, cmd, args)
 	local TeleTBL = SA_TeleportLocs[TeleKey]
 	if not TeleTBL then ply:ChatPrint("INVALID TELEPORT LOCATION") return end
 
-	local oldPos ply:GetPos()
+	local oldPos = ply:GetPos()
 	local pos = table.Random(TeleTBL)
 	ply:SetPos(pos)
 
