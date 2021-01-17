@@ -52,8 +52,11 @@ concommand.Add("sa_teleporter_do", function(ply, cmd, args)
 	local TeleTBL = SA_TeleportLocs[TeleKey]
 	if not TeleTBL then ply:ChatPrint("INVALID TELEPORT LOCATION") return end
 
+	local oldPos ply:GetPos()
 	local pos = table.Random(TeleTBL)
 	ply:SetPos(pos)
+
+	sound.Play("ambient/levels/citadel/weapon_disintegrate1.wav", oldPos)
 	sound.Play("ambient/levels/citadel/weapon_disintegrate1.wav", pos)
 end)
 
