@@ -178,7 +178,7 @@ local function DrawTeleporterUI()
 		local uoc = aimVector:Dot(oc)
 
 		local delta = (uoc * uoc) - (oclen2 - r2)
-		if delta >= 0 then
+		if delta >= 0 and (not planetMouseOver or planetMouseOver.oclen2 > oclen2) then
 			planetMouseOver = planetData
 		end
 	end
