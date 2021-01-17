@@ -14,3 +14,5 @@ ENT.LaserConsume = 7245 * 2 --Energy per cycle
 ENT.LaserCycle = 30 --Time is second to complete a cycle
 
 ENT.IceLaserModeMin = 2
+
+list.Set("LSEntOverlayText" , "ice_mining_laser_3", {HasOOO = true, num = 1, strings = {"ICE Mining Laser III\nEnergy: ", ""}, resnames = {"energy"}})

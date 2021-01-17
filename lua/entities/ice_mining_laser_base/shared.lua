@@ -17,4 +17,4 @@ ENT.LaserActive = false
 
 ENT.IceLaserModeMin = 0
 
-list.Set("LSEntOverlayText" , "ice_mining_laser_base", {HasOOO = true, num = 1, strings = {"ICE Mining Laser", "\nEnergy: "}, resnames = {"energy"}})
+list.Set("LSEntOverlayText" , "ice_mining_laser_base", {HasOOO = true, num = 1, strings = {"ICE Mining Laser I\nEnergy: ", ""}, resnames = {"energy"}})

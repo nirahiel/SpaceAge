@@ -17,4 +17,4 @@ ENT.RefineEfficiency = 0.5
 
 ENT.MinIceRefineryMod = 0
 
-list.Set("LSEntOverlayText" , "ice_refinery_basic", {HasOOO = true, num = 1, strings = {"ICE Mining Laser", "\nEnergy: "}, resnames = {"energy"}})
+list.Set("LSEntOverlayText" , "ice_refinery_basic", {HasOOO = true, num = 1, strings = {"ICE Refinery Basic\nEnergy: ", ""}, resnames = {"energy"}})

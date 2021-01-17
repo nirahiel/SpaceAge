@@ -16,3 +16,5 @@ ENT.CycleVol = 1
 ENT.RefineEfficiency = 1.0
 
 ENT.MinIceRefineryMod = 2
+
+list.Set("LSEntOverlayText" , "ice_refinery_advanced", {HasOOO = true, num = 1, strings = {"ICE Refinery Advanced\nEnergy: ", ""}, resnames = {"energy"}})
