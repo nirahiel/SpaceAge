@@ -196,7 +196,7 @@ local function DrawTeleporterUI()
 		end
 		offX = offX - dragStartX
 		offY = offY - dragStartY
-		drawAngle = dragStartAngle + Angle(offY * -360, offX * 360, 0)
+		drawAngle = dragStartAngle + Angle(offY * 360, offX * 360, 0)
 	else
 		dragStartAngle = nil
 	end
