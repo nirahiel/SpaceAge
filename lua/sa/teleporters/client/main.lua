@@ -51,7 +51,7 @@ end
 function SA.Teleporter.Open(ent)
 	screenW = ScrW()
 	screenH = ScrH()
-	screenFOV = LocalPlayer():GetFOV()
+	screenFOV = 75 --LocalPlayer():GetFOV()
 	lastDrawAngle = nil
 
 	drawnPlanets = {}
