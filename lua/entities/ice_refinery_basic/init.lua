@@ -2,6 +2,8 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
+DEFINE_BASECLASS("base_rd3_entity")
+
 local RD = CAF.GetAddon("Resource Distribution")
 
 local IceTypes = {
@@ -28,6 +30,8 @@ local GiveTranslate = {
 }
 
 function ENT:Initialize()
+	BaseClass.Initialize(self)
+
 	self:SetModel(self.Model)
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)

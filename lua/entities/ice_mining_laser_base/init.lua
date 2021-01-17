@@ -2,9 +2,13 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
+DEFINE_BASECLASS("base_rd3_entity")
+
 local RD = CAF.GetAddon("Resource Distribution")
 
 function ENT:Initialize()
+	BaseClass.Initialize(self)
+
 	self:SetModel(self.LaserModel)
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
