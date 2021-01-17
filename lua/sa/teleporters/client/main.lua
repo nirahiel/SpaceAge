@@ -12,8 +12,8 @@ local screenW, screenH, screenFOV
 local drawTeleporterUI = false
 local drawnPlanets = {}
 local drawAngle = ZERO_ANGLE
-local lastDrawAngle
 local planetShift
+local drawLastTime
 
 local MAX_MAP_SIZE = 300
 local BIGGER_THAN_MAP = 9999999999
@@ -37,22 +37,12 @@ local function MakePlanetModel(planetData)
 	return mdl
 end
 
-local function RecomputePlanetIntermediates(planetData, pos)
-	planetData.drawPos = pos
-	planetData.oc = -pos
-	planetData.oclen2 = pos:LengthSqr()
-	planetData.textCenterPos = nil
-	planetData.textPos = nil
-	if planetData.model then
-		planetData.model:SetPos(planetData.drawPos)
-	end
-end
-
 function SA.Teleporter.Open(ent)
 	screenW = ScrW()
 	screenH = ScrH()
 	screenFOV = 75 --LocalPlayer():GetFOV()
 	lastDrawAngle = nil
+	drawLastTime = RealTime()
 
 	drawnPlanets = {}
 
@@ -154,7 +144,6 @@ function SA.Teleporter.Open(ent)
 
 			color = planetColor,
 		}
-		RecomputePlanetIntermediates(planetData, planetData.position)
 		drawnPlanets[planet.name] = planetData
 	end
 
@@ -181,8 +170,13 @@ function SA.Teleporter.Close(dontNotifyServer)
 end
 
 local dragStartAngle, dragStartX, dragStartY
+
 local function DrawTeleporterUI()
 	if not drawTeleporterUI then return end
+
+	local curTime = RealTime()
+	local timeDelta = curTime - drawLastTime
+	drawLastTime = curTime
 
 	local cursorX, cursorY = gui.MousePos()
 
@@ -199,29 +193,28 @@ local function DrawTeleporterUI()
 		drawAngle = dragStartAngle + Angle(offY * 360, offX * 360, 0)
 	else
 		dragStartAngle = nil
+		drawAngle = Angle(drawAngle.p, drawAngle.y + (timeDelta * 5.0), drawAngle.r)
 	end
 
 	local planetMouseOver = nil
 
 	local aimVector = util.AimVector(ZERO_ANGLE, screenFOV, cursorX, cursorY, screenW, screenH)
 
-	if drawAngle ~= lastDrawAngle then
-		for _, planetData in pairs(drawnPlanets) do
-			local pos = planetData.position - planetShift
-			pos:Rotate(drawAngle)
-			pos = pos + planetShift
-			RecomputePlanetIntermediates(planetData, pos)
-		end
-	end
-
 	-- u = aimVector
 	-- c = planetData.position
 	-- o = 0,0,0
 
 	for _, planetData in pairs(drawnPlanets) do
+		local pos = planetData.position - planetShift
+		pos:Rotate(drawAngle)
+		pos = pos + planetShift
+
+		planetData.drawPos = pos
+
 		local r2 = planetData.r2
-		local oc = planetData.oc
-		local oclen2 = planetData.oclen2
+		local oc = -pos
+		local oclen2 = pos:LengthSqr()
+		planetData.oclen2 = oclen2
 
 		local uoc = aimVector:Dot(oc)
 
@@ -233,14 +226,13 @@ local function DrawTeleporterUI()
 
 	cam.Start3D(ZERO_VECTOR, ZERO_ANGLE, screenFOV)
 		for _, planetData in pairs(drawnPlanets) do
-			if not planetData.textCenterPos then
-				planetData.textCenterPos = (planetData.drawPos + Vector(0, 0, -planetData.r)):ToScreen()
-			end
+			planetData.textCenterPos = (planetData.drawPos + Vector(0, 0, -planetData.r)):ToScreen()
 
 			local mdl = planetData.model
 			if not mdl then
 				mdl = MakePlanetModel(planetData)
 			end
+			mdl:SetPos(planetData.drawPos)
 
 			local col = planetData.color
 
@@ -262,24 +254,14 @@ local function DrawTeleporterUI()
 
 	surface.SetFont("Trebuchet24")
 	for _, planetData in pairs(drawnPlanets) do
-		if not planetData.textPos then
-			local w, h = surface.GetTextSize(planetData.label)
-			local x = planetData.textCenterPos.x - (w / 2)
-			local y = planetData.textCenterPos.y + 10
-			planetData.textPos = {
-				x = x,
-				y = y,
-				bx = x - 5,
-				by = y - 5,
-				bw = w + 10,
-				bh = h + 10,
-			}
-		end
+		local w, h = surface.GetTextSize(planetData.label)
+		local x = planetData.textCenterPos.x - (w / 2)
+		local y = planetData.textCenterPos.y + 10
 
-		draw.RoundedBox(8, planetData.textPos.bx, planetData.textPos.by, planetData.textPos.bw, planetData.textPos.bh, Color(0,0,0,128))
+		draw.RoundedBox(8, x - 5, y - 5, w + 10, h + 10, Color(0,0,0,128))
 
 		surface.SetTextColor(planetData.drawColor.r, planetData.drawColor.g, planetData.drawColor.b)
-		surface.SetTextPos(planetData.textPos.x, planetData.textPos.y)
+		surface.SetTextPos(x, y)
 		surface.DrawText(planetData.label)
 	end
 
