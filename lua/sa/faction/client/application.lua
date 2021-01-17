@@ -1,5 +1,5 @@
-SA_REQUIRE("misc.player_full_load")
 SA_REQUIRE("faction.main")
+SA_REQUIRE("misc.player_loaded")
 
 local AppPanel = nil
 

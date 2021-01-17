@@ -1,7 +1,9 @@
 SA.API = {}
 
 SA_REQUIRE("config")
-SA_REQUIRE("misc.player_full_load")
+if CLIENT then
+	SA_REQUIRE("misc.player_loaded")
+end
 
 local JWT_IN_RENEWAL = true
 

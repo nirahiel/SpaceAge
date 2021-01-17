@@ -1,6 +1,6 @@
 SA.Terminal = {}
 
-SA_REQUIRE("misc.player_full_load")
+SA_REQUIRE("misc.player_loaded")
 SA_REQUIRE("terminal.research")
 SA_REQUIRE("terminal.resource")
 SA_REQUIRE("terminal.goodies")
