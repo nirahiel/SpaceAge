@@ -2,6 +2,7 @@ if SA.Teleporter then SA.Teleporter.Close() end
 
 SA.Teleporter = {}
 
+local FONT = "Trebuchet24"
 local SPHERE_MODEL = "models/holograms/hq_icosphere.mdl"
 local SPHERE_MATERIAL = "models/wireframe"
 local SPHERE_MODEL_SIZE = 12.0
@@ -224,6 +225,14 @@ local function DrawTeleporterUI()
 
 		local delta = (uoc * uoc) - (oclen2 - r2)
 
+		if planetData.textBoxPos and
+			cursorX >= planetData.textBoxPos.x1 and
+			cursorX <= planetData.textBoxPos.x2 and
+			cursorY >= planetData.textBoxPos.y1 and
+			cursorY <= planetData.textBoxPos.y2 then
+				delta = 9999
+		end
+
 		if delta < 0 then
 			continue
 		end
@@ -279,13 +288,36 @@ local function DrawTeleporterUI()
 		end
 	cam.End3D()
 
-	surface.SetFont("Trebuchet24")
+	surface.SetFont(FONT)
 	for _, planetData in pairs(drawnPlanets) do
-		local w, h = surface.GetTextSize(planetData.label)
+		local w, h
+		if planetData.textSize then
+			w = planetData.textSize.w
+			h = planetData.textSize.h
+		else
+			w, h = surface.GetTextSize(planetData.label)
+			planetData.textSize = {
+				w = w,
+				h = h,
+			}
+		end
+
 		local x = planetData.textCenterPos.x - (w / 2)
 		local y = planetData.textCenterPos.y + 10
 
-		draw.RoundedBox(8, x - 5, y - 5, w + 10, h + 10, Color(0,0,0,128))
+		local bw = w + 10
+		local bh = h + 10
+		local bx = x - 5
+		local by = y - 5
+
+		planetData.textBoxPos = {
+			x1 = bx,
+			x2 = bx + bw,
+			y1 = by,
+			y2 = by + bh,
+		}
+
+		draw.RoundedBox(8, bx, by, bw, bh, Color(0,0,0,128))
 
 		surface.SetTextColor(planetData.drawColor.r, planetData.drawColor.g, planetData.drawColor.b)
 		surface.SetTextPos(x, y)
