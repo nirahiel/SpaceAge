@@ -31,18 +31,6 @@ local ls_energy = 0
 -- this can't be changed right now
 local tempGaugeWid = 390
 
-local function LS_umsg_hook1(um)
-	ls_habitat = um:ReadFloat()
-	ls_air = um:ReadShort()
-	ls_tmp = um:ReadShort()
-	ls_coolant = um:ReadShort()
-	ls_energy = um:ReadShort()
-end
-
-local function LS_umsg_hook2(um)
-	ls_air = um:ReadShort()
-end
-
 local function LS_net_hook1()
 	ls_habitat = net.ReadFloat()
 	ls_air = net.ReadInt(32)
@@ -60,8 +48,6 @@ local function CheckHookIn()
 		return
 	end
 	RunConsoleCommand("LS_Display_HUD", "0")
-	usermessage.Hook("LS_umsg1", LS_umsg_hook1)
-	usermessage.Hook("LS_umsg2", LS_umsg_hook2)
 	net.Receive("LS_umsg1", LS_net_hook1)
 	net.Receive("LS_umsg2", LS_net_hook2)
 	timer.Remove("SA_CheckHUDHookIn")
