@@ -1,2 +1,2 @@
 include("shared.lua")
-language.Add("storage_ice", "Ice Storage Module")
+language.Add("storage_ice", "Raw Ice Storage Module")
