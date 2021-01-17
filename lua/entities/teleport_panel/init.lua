@@ -12,19 +12,15 @@ function ENT:Initialize()
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)
+	self:SetUseType(SIMPLE_USE)
 
 	local phys = self:GetPhysicsObject()
-	if (phys:IsValid()) then
+	if phys:IsValid() then
 		phys:EnableMotion(false)
 		phys:SetMass(50000)
 	end
-
-	if not self.TeleKey then self.TeleKey = "default" end
-	self.LastUse = 0
 end
 
-function ENT:Use(ply, called)
-	if self.LastUse > CurTime() then return end
-	SA.Teleporter.Open(ply, self.TeleKey)
-	self.LastUSe = CurTime() + 1
+function ENT:Use(ply)
+	SA.Teleporter.Open(ply, self)
 end

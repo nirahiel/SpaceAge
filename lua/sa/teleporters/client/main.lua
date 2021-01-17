@@ -1,94 +1,269 @@
-local SA_TeleportPanel = nil
-local function DestroyTeleportPanel()
-	if SA_TeleportPanel then
-		SA_TeleportPanel:SetDeleteOnClose(true)
-		SA_TeleportPanel:Close()
-	end
-end
-DestroyTeleportPanel()
-local SA_TeleList = {}
-local SA_TeleportLocaLBox = nil
-local SA_TeleKey = "NONE"
+if SA.Teleporter then SA.Teleporter.Close() end
 
-net.Receive("SA_HideTeleportPanel", function(len, ply)
-	net.ReadBool()
-	if not SA_TeleportPanel then return end
-	gui.EnableScreenClicker(false)
-	SA_TeleportPanel:SetVisible(false)
-end)
-local function RefreshTeleportPanel()
-	if SA_TeleList and SA_TeleportLocaLBox then
-		SA_TeleportLocaLBox:Clear()
-		for k, v in pairs(SA_TeleList) do
-			SA_TeleportLocaLBox:AddLine(v)
+SA.Teleporter = {}
+
+local screenW, screenH, screenFOV
+local drawTeleporterUI = false
+local drawnPlanets = {}
+local lastMouseOverPlanet = nil
+
+local MAX_MAP_SIZE = 300
+local BIGGER_THAN_MAP = 9999999999
+
+local SPHERE_MODEL = "models/holograms/hq_icosphere.mdl"
+local SPHERE_MATERIAL = "models/wireframe"
+local SPHERE_MODEL_SIZE = 12.0
+local ZERO_ANGLE = Angle(0,0,0)
+local ZERO_VECTOR = Vector(0,0,0)
+
+local function MakePlanetModel(planetData)
+	if planetData.model then
+		planetData.model:Remove()
+	end
+
+	local mdl = ClientsideModel(SPHERE_MODEL, RENDERGROUP_OTHER)
+	mdl:SetNoDraw(true)
+	mdl:SetMaterial(SPHERE_MATERIAL)
+	mdl:SetColor(planetData.color)
+	mdl:SetPos(planetData.position)
+	mdl:SetModelScale(planetData.size / SPHERE_MODEL_SIZE, 0)
+	mdl:SetRenderMode(RENDERMODE_TRANSCOLOR)
+	planetData.model = mdl
+	return mdl
+end
+
+function SA.Teleporter.Open(ent)
+	screenW = ScrW()
+	screenH = ScrH()
+	screenFOV = LocalPlayer():GetFOV()
+	lastMouseOverPlanet = nil
+
+	drawnPlanets = {}
+
+	local otherLocations = {}
+	local planetTeleporters = {}
+	local planets = SA.SB.GetPlanets()
+
+	local myPlanet = SA.SB.FindClosestPlanet(ent:GetPos(), false).name
+
+	for _, otherEnt in pairs(ents.FindByClass("teleport_panel")) do
+		local otherName = otherEnt:GetNWString("TeleKey")
+		if not otherLocations[otherName] then
+			local otherPlanet = SA.SB.FindClosestPlanet(otherEnt:GetPos(), false).name
+			otherLocations[otherName] = otherPlanet
+			planetTeleporters[otherPlanet] = otherName
 		end
 	end
+
+	local maxPlanetCoord = Vector(-BIGGER_THAN_MAP,-BIGGER_THAN_MAP,-BIGGER_THAN_MAP)
+	local minPlanetCoord = Vector(BIGGER_THAN_MAP,BIGGER_THAN_MAP,BIGGER_THAN_MAP)
+	for _, planet in pairs(planets) do
+		if planet.position.x > maxPlanetCoord.x then
+			maxPlanetCoord.x = planet.position.x
+		end
+		if planet.position.y > maxPlanetCoord.y then
+			maxPlanetCoord.y = planet.position.y
+		end
+		if planet.position.z > maxPlanetCoord.z then
+			maxPlanetCoord.z = planet.position.z
+		end
+		if planet.position.x < minPlanetCoord.x then
+			minPlanetCoord.x = planet.position.x
+		end
+		if planet.position.y < minPlanetCoord.y then
+			minPlanetCoord.y = planet.position.y
+		end
+		if planet.position.z < minPlanetCoord.z then
+			minPlanetCoord.z = planet.position.z
+		end
+	end
+
+	local planetSizeGrid = maxPlanetCoord - minPlanetCoord
+	local maxMapDimension = planetSizeGrid.x
+	if planetSizeGrid.y > maxMapDimension then
+		maxMapDimension  = planetSizeGrid.y
+	end
+	if planetSizeGrid.z > maxMapDimension then
+		maxMapDimension  = planetSizeGrid.z
+	end
+
+	local scaleFactor = MAX_MAP_SIZE / maxMapDimension
+
+	local offset = ((maxPlanetCoord + minPlanetCoord) / 2) * scaleFactor
+	offset.x = (minPlanetCoord.x * scaleFactor) - 1000
+
+	for _, planet in pairs(planets) do
+		local size = planet.radius * 2.0 * scaleFactor
+
+		local curModelPlanet = drawnPlanets[planet.name]
+
+		if curModelPlanet and curModelPlanet.size >= size then
+			continue
+		end
+
+		local teleporterName = planetTeleporters[planet.name]
+
+		local isMyPlanet = planet.name == myPlanet
+
+		local planetColor = Color(255,0,0,64)
+		if isMyPlanet then
+			planetColor = Color(0,0,255,64)
+		elseif teleporterName then
+			planetColor = Color(0,255,0,64)
+		end
+
+		local position = (planet.position * scaleFactor) - offset
+		local r = size / 2.0
+
+		local label = planet.name
+		if teleporterName then
+			label = label .. " (" .. teleporterName .. ")"
+		end
+
+		local planetData = {
+			position = position,
+			size = size,
+
+			r = r,
+			r2 = r * r,
+			oc = -position,
+			oclen2 = position:LengthSqr(),
+
+			name = planet.name,
+			teleporterName = teleporterName,
+			canTeleportTo = teleporterName and not isMyPlanet,
+			label = label,
+
+			color = planetColor,
+		}
+		drawnPlanets[planet.name] = planetData
+	end
+
+	drawTeleporterUI = true
+	gui.EnableScreenClicker(true)
 end
 
-net.Receive("SA_TeleporterUpdate", function(len, ply)
-	local iMax = net.ReadInt(16)
-	SA_TeleList = {}
-	for i = 1 , iMax do
-		table.insert(SA_TeleList, net.ReadString())
+function SA.Teleporter.Close(dontNotifyServer)
+	if not dontNotifyServer then
+		RunConsoleCommand("sa_teleporter_close")
 	end
-	RefreshTeleportPanel()
-end)
 
-local function CreateTeleportPanel()
-	DestroyTeleportPanel()
-	local ScrX = ScrW()
-	local ScrY = ScrH()
-	local BasePanel = vgui.Create("DFrame")
-	BasePanel:SetPos((ScrX / 2) - 320, (ScrY / 2) - 243)
-	BasePanel:SetSize(640, 486)
-	BasePanel:SetTitle("Teleporter Form: " .. SA_TeleKey)
-	BasePanel:SetDraggable(true)
-	BasePanel:ShowCloseButton(false)
-	BasePanel:SetDeleteOnClose(false)
+	if not drawTeleporterUI then return end
 
-	local TeleLBox = vgui.Create("DListView", BasePanel)
-	TeleLBox:SetMultiSelect(false)
-	TeleLBox:SetPos(20, 30)
-	TeleLBox:AddColumn("Name")
-	TeleLBox:SetSize(BasePanel:GetWide() - 40, 405)
+	drawTeleporterUI = false
+	for _, planetData in pairs(drawnPlanets) do
+		if planetData.model then
+			planetData.model:Remove()
+		end
+	end
+	drawnPlanets = {}
+	gui.EnableScreenClicker(false)
+end
 
-	SA_TeleportLocaLBox = TeleLBox
+local function DrawTeleporterUI()
+	if not drawTeleporterUI then return end
 
-	local AcceptButton = vgui.Create("DButton", BasePanel)
-	AcceptButton:SetText("Teleport")
-	AcceptButton:SetPos((BasePanel:GetWide() / 2) - 105, BasePanel:GetTall() - 45)
-	AcceptButton:SetSize(100, 40)
-	AcceptButton.DoClick = function()
-		if SA_TeleportLocaLBox then
-			local SelLine = SA_TeleportLocaLBox:GetSelectedLine()
-			if SelLine then
-				local SelPanel = SA_TeleportLocaLBox:GetLine(SelLine)
-				if SelPanel then
-					local SelText = SelPanel:GetValue(1)
-					RunConsoleCommand("sa_teleporter_do", SelText)
-				end
+	local planetMouseOver = nil
+	local planetMouseOverName = nil
+
+	local cursorX, cursorY = gui.MousePos()
+	local aimVector = util.AimVector(ZERO_ANGLE, screenFOV, cursorX, cursorY, screenW, screenH)
+
+	-- u = aimVector
+	-- c = planetData.position
+	-- o = 0,0,0
+
+	for _, planetData in pairs(drawnPlanets) do
+		local r2 = planetData.r2
+		local oc = planetData.oc
+		local oclen2 = planetData.oclen2
+
+		local uoc = aimVector:Dot(oc)
+
+		local delta = (uoc * uoc) - (oclen2 - r2)
+		if delta >= 0 then
+			planetMouseOver = planetData
+			planetMouseOverName = planetMouseOver.name
+		end
+	end
+
+	if planetMouseOverName ~= lastMouseOverPlanet then
+		lastMouseOverPlanet = planetMouseOverName
+		if planetMouseOver then
+			if planetMouseOver.canTeleportTo then
+				surface.PlaySound("buttons/button15.wav")
+			else
+				surface.PlaySound("buttons/button10.wav")
 			end
 		end
 	end
-	SA_TeleportLocaLBox.DoDoubleClick = AcceptButton.DoClick
-	local DenyButton = vgui.Create("DButton", BasePanel)
-	DenyButton:SetText("Cancel")
-	DenyButton:SetPos((BasePanel:GetWide() / 2) + 5, BasePanel:GetTall() - 45)
-	DenyButton:SetSize(100, 40)
-	DenyButton.DoClick = function()
-		RunConsoleCommand("sa_teleporter_cancel")
+
+	cam.Start3D(ZERO_VECTOR, ZERO_ANGLE, screenFOV)
+		for _, planetData in pairs(drawnPlanets) do
+			if not planetData.textCenterPos then
+				planetData.textCenterPos = (planetData.position + Vector(0, 0, -planetData.r)):ToScreen()
+			end
+
+			local mdl = planetData.model
+			if not mdl then
+				mdl = MakePlanetModel(planetData)
+			end
+
+			local col = mdl:GetColor()
+
+			if planetMouseOver == planetData then
+				if planetData.canTeleportTo then
+					col = Color(255,255,0,64)
+				else
+					col = Color(255,128,0,64)
+				end
+			end
+
+			planetData.drawColor = col
+
+			render.SetColorModulation(col.r / 255, col.g / 255, col.b / 255)
+			render.SetBlend(col.a / 255)
+			mdl:DrawModel()
+		end
+	cam.End3D()
+
+	surface.SetFont("Trebuchet24")
+	for _, planetData in pairs(drawnPlanets) do
+		if not planetData.textPos then
+			local w, h = surface.GetTextSize(planetData.label)
+			local x = planetData.textCenterPos.x - (w / 2)
+			local y = planetData.textCenterPos.y + 10
+			planetData.textPos = {
+				x = x,
+				y = y,
+				bx = x - 5,
+				by = y - 5,
+				bw = w + 10,
+				bh = h + 10,
+			}
+		end
+
+		draw.RoundedBox(8, planetData.textPos.bx, planetData.textPos.by, planetData.textPos.bw, planetData.textPos.bh, Color(0,0,0,128))
+
+		surface.SetTextColor(planetData.drawColor.r, planetData.drawColor.g, planetData.drawColor.b)
+		surface.SetTextPos(planetData.textPos.x, planetData.textPos.y)
+		surface.DrawText(planetData.label)
 	end
-	BasePanel:SetVisible(false)
-	SA_TeleportPanel = BasePanel
-	RefreshTeleportPanel()
+
+	if input.IsMouseDown(MOUSE_LEFT) then
+		if planetMouseOver and planetMouseOver.canTeleportTo then
+			SA.Teleporter.Close(true)
+			RunConsoleCommand("sa_teleporter_do", planetMouseOver.teleporterName)
+		else
+			SA.Teleporter.Close()
+		end
+	end
 end
-timer.Simple(0, CreateTeleportPanel)
+hook.Add("HUDPaint", "SA_HUDPaint_TeleporterUI", DrawTeleporterUI)
 
-
-net.Receive("SA_OpenTeleporter", function(len, ply)
-	SA_TeleKey = net.ReadString()
-	RunConsoleCommand("sa_teleporter_update")
-	SA_TeleportPanel:SetTitle("Teleporter Form: " .. SA_TeleKey)
-	gui.EnableScreenClicker(true)
-	SA_TeleportPanel:SetVisible(true)
+net.Receive("SA_Teleporter_Open", function()
+	SA.Teleporter.Open(net.ReadEntity())
+end)
+net.Receive("SA_Teleporter_Close", function()
+	SA.Teleporter.Close(true)
 end)

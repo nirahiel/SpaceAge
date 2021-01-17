@@ -12,6 +12,10 @@ pushd garrysmod/addons/spaceage
 git pull
 popd
 
+pushd garrysmod/addons/spacebuild
+git pull
+popd
+
 steamcmd +runscript "$HOME/s/garrysmod/addons/spaceage/misc/install.txt"
 
 "$HOME/s/garrysmod/addons/spaceage/misc/grabaddons.sh"
