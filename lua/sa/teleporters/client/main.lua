@@ -103,6 +103,10 @@ function SA.Teleporter.Open(ent)
 	offset.x = offsetX
 
 	for _, planet in pairs(planets) do
+		if IsValid(planet.ent) and planet.ent:GetColor() == Color(255,0,0,255) then
+			continue
+		end
+
 		local size = planet.radius * 2.0 * scaleFactor
 
 		local curModelPlanet = drawnPlanets[planet.name]
