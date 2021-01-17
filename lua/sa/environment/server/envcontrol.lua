@@ -94,6 +94,7 @@ local function InitHabitablePlanets()
 		local planet = ents.Create("base_sb_planet2")
 		planet:SetModel("models/props_lab/huladoll.mdl")
 		planet:SetPos(position)
+		planet:SetColor(Color(255,0,0,255))
 		planet:Spawn()
 
 		local closestPlan = SA.SB.FindClosestPlanet(position, false)
