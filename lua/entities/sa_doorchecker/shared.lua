@@ -7,5 +7,6 @@ ENT.Contact = "mriq91@gmail.com"
 ENT.Purpose = "Displays Door Status"
 ENT.Instructions = "Place and be happy"
 
-ENT.Spawnable   = false
+ENT.Spawnable = false
 ENT.AdminSpawnable = true
+ENT.DoNotDuplicate = true

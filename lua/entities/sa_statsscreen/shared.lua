@@ -9,3 +9,4 @@ ENT.Instructions = "Place and be happy"
 
 ENT.Spawnable   = false
 ENT.AdminSpawnable = true
+ENT.DoNotDuplicate = true

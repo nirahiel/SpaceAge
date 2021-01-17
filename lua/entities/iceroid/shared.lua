@@ -6,5 +6,6 @@ ENT.Category = "Asteroid"
 
 ENT.Spawnable = false
 ENT.AdminSpawnable = false
+ENT.DoNotDuplicate = true
 
 ENT.IsIceroid = true
