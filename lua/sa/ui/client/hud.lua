@@ -43,6 +43,18 @@ local function LS_umsg_hook2(um)
 	ls_air = um:ReadShort()
 end
 
+local function LS_net_hook1()
+	ls_habitat = net.ReadFloat()
+	ls_air = net.ReadInt(32)
+	ls_tmp = net.ReadInt(32)
+	ls_coolant = net.ReadInt(32)
+	ls_energy = net.ReadInt(32)
+end
+
+local function LS_net_hook2()
+	ls_air = net.ReadInt(32)
+end
+
 local function CheckHookIn()
 	if not ConVarExists("LS_Display_HUD") then
 		return
@@ -50,6 +62,8 @@ local function CheckHookIn()
 	RunConsoleCommand("LS_Display_HUD", "0")
 	usermessage.Hook("LS_umsg1", LS_umsg_hook1)
 	usermessage.Hook("LS_umsg2", LS_umsg_hook2)
+	net.Receive("LS_umsg1", LS_net_hook1)
+	net.Receive("LS_umsg2", LS_net_hook2)
 	timer.Remove("SA_CheckHUDHookIn")
 	print("SA HUD loaded...")
 end
