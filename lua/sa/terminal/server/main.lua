@@ -474,6 +474,7 @@ local function SA_MoveResource(ply, cmd, args)
 	local res = args[3]
 	local num = tonumber(args[4])
 	local CHECK = args[5]
+	if to == from then return end
 	if CHECK ~= HASH then return end
 	if num <= 0 then return end
 	local maxamt = 0
