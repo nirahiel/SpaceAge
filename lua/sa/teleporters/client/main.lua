@@ -6,13 +6,11 @@ local FONT = "Trebuchet24"
 local SPHERE_MODEL = "models/holograms/hq_icosphere.mdl"
 local SPHERE_MATERIAL = "models/wireframe"
 local SPHERE_MODEL_SIZE = 12.0
-local ZERO_ANGLE = Angle(0,0,0)
-local ZERO_VECTOR = Vector(0,0,0)
 
 local screenW, screenH, screenFOV
 local drawTeleporterUI = false
 local drawnPlanets = {}
-local drawAngle = ZERO_ANGLE
+local drawAngle = Angle(0,0,0)
 local drawLastTime
 
 local MAX_MAP_SIZE = 300
