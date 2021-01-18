@@ -13,7 +13,6 @@ local screenW, screenH, screenFOV
 local drawTeleporterUI = false
 local drawnPlanets = {}
 local drawAngle = ZERO_ANGLE
-local planetShift
 local drawLastTime
 
 local MAX_MAP_SIZE = 300
@@ -31,7 +30,7 @@ local function MakePlanetModel(planetData)
 	local mdl = ClientsideModel(SPHERE_MODEL, RENDERGROUP_OTHER)
 	mdl:SetNoDraw(true)
 	mdl:SetMaterial(SPHERE_MATERIAL)
-	mdl:SetPos(planetData.drawPos)
+	mdl:SetPos(planetData.position)
 	mdl:SetModelScale(planetData.size / SPHERE_MODEL_SIZE, 0)
 	mdl:SetRenderMode(RENDERMODE_TRANSCOLOR)
 	planetData.model = mdl
@@ -49,7 +48,7 @@ function SA.Teleporter.Open(ent)
 
 	local otherLocations = {}
 	local planetTeleporters = {}
-	local planets = SA.SB.GetPlanets()
+	local planets = table.Copy(SA.SB.GetPlanets())
 
 	local myPlanet = SA.SB.FindClosestPlanet(ent:GetPos(), false).name
 
@@ -61,6 +60,18 @@ function SA.Teleporter.Open(ent)
 			planetTeleporters[otherPlanet] = otherName
 		end
 	end
+
+	--[[
+	local stars = SA.SB.GetStars()
+	for k, star in pairs(stars) do
+		planets[k] = {
+			isStar = true,
+			radius = star.Radius,
+			position = star.Position,
+			name = star.name,
+		}
+	end
+	]]
 
 	maxPlanetCoord = Vector(-BIGGER_THAN_MAP,-BIGGER_THAN_MAP,-BIGGER_THAN_MAP)
 	minPlanetCoord = Vector(BIGGER_THAN_MAP,BIGGER_THAN_MAP,BIGGER_THAN_MAP)
@@ -97,11 +108,6 @@ function SA.Teleporter.Open(ent)
 	local scaleFactor = MAX_MAP_SIZE / maxMapDimension
 
 	local offset = ((maxPlanetCoord + minPlanetCoord) / 2) * scaleFactor
-	local offsetX = (minPlanetCoord.x * scaleFactor) - 1000
-
-	planetShift = Vector(offset.x - offsetX,0,0)
-
-	offset.x = offsetX
 
 	for _, planet in pairs(planets) do
 		if IsValid(planet.ent) and planet.ent:GetColor() == Color(255,0,0,255) then
@@ -121,7 +127,9 @@ function SA.Teleporter.Open(ent)
 		local isMyPlanet = planet.name == myPlanet
 
 		local planetColor = Color(255,0,0,64)
-		if isMyPlanet then
+		if planet.isStar then
+			planetColor = Color(255,255,0,128)
+		elseif isMyPlanet then
 			planetColor = Color(0,0,255,64)
 		elseif teleporterName then
 			planetColor = Color(0,255,0,64)
@@ -203,22 +211,18 @@ local function DrawTeleporterUI()
 
 	local planetMouseOver = nil
 
-	local aimVector = util.AimVector(ZERO_ANGLE, screenFOV, cursorX, cursorY, screenW, screenH)
+	local aimVector = util.AimVector(drawAngle, screenFOV, cursorX, cursorY, screenW, screenH)
+
+	local origin = drawAngle:Forward() * -1000
 
 	-- u = aimVector
 	-- c = planetData.position
-	-- o = 0,0,0
+	-- o = origin
 
 	for _, planetData in pairs(drawnPlanets) do
-		local pos = planetData.position - planetShift
-		pos:Rotate(drawAngle)
-		pos = pos + planetShift
-
-		planetData.drawPos = pos
-
 		local r2 = planetData.r2
-		local oc = -pos
-		local oclen2 = pos:LengthSqr()
+		local oc = origin - planetData.position
+		local oclen2 = oc:LengthSqr()
 		planetData.oclen2 = oclen2
 
 		local uoc = aimVector:Dot(oc)
@@ -259,16 +263,14 @@ local function DrawTeleporterUI()
 		end
 	end
 
-	cam.Start3D(ZERO_VECTOR, ZERO_ANGLE, screenFOV)
+	cam.Start3D(origin, drawAngle, screenFOV)
 		for _, planetData in pairs(drawnPlanets) do
-			planetData.textCenterPos = (planetData.drawPos + Vector(0, 0, -planetData.r)):ToScreen()
+			planetData.textCenterPos = (planetData.position + Vector(0, 0, -planetData.r)):ToScreen()
 
 			local mdl = planetData.model
 			if not mdl then
 				mdl = MakePlanetModel(planetData)
 			end
-			mdl:SetPos(planetData.drawPos)
-			mdl:SetAngles(drawAngle)
 
 			local col = planetData.color
 
