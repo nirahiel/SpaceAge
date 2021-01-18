@@ -2,11 +2,11 @@
   "Ring": [
     {
       "Counts": {
-        "Krystallos": 1,
-        "Clear Ice": 1,
-        "Glare Crust": 1,
-        "Blue Ice": 1,
-        "Glacial Mass": 1
+        "krystallos": 1,
+        "clear ice": 1,
+        "glare crust": 1,
+        "blue ice": 1,
+        "glacial mass": 1
       },
       "Config": {
         "OuterRadius": 4096,
@@ -26,11 +26,11 @@
     },
     {
       "Counts": {
-        "White Glaze": 3,
-        "Dark Glitter": 2,
-        "Gelidus": 4,
-        "Glare Crust": 1,
-        "Glacial Mass": 2
+        "white glaze": 3,
+        "dark glitter": 2,
+        "gelidus": 4,
+        "glare crust": 1,
+        "glacial mass": 2
       },
       "Config": {
         "OuterRadius": 5000,
@@ -50,9 +50,9 @@
     },
     {
       "Counts": {
-        "Clear Ice": 4,
-        "Glare Crust": 6,
-        "Dark Glitter": 1
+        "clear ice": 4,
+        "glare crust": 6,
+        "dark glitter": 1
       },
       "Config": {
         "OuterRadius": 4500,
@@ -72,10 +72,10 @@
     },
     {
       "Counts": {
-        "Clear Ice": 3,
-        "Gelidus": 5,
-        "Dark Glitter": 1,
-        "White Glaze": 4
+        "clear ice": 3,
+        "gelidus": 5,
+        "dark glitter": 1,
+        "white glaze": 4
       },
       "Config": {
         "OuterRadius": 4800,
@@ -95,12 +95,12 @@
     },
     {
       "Counts": {
-        "White Glaze": 5,
-        "Krystallos": 2,
-        "Dark Glitter": 1,
-        "Clear Ice": 2,
-        "Glare Crust": 5,
-        "Gelidus": 2
+        "white glaze": 5,
+        "krystallos": 2,
+        "dark glitter": 1,
+        "clear ice": 2,
+        "glare crust": 5,
+        "gelidus": 2
       },
       "Config": {
         "OuterRadius": 8000,
@@ -120,11 +120,11 @@
     },
     {
       "Counts": {
-        "Krystallos": 1,
-        "Dark Glitter": 2,
-        "Clear Ice": 2,
-        "Blue Ice": 3,
-        "Glacial Mass": 1
+        "krystallos": 1,
+        "dark glitter": 2,
+        "clear ice": 2,
+        "blue ice": 3,
+        "glacial mass": 1
       },
       "Config": {
         "OuterRadius": 5000,

@@ -2,11 +2,11 @@
   "Ring": [
     {
       "Counts": {
-        "Krystallos": 1,
-        "Dark Glitter": 2,
-        "Clear Ice": 8,
-        "Glare Crust": 1,
-        "Gelidus": 2
+        "krystallos": 1,
+        "dark glitter": 2,
+        "clear ice": 8,
+        "glare crust": 1,
+        "gelidus": 2
       },
       "Config": {
         "OuterRadius": 7680,
@@ -26,11 +26,11 @@
     },
     {
       "Counts": {
-        "Krystallos": 1,
-        "Dark Glitter": 1,
-        "Gelidus": 2,
-        "Glare Crust": 2,
-        "Blue Ice": 8
+        "krystallos": 1,
+        "dark glitter": 1,
+        "gelidus": 2,
+        "glare crust": 2,
+        "blue ice": 8
       },
       "Config": {
         "OuterRadius": 4096,
@@ -50,10 +50,10 @@
     },
     {
       "Counts": {
-        "Gelidus": 1,
-        "Glare Crust": 2,
-        "Krystallos": 1,
-        "Glacial Mass": 8
+        "gelidus": 1,
+        "glare crust": 2,
+        "krystallos": 1,
+        "glacial mass": 8
       },
       "Config": {
         "OuterRadius": 5632,
@@ -73,11 +73,11 @@
     },
     {
       "Counts": {
-        "White Glaze": 8,
-        "Krystallos": 1,
-        "Dark Glitter": 2,
-        "Gelidus": 2,
-        "Glare Crust": 1
+        "white glaze": 8,
+        "krystallos": 1,
+        "dark glitter": 2,
+        "gelidus": 2,
+        "glare crust": 1
       },
       "Config": {
         "OuterRadius": 4096,

@@ -34,13 +34,13 @@ function ENT:CalcVars(ply)
 
 	local Capacity = math.floor(30000 * (2.25 ^ reqLvl)) * ply.sa_data.advancement_level
 
-	RD.AddResource(self, "Oxygen Isotopes", Capacity)
-	RD.AddResource(self, "Hydrogen Isotopes", Capacity)
-	RD.AddResource(self, "Helium Isotopes", Capacity)
-	RD.AddResource(self, "Nitrogen Isotopes", Capacity)
-	RD.AddResource(self, "Liquid Ozone", Capacity)
+	RD.AddResource(self, "oxygen isotopes", Capacity)
+	RD.AddResource(self, "hydrogen isotopes", Capacity)
+	RD.AddResource(self, "helium isotopes", Capacity)
+	RD.AddResource(self, "nitrogen isotopes", Capacity)
+	RD.AddResource(self, "liquid ozone", Capacity)
 	RD.AddResource(self, "heavy water", Capacity)
-	RD.AddResource(self, "Strontium Clathrates", Capacity)
+	RD.AddResource(self, "strontium clathrates", Capacity)
 
 end
 
@@ -50,22 +50,19 @@ function ENT:Think()
 end
 
 function ENT:UpdateWireOutput()
-	Wire_TriggerOutput(self, "Oxygen Isotopes", RD.GetResourceAmount(self, "Oxygen Isotopes"))
-	Wire_TriggerOutput(self, "Hydrogen Isotopes", RD.GetResourceAmount(self, "Hydrogen Isotopes"))
-	Wire_TriggerOutput(self, "Helium Isotopes", RD.GetResourceAmount(self, "Helium Isotopes"))
-	Wire_TriggerOutput(self, "Nitrogen Isotopes", RD.GetResourceAmount(self, "Nitrogen Isotopes"))
-	Wire_TriggerOutput(self, "Liquid Ozone", RD.GetResourceAmount(self, "Liquid Ozone"))
-	Wire_TriggerOutput(self, "Heavy Water", RD.GetResourceAmount(self, "Heavy Water"))
-	Wire_TriggerOutput(self, "Strontium Clathrates", RD.GetResourceAmount(self, "Strontium Clathrates"))
+	Wire_TriggerOutput(self, "Oxygen Isotopes", RD.GetResourceAmount(self, "oxygen isotopes"))
+	Wire_TriggerOutput(self, "Hydrogen Isotopes", RD.GetResourceAmount(self, "hydrogen isotopes"))
+	Wire_TriggerOutput(self, "Helium Isotopes", RD.GetResourceAmount(self, "helium isotopes"))
+	Wire_TriggerOutput(self, "Nitrogen Isotopes", RD.GetResourceAmount(self, "nitrogen isotopes"))
+	Wire_TriggerOutput(self, "Liquid Ozone", RD.GetResourceAmount(self, "liquid ozone"))
+	Wire_TriggerOutput(self, "Heavy Water", RD.GetResourceAmount(self, "heavy water"))
+	Wire_TriggerOutput(self, "Strontium Clathrates", RD.GetResourceAmount(self, "strontium clathrates"))
 
-	Wire_TriggerOutput(self, "Max Oxygen Isotopes", RD.GetNetworkCapacity(self, "Oxygen Isotopes"))
-	Wire_TriggerOutput(self, "Max Hydrogen Isotopes", RD.GetNetworkCapacity(self, "Hydrogen Isotopes"))
-	Wire_TriggerOutput(self, "Max Helium Isotopes", RD.GetNetworkCapacity(self, "Helium Isotopes"))
-	Wire_TriggerOutput(self, "Max Nitrogen Isotopes", RD.GetNetworkCapacity(self, "Nitrogen Isotopes"))
-	Wire_TriggerOutput(self, "Max Liquid Ozone", RD.GetNetworkCapacity(self, "Liquid Ozone"))
-	Wire_TriggerOutput(self, "Max Heavy Water", RD.GetNetworkCapacity(self, "Heavy Water"))
-	Wire_TriggerOutput(self, "Max Strontium Clathrates", RD.GetNetworkCapacity(self, "Strontium Clathrates"))
+	Wire_TriggerOutput(self, "Max Oxygen Isotopes", RD.GetNetworkCapacity(self, "oxygen isotopes"))
+	Wire_TriggerOutput(self, "Max Hydrogen Isotopes", RD.GetNetworkCapacity(self, "hydrogen isotopes"))
+	Wire_TriggerOutput(self, "Max Helium Isotopes", RD.GetNetworkCapacity(self, "helium isotopes"))
+	Wire_TriggerOutput(self, "Max Nitrogen Isotopes", RD.GetNetworkCapacity(self, "nitrogen isotopes"))
+	Wire_TriggerOutput(self, "Max Liquid Ozone", RD.GetNetworkCapacity(self, "liquid ozone"))
+	Wire_TriggerOutput(self, "Max Heavy Water", RD.GetNetworkCapacity(self, "heavy water"))
+	Wire_TriggerOutput(self, "Max Strontium Clathrates", RD.GetNetworkCapacity(self, "strontium clathrates"))
 end
-
-
-

@@ -11,5 +11,23 @@ function SA.CAFInit()
 		SA.RD.AddProperResourceName("ore", "Ore")
 		SA.RD.AddProperResourceName("tiberium", "Tiberium")
 		SA.RD.AddProperResourceName("metals", "Metals")
+
+		SA.RD.AddProperResourceName("oxygen isotopes", "Oxygen Isotopes")
+		SA.RD.AddProperResourceName("hydrogen isotopes", "Hydrogen Isotopes")
+		SA.RD.AddProperResourceName("helium isotopes", "Helium Isotopes")
+		SA.RD.AddProperResourceName("nitrogen isotopes", "Nitrogen Isotopes")
+		SA.RD.AddProperResourceName("liquid ozone", "Liquid Ozone")
+		SA.RD.AddProperResourceName("strontium clathrates", "Strontium Clathrates")
+
+		SA.RD.AddProperResourceName("blue ice", "Blue Ice")
+		SA.RD.AddProperResourceName("clear ice", "Clear Ice")
+		SA.RD.AddProperResourceName("glacial mass", "Glacial Mass")
+		SA.RD.AddProperResourceName("white glaze", "White Glaze")
+		SA.RD.AddProperResourceName("dark glitter", "Dark Glitter")
+		SA.RD.AddProperResourceName("glare crust", "Glare Crust")
+		SA.RD.AddProperResourceName("gelidus", "Gelidus")
+		SA.RD.AddProperResourceName("krystallos", "Krystallos")
 	end)
+
+	hook.Run("SA_CAFInitComplete")
 end

@@ -178,7 +178,7 @@ LoadRes = function(ply, body, code)
 		ply.sa_data = body
 		SA_AddSAData(ply)
 		ply.sa_data.loaded = true
-		SA.Terminal.SetupStorage(ply, ply.sa_data.station_storage.contents)
+		SA.Terminal.SetupStorage(ply)
 		ply:ChatPrint("Your account has been loaded, welcome on duty.")
 		ply:AssignFaction()
 	end
@@ -197,12 +197,10 @@ LoadRes = function(ply, body, code)
 	ply:SetNWBool("isleader", ply.sa_data.is_faction_leader)
 	ply:SetNWInt("Score", ply.sa_data.score)
 
-	timer.Simple(1, function()
-		if not SA.ValidEntity(ply) then return end
-		ply.MayBePoked = true
-		SA.SendBasicInfo(ply)
-		ply:ChatPrint("Spawn limitations disengaged. Happy travels.")
-	end)
+	ply.MayBePoked = true
+	SA.SendBasicInfo(ply)
+	ply:ChatPrint("Spawn limitations disengaged. Happy travels.")
+
 	ply:SetNWBool("isloaded", true)
 	if ply.sa_data.loaded then
 		ply:Spawn()

@@ -70,7 +70,7 @@ function PANEL:Init()
 end
 
 function PANEL:SetResource(name, amount, capacity)
-	self.ResourceName:SetText(tostring(name))
+	self.ResourceName:SetText(SA.RD.GetProperResourceName(name))
 	self.Image:SetImage(ResourceIcons[string.lower(tostring(name))] or "spaceage/sa_research_icon")
 	self.RName = name
 	if amount then self:SetAmount(amount, capacity) end

@@ -6,29 +6,6 @@ DEFINE_BASECLASS("base_rd3_entity")
 
 local RD = CAF.GetAddon("Resource Distribution")
 
-local IceTypes = {
-	"Blue Ice",
-	"Clear Ice",
-	"Glacial Mass",
-	"White Glaze",
-	"Dark Glitter",
-	"Glare Crust",
-	"Gelidus",
-	"Krystallos"
-}
-
-local GiveTranslate = {
-	liquidnitrogen = "liquid nitrogen",
-	heavywater = "heavy water",
-	water = "water",
-	oxygen = "Oxygen Isotopes",
-	hydrogen = "Hydrogen Isotopes",
-	helium = "Helium Isotopes",
-	nitrogen = "Nitrogen Isotopes",
-	ozone = "Liquid Ozone",
-	strontium = "Strontium Clathrates"
-}
-
 function ENT:Initialize()
 	BaseClass.Initialize(self)
 
@@ -51,16 +28,16 @@ function ENT:Initialize()
 	RD.AddResource(self, "water", 0)
 	RD.AddResource(self, "heavy water", 0)
 
-	for _, Type in pairs(IceTypes) do
-		RD.AddResource(self, Type, 0)
+	for type, _ in pairs(SA.Ice.Types) do
+		RD.AddResource(self, type, 0)
 	end
 
-	RD.AddResource(self, "Oxygen Isotopes", 0)
-	RD.AddResource(self, "Hydrogen Isotopes", 0)
-	RD.AddResource(self, "Helium Isotopes", 0)
-	RD.AddResource(self, "Nitrogen Isotopes", 0)
-	RD.AddResource(self, "Liquid Ozone", 0)
-	RD.AddResource(self, "Strontium Clathrates", 0)
+	RD.AddResource(self, "oxygen isotopes", 0)
+	RD.AddResource(self, "hydrogen isotopes", 0)
+	RD.AddResource(self, "helium isotopes", 0)
+	RD.AddResource(self, "nitrogen isotopes", 0)
+	RD.AddResource(self, "liquid ozone", 0)
+	RD.AddResource(self, "strontium clathrates", 0)
 
 	self:SetOverlayText(self.PrintName .. "\n" .. "Progress: 0%")
 
@@ -90,12 +67,12 @@ function ENT:Refine()
 
 	if (CurEnergy > EnergyReq) then
 		if not self.CurrentRef then
-			for _, Type in pairs(IceTypes) do
-				local Avail = RD.GetResourceAmount(self, Type)
+			for type, _ in pairs(SA.Ice.Types) do
+				local Avail = RD.GetResourceAmount(self, type)
 				if (Avail > 0) then
-					self.CurrentRef = Type
+					self.CurrentRef = type
 					self.Volume = 1000
-					RD.ConsumeResource(self, Type, 1)
+					RD.ConsumeResource(self, type, 1)
 					Wire_TriggerOutput(self, "Active", 1)
 					break
 				end
@@ -110,9 +87,9 @@ function ENT:Refine()
 			Wire_TriggerOutput(self, "Progress", Progress)
 			self:SetOverlayText(self.PrintName .. "\nProgress: " .. tostring(Progress) .. "%")
 			if (self.Volume <= 0) then
-				local Gives = SA.Ice.GetRefined(self.CurrentRef, self.RefineEfficiency)
-				for Res, Count in pairs(Gives) do
-					RD.SupplyResource(self, GiveTranslate[Res], Count)
+				local gives = SA.Ice.GetRefined(self.CurrentRef, self.RefineEfficiency)
+				for res, count in pairs(gives) do
+					RD.SupplyResource(self, res, count)
 				end
 				self.CurrentRef = nil
 				Wire_TriggerOutput(self, "Active", 0)

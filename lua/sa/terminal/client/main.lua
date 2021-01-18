@@ -18,8 +18,12 @@ local SA_DevLimitLevel = 1
 local SA_Term_GUI
 local SA_Term_GoodieList
 local SA_Term_StatList
+
 local SA_Term_MarketBuy
+local SA_Term_MarketBuyTbl
 local SA_Term_MarketSell
+local SA_Term_MarketSellTbl
+
 local SA_Term_TempStorage
 local SA_Term_PermStorage
 local SA_Term_ShipStorage
@@ -218,6 +222,7 @@ local function CreateTerminalGUI()
 	MarkSell:AddColumn("Price")
 
 	SA_Term_MarketSell = MarkSell
+	SA_Term_MarketSellTbl = {}
 
 	local SellAmount = vgui.Create("DTextEntry", MarketTab)
 	SellAmount:SetPos(610, 195)
@@ -251,7 +256,7 @@ local function CreateTerminalGUI()
 			return
 		end
 		for _, Line in pairs(Selected) do
-			local Type = Line:GetValue(1)
+			local Type = SA_Term_MarketSellTbl[Line]
 			RunConsoleCommand("sa_market_sell", Type, Amount, HASH)
 		end
 	end
@@ -265,6 +270,7 @@ local function CreateTerminalGUI()
 
 
 	SA_Term_MarketBuy = MarkBuy
+	SA_Term_MarketBuyTbl = {}
 
 	local BuyAmount = vgui.Create("DTextEntry", MarketTab)
 	BuyAmount:SetPos(610, 455)
@@ -288,7 +294,7 @@ local function CreateTerminalGUI()
 			SA_TermError("Please pick a resource to buy!")
 			return
 		end
-		local Type = tmpX:GetValue(1)
+		local Type = SA_Term_MarketBuyTbl[tmpX]
 		RunConsoleCommand("sa_market_buy", Type, Amount, HASH)
 	end
 
@@ -647,18 +653,6 @@ local function sa_terminal_msg(len, ply)
 end
 net.Receive("SA_Terminal_SetVisible", sa_terminal_msg)
 
-local function CleanString(str)
-	local implode = {}
-	local splode = string.Explode(" ", str)
-	for k, v in pairs(splode) do
-		local lead = string.upper(string.sub(v, 1, 1))
-		local trail = string.sub(v, 2)
-		implode[k] = lead .. trail
-	end
-	local cleaned = string.Implode(" ", implode)
-	return cleaned
-end
-
 local function sa_term_update1(len, ply)
 	term_info.orecount = SA.AddCommasToInt(net.ReadInt(32))
 	term_info.tempore = SA.AddCommasToInt(net.ReadInt(32))
@@ -688,16 +682,18 @@ local function sa_term_update(ply, tbl)
 
 	SA_Term_TempStorage:Clear()
 	SA_Term_MarketSell:Clear()
+	SA_Term_MarketSellTbl = {}
+
 	for k, v in pairs(ResTabl) do
-		local name = CleanString(k)
 		local value = SA.AddCommasToInt(v[1])
 		local price = v[2]
 		local item = vgui.Create("SA_Terminal_Resource")
 		item:SetSize(220, 42)
 		item:SetLocation("temp")
-		item:SetResource(name, v[1])
+		item:SetResource(k, v[1])
 		SA_Term_TempStorage:AddItem(item)
-		SA_Term_MarketSell:AddLine(name, value, price)
+		local line = SA_Term_MarketSell:AddLine(SA.RD.GetProperResourceName(k), value, price)
+		SA_Term_MarketSellTbl[line] = k
 	end
 
 	SA_Term_PermStorage:Clear()
@@ -705,30 +701,31 @@ local function sa_term_update(ply, tbl)
 	SA_Term_StationMax = SA.AddCommasToInt(maxcap)
 
 	for k, v in pairs(PermStorage) do
-		local name = CleanString(tostring(k))
 		local item = vgui.Create("SA_Terminal_Resource")
 		item:SetSize(220, 42)
 		item:SetLocation("perm")
-		item:SetResource(name, v)
+		item:SetResource(k, v)
 		SA_Term_PermStorage:AddItem(item)
 	end
 	SA_Term_ShipStorage:Clear()
 	for k, v in pairs(ShipStorage) do
-		local name = CleanString(k)
 		if math.floor(v.value) > 0 and math.floor(v.maxvalue) > 0 then
 			local item = vgui.Create("SA_Terminal_Resource")
 			item:SetSize(220, 42)
 			item:SetLocation("ship")
-			item:SetResource(name, v.value, v.maxvalue)
+			item:SetResource(k, v.value, v.maxvalue)
 			SA_Term_ShipStorage:AddItem(item)
 		end
 	end
 
 	SA_Term_MarketBuy:Clear()
+	SA_Term_MarketBuyTbl = {}
+
 	for k, v in pairs(BuyPriceTable) do
-		local name = CleanString(v[1])
+		local name = SA.RD.GetProperResourceName(v[1])
 		local price = v[2]
-		SA_Term_MarketBuy:AddLine(name, price)
+		local line = SA_Term_MarketBuy:AddLine(name, price)
+		SA_Term_MarketBuyTbl[line] = v[1]
 	end
 
 	local Researches = SA.Research.Get()

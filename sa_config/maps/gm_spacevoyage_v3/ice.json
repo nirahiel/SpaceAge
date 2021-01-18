@@ -3,14 +3,14 @@
   "Custom": [
     {
       "Counts": {
-        "White Glaze": 10,
-        "Krystallos": 2,
-        "Dark Glitter": 4,
-        "Gelidus": 2,
-        "Clear Ice": 10,
-        "Glare Crust": 4,
-        "Blue Ice": 10,
-        "Glacial Mass": 10
+        "white glaze": 10,
+        "krystallos": 2,
+        "dark glitter": 4,
+        "gelidus": 2,
+        "clear ice": 10,
+        "glare crust": 4,
+        "blue ice": 10,
+        "glacial mass": 10
       },
       "Config": {
         "MineralAmountMultiplier": 1,

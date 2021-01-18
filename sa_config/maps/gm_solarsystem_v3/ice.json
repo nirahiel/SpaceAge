@@ -20,9 +20,9 @@
     },
     {
       "Counts": {
-        "Gelidus": 2,
-        "Glare Crust": 4,
-        "Blue Ice": 16
+        "gelidus": 2,
+        "glare crust": 4,
+        "blue ice": 16
       },
       "Config": {
         "OuterRadius": 7168,
@@ -42,9 +42,9 @@
     },
     {
       "Counts": {
-        "Glare Crust": 1,
-        "Dark Glitter": 1,
-        "Glacial Mass": 10
+        "glare crust": 1,
+        "dark glitter": 1,
+        "glacial mass": 10
       },
       "Config": {
         "OuterRadius": 4096,
@@ -64,11 +64,11 @@
     },
     {
       "Counts": {
-        "White Glaze": 10,
-        "Krystallos": 1,
-        "Dark Glitter": 2,
-        "Gelidus": 1,
-        "Glare Crust": 2
+        "white glaze": 10,
+        "krystallos": 1,
+        "dark glitter": 2,
+        "gelidus": 1,
+        "glare crust": 2
       },
       "Config": {
         "OuterRadius": 7168,

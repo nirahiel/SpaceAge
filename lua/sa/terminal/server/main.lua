@@ -34,29 +34,29 @@ AddRefineRes("permafrost", 4)
 local function AddResourcePrice(res, price)
 	table.insert(PriceTable, {res, price})
 end
-AddResourcePrice("Valuable Minerals", 3.127)
-AddResourcePrice("Metals", 0.738)
-AddResourcePrice("Terracrystal", 1.492)
-AddResourcePrice("Dark Matter", 2.762)
-AddResourcePrice("Permafrost", 2.113)
+AddResourcePrice("valuable minerals", 3.127)
+AddResourcePrice("metals", 0.738)
+AddResourcePrice("terracrystal", 1.492)
+AddResourcePrice("dark matter", 2.762)
+AddResourcePrice("permafrost", 2.113)
 
-AddResourcePrice("Hydrogen Isotopes", 6750)
-AddResourcePrice("Helium Isotopes", 4500)
-AddResourcePrice("Strontium Clathrates", 9000)
-AddResourcePrice("Nitrogen Isotopes", 2700)
-AddResourcePrice("Oxygen Isotopes", 2610)
-AddResourcePrice("Liquid Ozone", 5400)
+AddResourcePrice("hydrogen isotopes", 6750)
+AddResourcePrice("helium isotopes", 4500)
+AddResourcePrice("strontium clathrates", 9000)
+AddResourcePrice("nitrogen isotopes", 2700)
+AddResourcePrice("oxygen isotopes", 2610)
+AddResourcePrice("liquid ozone", 5400)
 
 
 local function AddResourceBuyPrice(res, price)
 	table.insert(BuyPriceTable, {res, price})
 end
-AddResourceBuyPrice("Oxygen", 2.5)
-AddResourceBuyPrice("Nitrogen", 0.5)
-AddResourceBuyPrice("Carbon Dioxide", 0.9)
-AddResourceBuyPrice("Hydrogen", 0.8)
-AddResourceBuyPrice("Energy", 1.0)
-AddResourceBuyPrice("Water", 3.0)
+AddResourceBuyPrice("oxygen", 2.5)
+AddResourceBuyPrice("nitrogen", 0.5)
+AddResourceBuyPrice("carbon dioxide", 0.9)
+AddResourceBuyPrice("hydrogen", 0.8)
+AddResourceBuyPrice("energy", 1.0)
+AddResourceBuyPrice("water", 3.0)
 
 local StationPos = Vector(0, 0, 0)
 local StationSize = 0
@@ -94,7 +94,7 @@ local function UpdateCapacity(ply)
 	ply.sa_data.station_storage.remaining = maxcap - count
 end
 
-function SA.Terminal.SetupStorage(ply, tbl)
+function SA.Terminal.SetupStorage(ply)
 	local uid = ply:UniqueID()
 	if not TempStorage[uid] then
 		TempStorage[uid] = {}
@@ -280,7 +280,7 @@ SA_UpdateInfo = function(ply, CanPass)
 	for k, v in pairs(TempStorageU) do
 		local price = 0
 		for l, n in pairs(PriceTable) do
-			if string.lower(k) == string.lower(n[1]) then
+			if k == n[1] then
 				price = n[2]
 				break
 			end
@@ -388,7 +388,7 @@ local function SA_MarketSell(ply, cmd, args)
 	local index = 0
 	local selling = 0
 	for k, v in pairs(TempStorage[uid]) do
-		if (string.lower(k) == string.lower(args[1])) then
+		if k == args[1] then
 			amount = v
 			index = k
 		end
@@ -400,7 +400,7 @@ local function SA_MarketSell(ply, cmd, args)
 	end
 	if (selling > 0) then
 		for k, v in pairs(PriceTable) do
-			if string.lower(v[1]) == string.lower(args[1]) then
+			if v[1] == args[1] then
 				local count = math.ceil(selling * v[2])
 				if ply.sa_data.faction_name == "corporation" or ply.sa_data.faction_name == "alliance" then
 					count = math.ceil(count * 1.33)
@@ -432,9 +432,9 @@ local function SA_MarketBuy(ply, cmd, args)
 	local price = 0
 	local pricepu = 0
 	for k, v in pairs(BuyPriceTable) do
-		if (string.lower(v[1]) == string.lower(args[1])) then
+		if v[1] == args[1] then
 			pricepu = v[2]
-			index = string.lower(v[1])
+			index = v[1]
 		end
 	end
 	if (pricepu <= 0) then return end
@@ -448,7 +448,7 @@ local function SA_MarketBuy(ply, cmd, args)
 	if (buying > 0) then
 		local bought = false
 		for k, v in pairs(TempStorage[uid]) do
-			if string.lower(k) == index then
+			if k == index then
 				ply.sa_data.credits = ply.sa_data.credits - price
 				TempStorage[uid][k] = v + buying
 				bought = true
@@ -464,7 +464,7 @@ local function SA_MarketBuy(ply, cmd, args)
 end
 concommand.Add("sa_market_buy", SA_MarketBuy)
 
-local function SA_MoveResource(ply, cmd, args, notagain)
+local function SA_MoveResource(ply, cmd, args)
 	if not ply.AtTerminal then return end
 	if ply.IsAFK then return end
 	if #args < 4 then return end
@@ -486,9 +486,6 @@ local function SA_MoveResource(ply, cmd, args, notagain)
 		maxamt, netid = SA_GetResource(ply, res)
 	end
 	if (not maxamt) or maxamt == 0 then
-		if notagain and tostring(notagain) == "reallynotagain" then return end
-		args[3] = string.lower(args[3])
-		SA_MoveResource(ply, cmd, args, "reallynotagain")
 		return
 	end
 	local tomove = 0
