@@ -6,11 +6,13 @@ local FONT = "Trebuchet24"
 local SPHERE_MODEL = "models/holograms/hq_icosphere.mdl"
 local SPHERE_MATERIAL = "models/wireframe"
 local SPHERE_MODEL_SIZE = 12.0
+local ZERO_ANGLE = Angle(0,0,0)
+local ZERO_VECTOR = Vector(0,0,0)
 
 local screenW, screenH, screenFOV
 local drawTeleporterUI = false
 local drawnPlanets = {}
-local drawAngle = Angle(0,0,0)
+local drawAngle = ZERO_ANGLE
 local drawLastTime
 
 local MAX_MAP_SIZE = 300
@@ -263,7 +265,9 @@ local function DrawTeleporterUI()
 
 	cam.Start3D(origin, drawAngle, screenFOV)
 		for _, planetData in pairs(drawnPlanets) do
-			planetData.textCenterPos = (planetData.position + Vector(0, 0, -planetData.r)):ToScreen()
+			local bv = Vector(0, 0, -planetData.r)
+			bv:Rotate(drawAngle)
+			planetData.textCenterPos = (planetData.position + bv):ToScreen()
 
 			local mdl = planetData.model
 			if not mdl then
