@@ -1,0 +1,1 @@
+- Please make sure to symlink (or copy) gamemodes/spacebuild from spacebuild and gamemodes/spaceage from spaceage to the gamemodes folder, gamemodes from the addons folder dont get loaded
