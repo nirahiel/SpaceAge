@@ -57,7 +57,7 @@ local function SA_RefreshApplications()
 	end
 end
 net.Receive("SA_Applications_Refresh", SA_RefreshApplications)
-hook.Add("SA_API_AuthReady", SA_RefreshApplications)
+hook.Add("SA_API_AuthReady", "SA_RefreshApplications_AuthReady", SA_RefreshApplications)
 
 local ApplyText, PTimeLBL, ScoreLBL, SelFCombo, SelAppIndex
 
