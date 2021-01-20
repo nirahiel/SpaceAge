@@ -22,7 +22,7 @@ local function TryLoadModule(moduleName, loadChain)
 		return
 	end
 
-	print("Loading module " .. moduleName)
+	print("[SA] Loading module " .. moduleName)
 
 	if loadChain[moduleName] then
 		PrintTable(loadChain)
@@ -38,7 +38,7 @@ local function TryLoadModule(moduleName, loadChain)
 
 	if module.fileNames then
 		for _, fileName in pairs(module.fileNames) do
-			print("Loading module file " .. fileName)
+			print("[SA] Loading module file " .. fileName)
 
 			local oldLoadChain = SA_CurrentLoadChain
 			SA_CurrentLoadChain = loadChain
@@ -47,7 +47,7 @@ local function TryLoadModule(moduleName, loadChain)
 		end
 	end
 
-	print("Loaded module " .. moduleName)
+	print("[SA] Loaded module " .. moduleName)
 end
 
 local function Local_SA_REQUIRE(moduleName)
