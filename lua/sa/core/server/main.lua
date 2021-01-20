@@ -1,20 +1,5 @@
 SA_REQUIRE("config")
 
-local WorldClasses = {}
-local function AddWorldClass(name)
-	table.insert(WorldClasses, name)
-end
-AddWorldClass("prop_door_rotating")
-AddWorldClass("prop_dynamic")
-AddWorldClass("func_useableladder")
-AddWorldClass("func_rotating")
-AddWorldClass("func_rot_button")
-AddWorldClass("func_door")
-AddWorldClass("func_door_rotating")
-AddWorldClass("func_button")
-AddWorldClass("func_movelinear")
-
-
 local function SetupConvars(name)
 	if (not ConVarExists(name)) then
 		return CreateConVar(name, 0)
