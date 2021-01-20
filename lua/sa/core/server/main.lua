@@ -59,7 +59,7 @@ function PlayerMeta:AssignFaction(name, cb)
 	if self.sa_data.faction_name ~= old_name then
 		self.sa_data.is_faction_leader = false
 		local steamId = self:SteamID()
-		SA.SaveUser(self, nil, function()
+		SA.SaveUser(self, function()
 			http.Fetch("https://spaceage.mp/sa_group_sync.php?steam_id=" .. steamId .. "&authkey=TwB8a4yUKkF13bpI")
 		end)
 	end
@@ -89,7 +89,14 @@ local function SA_InitSpawn(ply)
 
 	SA.API.GetPlayerFull(ply, function(body, code) LoadRes(ply, body, code) end)
 end
-hook.Add("PlayerFullLoad", "SA_LoadPlayer", SA_InitSpawn)
+hook.Add("PlayerInitialSpawn", "SA_LoadPlayer", SA_InitSpawn)
+
+local function SA_PlayerFullLoad(ply)
+	ply.MayBePoked = true
+	SA.SendBasicInfo(ply)
+	ply:ChatPrint("Spawn limitations disengaged. Happy travels.")
+end
+hook.Add("PlayerFullLoad", "SA_LoadPlayerSendData", SA_PlayerFullLoad)
 
 local function SA_MapCleanInitialize()
 	local entityToRemove = SA.Config.Load("remove_entities")
@@ -197,24 +204,13 @@ LoadRes = function(ply, body, code)
 	ply:SetNWBool("isleader", ply.sa_data.is_faction_leader)
 	ply:SetNWInt("Score", ply.sa_data.score)
 
-	ply.MayBePoked = true
-	SA.SendBasicInfo(ply)
-	ply:ChatPrint("Spawn limitations disengaged. Happy travels.")
-
 	ply:SetNWBool("isloaded", true)
 	if ply.sa_data.loaded then
 		ply:Spawn()
 	end
-
-	hook.Run("SA_PlayerLoaded", ply)
 end
 
-function SA.SaveUser(ply, isautosave, cb)
-	if isautosave == "sa_autosaver" then
-		ply:SetNWInt("sa_save_int", autoSaveTimeCVar:GetInt() * 60)
-		ply:SetNWInt("sa_last_saved", CurTime())
-	end
-
+function SA.SaveUser(ply, cb)
 	local sid = ply:SteamID()
 	if not ply.sa_data or not ply.sa_data.loaded or not SA_IsValidSteamID(sid) then
 		return false
@@ -232,7 +228,7 @@ local function SA_SaveAllUsers()
 	if autoSaveTime > 0 then
 		timer.Adjust("SA_Autosave", autoSaveTime * 60, 0, SA_SaveAllUsers)
 		for _, v in ipairs(player.GetHumans()) do
-			SA.SaveUser(v, "sa_autosaver")
+			SA.SaveUser(v)
 		end
 		SA.Planets.Save()
 	end
