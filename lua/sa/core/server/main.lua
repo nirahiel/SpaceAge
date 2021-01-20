@@ -65,59 +65,7 @@ function PlayerMeta:AssignFaction(name, cb)
 	end
 end
 
-local LoadRes, SA_AddSAData
-
-local function SA_IsValidSteamID(sid, allowzero)
-	if not sid or sid == "" or sid == "STEAM_ID_PENDING" then
-		return false
-	end
-	return true
-end
-
-local function SA_InitSpawn(ply)
-	SA.GiveCredits.Remove(ply)
-	local sid = ply:SteamID()
-	if not SA_IsValidSteamID(sid, true) then
-		print("Skip loading because bad SteamID: ", ply:Name(), sid)
-		return
-	end
-	print("Loading: ", ply:Name(), sid)
-
-	SA_AddSAData(ply)
-	SA.Terminal.SetupStorage(ply)
-	ply:AssignFaction()
-
-	SA.API.GetPlayerFull(ply, function(body, code) LoadRes(ply, body, code) end)
-end
-hook.Add("PlayerInitialSpawn", "SA_LoadPlayer", SA_InitSpawn)
-
-local function SA_PlayerFullLoad(ply)
-	ply.MayBePoked = true
-	SA.SendBasicInfo(ply)
-	ply:ChatPrint("Spawn limitations disengaged. Happy travels.")
-end
-hook.Add("PlayerFullLoad", "SA_LoadPlayerSendData", SA_PlayerFullLoad)
-
-local function SA_MapCleanInitialize()
-	local entityToRemove = SA.Config.Load("remove_entities")
-	if not entityToRemove then
-		return
-	end
-
-	if entityToRemove.Classes then
-		for _, cls in pairs(entityToRemove.Classes) do
-			for _, ent in pairs(ents.FindByClass(cls)) do
-				ent:Remove()
-			end
-		end
-	end
-end
-
-hook.Add("Initialize", "SA_MapCleanInitialize", function()
-	timer.Simple(5, SA_MapCleanInitialize)
-end)
-
-SA_AddSAData = function(ply)
+local function SA_AddSAData(ply)
 	if not ply.sa_data then
 		ply.sa_data = {}
 	end
@@ -163,15 +111,14 @@ SA_AddSAData = function(ply)
 	end
 end
 
-timer.Create("SA_PlayTimeTracker", 1, 0, function()
-	for _, ply in pairs(player.GetHumans()) do
-		if ply.sa_data and ply.sa_data.loaded then
-			ply.sa_data.playtime = ply.sa_data.playtime + 1
-		end
+local function SA_IsValidSteamID(sid, allowzero)
+	if not sid or sid == "" or sid == "STEAM_ID_PENDING" then
+		return false
 	end
-end)
+	return true
+end
 
-LoadRes = function(ply, body, code)
+local function LoadRes(ply, body, code)
 	print("Loaded:", ply:Name(), code)
 	if code == 404 then
 		SA_AddSAData(ply)
@@ -209,6 +156,57 @@ LoadRes = function(ply, body, code)
 		ply:Spawn()
 	end
 end
+
+local function SA_InitSpawn(ply)
+	SA.GiveCredits.Remove(ply)
+	local sid = ply:SteamID()
+	if not SA_IsValidSteamID(sid, true) then
+		print("Skip loading because bad SteamID: ", ply:Name(), sid)
+		return
+	end
+	print("Loading: ", ply:Name(), sid)
+
+	SA_AddSAData(ply)
+	SA.Terminal.SetupStorage(ply)
+	ply:AssignFaction()
+
+	SA.API.GetPlayerFull(ply, function(body, code) LoadRes(ply, body, code) end)
+end
+hook.Add("PlayerInitialSpawn", "SA_LoadPlayer", SA_InitSpawn)
+
+local function SA_PlayerFullLoad(ply)
+	ply.MayBePoked = true
+	SA.SendBasicInfo(ply)
+	ply:ChatPrint("Spawn limitations disengaged. Happy travels.")
+end
+hook.Add("PlayerFullLoad", "SA_LoadPlayerSendData", SA_PlayerFullLoad)
+
+local function SA_MapCleanInitialize()
+	local entityToRemove = SA.Config.Load("remove_entities")
+	if not entityToRemove then
+		return
+	end
+
+	if entityToRemove.Classes then
+		for _, cls in pairs(entityToRemove.Classes) do
+			for _, ent in pairs(ents.FindByClass(cls)) do
+				ent:Remove()
+			end
+		end
+	end
+end
+
+hook.Add("Initialize", "SA_MapCleanInitialize", function()
+	timer.Simple(5, SA_MapCleanInitialize)
+end)
+
+timer.Create("SA_PlayTimeTracker", 1, 0, function()
+	for _, ply in pairs(player.GetHumans()) do
+		if ply.sa_data and ply.sa_data.loaded then
+			ply.sa_data.playtime = ply.sa_data.playtime + 1
+		end
+	end
+end)
 
 function SA.SaveUser(ply, cb)
 	local sid = ply:SteamID()
