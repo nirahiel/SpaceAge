@@ -314,6 +314,7 @@ if SERVER then
 end
 
 if CLIENT then
+	local APIAuthReady = false
 	local function SA_API_RenewPlayerJWT()
 		JWT_IN_RENEWAL = true
 		RunConsoleCommand("sa_api_player_maketoken")
@@ -323,6 +324,10 @@ if CLIENT then
 		local _expiry = net.ReadInt(32)
 		local validTime = net.ReadInt(32)
 		JWT_IN_RENEWAL = false
+		if not APIAuthReady then
+			APIAuthReady = true
+			hook.Run("SA_API_AuthReady")
+		end
 		timer.Remove("SA_RenewJWT")
 		timer.Create("SA_RenewJWT", validTime / 2, 1, SA_API_RenewPlayerJWT)
 	end)

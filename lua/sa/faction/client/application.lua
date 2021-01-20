@@ -39,10 +39,6 @@ local function SA_RefreshApplications()
 
 	if isleader then
 		SA.API.ListFactionApplications(faction_name, function(body, code)
-			if code == 401 then
-				timer.Simple(5, SA_RefreshApplications)
-				return
-			end
 			if code == 404 then
 				body = {}
 			end
@@ -51,10 +47,6 @@ local function SA_RefreshApplications()
 		end)
 	else
 		SA.API.GetPlayerApplication(ply, function(body, code)
-			if code == 401 then
-				timer.Simple(5, SA_RefreshApplications)
-				return
-			end
 			if code == 404 then
 				body = {}
 			end
@@ -65,7 +57,7 @@ local function SA_RefreshApplications()
 	end
 end
 net.Receive("SA_Applications_Refresh", SA_RefreshApplications)
-SA.RunOnLoaded("SA_Applications_Refresh_PlayerLoaded", SA_RefreshApplications)
+hook.Add("SA_API_AuthReady", SA_RefreshApplications)
 
 local ApplyText, PTimeLBL, ScoreLBL, SelFCombo, SelAppIndex
 
