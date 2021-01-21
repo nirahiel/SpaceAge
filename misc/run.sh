@@ -17,6 +17,8 @@ upgrade_addon() {
 upgrade_addon spaceage
 upgrade_addon spacebuild
 upgrade_addon sbep
+upgrade_addon smartsnap
+upgrade_addon luapad
 
 steamcmd +runscript "$HOME/s/garrysmod/addons/spaceage/misc/install.txt"
 
