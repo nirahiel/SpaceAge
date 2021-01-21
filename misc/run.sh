@@ -8,13 +8,15 @@ export WORKSHOP_COLLECTION=177294269
 
 cd "$HOME/s"
 
-pushd garrysmod/addons/spaceage
-git pull
-popd
+upgrade_addon() {
+    pushd "garrysmod/addons/$1"
+    git pull
+    popd
+}
 
-pushd garrysmod/addons/spacebuild
-git pull
-popd
+upgrade_addon spaceage
+upgrade_addon spacebuild
+upgrade_addon sbep
 
 steamcmd +runscript "$HOME/s/garrysmod/addons/spaceage/misc/install.txt"
 
