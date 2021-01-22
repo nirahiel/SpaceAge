@@ -1,8 +1,8 @@
 #!/bin/bash
 # Main server runscript
 
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
-export LD_LIBRARY_PATH=".:bin/linux64:$LD_LIBRARY_PATH"
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+export LD_LIBRARY_PATH="$HOME/s/bin/linux64"
 
 export WORKSHOP_COLLECTION=177294269
 
