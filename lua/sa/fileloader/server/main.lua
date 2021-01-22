@@ -5,8 +5,8 @@ local function NotifyRun(ply, targetName)
 end
 
 local function RunLuaRecv(_, ply)
-	if not ply:IsSuperAdmin() then
-		ply:AddHint("Only SuperAdmins can do this", NOTIFY_ERROR, 2)
+	if not SA.FileBrowser.CanRunAll(LocalPlayer()) then
+		ply:AddHint("You cannot run lua remotely", NOTIFY_ERROR, 2)
 		return
 	end
 	local def = net.ReadString()

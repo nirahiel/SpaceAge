@@ -47,7 +47,7 @@ local function OpenFileBrowser()
 			menu:AddOption("Run " .. str, function() RunOn(str, path) end)
 		end
 		AddSendOption("clientside")
-		if LocalPlayer():IsSuperAdmin() then
+		if SA.FileBrowser.CanRunAll(LocalPlayer()) then
 			AddSendOption("serverside")
 			AddSendOption("shared")
 			AddSendOption("on all clients")
@@ -61,14 +61,14 @@ local function OpenFileBrowser()
 	end
 end
 concommand.Add("sa_open_file_browser", function ()
-	if not LocalPlayer():IsAdmin() then
+	if not SA.FileBrowser.CanRunClientside(LocalPlayer()) then
 		return
 	end
 	OpenFileBrowser()
 end)
 
 hook.Add("InitPostEntity", "SA_FileBrowser_Load", function()
-	if not LocalPlayer():IsAdmin() then
+	if not SA.FileBrowser.CanRunClientside(LocalPlayer()) then
 		return
 	end
 
