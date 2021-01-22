@@ -70,7 +70,7 @@ hook.Add("InitPostEntity", "SA_FileBrowser_Load", function()
 		return
 	end
 
-	local data = file.Read("sa_clientlua_autoload.txt", "DATA")
+	local data = file.Read("sa_clientlua_autoload.lua", "LUA")
 	if not data then
 		return
 	end
