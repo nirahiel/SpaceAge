@@ -47,15 +47,17 @@ local function OpenFileBrowser()
 			menu:AddOption("Run " .. str, function() RunOn(str, path) end)
 		end
 		AddSendOption("clientside")
-		AddSendOption("serverside")
-		AddSendOption("shared")
-		AddSendOption("on all clients")
-		menu:AddSpacer()
-		for _, ply in pairs(player.GetHumans()) do
-			local pid = ply:SteamID()
-			menu:AddOption("Run on " .. ply:GetName(), function() RunOn(pid, path) end)
+		if LocalPlayer():IsSuperAdmin() then
+			AddSendOption("serverside")
+			AddSendOption("shared")
+			AddSendOption("on all clients")
+			menu:AddSpacer()
+			for _, ply in pairs(player.GetHumans()) do
+				local pid = ply:SteamID()
+				menu:AddOption("Run on " .. ply:GetName(), function() RunOn(pid, path) end)
+			end
+			menu:Open()
 		end
-		menu:Open()
 	end
 end
 concommand.Add("sa_open_file_browser", function ()
