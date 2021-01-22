@@ -1,1 +1,7 @@
-- Please make sure to symlink (or copy) gamemodes/spacebuild from spacebuild and gamemodes/spaceage from spaceage to the gamemodes folder, gamemodes from the addons folder dont get loaded
+cd SERVERDIR
+
+cd gamemodes
+ln -s ../addons/spaceage/gamemodes/spaceage ./
+ln -s ../addons/spacebuild/gamemodes/spacebuild ./
+cd ../lua
+ln -s ../addons/spaceage/misc/bin ./
