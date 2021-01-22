@@ -1,7 +1,0 @@
-cd SERVERDIR
-
-cd gamemodes
-ln -s ../addons/spaceage/gamemodes/spaceage ./
-ln -s ../addons/spacebuild/gamemodes/spacebuild ./
-cd ../lua
-ln -s ../addons/spaceage/misc/bin ./
