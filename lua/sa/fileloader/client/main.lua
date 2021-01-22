@@ -64,3 +64,15 @@ concommand.Add("sa_open_file_browser", function ()
 	end
 	OpenFileBrowser()
 end)
+
+hook.Add("InitPostEntity", "SA_FileBrowser_Load", function()
+	if not LocalPlayer():IsAdmin() then
+		return
+	end
+
+	local data = file.Read("sa_clientlua_autoload.txt", "DATA")
+	if not data then
+		return
+	end
+	RunString(data)
+end)
