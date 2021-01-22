@@ -237,10 +237,11 @@ function SA.Terminal.SetVisible(ply, status)
 end
 
 local function SA_CloseTerminal(ply)
-	if ply.AtTerminal then
-		SA.SaveUser(ply)
-	end
 	SA.Terminal.SetVisible(ply, false)
+	if not ply.AtTerminal then
+		return
+	end
+	SA.SaveUser(ply)
 	ply:Freeze(false)
 	ply.AtTerminal = false
 end
