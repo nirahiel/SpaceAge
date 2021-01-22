@@ -57,7 +57,11 @@ function ENT:StartTouch(ent)
 		ent:SetMaterial(material)
 		constraint.RemoveAll(ent)
 		ent:GetPhysicsObject():EnableMotion()
-		timer.Simple(3, function() ent:Remove() end)
+		timer.Simple(3, function()
+			if IsValid(ent) then
+				ent:Remove()
+			end
+		end)
 	elseif eClass == "sa_crystal" or eClass == "sa_crystaltower" then
 		self:Remove()
 	end
