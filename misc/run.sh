@@ -18,6 +18,7 @@ upgrade_addon spaceage
 upgrade_addon spacebuild
 upgrade_addon sbep
 upgrade_addon smartsnap
+upgrade_addon wire-extras
 
 steamcmd +runscript "$HOME/s/garrysmod/addons/spaceage/misc/install.txt"
 
