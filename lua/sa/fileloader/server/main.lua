@@ -5,7 +5,7 @@ local function NotifyRun(ply, targetName)
 end
 
 local function RunLuaRecv(_, ply)
-	if not SA.FileBrowser.CanRunAll(LocalPlayer()) then
+	if not SA.FileBrowser.CanRunAll(ply) then
 		ply:AddHint("You cannot run lua remotely", NOTIFY_ERROR, 2)
 		return
 	end
