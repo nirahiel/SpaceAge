@@ -273,98 +273,6 @@ local function DrawLSBattery(CaptionX, Value, ScH, ScW, ColBack, ColText)
 	end
 end
 
-local function DrawScreenLineWithDip(lineYPos, lineWidth, dipHeight, dipWidth, dipPlateu, isOutline, isBottom)
-
-	local scrW = ScrW()
-	local scrWCenter = scrW / 2
-
-	local healthAreaOffsetH = 210
-	local healthAreaOffsetW = 110
-
-	if (not isBottom) then
-		isBottom = false
-	end
-
-	if (not isOutline) then
-		isOutline = false
-	end
-
-	local leftSide = {
-		-- left to right top of line
-		{x = 0, y = lineYPos},
-		{x = scrWCenter-dipWidth / 2, y = lineYPos},
-
-		{x = scrWCenter-dipWidth / 2, y = lineYPos + lineWidth},
-		{x = 0, y = lineYPos + lineWidth},
-	}
-
-	local leftSlope = {
-		-- left to right top of line
-		{x = scrWCenter-dipWidth / 2, y = lineYPos},
-		{x = scrWCenter-dipPlateu / 2, y = lineYPos + dipHeight},
-		{x = scrWCenter-dipPlateu / 2, y = lineYPos + dipHeight + lineWidth},
-		{x = scrWCenter-dipWidth / 2, y = lineYPos + lineWidth},
-	}
-
-	local plateu = {
-		{x = scrWCenter-dipPlateu / 2, y = lineYPos + dipHeight},
-		{x = scrWCenter + dipPlateu / 2, y = lineYPos + dipHeight},
-		{x = scrWCenter + dipPlateu / 2, y = lineYPos + dipHeight + lineWidth},
-		{x = scrWCenter-dipPlateu / 2, y = lineYPos + dipHeight + lineWidth}
-	}
-
-	local rightSlope = {
-		-- left to right top of line
-		{x = scrWCenter + dipPlateu / 2, y = lineYPos + dipHeight},
-		{x = scrWCenter + dipWidth / 2, y = lineYPos},
-		{x = scrWCenter + dipWidth / 2, y = lineYPos + lineWidth},
-		{x = scrWCenter + dipPlateu / 2, y = lineYPos + dipHeight + lineWidth}
-	}
-
-	local rightSideRight = scrW
-	if (isBottom) then
-		rightSideRight = rightSideRight - healthAreaOffsetW
-	end
-	local rightSide = {
-		-- left to right top of line
-		{x = scrWCenter + dipWidth / 2, y = lineYPos},
-		{x = rightSideRight, y = lineYPos},
-		{x = rightSideRight, y = lineYPos + lineWidth},
-		{x = scrWCenter + dipWidth / 2, y = lineYPos + lineWidth}
-	}
-
-	surface.DrawPoly(leftSlope)
-	surface.DrawPoly(leftSide)
-	surface.DrawPoly(plateu)
-	surface.DrawPoly(rightSlope)
-	surface.DrawPoly(rightSide)
-
-	if (isBottom == true) then
-
-		local healthAreaLeft = {
-			-- left to right top of line
-			{x = scrW - healthAreaOffsetW, y = lineYPos + lineWidth},
-			{x = scrW - healthAreaOffsetW, y = lineYPos - healthAreaOffsetH},
-			{x = scrW - healthAreaOffsetW + lineWidth, y = lineYPos - healthAreaOffsetH},
-			{x = scrW - healthAreaOffsetW + lineWidth, y = lineYPos + lineWidth}
-		}
-
-		surface.DrawPoly(healthAreaLeft)
-
-		if (isOutline) then
-			local healthAreaTop = {
-				-- left to right top of line
-				{x = scrW - healthAreaOffsetW + lineWidth, y = lineYPos - healthAreaOffsetH},
-				{x = scrW, y = lineYPos - healthAreaOffsetH},
-				{x = scrW, y = lineYPos - healthAreaOffsetH + lineWidth},
-				{x = scrW - healthAreaOffsetW + lineWidth, y = lineYPos - healthAreaOffsetH + lineWidth}
-			}
-
-			surface.DrawPoly(healthAreaTop)
-		end
-	end
-end
-
 local function SA_DrawHelmet(color)
 	draw.NoTexture()
 	local w = ScrW()
@@ -397,7 +305,7 @@ end)
 local colorWhite = Color(255, 255, 255, 255)
 
 local function SA_DrawTopBar()
-	local topBarSections = 6
+	local topBarSections = 5
 	local lp = LocalPlayer()
 
 	local yPos = 0
@@ -409,19 +317,18 @@ local function SA_DrawTopBar()
 		sectionWid * 2 - sectionWid / 2,
 		sectionWid * 3 - sectionWid / 2,
 		sectionWid * 4 - sectionWid / 2,
-		sectionWid * 5 - sectionWid / 2,
-		sectionWid * 6 - sectionWid / 2
+		sectionWid * 5 - sectionWid / 2
 	}
 
 	local topBarFont = "ScoreboardDefault"
 
 	draw.SimpleText("Name: " .. lp:Name(), topBarFont, section[1], yPos, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-	draw.SimpleText("Playtime: " .. formattedPlaytime, topBarFont, section[5], yPos, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-	draw.SimpleText("Score: " .. score, topBarFont, section[6], yPos, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Faction: " .. team.GetName(LocalPlayer():Team()), topBarFont, section[2], yPos, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 
-	draw.SimpleText("Faction: " .. team.GetName(LocalPlayer():Team()), topBarFont, ScrW() / 2, yPos + 8, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-	draw.SimpleText("Credits: " .. credits, topBarFont, ScrW() / 2, yPos + 26 + 8, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Playtime: " .. formattedPlaytime, topBarFont, section[3], yPos, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Score: " .. score, topBarFont, section[4], yPos, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 
+	draw.SimpleText("Credits: " .. credits, topBarFont, section[5], yPos, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 end
 
 local texGradR = surface.GetTextureID("vgui/gradient-r")
