@@ -72,17 +72,25 @@ local function e2_ls_info(ent)
 	return retTab
 end
 
-local function ls_get_nettbl_by_ent(this)
+local function ls_get_ent_netid(this)
 	if not SA.ValidEntity(this) then return nil end
 	local netid = this:GetNWInt("netid")
 	if netid <= 0 then return nil end
+	return netid
+end
+
+local function ls_get_nettbl_by_ent(this)
+	local netid = ls_get_ent_netid(this)
+	if not netid then return nil end
 	local nettable = RD.GetNetTable(netid)
 	if not nettable.resources then return nil end
 	return nettable.resources
 end
 
 local function ls_get_res_by_ent(this, res)
-	local amount, capacity, temperature = RD.GetResourceData(this, res)
+	local netid = ls_get_ent_netid(this)
+	if not netid then return nil end
+	local amount, capacity, temperature = RD.GetNetResourceData(netid, res)
 	return amount, capacity, temperature
 end
 
