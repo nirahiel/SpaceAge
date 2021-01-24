@@ -30,7 +30,7 @@ end
 
 function ENT:CalcVars(ply)
 	self.IsTiberiumStorage = true
-	RD.AddResource(self, "tiberium", self:GetCapacity(ply), 0)
+	self:AddResource("tiberium", self:GetCapacity(ply), 0)
 end
 
 function ENT:GetCapacity(ply)
@@ -46,12 +46,12 @@ function ENT:Think()
 end
 
 function ENT:UpdateWireOutput()
-	Wire_TriggerOutput(self, "Tiberium", RD.GetResourceAmount(self, "tiberium"))
-	Wire_TriggerOutput(self, "Max Tiberium", RD.GetNetworkCapacity(self, "tiberium"))
+	Wire_TriggerOutput(self, "Tiberium", self:GetResourceAmount("tiberium"))
+	Wire_TriggerOutput(self, "Max Tiberium", self:GetNetworkCapacity("tiberium"))
 end
 
 function ENT:OnRemove()
-	if RD.GetResourceAmount(self, "tiberium") < 1000 then return BaseClass.OnRemove(self) end
+	if self:GetResourceAmount("tiberium") < 1000 then return BaseClass.OnRemove(self) end
 
 	local wreck = ents.Create("wreckedstuff")
 	wreck:SetSolid(SOLID_NONE)

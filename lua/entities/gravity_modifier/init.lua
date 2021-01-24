@@ -109,11 +109,11 @@ function ENT:Think()
 			end
 		end
 		local eneeded = math.Round((Energy_Increment * self:GetMultiplier()) + (Energy_Increment * dif * self:GetMultiplier()))
-		if (RD.GetResourceAmount(self, "energy") < eneeded) then
+		if (self:GetResourceAmount("energy") < eneeded) then
 			self:EmitSound("common/warning.wav")
 			self:TurnOff(true)
 		else
-			RD.ConsumeResource(self, "energy", eneeded)
+			self:ConsumeResource(self, "energy", eneeded)
 		end
 	end
 	self:NextThink(CurTime() + 1)

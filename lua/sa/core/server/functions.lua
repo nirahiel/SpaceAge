@@ -68,11 +68,11 @@ function SA.Functions.Discharge(ent)
 		if hitent.IsAsteroid then
 			SA.Functions.MineThing(ent, hitent, "ore")
 		elseif hitent.IsOreStorage and GetConVar("sa_pirating"):GetBool() then
-			local resLeft = SA.RD.GetResourceAmount(hitent, "ore")
+			local resLeft = hitent:GetResourceAmount("ore")
 			local toUse = math.floor(ent.yield * 1.5)
 			if (resLeft < toUse) then toUse = resLeft end
-			SA.RD.ConsumeResource(hitent, "ore", toUse)
-			SA.RD.SupplyResource(ent, "ore", math.floor(toUse * 0.9))
+			hitent:ConsumeResource("ore", toUse)
+			ent:SupplyResource("ore", math.floor(toUse * 0.9))
 		elseif hitent:IsPlayer() then
 			hitent:TakeDamage(25, ent, ent)
 		end
@@ -88,7 +88,7 @@ function SA.Functions.MineThing(ent, hitent, resType)
 			amount = math.floor(ent.yield * (hitent.health / ent.damage))
 			hitent:Remove()
 		end
-		SA.RD.SupplyResource(ent, resType, amount)
+		ent:SupplyResource(resType, amount)
 		hitent.health = hitent.health - ent.damage
 	else
 		hitent:Remove()

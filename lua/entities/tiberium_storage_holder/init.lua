@@ -115,6 +115,6 @@ function ENT:Think()
 end
 
 function ENT:UpdateWireOutput()
-	Wire_TriggerOutput(self, "Tiberium", RD.GetResourceAmount(self, "tiberium"))
-	Wire_TriggerOutput(self, "Max Tiberium", RD.GetNetworkCapacity(self, "tiberium"))
+	Wire_TriggerOutput(self, "Tiberium", self:GetResourceAmount("tiberium"))
+	Wire_TriggerOutput(self, "Max Tiberium", self:GetNetworkCapacity("tiberium"))
 end

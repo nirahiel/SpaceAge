@@ -9,7 +9,7 @@ local RD = CAF.GetAddon("Resource Distribution")
 
 function ENT:Initialize()
 	BaseClass.Initialize(self)
-	RD.AddResource(self, "energy", 0, 0)
+	self:AddResource("energy", 0, 0)
 	self.Active = 0
 	if (WireAddon ~= nil) then
 		self.WireDebugName = self.PrintName
@@ -29,7 +29,7 @@ end
 function ENT:TurnOn()
 	if (self.Active == 0) then
 		self.Active = 1
-		if (RD.GetResourceAmount(self, "energy") < self.consume) then
+		if (self:GetResourceAmount("energy") < self.consume) then
 			self:TurnOff()
 			return
 		end
@@ -61,7 +61,7 @@ local function ScanRoid(ent)
 	if hitent.IsAsteroid or hitent.IsCrystal then
 		ent:UpdateWireOutput(math.floor((hitent.health / hitent.maxhealth) * 10000) / 100)
 	elseif hitent.IsOreStorage then
-		ent:UpdateWireOutput(math.floor((RD.GetResourceAmount(hitent, "ore") / RD.GetNetworkCapacity(hitent, "ore")) * 10000) / 100)
+		ent:UpdateWireOutput(math.floor((hitent:GetResourceAmount("ore") / hitent:GetNetworkCapacity("ore")) * 10000) / 100)
 	else
 		ent:UpdateWireOutput(0)
 	end
@@ -74,8 +74,8 @@ end
 function ENT:Think()
 	BaseClass.Think(self)
 	if (self.Active == 1) then
-		if (RD.GetResourceAmount(self, "energy") >= self.consume) then
-			RD.ConsumeResource(self, "energy", self.consume)
+		if (self:GetResourceAmount("energy") >= self.consume) then
+			self:ConsumeResource("energy", self.consume)
 			ScanRoid(self)
 		else
 			self:TurnOff()

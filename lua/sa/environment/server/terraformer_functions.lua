@@ -1,7 +1,7 @@
 SA.Terraformer = {}
 
 local function SA_Terraformer_PushAtmosphere(terent, resName, atmoname, amount)
-	SA.RD.ConsumeResource(terent, resName, amount)
+	terent:ConsumeResource(resName, amount)
 	local terair = terent.environment.sbenvironment.air
 	if terair.empty < amount then
 		local neededAm = amount - terair.empty
@@ -97,7 +97,7 @@ function SA.Terraformer.Run(terent)
 			terent:TurnOff()
 			return
 		else
-			SA.RD.ConsumeResource(terent, "energy", 10000)
+			terent:ConsumeResource("energy", 10000)
 		end
 	end
 	if tc < 10000 then
@@ -109,7 +109,7 @@ function SA.Terraformer.Run(terent)
 			return
 		end
 	else
-		SA.RD.ConsumeResource(terent, "terracrystal", 10000)
+		terent:ConsumeResource("terracrystal", 10000)
 	end
 	if terent.State == 1 then --Boot up sequence
 		if terent.StateTicks > 10 then
@@ -119,7 +119,7 @@ function SA.Terraformer.Run(terent)
 				terent:TurnOff()
 				return
 			else
-				SA.RD.ConsumeResource(terent, "energy", 100000)
+				terent:ConsumeResource("energy", 100000)
 			end
 		end
 	elseif terent.State == 2 then --Gravity adaption
@@ -151,7 +151,7 @@ function SA.Terraformer.Run(terent)
 					terent:ChangeStability(math.random(-30, -10))
 					return
 				end
-				SA.RD.ConsumeResource(terent, "permafrost", 1000)
+				terent:ConsumeResource("permafrost", 1000)
 				terair.temperature = terair.temperature - 1
 				tvalid = false
 			end
@@ -162,7 +162,7 @@ function SA.Terraformer.Run(terent)
 					terent:ChangeStability(math.random(-30, -10))
 					return
 				end
-				SA.RD.ConsumeResource(terent, "dark matter", 1000)
+				terent:ConsumeResource("dark matter", 1000)
 				tersbenv.temperature = tersbenv.temperature + 1
 				tvalid = false
 			end
@@ -178,7 +178,7 @@ function SA.Terraformer.Run(terent)
 				terent:ChangeStability(math.random(-30, -10))
 				return
 			end
-			SA.RD.ConsumeResource(terent, "permafrost", 1000)
+			terent:ConsumeResource("permafrost", 1000)
 			tersbenv.temperature2 = tersbenv.temperature2 - 1
 			tvalid = false
 		elseif tDiff < -1 then
@@ -186,7 +186,7 @@ function SA.Terraformer.Run(terent)
 				terent:ChangeStability(math.random(-30, -10))
 				return
 			end
-			SA.RD.ConsumeResource(terent, "dark matter", 1000)
+			terent:ConsumeResource("dark matter", 1000)
 			tersbenv.temperature2 = tersbenv.temperature2 + 1
 			tvalid = false
 		else
@@ -230,25 +230,25 @@ end
 
 function SA.Terraformer.SpazzOut(terent, forcekill)
 	if terent.FinalSpazzed or terent.environment.IsProtected or (not terent.environment:IsPlanet()) or terent.environment == SA.SB.GetSpace() then return end
-	local energy = SA.RD.GetResourceAmount(terent, "energy")
+	local energy = terent:GetResourceAmount("energy")
 	if terent.State ~= -1 then
-		local o2 = SA.RD.GetResourceAmount(terent, "oxygen")
-		local co2 = SA.RD.GetResourceAmount(terent, "carbon dioxide")
-		local dm = SA.RD.GetResourceAmount(terent, "dark matter")
-		local tc = SA.RD.GetResourceAmount(terent, "terracrystal")
-		local pf = SA.RD.GetResourceAmount(terent, "permafrost")
-		if o2 > 0 then SA.RD.ConsumeResource(terent, "oxygen", o2) end
-		if co2 > 0 then SA.RD.ConsumeResource(terent, "carbon dioxide", co2) end
-		if dm > 0 then SA.RD.ConsumeResource(terent, "dark matter", dm) end
-		if tc > 0 then SA.RD.ConsumeResource(terent, "terracrystal", tc) end
-		if pf > 0 then SA.RD.ConsumeResource(terent, "permafrost", pf) end
+		local o2 = terent:GetResourceAmount("oxygen")
+		local co2 = terent:GetResourceAmount("carbon dioxide")
+		local dm = terent:GetResourceAmount("dark matter")
+		local tc = terent:GetResourceAmount("terracrystal")
+		local pf = terent:GetResourceAmount("permafrost")
+		if o2 > 0 then terent:ConsumeResource("oxygen", o2) end
+		if co2 > 0 then terent:ConsumeResource("carbon dioxide", co2) end
+		if dm > 0 then terent:ConsumeResource("dark matter", dm) end
+		if tc > 0 then terent:ConsumeResource("terracrystal", tc) end
+		if pf > 0 then terent:ConsumeResource("permafrost", pf) end
 	end
 	terent:SetState(-1)
 	if energy < 10000 then
 		terent:TurnOff()
 		return
 	else
-		SA.RD.ConsumeResource(terent, "energy", 10000)
+		terent:ConsumeResource("energy", 10000)
 	end
 	local haschanged = false
 	local myenv = terent.environment.sbenvironment

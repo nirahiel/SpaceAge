@@ -40,7 +40,7 @@ function ENT:CalcVars(ply)
 	end
 
 	self.IsOreStorage = true
-	RD.AddResource(self, "ore", (self.StorageOffset + (self:GetPlayerLevel(ply) * self.StorageIncrement)) * ply.sa_data.advancement_level, 0)
+	self:AddResource("ore", (self.StorageOffset + (self:GetPlayerLevel(ply) * self.StorageIncrement)) * ply.sa_data.advancement_level, 0)
 end
 
 function ENT:Think()
@@ -52,6 +52,6 @@ function ENT:Think()
 end
 
 function ENT:UpdateWireOutput()
-	Wire_TriggerOutput(self, "Ore", RD.GetResourceAmount(self, "ore"))
-	Wire_TriggerOutput(self, "Max Ore", RD.GetNetworkCapacity(self, "ore"))
+	Wire_TriggerOutput(self, "Ore", self:GetResourceAmount("ore"))
+	Wire_TriggerOutput(self, "Max Ore", self:GetNetworkCapacity("ore"))
 end

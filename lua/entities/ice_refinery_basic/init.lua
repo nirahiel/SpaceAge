@@ -23,21 +23,21 @@ function ENT:Initialize()
 		phys:EnableMotion(true)
 	end
 
-	RD.AddResource(self, "energy", 0)
-	RD.AddResource(self, "liquid nitrogen", 0)
-	RD.AddResource(self, "water", 0)
-	RD.AddResource(self, "heavy water", 0)
+	self:AddResource("energy", 0)
+	self:AddResource("liquid nitrogen", 0)
+	self:AddResource("water", 0)
+	self:AddResource("heavy water", 0)
 
 	for type, _ in pairs(SA.Ice.Types) do
-		RD.AddResource(self, type, 0)
+		self:AddResource(type, 0)
 	end
 
-	RD.AddResource(self, "oxygen isotopes", 0)
-	RD.AddResource(self, "hydrogen isotopes", 0)
-	RD.AddResource(self, "helium isotopes", 0)
-	RD.AddResource(self, "nitrogen isotopes", 0)
-	RD.AddResource(self, "liquid ozone", 0)
-	RD.AddResource(self, "strontium clathrates", 0)
+	self:AddResource("oxygen isotopes", 0)
+	self:AddResource("hydrogen isotopes", 0)
+	self:AddResource("helium isotopes", 0)
+	self:AddResource("nitrogen isotopes", 0)
+	self:AddResource("liquid ozone", 0)
+	self:AddResource("strontium clathrates", 0)
 
 	self:SetOverlayText(self.PrintName .. "\n" .. "Progress: 0%")
 
@@ -62,24 +62,24 @@ function ENT:Refine()
 	local own = SA.PP.GetOwner(self)
 	if own and own.IsAFK then return end
 
-	local CurEnergy = RD.GetResourceAmount(self, "energy")
+	local CurEnergy = self:GetResourceAmount("energy")
 	local EnergyReq = self.CycleEnergy / self.CycleTime
 
 	if (CurEnergy > EnergyReq) then
 		if not self.CurrentRef then
 			for type, _ in pairs(SA.Ice.Types) do
-				local Avail = RD.GetResourceAmount(self, type)
+				local Avail = self:GetResourceAmount(type)
 				if (Avail > 0) then
 					self.CurrentRef = type
 					self.Volume = 1000
-					RD.ConsumeResource(self, type, 1)
+					self:ConsumeResource(type, 1)
 					Wire_TriggerOutput(self, "Active", 1)
 					break
 				end
 			end
 		end
 		if (self.CurrentRef) then
-			RD.ConsumeResource(self, "energy", EnergyReq)
+			self:ConsumeResource("energy", EnergyReq)
 
 			local RefSpeed = (self.CycleVol / self.CycleTime) * 1000
 			self.Volume = self.Volume - RefSpeed
@@ -89,7 +89,7 @@ function ENT:Refine()
 			if (self.Volume <= 0) then
 				local gives = SA.Ice.GetRefined(self.CurrentRef, self.RefineEfficiency)
 				for res, count in pairs(gives) do
-					RD.SupplyResource(self, res, count)
+					self:SupplyResource(res, count)
 				end
 				self.CurrentRef = nil
 				Wire_TriggerOutput(self, "Active", 0)

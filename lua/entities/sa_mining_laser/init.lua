@@ -12,8 +12,8 @@ local RD = CAF.GetAddon("Resource Distribution")
 
 function ENT:Initialize()
 	BaseClass.Initialize(self)
-	RD.AddResource(self, "energy", 0, 0)
-	RD.AddResource(self, "ore", 0, 0)
+	self:AddResource("energy", 0, 0)
+	self:AddResource("ore", 0, 0)
 	self.Active = 0
 	self.damage = 16
 
@@ -63,7 +63,7 @@ end
 function ENT:TurnOn()
 	if (self.Active == 0) then
 		self.Active = 1
-		if (RD.GetResourceAmount(self, "energy") < self.consume) then
+		if (self:GetResourceAmount("energy") < self.consume) then
 			self:TurnOff()
 			return
 		end
@@ -101,8 +101,8 @@ end
 function ENT:Think()
 	BaseClass.Think(self)
 	if (self.Active == 1) then
-			if (RD.GetResourceAmount(self, "energy") >= self.consume) then
-				RD.ConsumeResource(self, "energy", self.consume)
+			if (self:GetResourceAmount("energy") >= self.consume) then
+				self:ConsumeResource("energy", self.consume)
 				SA.Functions.Discharge(self)
 				Wire_TriggerOutput(self, "Output", self.yield)
 			else

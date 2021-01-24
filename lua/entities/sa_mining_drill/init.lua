@@ -13,8 +13,8 @@ local RD = CAF.GetAddon("Resource Distribution")
 
 function ENT:Initialize()
 	BaseClass.Initialize(self)
-	RD.AddResource(self, "energy", 0, 0)
-	RD.AddResource(self, "tiberium", 0, 0)
+	self:AddResource("energy", 0, 0)
+	self:AddResource("tiberium", 0, 0)
 	self.Active = 0
 	self.damage = 30
 	self.TouchEnt = nil
@@ -60,7 +60,7 @@ end
 function ENT:TurnOn()
 	if (self.Active == 0) then
 		self.Active = 1
-		if (RD.GetResourceAmount(self, "energy") < self.consume) then
+		if (self:GetResourceAmount("energy") < self.consume) then
 			self:TurnOff()
 			return
 		end
@@ -108,8 +108,8 @@ end
 function ENT:Think()
 	BaseClass.Think(self)
 	if (self.Active == 1) then
-		if (RD.GetResourceAmount(self, "energy") >= self.consume) then
-			RD.ConsumeResource(self, "energy", self.consume)
+		if (self:GetResourceAmount(self, "energy") >= self.consume) then
+			self:ConsumeResource(self, "energy", self.consume)
 			local myOwner = SA.PP.GetOwner(self)
 			if self.TouchEnt and self.TouchEnt.IsCrystal and myOwner and myOwner:IsValid() and myOwner:GetPos():Distance(self:GetPos()) <= 350 and myOwner:InVehicle() then
 				local skin = self.TouchEnt:GetSkin()

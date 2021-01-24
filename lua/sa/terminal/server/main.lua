@@ -206,7 +206,7 @@ end
 local function SA_SupplyResource(ply, res, num)
 	local SelNode = SA_SelectedNode(ply)
 	if (SA.ValidEntity(SelNode)) then
-		SA.RD.SupplyNetResource(SelNode.netid, res, num)
+		SA.RD.SupplyNetResource(SelNode.netid, res, num, 293)
 	end
 	return 0
 end

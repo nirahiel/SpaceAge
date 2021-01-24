@@ -18,9 +18,9 @@ function ENT:Initialize()
 	else
 		self.Inputs = { }
 	end
-	RD.AddResource(self, "terracrystal", 1000000)
-	RD.AddResource(self, "dark matter", 1000000)
-	RD.AddResource(self, "permafrost", 1000000)
+	self:AddResource("terracrystal", 1000000)
+	self:AddResource("dark matter", 1000000)
+	self:AddResource("permafrost", 1000000)
 	self.caf.custom.masschangeoverride = true
 	local pl = self:GetTable().Founder
 	if pl and pl:IsValid() and pl:IsPlayer() and pl.sa_data.score and pl.sa_data.score < 1000000 then
@@ -49,12 +49,12 @@ function ENT:Think()
 end
 
 function ENT:UpdateWireOutput()
-	local dm = RD.GetResourceAmount(self, "dark matter")
-	local tc = RD.GetResourceAmount(self, "terracrystal")
-	local pf = RD.GetResourceAmount(self, "permafrost")
-	local maxdm = RD.GetNetworkCapacity(self, "dark matter")
-	local maxtc = RD.GetNetworkCapacity(self, "terracrystal")
-	local maxpf = RD.GetNetworkCapacity(self, "permafrost")
+	local dm = self:GetResourceAmount("dark matter")
+	local tc = self:GetResourceAmount("terracrystal")
+	local pf = self:GetResourceAmount("permafrost")
+	local maxdm = self:GetNetworkCapacity("dark matter")
+	local maxtc = self:GetNetworkCapacity("terracrystal")
+	local maxpf = self:GetNetworkCapacity("permafrost")
 
 	Wire_TriggerOutput(self, "Dark Matter", dm)
 	Wire_TriggerOutput(self, "Permafrost", pf)

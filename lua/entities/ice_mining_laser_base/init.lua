@@ -17,15 +17,15 @@ function ENT:Initialize()
 
 	self:SetColor(Color(0, 100, 255, 255))
 
-	RD.AddResource(self, "energy", 0)
-	RD.AddResource(self, "blue ice", 0)
-	RD.AddResource(self, "clear ice", 0)
-	RD.AddResource(self, "glacial mass", 0)
-	RD.AddResource(self, "white glaze", 0)
-	RD.AddResource(self, "dark glitter", 0)
-	RD.AddResource(self, "glare crust", 0)
-	RD.AddResource(self, "gelidus", 0)
-	RD.AddResource(self, "krystallos", 0)
+	self:AddResource("energy", 0)
+	self:AddResource("blue ice", 0)
+	self:AddResource("clear ice", 0)
+	self:AddResource("glacial mass", 0)
+	self:AddResource("white glaze", 0)
+	self:AddResource("dark glitter", 0)
+	self:AddResource("glare crust", 0)
+	self:AddResource("gelidus", 0)
+	self:AddResource("krystallos", 0)
 
 	self.Inputs = Wire_CreateInputs(self, { "Activate" })
 	self.Outputs = Wire_CreateOutputs(self, { "Active", "Mineral Amount", "Progress" })
@@ -53,7 +53,7 @@ function ENT:Mine()
 
 	--Before we do anything, lets make sure they have power!
 	local EnergyUse = self.LaserConsume / self.LaserCycle
-	local CurEnergy = RD.GetResourceAmount(self, "energy")
+	local CurEnergy = self:GetResourceAmount("energy")
 
 	if (CurEnergy < EnergyUse) then return end
 
@@ -73,11 +73,11 @@ function ENT:Mine()
 		--Oh look, our laser is full, dump it into cargo.
 		if (self.IceCollected[Type] >= 1000) then
 			self.IceCollected[Type] = self.IceCollected[Type] - 1000
-			RD.SupplyResource(self, Type, 1)
+			self:SupplyResource(Type, 1)
 		end
 
 		--Energy Usage--
-		RD.ConsumeResource(self, "energy", EnergyUse)
+		self:ConsumeResource("energy", EnergyUse)
 
 		--Updating shit--
 		Wire_TriggerOutput(self, "Mineral Amount", math.floor(ent.MineralAmount * 10) / 10)

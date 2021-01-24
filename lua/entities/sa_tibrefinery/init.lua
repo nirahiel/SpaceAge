@@ -38,7 +38,7 @@ function ENT:Initialize()
 end
 
 function ENT:StartTouch(ent)
-	if ent.IsTiberiumStorage and (RD.GetResourceAmount(ent, "tiberium") >= 0) then
+	if ent.IsTiberiumStorage and (ent:GetResourceAmount("tiberium") >= 0) then
 		local attachPlace = SA.Tiberium.FindFreeAttachPlace(ent, self)
 		if not attachPlace then return end
 		if not SA.Tiberium.AttachStorage(ent, self, attachPlace) then return end
@@ -60,14 +60,14 @@ function ENT:Think()
 		RD.Unlink(v)
 		local ply = SA.PP.GetOwner(v)
 		if ply and ply:IsValid() and ply:IsPlayer() then
-			local am = RD.GetResourceAmount(v, "tiberium")
+			local am = v:GetResourceAmount("tiberium")
 			local taken = 10000
 			if am < taken then taken = am end
 			if taken <= 0 then
 				v:Remove()
 				self.TouchTable[k] = nil
 			else
-				RD.ConsumeResource(v, "tiberium", taken)
+				v:ConsumeResource("tiberium", taken)
 				local creds = math.Round(taken * (math.random(20, 30)))
 				if ply.sa_data.faction_name == "corporation" or ply.sa_data.faction_name == "alliance" then
 					creds = math.ceil((creds * 1.33) * 1000) / 1000
