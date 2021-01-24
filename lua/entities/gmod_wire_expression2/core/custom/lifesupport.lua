@@ -2,6 +2,8 @@
 local RD = CAF.GetAddon("Resource Distribution")
 E2Lib.RegisterExtension("lifesupport", false)
 
+local E2_MAX_ARRAY_SIZE = 64
+
 local function e2defaulttable()
 	return {n={},ntypes={},s={},stypes={},size=0}
 end
