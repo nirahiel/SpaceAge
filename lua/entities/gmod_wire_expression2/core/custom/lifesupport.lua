@@ -122,17 +122,17 @@ end
 
 e2function number entity:lsGetAmount(string key)
 	local amount, _, _ = ls_get_res_by_ent(this, key)
-	return amount
+	return amount or 0
 end
 
 e2function number entity:lsGetCapacity(string key)
 	local _, capacity, _ = ls_get_res_by_ent(this, key)
-	return capacity
+	return capacity or 0
 end
 
 e2function number entity:lsGetTemperature(string key)
 	local _, _, temperature = ls_get_res_by_ent(this, key)
-	return temperature
+	return temperature or 0
 end
 
 e2function table entity:lsGetData(string key)
