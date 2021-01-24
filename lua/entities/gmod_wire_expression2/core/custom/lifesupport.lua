@@ -141,9 +141,9 @@ e2function table entity:lsGetData(string key)
 		n={},
 		ntypes={},
 		s={
-			amount = amount,
-			capacity = capacity,
-			temperature = temperature
+			amount = amount or 0,
+			capacity = capacity or 0,
+			temperature = temperature or 0
 		},
 		stypes={
 			amount = "n",
