@@ -72,13 +72,18 @@ local function e2_ls_info(ent)
 	return retTab
 end
 
-local function ls_get_res_by_ent(this)
+local function ls_get_nettbl_by_ent(this)
 	if not SA.ValidEntity(this) then return nil end
 	local netid = this:GetNWInt("netid")
 	if netid <= 0 then return nil end
 	local nettable = RD.GetNetTable(netid)
 	if not nettable.resources then return nil end
 	return nettable.resources
+end
+
+local function ls_get_res_by_ent(this, res)
+	local amount, capacity, temperature = RD.GetResourceData(this, res)
+	return amount, capacity, temperature
 end
 
 __e2setcost(5)
@@ -91,9 +96,8 @@ e2function table lsInfo()
 	return e2_ls_info(self.entity)
 end
 
-
 e2function array entity:lsGetResources()
-	local nettable = ls_get_res_by_ent(this)
+	local nettable = ls_get_nettbl_by_ent(this)
 	if not nettable then return {} end
 	local aTab = {}
 	for k, v in pairs(nettable) do
@@ -103,19 +107,43 @@ e2function array entity:lsGetResources()
 	return aTab
 end
 
+local function ls_get_res
+
 __e2setcost(2)
 e2function string lsGetName(string key)
 	return RD.GetProperResourceName(key)
 end
 
 e2function number entity:lsGetAmount(string key)
-	local nettable = ls_get_res_by_ent(this)
-	if not (nettable and nettable[key]) then return 0 end
-	return nettable[key].value
+	local amount, _, _ = ls_get_res_by_ent(this, key)
+	return amount
 end
 
 e2function number entity:lsGetCapacity(string key)
-	local nettable = ls_get_res_by_ent(this)
-	if not (nettable and nettable[key]) then return 0 end
-	return nettable[key].maxvalue
+	local _, capacity, _ = ls_get_res_by_ent(this, key)
+	return capacity
+end
+
+e2function number entity:lsGetTemperature(string key)
+	local _, _, temperature = ls_get_res_by_ent(this, key)
+	return temperature
+end
+
+e2function table entity:lsGetData(string key)
+	local amount, capacity, temperature = ls_get_res_by_ent(this, key)
+	return {
+		n={},
+		ntypes={},
+		s={
+			amount = amount,
+			capacity = capacity,
+			temperature = temperature
+		},
+		stypes={
+			amount = "n",
+			capacity = "n",
+			temperature = "n"
+		},
+		size=3
+	}
 end
