@@ -80,11 +80,11 @@ function SA.Terraformer.Run(terent)
 	if not (ply and ply:IsValid() and ply:IsPlayer()) then return end
 
 	if terent.environment.IsProtected or (not terent.environment:IsPlanet()) or terent.environment == SA.SB.GetSpace() then return end
-	local energy = SA.RD.GetResourceAmount(terent, "energy")
-	local o2 = SA.RD.GetResourceAmount(terent, "oxygen")
-	local dm = SA.RD.GetResourceAmount(terent, "dark matter")
-	local tc = SA.RD.GetResourceAmount(terent, "terracrystal")
-	local pf = SA.RD.GetResourceAmount(terent, "permafrost")
+	local energy = terent:GetResourceAmount("energy")
+	local o2 = terent:GetResourceAmount("oxygen")
+	local dm = terent:GetResourceAmount("dark matter")
+	local tc = terent:GetResourceAmount("terracrystal")
+	local pf = terent:GetResourceAmount("permafrost")
 	local terenv = terent.environment
 	local tersbenv = terenv.sbenvironment
 	local terair = tersbenv.air
