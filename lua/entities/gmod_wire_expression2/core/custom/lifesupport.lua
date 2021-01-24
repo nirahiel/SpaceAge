@@ -86,7 +86,7 @@ local function ls_get_res_by_ent(this, res)
 	return amount, capacity, temperature
 end
 
-__e2setcost(5)
+__e2setcost(10)
 e2function table entity:lsInfo()
 	if not SA.ValidEntity(this) then return e2defaulttable() end
 	return e2_ls_info(this)
@@ -109,7 +109,7 @@ end
 
 local function ls_get_res
 
-__e2setcost(2)
+__e2setcost(5)
 e2function string lsGetName(string key)
 	return RD.GetProperResourceName(key)
 end
