@@ -107,8 +107,6 @@ e2function array entity:lsGetResources()
 	return aTab
 end
 
-local function ls_get_res
-
 __e2setcost(5)
 e2function string lsGetName(string key)
 	return RD.GetProperResourceName(key)
