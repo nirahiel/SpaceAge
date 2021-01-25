@@ -8,8 +8,6 @@ DEFINE_BASECLASS("base_rd3_entity")
 
 include("shared.lua")
 
-local RD = CAF.GetAddon("Resource Distribution")
-
 function ENT:Initialize()
 	BaseClass.Initialize(self)
 	self:AddResource("energy", 0, 0)
@@ -29,7 +27,10 @@ function ENT:Initialize()
 		phys:Wake()
 	end
 	self.lasersound = CreateSound(self, "ambient/energy/electric_loop.wav")
+end
 
+function ENT:CAF_PostInit()
+	self:InitializeVars()
 	self:CalcVars(self:GetTable().Founder)
 end
 
@@ -39,7 +40,7 @@ end
 
 function ENT:CalcVars(ply)
 	if ply.sa_data.research.ore_laser_level[1] < self.MinMiningTheory then
-		self:Remove()
+		SA.Research.RemoveEntityWithWarning(self, "ore_laser_level", self.MinMiningTheory)
 		return
 	end
 

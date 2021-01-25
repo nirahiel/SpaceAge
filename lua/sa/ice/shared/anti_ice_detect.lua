@@ -14,7 +14,7 @@ local OKAY_CALLERS = { "addons/spaceage/", "lua/fpp/", "lua/ulib/" }
 SA.Ice.RunAntiIceDebug = false
 
 local function IsOkay(ent)
-	if SA.ValidEntity(ent) and GetEntityClass(ent) == "iceroid" then
+	if SA.ValidEntity(ent) and GetEntityClass(ent) == "sa_iceroid" then
 		return false
 	end
 
@@ -100,7 +100,7 @@ local function OverwriteTraceFunc(idx, tbl)
 	end
 end
 
-local ICEROID = "iceroid"
+local ICEROID = "sa_iceroid"
 local function IsIceroidWildcard(cls)
 	if cls == ICEROID then
 		return true

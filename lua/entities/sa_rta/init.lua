@@ -26,16 +26,22 @@ function ENT:Initialize()
 	self:SetSolid(SOLID_VPHYSICS)
 	self.Inputs = Wire_CreateInputs(self, { "OpenTerminal" })
 	self.NextUse = 0
-	timer.Simple(0.1, function() self:CheckCanSpawn(self:GetTable().Founder) end)
+end
+
+function ENT:CAF_PostInit()
+	self:CheckCanSpawn(self:GetTable().Founder)
 end
 
 function ENT:CheckCanSpawn(ply)
-	if (ply.sa_data.research.rta[1] < 1) then self:Remove() return end
+	if (ply.sa_data.research.rta[1] < 1) then
+		SA.Research.RemoveEntityWithWarning(self, "rta", 1)
+	end
 end
 
 function ENT:TriggerInput(iname, value)
 	if (iname == "OpenTerminal") and value ~= 0 then
-		OpenTerminal(self, self.pl, self:GetTable().Founder)
+		local ply = self:GetTable().Founder
+		OpenTerminal(self, ply, ply)
 	end
 end
 

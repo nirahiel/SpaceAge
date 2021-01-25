@@ -12,7 +12,7 @@ local function CalcRing(inrad, outrad, angle)
 end
 
 function SA.Ice.SpawnRoidRing(iceType, data)
-	local ent = ents.Create("iceroid")
+	local ent = ents.Create("sa_iceroid")
 
 	local IceData = SA.Ice.Types[iceType]
 

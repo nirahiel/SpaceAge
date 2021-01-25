@@ -15,7 +15,7 @@ end
 
 function ENT:Think()
 	BaseClass.Think(self)
-	SA.Tiberium.RemoveIntersecting(self, {"sa_crystaltower", "sa_mining_drill", "sa_mining_drill_ii"})
+	SA.Tiberium.RemoveIntersecting(self, {"sa_crystaltower", "sa_mining_drill"})
 	self:NextThink(CurTime() + 2)
 	return true
 end

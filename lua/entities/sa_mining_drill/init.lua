@@ -9,8 +9,6 @@ function ENT:GetPlayerLevel(ply)
 	return ply.sa_data.research.tiberium_drill_yield[self.MinTibDrillMod + 1]
 end
 
-local RD = CAF.GetAddon("Resource Distribution")
-
 function ENT:Initialize()
 	BaseClass.Initialize(self)
 	self:AddResource("energy", 0, 0)
@@ -31,13 +29,16 @@ function ENT:Initialize()
 		phys:SetMass(120)
 		phys:Wake()
 	end
+end
 
+function ENT:CAF_PostInit()
+	self:InitializeVars()
 	self:CalcVars(self:GetTable().Founder)
 end
 
 function ENT:CalcVars(ply)
 	if ply.sa_data.research.tiberium_drill_level[1] < self.MinTibDrillMod then
-		self:Remove()
+		SA.Research.RemoveEntityWithWarning(self, "tiberium_drill_level", self.MinTibDrillMod)
 		return
 	end
 

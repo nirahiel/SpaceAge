@@ -3,8 +3,6 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
-local RD = CAF.GetAddon("Resource Distribution")
-
 DEFINE_BASECLASS("base_rd3_entity")
 
 function ENT:Initialize()
@@ -24,6 +22,7 @@ function ENT:Initialize()
 	self.caf.custom.masschangeoverride = true
 	local pl = self:GetTable().Founder
 	if pl and pl:IsValid() and pl:IsPlayer() and pl.sa_data.score and pl.sa_data.score < 1000000 then
+		pl:AddNotify("You need 1.000.000 score to spawn a terraforming storage", NOTIFY_ERROR, 5)
 		self:Remove()
 		return
 	end

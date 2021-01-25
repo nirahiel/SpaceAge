@@ -9,7 +9,7 @@ if (CLIENT) then
 	language.Add("tool.turn_into_skinswitcher.name" , "Make-A-Skin-Switcher Tool")
 	language.Add("tool.turn_into_skinswitcher.desc" , "Easily turn props into skin switchers.")
 	language.Add("tool.turn_into_skinswitcher.0", "Left click a prop to turn it into a skin switcher.")
-	language.Add("undone_Skin Switcher", "Undone Habitable Module")
+	language.Add("undone_Skin Switcher", "Undone Skin Switcher")
 	language.Add("TurnToSkinSwitcher", "Make-A-Skin-Switcher")
 end
 
@@ -28,7 +28,7 @@ function TOOL:LeftClick(trace)
 
 		traceEnt:Remove()
 
-		local sksw = ents.Create("skin_switcher")
+		local sksw = ents.Create("sa_skin_switcher")
 		sksw:SetModel(prop.model)
 		sksw:Spawn()
 		sksw:Activate()
@@ -45,7 +45,7 @@ function TOOL:LeftClick(trace)
 			undo.AddEntity(sksw)
 			undo.Finish()
 
-		ply:AddCleanup("skin_switchers" , habmod)
+		ply:AddCleanup("sa_skin_switchers" , habmod)
 
 		return true
 	end

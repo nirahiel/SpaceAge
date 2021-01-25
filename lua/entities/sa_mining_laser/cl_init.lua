@@ -8,6 +8,15 @@ local mat = Material("trails/laser")
 local sprite = Material("sprites/animglow02")
 local BeamColor = {Color(255, 0, 0, 255), Color(0, 255, 0, 255), Color(0, 0, 255, 255)}
 
+local CalcColorTbl = {
+	function(level) return Color(255, 255 - math.floor(level * 0.85), 0) end,
+	function(level) return Color(255, 0, math.floor(level * 0.85)) end,
+	function(level) return Color(255 - math.floor(level * 0.85), 0, 255) end,
+	function(level) return Color(0, math.floor(level * 0.85), 255) end,
+	function(level) return Color(0, 255, 255 - math.floor(level * 0.85)) end,
+	function(level) return Color(math.floor(level * 0.85), 255, math.floor(level * 0.85)) end,
+}
+
 function ENT:Draw()
 	BaseClass.Draw(self)
 	if self:GetNWBool("o") == true then
@@ -22,8 +31,9 @@ end
 function ENT:DrawLaser()
 	local level = self:GetNWInt("level")
 	if level ~= self.LastLevel then
+		self:InitializeVars()
 		self.LastLevel = level
-		self.LaserColor = self:CalcColor(level)
+		self.LaserColor = CalcColorTbl[self.rank](level)
 		self.LaserWidth = self.BeamWidthOffset + math.floor(level / 10)
 	end
 	self:DrawLaserDef(self.LaserColor, self.LaserWidth)

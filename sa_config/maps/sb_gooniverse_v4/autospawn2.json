@@ -144,7 +144,7 @@
     "model": "models/props/terminal.mdl",
     "rol": 0,
     "y": 413.061,
-    "class": "terminal",
+    "class": "sa_terminal",
     "z": 4625.4199,
     "yaw": -45
   },
@@ -204,7 +204,7 @@
     "model": "models/props/terminal.mdl",
     "rol": -0.5957,
     "y": 469.9494,
-    "class": "terminal",
+    "class": "sa_terminal",
     "z": 4624.5601,
     "yaw": -78.5106
   },
@@ -363,7 +363,7 @@
     "model": "models/props/terminal.mdl",
     "rol": 0,
     "y": 518.1118,
-    "class": "terminal",
+    "class": "sa_terminal",
     "z": 4624.313,
     "yaw": -117.9357
   },

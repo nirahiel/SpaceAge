@@ -6,7 +6,7 @@ local SA_TeleportLocs = {}
 util.PrecacheModel("models/holograms/hq_icosphere.mdl")
 
 local function InitSATeleporters()
-	for k, v in pairs(ents.FindByClass("teleport_panel")) do
+	for k, v in pairs(ents.FindByClass("sa_teleport_panel")) do
 		v:Remove()
 	end
 
@@ -25,7 +25,7 @@ local function InitSATeleporters()
 		SA_TeleportLocs[name] = spawns
 
 		for k, v in pairs(config.Panels) do
-			local tele = ents.Create("teleport_panel")
+			local tele = ents.Create("sa_teleport_panel")
 			tele:SetPos(Vector(unpack(v.Position)))
 			tele:SetAngles(Angle(unpack(v.Angle)))
 			tele:SetNWString("TeleKey", name)

@@ -50,7 +50,7 @@ function SA.Teleporter.Open(ent)
 
 	local myPlanet = SA.SB.FindClosestPlanet(ent:GetPos(), false).name
 
-	for _, otherEnt in pairs(ents.FindByClass("teleport_panel")) do
+	for _, otherEnt in pairs(ents.FindByClass("sa_teleport_panel")) do
 		local otherName = otherEnt:GetNWString("TeleKey")
 		if not otherLocations[otherName] then
 			local otherPlanet = SA.SB.FindClosestPlanet(otherEnt:GetPos(), false).name

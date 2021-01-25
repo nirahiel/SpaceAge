@@ -4,7 +4,22 @@ ENT.PrintName = "Mining Drill"
 
 list.Set("LSEntOverlayText" , "sa_mining_drill", {HasOOO = true, num = 2, strings = {"Mining Drill", "\nEnergy: ", "\nTiberium: "}, resnames = {"energy", "tiberium"}})
 
-ENT.EnergyBase = 600
-ENT.YieldOffset = 50
-ENT.YieldIncrement = 10
-ENT.MinTibDrillMod = 0
+local EnergyBaseTbl = {600,1200}
+local YieldOffsetTbl = {50,100}
+local YieldIncrementTbl = {10,20}
+local MinTibDrillModTbl = {0,1}
+
+function ENT:InitializeVars()
+	local rank = self:GetNWInt("rank")
+	if rank <= 0 then
+		return
+	end
+
+	self.rank = rank
+
+	self.EnergyBase = EnergyBaseTbl[rank]
+	self.YieldOffset = YieldOffsetTbl[rank]
+	self.YieldIncrement = YieldIncrementTbl[rank]
+	self.MinTibDrillMod = MinTibDrillModTbl[rank]
+end
+

@@ -24,9 +24,10 @@ function ENT:Initialize()
 	else
 		self.Inputs = {{ Name = "On" }}
 	end
-	RD.RegisterNonStorageDevice(self)
+	self:RegisterNonStorageDevice(self)
 	local pl = self:GetTable().Founder
 	if pl and pl:IsValid() and pl:IsPlayer() and pl.sa_data.score and pl.sa_data.score < 100000000 then
+		pl:AddNotify("You need 100.000.000 score to spawn a terraformer", NOTIFY_ERROR, 5)
 		self:Remove()
 		return
 	end
