@@ -33,6 +33,11 @@ function ENT:Draw()
 	if (not self:GetNWBool("o")) then
 		return
 	end
+
+	if not self.LaserRange then
+		self:InitializeVars()
+	end
+
 	local pos = self:GetPos()
 	local up = self:GetUp()
 	local Trace = util.QuickTrace(pos, up * self.LaserRange, self)
