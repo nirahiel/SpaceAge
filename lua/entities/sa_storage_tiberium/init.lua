@@ -2,7 +2,7 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
-DEFINE_BASECLASS("base_rd3_entity")
+DEFINE_BASECLASS("sa_base_rd3_entity")
 
 function ENT:Initialize()
 	BaseClass.Initialize(self)
@@ -17,11 +17,6 @@ function ENT:Initialize()
 		phys:Wake()
 		phys:SetMass(500)
 	end
-end
-
-function ENT:CAF_PostInit()
-	self:InitializeVars()
-	self:CalcVars(self:GetTable().Founder)
 end
 
 function ENT:CalcVars(ply)

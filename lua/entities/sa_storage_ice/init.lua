@@ -2,7 +2,7 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
-DEFINE_BASECLASS("base_rd3_entity")
+DEFINE_BASECLASS("sa_base_rd3_entity")
 
 function ENT:Initialize()
 	BaseClass.Initialize(self)
@@ -27,22 +27,13 @@ function ENT:Initialize()
 	"Max Krystallos"})
 end
 
-function ENT:CAF_PostInit()
-	self:CalcVars(self:GetTable().Founder)
-end
-
 function ENT:CalcVars(ply)
-	local reqLvl = SA.Ice.GetLevelForStorageModel(self:GetModel())
-	if not reqLvl then
-		self:remove()
-		return
-	end
-	if ply.sa_data.research.ice_raw_storage_level[1] < reqLvl then
-		SA.Research.RemoveEntityWithWarning(self, "ice_raw_storage_level", reqLvl)
+	if ply.sa_data.research.ice_raw_storage_level[1] < self.MinRawIceStorageMod then
+		SA.Research.RemoveEntityWithWarning(self, "ice_raw_storage_level", self.MinRawIceStorageMod)
 		return
 	end
 
-	local Capacity = math.floor(8 * (4.5 ^ reqLvl)) * ply.sa_data.advancement_level
+	local Capacity = math.floor(8 * (4.5 ^ self.rank)) * ply.sa_data.advancement_level
 
 	self:AddResource("blue ice", Capacity)
 	self:AddResource("clear ice", Capacity)

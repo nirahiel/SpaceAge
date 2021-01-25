@@ -2,7 +2,7 @@ include("shared.lua")
 
 language.Add("sa_mining_laser", "Mining Laser")
 
-DEFINE_BASECLASS("base_rd3_entity")
+DEFINE_BASECLASS("sa_base_rd3_entity")
 
 local mat = Material("trails/laser")
 local sprite = Material("sprites/animglow02")
@@ -19,6 +19,11 @@ local CalcColorTbl = {
 
 function ENT:Draw()
 	BaseClass.Draw(self)
+
+	if not self.rank then
+		return
+	end
+
 	if self:GetNWBool("o") == true then
 		self:DrawLaser()
 	end
@@ -31,7 +36,6 @@ end
 function ENT:DrawLaser()
 	local level = self:GetNWInt("level")
 	if level ~= self.LastLevel then
-		self:InitializeVars()
 		self.LastLevel = level
 		self.LaserColor = CalcColorTbl[self.rank](level)
 		self.LaserWidth = self.BeamWidthOffset + math.floor(level / 10)

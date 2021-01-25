@@ -2,7 +2,7 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
-DEFINE_BASECLASS("base_rd3_entity")
+DEFINE_BASECLASS("sa_base_rd3_entity")
 
 function ENT:Initialize()
 	BaseClass.Initialize(self)
@@ -46,11 +46,6 @@ function ENT:Initialize()
 	self.Volume = 0;
 	self.NextCycle = 0;
 
-end
-
-function ENT:CAF_PostInit()
-	self:InitializeVars()
-	self:CalcVars(self:GetTable().Founder)
 end
 
 function ENT:CalcVars(ply)

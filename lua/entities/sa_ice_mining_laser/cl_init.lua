@@ -1,6 +1,6 @@
 include("shared.lua")
 
-DEFINE_BASECLASS("base_rd3_entity")
+DEFINE_BASECLASS("sa_base_rd3_entity")
 
 local laserMat = CreateMaterial("sc_blue_beam02", "UnLitGeneric", {
 	["$basetexture"] = "sprites/physbeam",
@@ -30,12 +30,12 @@ local col = Color(255, 0, 0, 255)
 function ENT:Draw()
 	BaseClass.Draw(self)
 
-	if (not self:GetNWBool("o")) then
+	if not self.LaserRange then
 		return
 	end
 
-	if not self.LaserRange then
-		self:InitializeVars()
+	if not self:GetNWBool("o") then
+		return
 	end
 
 	local pos = self:GetPos()

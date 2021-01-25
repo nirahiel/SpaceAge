@@ -1,31 +1,63 @@
 ENT.Type = "anim"
-ENT.Base = "base_rd3_entity"
+ENT.Base = "sa_base_rd3_entity"
 ENT.PrintName = "Asteroid Mining Laser"
 
 list.Set("LSEntOverlayText" , "sa_mining_laser", {HasOOO = true, num = 2, strings = {"Asteroid Mining Laser", "\nEnergy: ", "\nOre: "}, resnames = {"energy", "ore"}})
 
-local MinMiningTheoryTbl = {0,1,2,3,4,5}
-local EnergyBaseTbl = {600,1200,1800,2400,3000,5000}
-local YieldOffsetTbl = {50,2000,6000,15000,30000,60000}
-local YieldIncrementTbl = {6.25,12.5,25,50,200,400}
+ENT.IsRanked = true
+ENT.RankedVars = {
+	{
+		MinMiningTheory = 0,
+		EnergyBase = 600,
+		YieldOffset = 50,
+		YieldIncrement = 6.25,
 
-local BeamLengthTbl = {2000,2250,2500,2750,3000,4000}
-local BeamWidthOffsetTbl = {10,20,30,40,50,0}
+		BeamLength = 2000,
+		BeamWidthOffset = 10,
+	},
+	{
+		MinMiningTheory = 1,
+		EnergyBase = 1200,
+		YieldOffset = 2000,
+		YieldIncrement = 12.5,
 
-function ENT:InitializeVars()
-	local rank = self:GetNWInt("rank")
-	if rank <= 0 then
-		if SERVER then self:Remove() end
-		return
-	end
+		BeamLength = 2250,
+		BeamWidthOffset = 20,
+	},
+	{
+		MinMiningTheory = 2,
+		EnergyBase = 1800,
+		YieldOffset = 6000,
+		YieldIncrement = 25,
 
-	self.rank = rank
+		BeamLength = 2500,
+		BeamWidthOffset = 30,
+	},
+	{
+		MinMiningTheory = 3,
+		EnergyBase = 2400,
+		YieldOffset = 15000,
+		YieldIncrement = 50,
 
-	self.MinMiningTheory = MinMiningTheoryTbl[rank]
-	self.EnergyBase = EnergyBaseTbl[rank]
-	self.YieldOffset = YieldOffsetTbl[rank]
-	self.YieldIncrement = YieldIncrementTbl[rank]
+		BeamLength = 2750,
+		BeamWidthOffset = 40,
+	},
+	{
+		MinMiningTheory = 4,
+		EnergyBase = 3000,
+		YieldOffset = 30000,
+		YieldIncrement = 200,
 
-	self.BeamLength = BeamLengthTbl[rank]
-	self.BeamWidthOffset = BeamWidthOffsetTbl[rank]
-end
+		BeamLength = 3000,
+		BeamWidthOffset = 50,
+	},
+	{
+		MinMiningTheory = 5,
+		EnergyBase = 5000,
+		YieldOffset = 60000,
+		YieldIncrement = 400,
+
+		BeamLength = 5000,
+		BeamWidthOffset = 60,
+	},
+}

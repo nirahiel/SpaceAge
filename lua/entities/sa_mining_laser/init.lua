@@ -4,7 +4,7 @@ AddCSLuaFile("shared.lua")
 util.PrecacheSound("common/warning.wav")
 util.PrecacheSound("ambient/energy/electric_loop.wav")
 
-DEFINE_BASECLASS("base_rd3_entity")
+DEFINE_BASECLASS("sa_base_rd3_entity")
 
 include("shared.lua")
 
@@ -27,11 +27,6 @@ function ENT:Initialize()
 		phys:Wake()
 	end
 	self.lasersound = CreateSound(self, "ambient/energy/electric_loop.wav")
-end
-
-function ENT:CAF_PostInit()
-	self:InitializeVars()
-	self:CalcVars(self:GetTable().Founder)
 end
 
 function ENT:GetPlayerLevel(ply)

@@ -3,7 +3,7 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
-DEFINE_BASECLASS("base_rd3_entity")
+DEFINE_BASECLASS("sa_base_rd3_entity")
 
 function ENT:GetPlayerLevel(ply)
 	return ply.sa_data.research.ore_storage_capacity[self.MinOreManage + 1]
@@ -24,17 +24,7 @@ function ENT:Initialize()
 	end
 end
 
-function ENT:CAF_PostInit()
-	self:InitializeVars()
-	self:CalcVars(self:GetTable().Founder)
-end
-
 function ENT:CalcVars(ply)
-	if not self:InitializeVars() then
-		self:Remove()
-		return
-	end
-
 	if ply.sa_data.research.ore_storage_level[1] < self.MinOreManage then
 		SA.Research.RemoveEntityWithWarning(self, "ore_storage_level", self.MinOreManage)
 		return

@@ -3,7 +3,7 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
-DEFINE_BASECLASS("base_rd3_entity")
+DEFINE_BASECLASS("sa_base_rd3_entity")
 
 function ENT:GetPlayerLevel(ply)
 	return ply.sa_data.research.tiberium_drill_yield[self.MinTibDrillMod + 1]
@@ -29,11 +29,6 @@ function ENT:Initialize()
 		phys:SetMass(120)
 		phys:Wake()
 	end
-end
-
-function ENT:CAF_PostInit()
-	self:InitializeVars()
-	self:CalcVars(self:GetTable().Founder)
 end
 
 function ENT:CalcVars(ply)

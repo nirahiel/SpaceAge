@@ -31,14 +31,14 @@ TOOL.Devices = {
 			ii = {
 				rank = 2,
 				Name = "Medium (Level II)",
-				model = "models/Slyfo/nacshortsleft.mdl",
+				model = "models/slyfo/nacshortsleft.mdl",
 				skin = 0,
 				legacy = false,
 			},
 			iii = {
 				rank = 3,
 				Name = "Large (Level III)",
-				model = "models/Slyfo/nacshuttleright.mdl",
+				model = "models/slyfo/nacshuttleright.mdl",
 				skin = 0,
 				legacy = false,
 			},

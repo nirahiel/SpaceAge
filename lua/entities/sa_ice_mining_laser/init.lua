@@ -2,7 +2,7 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
-DEFINE_BASECLASS("base_rd3_entity")
+DEFINE_BASECLASS("sa_base_rd3_entity")
 
 local RD = CAF.GetAddon("Resource Distribution")
 
@@ -37,11 +37,6 @@ function ENT:Initialize()
 	self.ShouldMine = false
 	self.IsMining = false
 	self.NextPulse = 0
-end
-
-function ENT:CAF_PostInit()
-	self:InitializeVars()
-	self:CalcVars(self:GetTable().Founder)
 end
 
 function ENT:CalcVars(ply)

@@ -2,7 +2,7 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
-DEFINE_BASECLASS("base_rd3_entity")
+DEFINE_BASECLASS("sa_base_rd3_entity")
 
 function ENT:Initialize()
 	BaseClass.Initialize(self)
@@ -25,22 +25,13 @@ function ENT:Initialize()
 	"Max Strontium Clathrates"})
 end
 
-function ENT:CAF_PostInit()
-	self:CalcVars(self:GetTable().Founder)
-end
-
 function ENT:CalcVars(ply)
-	local reqLvl = SA.Ice.GetLevelForProductStorageModel(self:GetModel())
-	if not reqLvl then
-		self:remove()
-		return
-	end
-	if ply.sa_data.research.ice_product_storage_level[1] < reqLvl then
-		SA.Research.RemoveEntityWithWarning(self, "ice_product_storage_level", reqLvl)
+	if ply.sa_data.research.ice_product_storage_level[1] < self.MinIceProductStorageMod then
+		SA.Research.RemoveEntityWithWarning(self, "ice_product_storage_level", self.MinIceProductStorageMod)
 		return
 	end
 
-	local Capacity = math.floor(30000 * (2.25 ^ reqLvl)) * ply.sa_data.advancement_level
+	local Capacity = math.floor(30000 * (2.25 ^ self.rank)) * ply.sa_data.advancement_level
 
 	self:AddResource("oxygen isotopes", Capacity)
 	self:AddResource("hydrogen isotopes", Capacity)

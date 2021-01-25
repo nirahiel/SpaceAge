@@ -1,3 +1,20 @@
+local romanNumerals = {
+	"I",
+	"II",
+	"III",
+	"IV",
+	"V",
+	"VI",
+	"VII",
+	"VIII",
+	"IX",
+	"X"
+}
+
+function SA.ToRomanNumerals(num)
+	return romanNumerals[num] or tostring(num)
+end
+
 function SA.AddCommasToInt(str)
 	str = tostring(str)
 
