@@ -9,7 +9,7 @@ DEFINE_BASECLASS("base_rd3_entity")
 
 function ENT:SpawnFunction(ply, tr)
 	if (not tr.Hit) then return end
-	local ent = ents.Create("sa_tiberium_storage_holder")
+	local ent = ents.Create("sa_storage_tiberium_holder")
 	ent:SetPos(tr.HitPos)
 	ent:Spawn()
 	ent:Activate()
