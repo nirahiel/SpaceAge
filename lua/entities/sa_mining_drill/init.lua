@@ -59,12 +59,8 @@ function ENT:CalcVars(ply)
 end
 
 function ENT:TurnOn()
-	if (self.Active == 0) then
+	if self.Active == 0 then
 		self.Active = 1
-		if (self:GetResourceAmount("energy") < self.consume) then
-			self:TurnOff()
-			return
-		end
 		if WireAddon then
 			Wire_TriggerOutput(self, "On", 1)
 		end
@@ -74,7 +70,7 @@ function ENT:TurnOn()
 end
 
 function ENT:TurnOff()
-	if (self.Active == 1) then
+	if self.Active == 1 then
 		self.Active = 0
 		if WireAddon then
 			Wire_TriggerOutput(self, "On", 0)
@@ -108,28 +104,31 @@ end
 
 function ENT:Think()
 	BaseClass.Think(self)
-	if (self.Active == 1) then
-		if (self:GetResourceAmount(self, "energy") >= self.consume) then
-			self:ConsumeResource(self, "energy", self.consume)
-			local myOwner = SA.PP.GetOwner(self)
-			if self.TouchEnt and self.TouchEnt.IsCrystal and myOwner and myOwner:IsValid() and myOwner:GetPos():Distance(self:GetPos()) <= 350 and myOwner:InVehicle() then
-				local skin = self.TouchEnt:GetSkin()
-				if skin == 2 then
-					self.yield = math.floor(self.oldyield * 1.5)
-				elseif skin == 0 then
-					self.yield = math.floor(self.oldyield * 1.2)
-				else
-					self.yield = self.oldyield
-				end
-				SA.Functions.MineThing(self, self.TouchEnt, "tiberium")
-				self.yield = self.oldyield
-			end
-		else
-			self:TurnOff()
-		end
-	else
-		self:TurnOff()
-	end
 	self:NextThink(CurTime() + 1)
+
+	if self.Active == 0 then
+		return true
+	end
+
+	local used = self:ConsumeResource("energy", self.consume)
+	if used < self.consume then
+		self:TurnOff()
+		return true
+	end
+
+	local myOwner = SA.PP.GetOwner(self)
+	if self.TouchEnt and self.TouchEnt.IsCrystal and myOwner and myOwner:IsValid() and myOwner:GetPos():Distance(self:GetPos()) <= 350 and myOwner:InVehicle() then
+		local skin = self.TouchEnt:GetSkin()
+		if skin == 2 then
+			self.yield = math.floor(self.oldyield * 1.5)
+		elseif skin == 0 then
+			self.yield = math.floor(self.oldyield * 1.2)
+		else
+			self.yield = self.oldyield
+		end
+		SA.Functions.MineThing(self, self.TouchEnt, "tiberium")
+		self.yield = self.oldyield
+	end
+
 	return true
 end
