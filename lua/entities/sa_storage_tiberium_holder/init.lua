@@ -13,7 +13,7 @@ function ENT:SpawnFunction(ply, tr)
 	ent:SetPos(tr.HitPos)
 	ent:Spawn()
 	ent:Activate()
-	self.TouchTable = {}
+	ent.TouchTable = {}
 	return ent
 end
 
