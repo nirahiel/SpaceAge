@@ -16,13 +16,12 @@ local function ranked_dev_func(ent, type, level, devinfo)
 
 	local ply = ent:GetTable().Founder
 	if not IsValid(ply) then
-		ent:Remove()
-		return
+		return CAFEnts.FORCE_REMOVE_ENT
 	end
 
 	if ply:GetCount(LimitName) >= ply.sa_data.advancement_level then
 		ply:AddHint("You can only spawn " .. ply.sa_data.advancement_level .. " mining devices!", NOTIFY_ERROR, 5)
-		ent:Remove()
+		return CAFEnts.FORCE_REMOVE_ENT
 	end
 end
 

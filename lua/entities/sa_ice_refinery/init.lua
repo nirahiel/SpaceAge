@@ -41,11 +41,10 @@ function ENT:Initialize()
 	self.Inputs = Wire_CreateInputs(self, { "Activate" })
 	self.Outputs = Wire_CreateOutputs(self, { "Active", "Progress" })
 
-	self.ShouldRefine = false;
-	self.CurrentRef = nil;
-	self.Volume = 0;
-	self.NextCycle = 0;
-
+	self.ShouldRefine = false
+	self.CurrentRef = nil
+	self.Volume = 0
+	self.NextCycle = 0
 end
 
 function ENT:CalcVars(ply)

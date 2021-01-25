@@ -63,7 +63,7 @@ local function CCRateUser(player, command, arguments)
 	Target.RatingTimers = Target.RatingTimers or {}
 	if (Target.RatingTimers[RaterID] and Target.RatingTimers[RaterID] > CurTime() - 60) then
 
-		Rater:ChatPrint("Please wait before rating " .. Target:Nick() .. " again.\n");
+		Rater:ChatPrint("Please wait before rating " .. Target:Nick() .. " again.\n")
 		return
 
 	end
@@ -71,10 +71,10 @@ local function CCRateUser(player, command, arguments)
 	Target.RatingTimers[RaterID] = CurTime()
 
 	--Tell the target that they have been rated (but don"t tell them who to add to the fun and bitching)
-	Target:ChatPrint(Rater:Nick() .. " Gave you a '" .. GetRatingName(RatingID) .. "' rating.\n");
+	Target:ChatPrint(Rater:Nick() .. " Gave you a '" .. GetRatingName(RatingID) .. "' rating.\n")
 
 	--Let the rater know that their vote was counted
-	Rater:ChatPrint("Gave " .. Target:Nick() .. " a '" .. GetRatingName(RatingID) .. "' rating.\n");
+	Rater:ChatPrint("Gave " .. Target:Nick() .. " a '" .. GetRatingName(RatingID) .. "' rating.\n")
 
 	sql.Query("INSERT INTO sui_ratings (target, rater, rating) VALUES (" .. TargetID .. ", " .. RaterID .. ", " .. RatingID .. ")")
 

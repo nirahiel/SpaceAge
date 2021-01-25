@@ -8,7 +8,7 @@ if SERVER then
 				hudaf[userid] = pl:Armor()
 			end
 		end
-	end);
+	end)
 	Msg("SERVER: Armor fix running.\n")
 end
 

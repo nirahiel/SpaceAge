@@ -11,7 +11,7 @@ local function GetProceduralEdge(vertices, cornerRadius, divisions, startDegrees
 end
 
 function surface.DrawTexturedRectRounded(x, y, width, height, cornerRadius, divisions, roundTopLeft, roundTopRight, roundBottomLeft, roundBottomRight)
-	local vertices = {};
+	local vertices = {}
 
 	--top left and variable init
 	local cornerX = x
