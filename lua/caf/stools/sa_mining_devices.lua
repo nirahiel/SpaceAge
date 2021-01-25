@@ -1,3 +1,5 @@
+local LimitName = "sa_mining_device"
+
 TOOL.Category = "SpaceAge"
 TOOL.Name = "Mining Devices"
 TOOL.DeviceName = "Mining Device"
@@ -5,12 +7,23 @@ TOOL.DeviceNamePlural = "Mining Devices"
 TOOL.ClassName = "sa_mining_device"
 TOOL.DevSelect = true
 TOOL.Limited = true
-TOOL.LimitName = "sa_mining_device"
+TOOL.LimitName = LimitName
 TOOL.Limit = 20
 CAFToolSetup.SetLang("SpaceAge Mining Devices", "Create Mining Devices attached to any surface.", "Left-Click: Spawn a Device.  Reload: Repair Device.")
 
 local function ranked_dev_func(ent, type, level, devinfo)
 	ent:SetNWInt("rank", devinfo.rank)
+
+	local ply = ent:GetTable().Founder
+	if not IsValid(ply) then
+		ent:Remove()
+		return
+	end
+
+	if ply:GetCount(LimitName) >= ply.sa_data.advancement_level then
+		ply:AddHint("You can only spawn " .. ply.sa_data.advancement_level .. " mining devices!", NOTIFY_ERROR, 5)
+		ent:Remove()
+	end
 end
 
 TOOL.Devices = {
