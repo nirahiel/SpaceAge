@@ -105,16 +105,6 @@ function ENT:Destruct()
 	LS.Destruct(self, true)
 end
 
-function ENT:Think()
-	BaseClass.Think(self)
-	if WireAddon ~= nil then
-		self:UpdateWireOutput()
-	end
-	self:NextThink(CurTime() + 1)
-	return true
-end
-
 function ENT:UpdateWireOutput()
-	Wire_TriggerOutput(self, "Tiberium", self:GetResourceAmount("tiberium"))
-	Wire_TriggerOutput(self, "Max Tiberium", self:GetNetworkCapacity("tiberium"))
+	self:DoUpdateWireOutput("Tiberium", "tiberium")
 end

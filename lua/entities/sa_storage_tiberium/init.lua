@@ -31,21 +31,16 @@ function ENT:GetCapacity(ply)
 	return (self.StorageOffset + (ply.sa_data.research.tiberium_storage_capacity[self.MinTiberiumStorageMod + 1] * self.StorageIncrement)) * ply.sa_data.advancement_level
 end
 
-function ENT:Think()
-	if WireAddon ~= nil then
-		self:UpdateWireOutput()
-	end
-	self:NextThink(CurTime() + 1)
-	return true
-end
-
 function ENT:UpdateWireOutput()
 	Wire_TriggerOutput(self, "Tiberium", self:GetResourceAmount("tiberium"))
 	Wire_TriggerOutput(self, "Max Tiberium", self:GetNetworkCapacity("tiberium"))
 end
 
 function ENT:OnRemove()
-	if self:GetResourceAmount("tiberium") < 1000 then return BaseClass.OnRemove(self) end
+	if self:GetResourceAmount("tiberium") < 1000 then
+		BaseClass.OnRemove(self)
+		return
+	end
 
 	local wreck = ents.Create("wreckedstuff")
 	wreck:SetSolid(SOLID_NONE)

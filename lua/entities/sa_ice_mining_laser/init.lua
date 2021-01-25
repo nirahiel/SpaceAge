@@ -51,9 +51,12 @@ function ENT:Mine()
 
 	--Before we do anything, lets make sure they have power!
 	local EnergyUse = self.LaserConsume / self.LaserCycle
-	local CurEnergy = self:GetResourceAmount("energy")
 
-	if (CurEnergy < EnergyUse) then return end
+	if self:ConsumeResource("energy", EnergyUse) < EnergyUse then
+		self.ShouldMine = false
+		self:SetStatus(false)
+		return
+	end
 
 	local ent = util.QuickTrace(self:GetPos(), self:GetUp() * self.LaserRange, self).Entity
 	if ent and ent.IsIceroid then
@@ -75,7 +78,7 @@ function ENT:Mine()
 		end
 
 		--Energy Usage--
-		self:ConsumeResource("energy", EnergyUse)
+
 
 		--Updating shit--
 		Wire_TriggerOutput(self, "Mineral Amount", math.floor(ent.MineralAmount * 10) / 10)
@@ -89,7 +92,7 @@ end
 function ENT:SetStatus(bool)
 	self.IsMining = bool
 	self:SetNWBool("o", bool)
-	if (bool) then
+	if bool then
 		Wire_TriggerOutput(self, "Active", 1)
 	else
 		Wire_TriggerOutput(self, "Active", 0)

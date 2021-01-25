@@ -34,15 +34,6 @@ function ENT:CalcVars(ply)
 	self:AddResource("ore", (self.StorageOffset + (self:GetPlayerLevel(ply) * self.StorageIncrement)) * ply.sa_data.advancement_level, 0)
 end
 
-function ENT:Think()
-	if WireAddon then
-		self:UpdateWireOutput()
-	end
-	self:NextThink(CurTime() + 1)
-	return true
-end
-
 function ENT:UpdateWireOutput()
-	Wire_TriggerOutput(self, "Ore", self:GetResourceAmount("ore"))
-	Wire_TriggerOutput(self, "Max Ore", self:GetNetworkCapacity("ore"))
+	self:DoUpdateWireOutput("Ore", "ore")
 end

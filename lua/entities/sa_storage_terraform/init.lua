@@ -37,28 +37,8 @@ end
 function ENT:UpdateMass()
 end
 
-function ENT:Think()
-	BaseClass.Think(self)
-
-	if WireAddon ~= nil then
-		self:UpdateWireOutput()
-	end
-	self:NextThink(CurTime() + 1)
-	return true
-end
-
 function ENT:UpdateWireOutput()
-	local dm = self:GetResourceAmount("dark matter")
-	local tc = self:GetResourceAmount("terracrystal")
-	local pf = self:GetResourceAmount("permafrost")
-	local maxdm = self:GetNetworkCapacity("dark matter")
-	local maxtc = self:GetNetworkCapacity("terracrystal")
-	local maxpf = self:GetNetworkCapacity("permafrost")
-
-	Wire_TriggerOutput(self, "Dark Matter", dm)
-	Wire_TriggerOutput(self, "Permafrost", pf)
-	Wire_TriggerOutput(self, "TerraCrystal", tc)
-	Wire_TriggerOutput(self, "Max Dark Matter", maxdm)
-	Wire_TriggerOutput(self, "Max Permafrost", maxpf)
-	Wire_TriggerOutput(self, "Max TerraCrystal", maxtc)
+	self:DoUpdateWireOutput("Dark Matter", "dark matter")
+	self:DoUpdateWireOutput("TerraCrystal", "terracrystal")
+	self:DoUpdateWireOutput("Permafrost", "permafrost")
 end

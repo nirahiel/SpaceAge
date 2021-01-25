@@ -68,10 +68,8 @@ function SA.Functions.Discharge(ent)
 		if hitent.IsAsteroid then
 			SA.Functions.MineThing(ent, hitent, "ore")
 		elseif hitent.IsOreStorage and GetConVar("sa_pirating"):GetBool() then
-			local resLeft = hitent:GetResourceAmount("ore")
 			local toUse = math.floor(ent.yield * 1.5)
-			if (resLeft < toUse) then toUse = resLeft end
-			hitent:ConsumeResource("ore", toUse)
+			toUse = hitent:ConsumeResource("ore", toUse)
 			ent:SupplyResource("ore", math.floor(toUse * 0.9))
 		elseif hitent:IsPlayer() then
 			hitent:TakeDamage(25, ent, ent)

@@ -27,10 +27,6 @@ end
 function ENT:TurnOn()
 	if (self.Active == 0) then
 		self.Active = 1
-		if (self:GetResourceAmount("energy") < self.consume) then
-			self:TurnOff()
-			return
-		end
 		self:SetOOO(1)
 		self:SetNWBool("o", true)
 	end
@@ -57,26 +53,26 @@ local function ScanRoid(ent)
 	local hitent = tr.Entity
 	if (not hitent) then return end
 	if hitent.IsAsteroid or hitent.IsCrystal then
-		ent:UpdateWireOutput(math.floor((hitent.health / hitent.maxhealth) * 10000) / 100)
+		ent:UpdateResultOutput((hitent.health / hitent.maxhealth) * 100)
 	elseif hitent.IsOreStorage then
-		ent:UpdateWireOutput(math.floor((hitent:GetResourceAmount("ore") / hitent:GetNetworkCapacity("ore")) * 10000) / 100)
+		local amount, capacity = hitent:GetResourceData("ore")
+		ent:UpdateResultOutput((amount / capacity) * 100)
 	else
-		ent:UpdateWireOutput(0)
+		ent:UpdateResultOutput(0)
 	end
 end
 
-function ENT:UpdateWireOutput(result)
+function ENT:UpdateResultOutput(result)
 	Wire_TriggerOutput(self, "Result", result)
 end
 
 function ENT:Think()
 	BaseClass.Think(self)
 	if (self.Active == 1) then
-		if (self:GetResourceAmount("energy") >= self.consume) then
-			self:ConsumeResource("energy", self.consume)
-			ScanRoid(self)
-		else
+		if self:ConsumeResource("energy", self.consume) < self.consume then
 			self:TurnOff()
+		else
+			ScanRoid(self)
 		end
 	end
 	self:NextThink(CurTime() + 1)

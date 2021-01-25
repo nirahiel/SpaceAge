@@ -57,12 +57,8 @@ function ENT:CalcVars(ply)
 end
 
 function ENT:TurnOn()
-	if (self.Active == 0) then
+	if self.Active == 0 then
 		self.Active = 1
-		if (self:GetResourceAmount("energy") < self.consume) then
-			self:TurnOff()
-			return
-		end
 		self.lasersound:Play()
 		if WireAddon then
 			Wire_TriggerOutput(self, "On", 1)
@@ -73,11 +69,12 @@ function ENT:TurnOn()
 end
 
 function ENT:TurnOff()
-	if (self.Active == 1) then
+	if self.Active == 1 then
 		self.Active = 0
 		self.lasersound:Stop()
 		if WireAddon then
 			Wire_TriggerOutput(self, "On", 0)
+			Wire_TriggerOutput(self, "Output", 0)
 		end
 		self:SetOOO(0)
 		self:SetNWBool("o", false)
@@ -89,26 +86,24 @@ function ENT:OnRemove()
 end
 
 function ENT:TriggerInput(iname, value)
-	if (iname == "On") then
+	if iname == "On" then
 		self:SetActive(value)
 	end
 end
 
 function ENT:Think()
 	BaseClass.Think(self)
-	if (self.Active == 1) then
-			if (self:GetResourceAmount("energy") >= self.consume) then
-				self:ConsumeResource("energy", self.consume)
-				SA.Functions.Discharge(self)
-				Wire_TriggerOutput(self, "Output", self.yield)
-			else
-				self:TurnOff()
-				Wire_TriggerOutput(self, "Output", 0)
-			end
-	else
-		self:TurnOff()
-		Wire_TriggerOutput(self, "Output", 0)
+
+	if self.Active == 1 then
+		if self:ConsumeResource("energy", self.consume) < self.consume then
+			self:TurnOff()
+			Wire_TriggerOutput(self, "Output", 0)
+		else
+			SA.Functions.Discharge(self)
+			Wire_TriggerOutput(self, "Output", self.yield)
+		end
 	end
+
 	self:NextThink(CurTime() + 1)
 	return true
 end

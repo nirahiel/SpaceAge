@@ -58,8 +58,11 @@ function ENT:Refine()
 	local own = SA.PP.GetOwner(self)
 	if own and own.IsAFK then return end
 
-	local CurEnergy = self:GetResourceAmount("energy")
 	local EnergyReq = self.CycleEnergy / self.CycleTime
+	if self:ConsumeResource("energy", EnergyReq) < EnergyReq then
+		self:TriggerInput("Activate", 0)
+		return
+	end
 
 	if (CurEnergy > EnergyReq) then
 		if not self.CurrentRef then
@@ -106,7 +109,7 @@ function ENT:Think()
 end
 
 function ENT:TriggerInput(iname, value)
-	if (iname == "Activate") then
+	if iname == "Activate" then
 		if value == 1 then
 			self.ShouldRefine = true
 		else

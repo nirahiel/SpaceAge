@@ -43,25 +43,12 @@ function ENT:CalcVars(ply)
 
 end
 
-function ENT:Think()
-	BaseClass.Think(self)
-	self:UpdateWireOutput()
-end
-
 function ENT:UpdateWireOutput()
-	Wire_TriggerOutput(self, "Oxygen Isotopes", self:GetResourceAmount("oxygen isotopes"))
-	Wire_TriggerOutput(self, "Hydrogen Isotopes", self:GetResourceAmount("hydrogen isotopes"))
-	Wire_TriggerOutput(self, "Helium Isotopes", self:GetResourceAmount("helium isotopes"))
-	Wire_TriggerOutput(self, "Nitrogen Isotopes", self:GetResourceAmount("nitrogen isotopes"))
-	Wire_TriggerOutput(self, "Carbon Isotopes", self:GetResourceAmount("carbon isotopes"))
-	Wire_TriggerOutput(self, "Heavy Water", self:GetResourceAmount("heavy water"))
-	Wire_TriggerOutput(self, "Strontium Clathrates", self:GetResourceAmount("strontium clathrates"))
-
-	Wire_TriggerOutput(self, "Max Oxygen Isotopes", self:GetNetworkCapacity("oxygen isotopes"))
-	Wire_TriggerOutput(self, "Max Hydrogen Isotopes", self:GetNetworkCapacity("hydrogen isotopes"))
-	Wire_TriggerOutput(self, "Max Helium Isotopes", self:GetNetworkCapacity("helium isotopes"))
-	Wire_TriggerOutput(self, "Max Nitrogen Isotopes", self:GetNetworkCapacity("nitrogen isotopes"))
-	Wire_TriggerOutput(self, "Max Carbon Isotopes", self:GetNetworkCapacity("carbon isotopes"))
-	Wire_TriggerOutput(self, "Max Heavy Water", self:GetNetworkCapacity("heavy water"))
-	Wire_TriggerOutput(self, "Max Strontium Clathrates", self:GetNetworkCapacity("strontium clathrates"))
+	self:DoUpdateWireOutput("Oxygen Isotopes", "oxygen isotopes")
+	self:DoUpdateWireOutput("Hydrogen Isotopes", "hydrogen isotopes")
+	self:DoUpdateWireOutput("Helium Isotopes", "helium isotopes")
+	self:DoUpdateWireOutput("Nitrogen Isotopes", "nitrogen isotopes")
+	self:DoUpdateWireOutput("Carbon Isotopes", "carbon isotopes")
+	self:DoUpdateWireOutput("Heavy Water", "heavy water")
+	self:DoUpdateWireOutput("Strontium Clathrates", "strontium clathrates")
 end
