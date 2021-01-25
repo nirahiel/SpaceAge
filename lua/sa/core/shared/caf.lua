@@ -16,7 +16,7 @@ function SA.CAFInit()
 		SA.RD.AddProperResourceName("hydrogen isotopes", "Hydrogen Isotopes")
 		SA.RD.AddProperResourceName("helium isotopes", "Helium Isotopes")
 		SA.RD.AddProperResourceName("nitrogen isotopes", "Nitrogen Isotopes")
-		SA.RD.AddProperResourceName("liquid ozone", "Liquid Ozone")
+		SA.RD.AddProperResourceName("carbon isotopes", "Carbon Isotopes")
 		SA.RD.AddProperResourceName("strontium clathrates", "Strontium Clathrates")
 
 		SA.RD.AddProperResourceName("blue ice", "Blue Ice")

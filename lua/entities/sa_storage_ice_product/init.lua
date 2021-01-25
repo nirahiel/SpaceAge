@@ -13,14 +13,14 @@ function ENT:Initialize()
 	"Hydrogen Isotopes",
 	"Helium Isotopes",
 	"Nitrogen Isotopes",
-	"Liquid Ozone",
+	"Carbon Isotopes",
 	"Heavy Water",
 	"Strontium Clathrates",
 	"Max Oxygen Isotopes",
 	"Max Hydrogen Isotopes",
 	"Max Helium Isotopes",
 	"Max Nitrogen Isotopes",
-	"Max Liquid Ozone",
+	"Max Carbon Isotopes",
 	"Max Heavy Water",
 	"Max Strontium Clathrates"})
 end
@@ -46,7 +46,7 @@ function ENT:CalcVars(ply)
 	self:AddResource("hydrogen isotopes", Capacity)
 	self:AddResource("helium isotopes", Capacity)
 	self:AddResource("nitrogen isotopes", Capacity)
-	self:AddResource("liquid ozone", Capacity)
+	self:AddResource("carbon isotopes", Capacity)
 	self:AddResource("heavy water", Capacity)
 	self:AddResource("strontium clathrates", Capacity)
 
@@ -62,7 +62,7 @@ function ENT:UpdateWireOutput()
 	Wire_TriggerOutput(self, "Hydrogen Isotopes", self:GetResourceAmount("hydrogen isotopes"))
 	Wire_TriggerOutput(self, "Helium Isotopes", self:GetResourceAmount("helium isotopes"))
 	Wire_TriggerOutput(self, "Nitrogen Isotopes", self:GetResourceAmount("nitrogen isotopes"))
-	Wire_TriggerOutput(self, "Liquid Ozone", self:GetResourceAmount("liquid ozone"))
+	Wire_TriggerOutput(self, "Carbon Isotopes", self:GetResourceAmount("carbon isotopes"))
 	Wire_TriggerOutput(self, "Heavy Water", self:GetResourceAmount("heavy water"))
 	Wire_TriggerOutput(self, "Strontium Clathrates", self:GetResourceAmount("strontium clathrates"))
 
@@ -70,7 +70,7 @@ function ENT:UpdateWireOutput()
 	Wire_TriggerOutput(self, "Max Hydrogen Isotopes", self:GetNetworkCapacity("hydrogen isotopes"))
 	Wire_TriggerOutput(self, "Max Helium Isotopes", self:GetNetworkCapacity("helium isotopes"))
 	Wire_TriggerOutput(self, "Max Nitrogen Isotopes", self:GetNetworkCapacity("nitrogen isotopes"))
-	Wire_TriggerOutput(self, "Max Liquid Ozone", self:GetNetworkCapacity("liquid ozone"))
+	Wire_TriggerOutput(self, "Max Carbon Isotopes", self:GetNetworkCapacity("carbon isotopes"))
 	Wire_TriggerOutput(self, "Max Heavy Water", self:GetNetworkCapacity("heavy water"))
 	Wire_TriggerOutput(self, "Max Strontium Clathrates", self:GetNetworkCapacity("strontium clathrates"))
 end

@@ -33,7 +33,7 @@ function ENT:Initialize()
 	self:AddResource("hydrogen isotopes", 0)
 	self:AddResource("helium isotopes", 0)
 	self:AddResource("nitrogen isotopes", 0)
-	self:AddResource("liquid ozone", 0)
+	self:AddResource("carbon isotopes", 0)
 	self:AddResource("strontium clathrates", 0)
 
 	self:SetOverlayText(self.PrintName .. "\n" .. "Progress: 0%")

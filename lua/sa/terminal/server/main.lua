@@ -45,7 +45,7 @@ AddResourcePrice("helium isotopes", 4500)
 AddResourcePrice("strontium clathrates", 9000)
 AddResourcePrice("nitrogen isotopes", 2700)
 AddResourcePrice("oxygen isotopes", 2610)
-AddResourcePrice("liquid ozone", 5400)
+AddResourcePrice("carbon isotopes", 5400)
 
 
 local function AddResourceBuyPrice(res, price)
