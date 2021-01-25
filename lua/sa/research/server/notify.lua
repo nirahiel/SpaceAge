@@ -2,7 +2,7 @@ SA_REQUIRE("research.main")
 
 function SA.Research.RemoveEntityWithWarning(ent, research, requiredLevel)
 	local ply = ent:GetTable().Founder
-	local rank = ent:GetNWInt("rank")
+	local rank = ent:GetNWInt("rank") or "[unknown]"
 	local name = ent.PrintName
 	ent:Remove()
 	if IsValid(ply) then

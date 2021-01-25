@@ -18,6 +18,7 @@ list.Set("LSEntOverlayText" , "sa_ice_refinery", {HasOOO = true, num = 1, string
 function ENT:InitializeVars()
 	local rank = self:GetNWInt("rank")
 	if rank <= 0 then
+		if SERVER then self:Remove() end
 		return
 	end
 

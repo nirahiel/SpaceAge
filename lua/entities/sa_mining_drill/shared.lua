@@ -12,6 +12,7 @@ local MinTibDrillModTbl = {0,1}
 function ENT:InitializeVars()
 	local rank = self:GetNWInt("rank")
 	if rank <= 0 then
+		if SERVER then self:Remove() end
 		return
 	end
 
