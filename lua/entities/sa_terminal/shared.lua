@@ -7,5 +7,5 @@ ENT.Purpose = ""
 ENT.Instructions = ""
 
 ENT.Spawnable = false
-ENT.AdminSpawnable = false
+ENT.AdminSpawnable = true
 ENT.DoNotDuplicate = true
