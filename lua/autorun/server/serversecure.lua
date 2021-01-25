@@ -1,3 +1,5 @@
+if true then return end -- DISABLE SERVERSECURE FOR NOW
+
 require("serversecure")
 
 --serversecure.EnableFirewallWhitelist(boolean) -- enable "firewall" whitelist, any client not in the whitelist doesn't see the server
