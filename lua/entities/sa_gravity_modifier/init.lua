@@ -9,7 +9,6 @@ DEFINE_BASECLASS("base_sb_environment")
 include("shared.lua")
 local Energy_Increment = 25
 
-local RD = CAF.GetAddon("Resource Distribution")
 local SB = CAF.GetAddon("Spacebuild")
 
 function ENT:Initialize()

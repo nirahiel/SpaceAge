@@ -5,8 +5,6 @@ include("shared.lua")
 
 DEFINE_BASECLASS("base_rd3_entity")
 
-local RD = CAF.GetAddon("Resource Distribution")
-
 function ENT:Initialize()
 	BaseClass.Initialize(self)
 	self:AddResource("energy", 0, 0)
