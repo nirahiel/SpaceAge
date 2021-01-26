@@ -13,7 +13,6 @@ local ResearchPanels = {}
 local term_info = {}
 local SA_Term_StationCap = 0
 local SA_Term_StationMax = 0
-local SA_DevLimitLevel = 1
 
 local SA_Term_GUI
 local SA_Term_GoodieList
@@ -446,7 +445,7 @@ local function CreateTerminalGUI()
 		end
 	end
 
-	local ApplicationTab = vgui.Create ("DPanel")
+	local ApplicationTab = vgui.Create("DPanel")
 	ApplicationTab:SetPos(5, 25)
 	ApplicationTab:SetSize(790, 625)
 	ApplicationTab.Paint = function()
@@ -458,118 +457,6 @@ local function CreateTerminalGUI()
 
 	SA.Application.CreateGUI(ApplicationTab)
 
-	local DeveloperTab = nil
-
-	if LocalPlayer():IsSuperAdmin() then
-		DeveloperTab = vgui.Create ("DPanel")
-		DeveloperTab:SetPos(5, 25)
-		DeveloperTab:SetSize(790, 625)
-		DeveloperTab.Paint = function()
-			local text = "Development"
-			local width = GetTextBackgroundWidth(font, text)
-			draw.RoundedBox(4, guiSizeX / 2 - width / 2, 10, width, 30, Color(50, 50, 50, 255))
-			draw.SimpleText(text, font, guiSizeX / 2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-		end
-
-		SA_MaxCrystalCount = vgui.Create("DTextEntry", DeveloperTab)
-		SA_MaxCrystalCount:SetText("0")
-		SA_MaxCrystalCount:SetEditable(true)
-		SA_MaxCrystalCount:SetPos(270, 60)
-		SA_MaxCrystalCount:SetSize(100, 20)
-
-		local SA_MaxCrystalCount_LBL = vgui.Create("DLabel", DeveloperTab)
-		SA_MaxCrystalCount_LBL:SetText("Maximum Crystals per Tower:")
-		SA_MaxCrystalCount_LBL:SetPos(15, 60)
-		SA_MaxCrystalCount_LBL:SetSize(250, 20)
-
-		SA_CrystalRadius = vgui.Create("DTextEntry", DeveloperTab)
-		SA_CrystalRadius:SetText("0")
-		SA_CrystalRadius:SetEditable(true)
-		SA_CrystalRadius:SetPos(270, 85)
-		SA_CrystalRadius:SetSize(100, 20)
-
-		local SA_CrystalRadius_LBL = vgui.Create("DLabel", DeveloperTab)
-		SA_CrystalRadius_LBL:SetText("Maximum Radius of Crystals around Tower:")
-		SA_CrystalRadius_LBL:SetPos(15, 85)
-		SA_CrystalRadius_LBL:SetSize(250, 20)
-
-		SA_Max_Roid_Count = vgui.Create("DTextEntry", DeveloperTab)
-		SA_Max_Roid_Count:SetText("0")
-		SA_Max_Roid_Count:SetEditable(true)
-		SA_Max_Roid_Count:SetPos(270, 110)
-		SA_Max_Roid_Count:SetSize(100, 20)
-
-		local SA_Max_Roid_Count_LBL = vgui.Create("DLabel", DeveloperTab)
-		SA_Max_Roid_Count_LBL:SetText("Maximum Asteroids:")
-		SA_Max_Roid_Count_LBL:SetPos(15, 110)
-		SA_Max_Roid_Count_LBL:SetSize(250, 20)
-
-		local ResetPlanetsButton = vgui.Create("DButton", DeveloperTab)
-		ResetPlanetsButton:SetText("Reset Planets")
-		ResetPlanetsButton:SetPos(15, 215)
-		ResetPlanetsButton:SetSize(150, 40)
-		ResetPlanetsButton.DoClick = function()
-			RunConsoleCommand("sa_restart_environment")
-		end
-
-		local ResetRoidsButton = vgui.Create("DButton", DeveloperTab)
-		ResetRoidsButton:SetText("Respawn Asteroids")
-		ResetRoidsButton:SetPos(15, 260)
-		ResetRoidsButton:SetSize(150, 40)
-		ResetRoidsButton.DoClick = function()
-			RunConsoleCommand("sa_respawn_asteroids")
-		end
-
-		local RemoveCrystalsButton = vgui.Create("DButton", DeveloperTab)
-		RemoveCrystalsButton:SetText("Respawn all Crystals")
-		RemoveCrystalsButton:SetPos(15, 305)
-		RemoveCrystalsButton:SetSize(150, 40)
-		RemoveCrystalsButton.DoClick = function()
-			RunConsoleCommand("sa_respawn_crystals")
-		end
-
-		local NewAutospawnButton = vgui.Create("DButton", DeveloperTab)
-		NewAutospawnButton:SetText("Respawn all SpaceAge Stuff")
-		NewAutospawnButton:SetPos(15, 350)
-		NewAutospawnButton:SetSize(150, 40)
-		NewAutospawnButton.DoClick = function()
-			RunConsoleCommand("sa_autospawn_run")
-		end
-
-		local RestartServerButton = vgui.Create("DButton", DeveloperTab)
-		RestartServerButton:SetText("Restart Server")
-		RestartServerButton:SetPos(215, 215)
-		RestartServerButton:SetSize(150, 40)
-		RestartServerButton.DoClick = function()
-			RunConsoleCommand("RestartServer")
-		end
-
-		local RemoveErrorsButton = vgui.Create("DButton", DeveloperTab)
-		RemoveErrorsButton:SetText("Remove ERRORs")
-		RemoveErrorsButton:SetPos(215, 260)
-		RemoveErrorsButton:SetSize(150, 40)
-		RemoveErrorsButton.DoClick = function()
-			RunConsoleCommand("fa", "removeerrors")
-		end
-
-		local ChangeButton = vgui.Create("DButton", DeveloperTab)
-		ChangeButton:SetText("Apply")
-		ChangeButton:SetPos((DeveloperTab:GetWide() / 2) - 105, 140)
-		ChangeButton:SetSize(100, 40)
-		ChangeButton.DoClick = function()
-			SA_DevSetVal(1, SA_MaxCrystalCount)
-			SA_DevSetVal(2, SA_CrystalRadius)
-			SA_DevSetVal(3, SA_Max_Roid_Count)
-		end
-		local CancelButton = vgui.Create("DButton", DeveloperTab)
-		CancelButton:SetText("Cancel")
-		CancelButton:SetPos((DeveloperTab:GetWide() / 2) + 5, 140)
-		CancelButton:SetSize(100, 40)
-		CancelButton.DoClick = function()
-			RunConsoleCommand("sa_terminal_update")
-		end
-	end
-
 	SA.Application.Refresh()
 
 	Tabs:AddSheet("Stats", StatTab, "VGUI/application-monitor", false, false, "Statistics")
@@ -578,11 +465,6 @@ local function CreateTerminalGUI()
 	Tabs:AddSheet("Research", ResearchTab, "VGUI/blueprint", false, false, "Research")
 	Tabs:AddSheet("Application", ApplicationTab, "VGUI/auction-hammer-gavel", false, false, "Application")
 	Tabs:AddSheet("Goodies", GoodieTab, "VGUI/box", false, false, "Goodies")
-
-
-	if DeveloperTab then
-		Tabs:AddSheet("Development", DeveloperTab, "VGUI/bank", false, false, "Development")
-	end
 
 	BasePanel:MakePopup()
 	BasePanel:SetVisible(false)
@@ -660,31 +542,38 @@ end
 net.Receive("SA_TerminalUpdateSmall", sa_term_update1)
 
 local function sa_term_update(ply, tbl)
-	local ResTabl = tbl[1]
+	ply = LocalPlayer()
+
+	local ResearchTable = tbl[7]
+	local canReset = tbl[8]
+	local lv = tbl[9]
+
+	if not ply.sa_data then
+		ply.sa_data = {}
+	end
+	ply.sa_data.advancement_level = lv
+	ply.sa_data.faction_name = SA.Factions.Table[ply:Team()][2]
+	ply.sa_data.research = ResearchTable
+
+	local ResourceTabl = tbl[1]
 	local capacity = tbl[2]
 	local maxcap = tbl[3]
 	local PermStorage = tbl[4]
 	local ShipStorage = tbl[5]
 	local BuyPriceTable = tbl[6]
-	local ResTabl2 = tbl[7]
-	local canReset = tbl[8]
-	local lv = tbl[9]
-	local devVars = tbl[10]
 
 	if lv >= 5 then canReset = false end
-	SA_DevLimitLevel = lv
 
 	if SA_UpgradeLevelButton then
 		SA_UpgradeLevelButton:SetDisabled(not canReset)
 		SA_UpgradeLevelButton:SetText("Advance Level (current: " .. tostring(lv) .. " / 5) [Price: " .. SA.AddCommasToInt(5000000000 * (lv * lv)) .. "]")
 	end
 
-
 	SA_Term_TempStorage:Clear()
 	SA_Term_MarketSell:Clear()
 	SA_Term_MarketSellTbl = {}
 
-	for k, v in pairs(ResTabl) do
+	for k, v in pairs(ResourceTabl) do
 		local value = SA.AddCommasToInt(v[1])
 		local price = v[2]
 		local item = vgui.Create("SA_Terminal_Resource")
@@ -728,38 +617,8 @@ local function sa_term_update(ply, tbl)
 		SA_Term_MarketBuyTbl[line] = v[1]
 	end
 
-	local Researches = SA.Research.Get()
-
-	for k, v in pairs(ResTabl2) do
-		local resname = v[1]
-		local rank = v[2]
-		local group = v[3]
-
-		local cost = ""
-		local val = Researches[resname]
-
-		local ranks = val.ranks
-		if (ranks == rank) and (ranks ~= 0) then
-			cost = "Max Rank"
-		else
-			local base = val.cost
-			local inc = base * (val.costinc / 100)
-			local total = base + (inc * rank)
-			total = total * (SA_DevLimitLevel * SA_DevLimitLevel)
-			if group == "legion" or group == "alliance" then
-				total = math.ceil(total * 0.66)
-			elseif group == "starfleet" then
-				total = math.ceil(total * 0.88)
-			end
-			cost = "Cost: " .. SA.AddCommasToInt(total)
-		end
-		ResearchPanels[resname]:Update(rank, cost)
-	end
-
-	if SA_MaxCrystalCount and SA_CrystalRadius and SA_Max_Roid_Count then
-		SA_MaxCrystalCount:SetText(devVars[1])
-		SA_CrystalRadius:SetText(devVars[2])
-		SA_Max_Roid_Count:SetText(devVars[3])
+	for _, v in pairs(ResearchPanels) do
+		v:Update()
 	end
 end
 supernet.Hook("SA_TerminalUpdate", sa_term_update)

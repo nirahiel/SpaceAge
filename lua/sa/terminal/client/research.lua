@@ -66,94 +66,63 @@ end
 
 function PANEL:SetDesc()
 	local Desc = self.ResearchTbl.desc
-	local reqtype = self.ResearchTbl.type
-	local prereq = self.ResearchTbl.prereq
-	if reqtype == "none" then
+
+	if #self.MissingReqs == 0 and #self.FulfilledReqs == 0 then
 		self.ResearchDesc:SetText(Desc)
 		return
 	end
+
 	local DescAdd = "\nRequires: "
-	if reqtype == "unlock" then
-		for k, v in pairs(prereq) do
-			if v[1] == "faction" then
-				DescAdd = DescAdd .. " (Faction: "
-				for ke, ve in pairs(v[2]) do
-					DescAdd = DescAdd .. SA.Factions.ToLong[ve] .. ", "
-				end
-				DescAdd = string.Left(DescAdd, string.len(DescAdd) - 1) .. ")"
-			else
-				local name = ""
-				if self.ResearchTbl.name == v[1] then -- TODO: ???
-					name = n.display
-				end
-				if name ~= "" then
-					DescAdd = DescAdd .. " (" .. name .. ": " .. v[2] .. ")"
-				end
-			end
-		end
-	elseif reqtype == "perrank" then
-		local cur = tonumber(self.CurrentRank)
-		local max = tonumber(self.MaxRank)
-		if cur < max then
-			local offset = cur + 1
-			local name = ""
-			local level = 0
-			local tbl = prereq[offset]
-			if tbl and #tbl > 0 then
-				for k, v in pairs(tbl) do
-					if v[1] == "faction" then
-						DescAdd = DescAdd .. " (Faction: "
-						for ke, ve in pairs(v[2]) do
-							--glualint:ignore-next-line
-							DescAdd = DescAdd .. SA.Factions.ToLong[ve] .. ", "
-						end
-						DescAdd = string.Left(DescAdd, string.len(DescAdd) - 1) .. ")"
-					else
-						local subName = ""
-						if self.ResearchTbl.name == v[1] then -- TODO: ???
-							--glualint:ignore-next-line
-							subName = n.display
-						end
-						if name ~= "" then
-							--glualint:ignore-next-line
-							DescAdd = DescAdd .. " (" .. subName .. ": " .. v[2] .. ")"
-						end
-					end
-				end
-			end
-			if name ~= "" then
-				DescAdd = DescAdd .. " (" .. name .. ": " .. level .. ")"
-			end
-		end
+
+	for _, req in pairs(self.MissingReqs) do
+		DescAdd = DescAdd .. "\n" .. SA.Research.RequirementToString(req)
 	end
-	if (DescAdd ~= "\nRequires: ") then
-		Desc = Desc .. DescAdd
+
+	--[[
+	for _, req in pairs(self.FulfilledReqs) do
+		DescAdd = DescAdd .. "\n" .. SA.Research.RequirementToString(req) .. " (OK)"
 	end
-	self.ResearchDesc:SetText(Desc)
+	]]
+
+	self.ResearchDesc:SetText(Desc .. DescAdd)
 end
 
 function PANEL:SetResearch(Research)
 	self.ResearchName:SetText(Research.display)
 	self.ResearchTbl = Research
 	self.Image:SetImage("spaceage/" .. Research.image)
-	self:Update(0)
+	self:Update()
 end
 
-function PANEL:Update(Rank, Cost)
-	self.CurrentRank = Rank
-	self.MaxRank = self.ResearchTbl.ranks
-	self.ResearchRank:SetText("Rank: " .. Rank .. "/" .. self.MaxRank)
-	self:SetDesc()
-	if (Cost) then
-		self.ResearchCost:SetText(Cost)
-		if (Cost == "Max Rank") then
-			self.UpgradeButton:SetDisabled(true)
-			self.UpgradeAllButton:SetDisabled(true)
-		else
-			self.UpgradeButton:SetDisabled(false)
-			self.UpgradeAllButton:SetDisabled(false)
-		end
+function PANEL:Update()
+	local ply = LocalPlayer()
+	if not (ply.sa_data and ply.sa_data.research) then
+		self.CurrentRank = 0
+		self.FulfilledReqs = {}
+		self.MissingReqs = {}
+		self:SetDesc()
+		return
 	end
+
+	self.CurrentRank = SA.Research.GetFromPlayer(ply, self.ResearchTbl.name)
+
+	self.MaxRank = self.ResearchTbl.ranks
+	self.ResearchRank:SetText("Rank: " .. self.CurrentRank .. "/" .. self.MaxRank)
+
+	local ok, cost, missingReqs, fulfilledReqs = SA.Research.GetNextInfo(ply, self.ResearchTbl, false)
+	if cost <= 0 then
+		self.ResearchCost:SetText("Max rank")
+	else
+		self.ResearchCost:SetText(SA.AddCommasToInt(cost))
+	end
+
+	self.UpgradeButton:SetDisabled(not ok)
+	self.UpgradeAllButton:SetDisabled(not ok)
+
+	self.FulfilledReqs = fulfilledReqs
+	self.MissingReqs = missingReqs
+
+	self:SetDesc()
 end
 
 function PANEL:Paint(w, h)

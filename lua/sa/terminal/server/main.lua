@@ -309,19 +309,6 @@ SA_UpdateInfo = function(ply, CanPass)
 		ResTabl[k] = {v, tostring(price)}
 	end
 
-	local Researches = SA.Research.Get()
-
-	local ResTabl2 = {}
-
-	for k, v in pairs(Researches) do
-		ResTabl2[k] = {k, SA.Research.GetFromPlayer(ply, v.name), ply.sa_data.faction_name}
-	end
-
-	local DevVars = {0, 0, 0}
-	if ply:GetLevel() >= 3 then
-		DevVars = {SA.Tiberium.MaxCrystalCount, SA.Tiberium.CrystalRadius, SA.Asteroids.MaxCount}
-	end
-
 	ply.SendingTermUp = true
 	supernet.Send(ply, "SA_TerminalUpdate", {
 		ResTabl,
@@ -330,10 +317,9 @@ SA_UpdateInfo = function(ply, CanPass)
 		PermStorageU,
 		ShipStorageU,
 		BuyPriceTable,
-		ResTabl2,
+		ply.sa_data.research,
 		SA_CanReset(ply),
 		ply.sa_data.advancement_level,
-		DevVars,
 	}, function() SA_InfoSent(ply) end)
 end
 concommand.Add("sa_terminal_update", SA_UpdateInfo)
@@ -561,58 +547,14 @@ end
 concommand.Add("sa_buy_perm_storage", SA_BuyPermStorage)
 
 local function SA_Research_Int(ply, Research)
-	local cur = SA.Research.GetFromPlayer(ply, Research.name)
-	local cap = Research.ranks
-	if (cap ~= 0) and cap == cur then
+	local cred = ply.sa_data.credits
+	local ok, total = SA.Research.GetNextInfo(ply, Research, true)
+	if not ok then
 		return
-	end
-	if Research.faction and #Research.faction > 0 and not table.HasValue(Research.faction, ply.sa_data.faction_name) then
-		return
-	end
-	if Research.type ~= "none" then
-		local prereq = Research.prereq
-		local reqtype = Research.type
-		if reqtype == "unlock" then
-			for k, v in pairs(prereq) do
-				if v[1] == "faction" then
-					if not table.HasValue(v[2], ply.sa_data.faction_name) then
-						return
-					end
-				elseif SA.Research.GetFromPlayer(ply, v[1]) < v[2] then
-					return
-				end
-			end
-		elseif reqtype == "perrank" then
-			local idx = cur + 1
-			local tbl = Research.prereq[idx]
-			if tbl and #tbl > 0 then
-				for k, v in pairs(tbl) do
-					if v[1] == "faction" then
-						--glualint:ignore-next-line
-						if not table.HasValue(v[2], ply.sa_data.faction_name) then
-							return
-						end
-					elseif SA.Research.GetFromPlayer(ply, v[1]) < v[2] then
-						return
-					end
-				end
-			end
-		end
-	end
-	local cost = Research.cost
-	local inc = Research.costinc / 100
-	local devl = ply.sa_data.advancement_level
-	local cred = tonumber(ply.sa_data.credits)
-	local total = cost + (cost * inc) * cur
-	total = total * (devl * devl)
-
-	if ply.sa_data.faction_name == "legion" or ply.sa_data.faction_name == "alliance" then
-		total = math.ceil(total * 0.66)
-	elseif ply.sa_data.faction_name == "starfleet" then
-		total = math.ceil(total * 0.88)
 	end
 
 	if cred >= total then
+		local cur = SA.Research.GetFromPlayer(ply, Research.name)
 		SA.Research.SetToPlayer(ply, Research.name, cur + 1)
 		ply.sa_data.credits = ply.sa_data.credits - total
 		return true
@@ -628,15 +570,10 @@ local function SA_Buy_Research_Cmd(ply, cmd, args)
 	if CHECK ~= HASH then return end
 	if limit < 1 then return end
 
-	local Researches = SA.Research.Get()
-	local Research = nil
-	for k, v in pairs(Researches) do
-		if k == res then
-			Research = v
-			break
-		end
+	local Research = SA.Research.GetByName(res)
+	if not Research then
+		return
 	end
-	if not Research then return end
 
 	local ok = false
 	while SA_Research_Int(ply, Research) do
