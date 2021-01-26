@@ -25,7 +25,7 @@ function ENT:Initialize()
 		phys:EnableMotion(false)
 	end
 	local physobj = self:GetPhysicsObject()
-	if physobj:IsValid() then physobj:SetMass("50000") end
+	if physobj:IsValid() then physobj:SetMass(50000) end
 end
 
 function ENT:Use(ply, called)
