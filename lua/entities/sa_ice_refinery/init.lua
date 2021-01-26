@@ -57,43 +57,40 @@ function ENT:Refine()
 	local own = SA.PP.GetOwner(self)
 	if own and own.IsAFK then return end
 
-	local EnergyReq = self.CycleEnergy / self.CycleTime
-	if self:ConsumeResource("energy", EnergyReq) < EnergyReq then
-		self:TriggerInput("Activate", 0)
-		return
-	end
-
-	if (CurEnergy > EnergyReq) then
-		if not self.CurrentRef then
-			for type, _ in pairs(SA.Ice.Types) do
-				local Avail = self:GetResourceAmount(type)
-				if (Avail > 0) then
-					self.CurrentRef = type
-					self.Volume = 1000
-					self:ConsumeResource(type, 1)
-					Wire_TriggerOutput(self, "Active", 1)
-					break
-				end
+	if not self.CurrentRef then
+		for type, _ in pairs(SA.Ice.Types) do
+			local Avail = self:GetResourceAmount(type)
+			if (Avail > 0) then
+				self.CurrentRef = type
+				self.Volume = 1000
+				self:ConsumeResource(type, 1)
+				Wire_TriggerOutput(self, "Active", 1)
+				break
 			end
 		end
-		if (self.CurrentRef) then
-			self:ConsumeResource("energy", EnergyReq)
+	end
 
-			local RefSpeed = (self.CycleVol / self.CycleTime) * 1000
-			self.Volume = self.Volume - RefSpeed
-			local Progress = math.Clamp((1000-self.Volume) / 10, 0, 100)
-			Wire_TriggerOutput(self, "Progress", Progress)
-			self:SetOverlayText(self.PrintName .. "\nProgress: " .. tostring(Progress) .. "%")
-			if (self.Volume <= 0) then
-				local gives = SA.Ice.GetRefined(self.CurrentRef, self.RefineEfficiency)
-				for res, count in pairs(gives) do
-					self:SupplyResource(res, count)
-				end
-				self.CurrentRef = nil
-				Wire_TriggerOutput(self, "Active", 0)
-				Wire_TriggerOutput(self, "Progress", 0)
-				self:SetOverlayText(self.PrintName .. "\nProgress: 0%")
+	if self.CurrentRef then
+		local EnergyReq = self.CycleEnergy / self.CycleTime
+		if self:ConsumeResource("energy", EnergyReq) < EnergyReq then
+			self:TriggerInput("Activate", 0)
+			return
+		end
+
+		local RefSpeed = (self.CycleVol / self.CycleTime) * 1000
+		self.Volume = self.Volume - RefSpeed
+		local Progress = math.Clamp((1000-self.Volume) / 10, 0, 100)
+		Wire_TriggerOutput(self, "Progress", Progress)
+		self:SetOverlayText(self.PrintName .. "\nProgress: " .. tostring(Progress) .. "%")
+		if (self.Volume <= 0) then
+			local gives = SA.Ice.GetRefined(self.CurrentRef, self.RefineEfficiency)
+			for res, count in pairs(gives) do
+				self:SupplyResource(res, count)
 			end
+			self.CurrentRef = nil
+			Wire_TriggerOutput(self, "Active", 0)
+			Wire_TriggerOutput(self, "Progress", 0)
+			self:SetOverlayText(self.PrintName .. "\nProgress: 0%")
 		end
 	end
 end
