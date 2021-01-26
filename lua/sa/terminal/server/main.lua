@@ -626,27 +626,3 @@ local function SA_ResetMe(ply, cmd, args)
 	SA.SendBasicInfo(ply)
 end
 concommand.Add("sa_advance_level", SA_ResetMe)
-
-local function SA_DevSetVar(ply, cmd, args)
-	if not (ply and ply:IsValid() and ply:IsAdmin()) then return end
-	if #args < 2 then return end
-	local varid = tonumber(args[1])
-	local cval = tonumber(args[2])
-	if varid <= 0 or cval <= 0 then return end
-	local varname = "UNKOWN"
-	if varid == 1 then
-		if SA.Tiberium.MaxCrystalCount == cval then return end
-		SA.Tiberium.MaxCrystalCount = cval
-		varname = "max. concurrent tiberium crystals per tower"
-	elseif varid == 2 then
-		if SA.Tiberium.CrystalRadius == cval then return end
-		SA.Tiberium.CrystalRadius = cval
-		varname = "max. radius of tiberium crystals around tower"
-	elseif varid == 3 then
-		if SA.Asteroids.MaxCount == cval then return end
-		SA.Asteroids.MaxCount = cval
-		varname = "max. concurrent asteroid count"
-	end
-	SystemSendMSG(ply, "changed " .. varname .. " to " .. tostring(cval))
-end
-concommand.Add("sa_dev_set_var", SA_DevSetVar)

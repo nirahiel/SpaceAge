@@ -58,10 +58,6 @@ local function SA_TermError(ErrText)
 	SA_ErrorAlpha = 230
 end
 
-local function SA_DevSetVal(vnum, vval)
-	RunConsoleCommand("sa_dev_set_var", vnum, tonumber(vval:GetValue()))
-end
-
 local function SA_Term_UpdateStats()
 	if not SA_Term_StatList then return end
 	SA_Term_StatList:Clear()
