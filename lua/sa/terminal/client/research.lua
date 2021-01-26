@@ -64,29 +64,6 @@ function PANEL:Init()
 	end
 end
 
-function PANEL:SetDesc()
-	local Desc = self.ResearchTbl.desc
-
-	if #self.MissingReqs == 0 and #self.FulfilledReqs == 0 then
-		self.ResearchDesc:SetText(Desc)
-		return
-	end
-
-	local DescAdd = "\nRequires: "
-
-	for _, req in pairs(self.MissingReqs) do
-		DescAdd = DescAdd .. "\n" .. SA.Research.RequirementToString(req)
-	end
-
-	--[[
-	for _, req in pairs(self.FulfilledReqs) do
-		DescAdd = DescAdd .. "\n" .. SA.Research.RequirementToString(req) .. " (OK)"
-	end
-	]]
-
-	self.ResearchDesc:SetText(Desc .. DescAdd)
-end
-
 function PANEL:SetResearch(Research)
 	self.ResearchName:SetText(Research.display)
 	self.ResearchTbl = Research
@@ -95,12 +72,13 @@ function PANEL:SetResearch(Research)
 end
 
 function PANEL:Update()
+	self.ResearchDesc:SetText(self.ResearchTbl.desc)
+
 	local ply = LocalPlayer()
 	if not (ply.sa_data and ply.sa_data.research) then
 		self.CurrentRank = 0
 		self.FulfilledReqs = {}
 		self.MissingReqs = {}
-		self:SetDesc()
 		return
 	end
 
@@ -119,10 +97,11 @@ function PANEL:Update()
 	self.UpgradeButton:SetDisabled(not ok)
 	self.UpgradeAllButton:SetDisabled(not ok)
 
+	self:SetTooltipPanelOverride("SA_Terminal_Research_Tooltip")
+
+	self.MaxedOut = cost <= 0
 	self.FulfilledReqs = fulfilledReqs
 	self.MissingReqs = missingReqs
-
-	self:SetDesc()
 end
 
 function PANEL:Paint(w, h)

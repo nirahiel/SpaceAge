@@ -27,9 +27,6 @@ local SA_Term_TempStorage
 local SA_Term_PermStorage
 local SA_Term_ShipStorage
 local SA_UpgradeLevelButton
-local SA_MaxCrystalCount
-local SA_CrystalRadius
-local SA_Max_Roid_Count
 
 local textBackgroundExtraWidth = 15
 local function GetTextBackgroundWidth(font, text)

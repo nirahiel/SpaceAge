@@ -52,7 +52,7 @@ end
 function SA.Research.GetNextInfo(ply, Research, stopOnFail)
 	local cur = SA.Research.GetFromPlayer(ply, Research.name)
 	local cap = Research.ranks
-	if cap ~= 0 and cap == cur then
+	if cap ~= 0 and cap <= cur then
 		return false, 0, {}, {}
 	end
 
