@@ -3,7 +3,6 @@ SA.Functions = {}
 function SA.SendBasicInfo(ply)
 	ply.sa_data.credits = math.floor(ply.sa_data.credits)
 	ply.sa_data.score = math.floor(ply.sa_data.score)
-	ply:SetNWInt("Score", ply.sa_data.score)
 	net.Start("SA_SendBasicInfo")
 		net.WriteString(ply.sa_data.credits)
 		net.WriteString(ply.sa_data.score)

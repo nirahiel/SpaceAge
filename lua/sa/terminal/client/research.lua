@@ -64,6 +64,20 @@ function PANEL:Init()
 	end
 end
 
+function PANEL:CheckCost(SA_TermError)
+	local ply = LocalPlayer()
+	if not (ply.sa_data and ply.sa_data.credits) then
+		return true
+	end
+
+	if ply.sa_data.credits < self.Cost then
+		SA_TermError("You do not have enough credits for this research")
+		return false
+	end
+
+	return true
+end
+
 function PANEL:SetResearch(Research)
 	self.ResearchName:SetText(Research.display)
 	self.ResearchTbl = Research
@@ -93,6 +107,8 @@ function PANEL:Update()
 	else
 		self.ResearchCost:SetText(SA.AddCommasToInt(cost))
 	end
+
+	self.Cost = cost
 
 	self.UpgradeButton:SetDisabled(not ok)
 	self.UpgradeAllButton:SetDisabled(not ok)

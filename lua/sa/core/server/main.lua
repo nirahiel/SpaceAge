@@ -129,7 +129,6 @@ local function LoadRes(ply, body, code)
 	end
 
 	ply:SetNWBool("isleader", ply.sa_data.is_faction_leader)
-	ply:SetNWInt("Score", ply.sa_data.score)
 
 	ply:SetNWBool("isloaded", true)
 	if ply.sa_data.loaded and ply.HasAlreadySpawned then

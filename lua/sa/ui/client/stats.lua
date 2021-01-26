@@ -2,6 +2,33 @@ local SA_MaxNameLength = 24
 
 SA.StatsTable = {}
 
+local function sa_info_msg_credsc()
+	local ply = LocalPlayer()
+	if not ply.sa_data then
+		ply.sa_data = {}
+	end
+
+	local c = net.ReadString()
+	local sc = net.ReadString()
+	ply.sa_data.credits = tonumber(c)
+	ply.sa_data.score = tonumber(sc)
+	ply.sa_data.playtime = net.ReadInt(32)
+
+	ply.sa_data.formatted_credits = SA.AddCommasToInt(c)
+	ply.sa_data.formatted_score = SA.AddCommasToInt(sc)
+	ply.sa_data.formatted_playtime = SA.FormatTime(ply.sa_data.playtime)
+end
+net.Receive("SA_SendBasicInfo", sa_info_msg_credsc)
+
+timer.Create("SA_IncPlayTime", 1, 0, function()
+	local ply = LocalPlayer()
+	if not ply.sa_data then
+		return
+	end
+	ply.sa_data.playtime = ply.sa_data.playtime + 1
+	ply.sa_data.formatted_playtime = SA.FormatTime(ply.sa_data.playtime)
+end)
+
 local function SA_ReceiveStatsUpdate(body, code)
 	if code ~= 200 then
 		return

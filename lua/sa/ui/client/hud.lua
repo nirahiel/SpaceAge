@@ -286,22 +286,6 @@ local function SA_DrawHelmet(color)
 	surface.DrawRect(0, 25, w, 5)
 end
 
-local credits = "LOADING"
-local score = "LOADING"
-local playtime = 0
-local formattedPlaytime = "LOADING"
-local function sa_info_msg_credsc(len, ply)
-	credits = SA.AddCommasToInt(net.ReadString())
-	score = SA.AddCommasToInt(net.ReadString())
-	playtime = net.ReadInt(32)
-	formattedPlaytime = SA.FormatTime(playtime)
-end
-net.Receive("SA_SendBasicInfo", sa_info_msg_credsc)
-timer.Create("SA_IncPlayTime", 1, 0, function()
-	playtime = playtime + 1
-	formattedPlaytime = SA.FormatTime(playtime)
-end)
-
 local colorWhite = Color(255, 255, 255, 255)
 
 local function SA_DrawTopBar()
@@ -323,12 +307,16 @@ local function SA_DrawTopBar()
 	local topBarFont = "ScoreboardDefault"
 
 	draw.SimpleText("Name: " .. lp:Name(), topBarFont, section[1], yPos, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-	draw.SimpleText("Faction: " .. team.GetName(LocalPlayer():Team()), topBarFont, section[2], yPos, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Faction: " .. team.GetName(lp:Team()), topBarFont, section[2], yPos, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 
-	draw.SimpleText("Playtime: " .. formattedPlaytime, topBarFont, section[3], yPos, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-	draw.SimpleText("Score: " .. score, topBarFont, section[4], yPos, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	if not lp.sa_data then
+		return
+	end
 
-	draw.SimpleText("Credits: " .. credits, topBarFont, section[5], yPos, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Playtime: " .. lp.sa_data.formatted_playtime, topBarFont, section[3], yPos, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Score: " .. lp.sa_data.formatted_score, topBarFont, section[4], yPos, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+
+	draw.SimpleText("Credits: " .. lp.sa_data.formatted_credits, topBarFont, section[5], yPos, colorWhite, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 end
 
 local texGradR = surface.GetTextureID("vgui/gradient-r")

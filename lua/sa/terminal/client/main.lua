@@ -77,10 +77,9 @@ local function CreateTerminalGUI()
 	local y = ScrH() / 2
 	BasePanel:SetPos(x - 400, y - 350)
 	BasePanel:SetSize(800, 700)
-	BasePanel:SetTitle("Terminal v3, Powered by Intel Pentium IV 3.2 GHz Processor!")
+	BasePanel:SetTitle("Terminal v4")
 	BasePanel:SetDraggable(true)
 	BasePanel:ShowCloseButton(false)
-	BasePanel:SetBackgroundBlur(true)
 
 	SA_Term_GUI = BasePanel
 	SA_Term_GUI.SA_IsTerminalGUI = true
@@ -422,9 +421,15 @@ local function CreateTerminalGUI()
 		ResearchPanel:SetSize(700, 74)
 		ResearchPanel:SetResearch(ResearchData)
 		ResearchPanel.UpgradeCommand = function()
+			if not ResearchPanel:CheckCost(SA_TermError) then
+				return
+			end
 			RunConsoleCommand("sa_buy_research", ResearchData.name, "1", HASH)
 		end
 		ResearchPanel.UpgradeAllCommand = function()
+			if not ResearchPanel:CheckCost(SA_TermError) then
+				return
+			end
 			RunConsoleCommand("sa_buy_research", ResearchData.name, "9999", HASH)
 		end
 		ResearchPanels[ResearchData.name] = ResearchPanel
