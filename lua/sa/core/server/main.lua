@@ -128,21 +128,24 @@ local function LoadRes(ply, body, code)
 			ply:Kick("You don't meet the requirements for this server!")
 	end
 
-	ply.InvitedTo = false
-	ply.IsAFK = false
-	ply.MayBePoked = false
-
 	ply:SetNWBool("isleader", ply.sa_data.is_faction_leader)
 	ply:SetNWInt("Score", ply.sa_data.score)
 
 	ply:SetNWBool("isloaded", true)
-	if ply.sa_data.loaded then
+	if ply.sa_data.loaded and ply.HasAlreadySpawned then
 		ply:Spawn()
+	end
+
+	if ply.MayBePoked then
+		SA.SendBasicInfo(ply)
 	end
 end
 
 local function SA_InitSpawn(ply)
 	SA.GiveCredits.Remove(ply)
+	ply.IsAFK = false
+	ply.MayBePoked = false
+
 	local sid = ply:SteamID()
 	if not SA_IsValidSteamID(sid, true) then
 		print("Skip loading because bad SteamID: ", ply:Name(), sid)
@@ -156,7 +159,7 @@ local function SA_InitSpawn(ply)
 
 	SA.API.GetPlayerFull(ply, function(body, code) LoadRes(ply, body, code) end)
 end
-hook.Add("PlayerInitialSpawn", "SA_LoadPlayer", SA_InitSpawn)
+hook.Add("PlayerAuthed", "SA_LoadPlayer", SA_InitSpawn)
 
 local function SA_PlayerFullLoad(ply)
 	ply.MayBePoked = true

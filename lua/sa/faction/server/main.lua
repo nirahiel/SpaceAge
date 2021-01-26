@@ -82,24 +82,27 @@ timer.Create("SA_RefreshFactions", 30, 0, function()
 end)
 
 local function SA_SetSpawnPos(ply)
+	ply.HasAlreadySpawned = true
+
+	local idx = SA.Factions.Max + 1
 	if ply.sa_data and ply.sa_data.loaded then
-		local idx = ply:Team()
-		if not ply:IsVIP() then
-			local modelIdx = 4
-			if ply.sa_data.is_faction_leader then
-				modelIdx = 5
+		idx = ply:Team()
+	end
+
+	if not ply:IsVIP() then
+		local modelIdx = 4
+		if ply.sa_data and ply.sa_data.is_faction_leader then
+			modelIdx = 5
+		end
+		timer.Simple(2, function()
+			if IsValid(ply) then
+				ply:SetModel(SA.Factions.Table[idx][modelIdx])
 			end
-			timer.Simple(2, function() if (ply and ply:IsValid()) then ply:SetModel(SA.Factions.Table[idx][modelIdx]) end end)
-		end
-		ply:SetTeam(idx)
-		if SA.Factions.Table[idx][6] then
-			return table.Random(SA.Factions.Table[idx][6])
-		end
-	else
-		ply:SetTeam(SA.Factions.Max + 1)
-		if SA.Factions.Table[1][6] then
-			return table.Random(SA.Factions.Table[SA.Factions.Max + 1][6])
-		end
+		end)
+	end
+
+	if SA.Factions.Table[idx][6] then
+		return table.Random(SA.Factions.Table[idx][6])
 	end
 end
 hook.Add("PlayerSelectSpawn", "SA_ChooseSpawn", SA_SetSpawnPos)
