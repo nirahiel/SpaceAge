@@ -29,11 +29,5 @@ function ENT:Initialize()
 end
 
 function ENT:Use(ply, called)
-	if not ply.TempStorage then
-		ply.TempStorage = {}
-	end
-	ply.AtTerminal = true
-	SA.Terminal.SetVisible(ply, true)
-	ply:Freeze(true)
-	ply:ConCommand("sa_terminal_update")
+	SA.Terminal.Open(ply, self)
 end

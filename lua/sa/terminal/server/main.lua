@@ -236,6 +236,20 @@ function SA.Terminal.SetVisible(ply, status)
 	net.Send(ply)
 end
 
+function SA.Terminal.Open(ply, ent)
+	if ply.AtTerminal then
+		return
+	end
+	if not ply.TempStorage then
+		ply.TempStorage = {}
+	end
+	ply.AtTerminal = true
+	ply.AtTerminalEnt = ent
+	SA.Terminal.SetVisible(ply, true)
+	ply:Freeze(true)
+	ply:ConCommand("sa_terminal_update")
+end
+
 local function SA_CloseTerminal(ply)
 	SA.Terminal.SetVisible(ply, false)
 	if not ply.AtTerminal then
