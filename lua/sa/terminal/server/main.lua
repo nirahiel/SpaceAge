@@ -258,6 +258,7 @@ local function SA_CloseTerminal(ply)
 	SA.SaveUser(ply)
 	ply:Freeze(false)
 	ply.AtTerminal = false
+	ply.AtTerminalEnt = nil
 end
 concommand.Add("sa_terminal_close", SA_CloseTerminal)
 
