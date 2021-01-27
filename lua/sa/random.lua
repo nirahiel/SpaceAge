@@ -1,7 +1,7 @@
 print("RandomLoad", pcall(require, "random"))
 
 local function ReseedRandom()
-	local seed = os.time()
+	local seed = os.time() + math.random(0, 2147483647)
 	if SecureRandomNumber then
 		seed = seed + SecureRandomNumber(0, 2147483647)
 	end
