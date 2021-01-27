@@ -5,8 +5,7 @@ local function ReseedRandom()
 	if SecureRandomNumber then
 		seed = seed + SecureRandomNumber(0, 2147483647)
 	end
-	print("RandomSeed", seed)
 	math.randomseed(seed)
 end
 ReseedRandom()
-timer.Create("SA_ReseedRandom", 60, 0, ReseedRandom)
+timer.Create("SA_ReseedRandom", 10, 0, ReseedRandom)
