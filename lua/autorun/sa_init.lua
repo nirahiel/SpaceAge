@@ -1,8 +1,5 @@
 if SERVER then
-	print("RandomLoad", pcall(require, "random"))
-	if SecureRandomNumber then
-		math.random = SecureRandomNumber
-	end
+	include("sa/random.lua")
 	AddCSLuaFile()
 end
 
