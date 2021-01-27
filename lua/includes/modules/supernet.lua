@@ -1,4 +1,4 @@
-local supernet = {}
+supernet = {}
 
 if SERVER then
 	AddCSLuaFile()
@@ -180,5 +180,3 @@ function supernet.Hook(name, cb)
 		print("[supernet] Enabled receiving messages!")
 	end
 end
-
-return supernet

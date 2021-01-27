@@ -1,6 +1,5 @@
-if true then return end -- DISABLE SERVERSECURE FOR NOW
-
-require("serversecure")
+local ok = pcall(require, "serversecure")
+if not ok then return end
 
 --serversecure.EnableFirewallWhitelist(boolean) -- enable "firewall" whitelist, any client not in the whitelist doesn't see the server
 --serversecure.AddWhitelistIP(ip_in_integer_format) -- add an IP to the whitelist
@@ -25,5 +24,3 @@ serversecure.EnableQueryLimiter(true) -- enable query limiter (similar to Source
 serversecure.SetMaxQueriesWindow(60) -- timespan over which to average query counts from IPs (default is 30 seconds)
 serversecure.SetMaxQueriesPerSecond(1) -- maximum queries per second from a single IP (default is 1 per second)
 serversecure.SetGlobalMaxQueriesPerSecond(50) -- maximum total queries per second (default is 60 per second)
-
-SERVERSECURE_OK = true

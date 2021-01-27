@@ -1,3 +1,5 @@
+SA.REQUIRE("ui.main")
+
 local function GetProceduralEdge(vertices, cornerRadius, divisions, startDegrees, circleCenterX, circleCenterY, x, y, width, height)
 	for i = 1, divisions do
 		local offset = (90 / divisions) * i
@@ -10,7 +12,7 @@ local function GetProceduralEdge(vertices, cornerRadius, divisions, startDegrees
 	end
 end
 
-function surface.DrawTexturedRectRounded(x, y, width, height, cornerRadius, divisions, roundTopLeft, roundTopRight, roundBottomLeft, roundBottomRight)
+function SA.UI.DrawTexturedRectRounded(x, y, width, height, cornerRadius, divisions, roundTopLeft, roundTopRight, roundBottomLeft, roundBottomRight)
 	local vertices = {}
 
 	--top left and variable init

@@ -8,6 +8,9 @@ local surface = surface
 local team = team
 local tostring = tostring
 
+SA.REQUIRE("ui.functions")
+local DrawTexturedRectRounded = SA.UI.DrawTexturedRectRounded
+
 local alwaysshowtemp = CreateClientConVar("cl_alwaysshowtemperature", 0, true, false)
 local drawHud = GetConVar("cl_drawhud")
 
@@ -453,16 +456,16 @@ local function SA_CustomHUDPaint()
 		--temp bar outline
 		surface.SetDrawColor(black)
 		draw.NoTexture()
-		surface.DrawTexturedRectRounded(tempX - outlineW, tempY + 5 - outlineW, tempGaugeWid + outlineW * 2 + 1, 20 + outlineW * 2, 4, 4, true, true, true, true)
+		DrawTexturedRectRounded(tempX - outlineW, tempY + 5 - outlineW, tempGaugeWid + outlineW * 2 + 1, 20 + outlineW * 2, 4, 4, true, true, true, true)
 
 		-- cool temp
 		surface.SetDrawColor(coolTemp)
 		draw.NoTexture()
-		surface.DrawTexturedRectRounded(tempX, tempY + 5, Wid, 20, 4, 4, true, false, true, false)
+		DrawTexturedRectRounded(tempX, tempY + 5, Wid, 20, 4, 4, true, false, true, false)
 
 		-- hot temp
 		surface.SetDrawColor(hotTemp)
-		surface.DrawTexturedRectRounded(tempX + Wid, tempY + 5, tempGaugeWid - Wid, 20, 4, 4, false, true, false ,true)
+		DrawTexturedRectRounded(tempX + Wid, tempY + 5, tempGaugeWid - Wid, 20, 4, 4, false, true, false ,true)
 
 		local MinWid = math.Clamp(FairTemp_Min / GlobalTemp_Max, 0, 1) * tempGaugeWid
 		local Perc2 = math.Clamp(FairTemp_Max / GlobalTemp_Max, 0, 1)
@@ -471,7 +474,7 @@ local function SA_CustomHUDPaint()
 		-- good temp
 
 		surface.SetDrawColor(goodTemp)
-		surface.DrawTexturedRectRounded(tempX + MinWid, tempY + 5, Wid2-2, 20, 1, 3, true, true, true ,true)
+		DrawTexturedRectRounded(tempX + MinWid, tempY + 5, Wid2-2, 20, 1, 3, true, true, true ,true)
 
 
 		-- fade blue-red-green
@@ -486,10 +489,10 @@ local function SA_CustomHUDPaint()
 		--dark gradients
 		surface.SetDrawColor(Color(0, 0, 0, 235))
 		surface.SetTexture(texGradD)
-		surface.DrawTexturedRectRounded(tempX, tempY + 5, MinWid, 20, 4, 4, true, false, true, false)
-		surface.DrawTexturedRectRounded(MinWid + tempX + Wid2, tempY + 5, tempGaugeWid - MinWid - Wid2 + 1, 20, 4, 4, false, true, false ,true)
+		DrawTexturedRectRounded(tempX, tempY + 5, MinWid, 20, 4, 4, true, false, true, false)
+		DrawTexturedRectRounded(MinWid + tempX + Wid2, tempY + 5, tempGaugeWid - MinWid - Wid2 + 1, 20, 4, 4, false, true, false ,true)
 
-		surface.DrawTexturedRectRounded(MinWid + tempX, tempY + 5, Wid2, 20, 2, 2, false, false, false, false)
+		DrawTexturedRectRounded(MinWid + tempX, tempY + 5, Wid2, 20, 2, 2, false, false, false, false)
 
 
 		surface.SetTexture(texGradU)

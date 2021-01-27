@@ -1,6 +1,8 @@
 --glualint:ignore-file
 E2Lib.RegisterExtension("sa_money", false)
 
+local bool_to_number = SA.bool_to_number
+
 local lastMoneyFunc = {}
 
 local moneyResults = {}
