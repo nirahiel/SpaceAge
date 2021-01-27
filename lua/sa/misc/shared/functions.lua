@@ -56,8 +56,16 @@ end
 function SA.FormatTime(time)
 	local seconds = time % 60
 	local minutes = math.floor(time / 60) % 60
-	local hours = math.floor(time / 3600)
-	return hours .. ":" .. dString(minutes) .. ":" .. dString(seconds)
+	local hours = math.floor(time / 3600) % 24
+	local days = math.floor(time / 86400)
+
+	local outTime = hours .. ":" .. dString(minutes) .. ":" .. dString(seconds)
+	if days == 1 then
+		return "1 day " .. outTime
+	elseif days > 1 then
+		return days .. " days " .. outTime
+	end
+	return outTime
 end
 
 function SA.ValidEntity(ent)
