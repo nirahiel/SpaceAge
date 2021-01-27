@@ -16,10 +16,6 @@ local drawLastTime
 local MAX_MAP_SIZE = 300
 local BIGGER_THAN_MAP = 9999999999
 
-function LOLANGLE(ang)
-	drawAngle = ang
-end
-
 local function MakePlanetModel(planetData)
 	if planetData.model then
 		planetData.model:Remove()
@@ -38,8 +34,7 @@ end
 function SA.Teleporter.Open(ent)
 	screenW = ScrW()
 	screenH = ScrH()
-	screenFOV = 75 --LocalPlayer():GetFOV()
-	lastDrawAngle = nil
+	screenFOV = 75
 	drawLastTime = RealTime()
 
 	drawnPlanets = {}
@@ -71,8 +66,8 @@ function SA.Teleporter.Open(ent)
 	end
 	]]
 
-	maxPlanetCoord = Vector(-BIGGER_THAN_MAP,-BIGGER_THAN_MAP,-BIGGER_THAN_MAP)
-	minPlanetCoord = Vector(BIGGER_THAN_MAP,BIGGER_THAN_MAP,BIGGER_THAN_MAP)
+	local maxPlanetCoord = Vector(-BIGGER_THAN_MAP,-BIGGER_THAN_MAP,-BIGGER_THAN_MAP)
+	local minPlanetCoord = Vector(BIGGER_THAN_MAP,BIGGER_THAN_MAP,BIGGER_THAN_MAP)
 	for _, planet in pairs(planets) do
 		if planet.position.x > maxPlanetCoord.x then
 			maxPlanetCoord.x = planet.position.x

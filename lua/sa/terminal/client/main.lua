@@ -6,7 +6,7 @@ SA.REQUIRE("terminal.resource")
 SA.REQUIRE("terminal.goodies")
 SA.REQUIRE("faction.application")
 
-require("supernet")
+local supernet = require("supernet")
 
 local ResearchPanels = {}
 local SA_Term_StationCap = 0

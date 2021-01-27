@@ -299,7 +299,6 @@ function SA.Terraformer.SpazzOut(terent, forcekill)
 		envair.co2 = lastval
 		leftair = leftair - lastval
 		envair.empty = leftair
-		leftair = 0
 		if not forcekill then
 			local vPoint = terent:GetPos()
 			local effectdata = EffectData()

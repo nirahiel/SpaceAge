@@ -1,6 +1,6 @@
 SA.REQUIRE("config")
 
-require("supernet")
+local supernet = require("supernet")
 
 local HASH = tostring(math.random(1000000, 9999999))
 if SecureRandomString then

@@ -54,8 +54,6 @@ function ENT:Initialize()
 
 	self:SetFully(0, true)
 	self:SetBlocked(0)
-
-	self.xswitch =
 end
 
 function ENT:Think()

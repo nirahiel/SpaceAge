@@ -13,8 +13,9 @@ std = {
        "Wire_Render",
        "Wire_Remove",
        "Wire_Restored",
+       "WireGPU_Monitors",
        "CPPI",
-       "CAF"
+       "CAF", "CAFToolSetup", "CAFEnts"
    },
 }
 max_line_length = 300
