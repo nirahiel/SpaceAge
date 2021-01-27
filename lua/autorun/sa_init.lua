@@ -3,7 +3,9 @@ if SERVER then
 	AddCSLuaFile()
 end
 
-SA = {}
+if not SA then
+	SA = {}
+end
 
 local SA_ModuleList = {}
 
@@ -85,11 +87,11 @@ local function LoadAllFilesForModule(module, side)
 end
 
 local function SA_LoadAllModules()
-	if SA_ALL_MODULES_LOADED then
+	if SA.ALL_MODULES_LOADED then
 		return
 	end
 
-	_, modules = file.Find("sa/*", "LUA")
+	local _, modules = file.Find("sa/*", "LUA")
 	for _, module in pairs(modules) do
 		SA_ModuleList[module] = {
 			dependencies = {}
@@ -99,11 +101,11 @@ local function SA_LoadAllModules()
 		LoadAllFilesForModule(module, "server")
 	end
 
-	SA_REQUIRE = Local_SA_REQUIRE
+	SA.REQUIRE = Local_SA_REQUIRE
 	LoadModuleTree()
 
-	SA_REQUIRE = function() end
-	SA_ALL_MODULES_LOADED = true
+	SA.REQUIRE = function() end
+	SA.ALL_MODULES_LOADED = true
 end
 
 SA_LoadAllModules()

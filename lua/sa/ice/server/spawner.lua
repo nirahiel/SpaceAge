@@ -1,6 +1,6 @@
-SA_REQUIRE("config")
-SA_REQUIRE("ice.main")
-SA_REQUIRE("ice.types")
+SA.REQUIRE("config")
+SA.REQUIRE("ice.main")
+SA.REQUIRE("ice.types")
 
 local IceModels = {"models/props_wasteland/rockgranite04a.mdl", "models/props_wasteland/rockgranite04b.mdl"}
 

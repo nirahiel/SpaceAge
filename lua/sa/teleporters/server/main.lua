@@ -1,4 +1,4 @@
-SA_REQUIRE("config")
+SA.REQUIRE("config")
 SA.Teleporter = {}
 
 local SA_TeleportLocs = {}

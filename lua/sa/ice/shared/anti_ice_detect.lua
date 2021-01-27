@@ -1,4 +1,4 @@
-SA_REQUIRE("ice.main")
+SA.REQUIRE("ice.main")
 
 local SERVER = SERVER
 local dgetinfo = debug.getinfo

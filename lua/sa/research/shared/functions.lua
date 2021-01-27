@@ -1,4 +1,4 @@
-SA_REQUIRE("research.main")
+SA.REQUIRE("research.main")
 
 function SA.Research.GetNextInfoByName(ply, name)
 	return SA.Research.GetNextInfo(ply, SA.Research.GetByName(name))

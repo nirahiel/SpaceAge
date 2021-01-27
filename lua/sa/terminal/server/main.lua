@@ -1,4 +1,4 @@
-SA_REQUIRE("config")
+SA.REQUIRE("config")
 
 require("supernet")
 
@@ -281,16 +281,8 @@ SA_UpdateInfo = function(ply, CanPass)
 
 	local TempStorageU = SA_GetTempStorage(ply)
 
-	local orecount = SA_GetResource(ply, "ore")
-	local tempore = TempStorageU.ore
-
 	local PermStorageU = SA.Terminal.GetPermStorage(ply)
 	local ShipStorageU = SA_GetShipResources(ply)
-
-	net.Start("SA_TerminalUpdateSmall")
-		net.WriteInt(orecount or 0, 32)
-		net.WriteInt(tempore or 0, 32)
-	net.Send(ply)
 
 	local ResTabl = {}
 	for k, v in pairs(TempStorageU) do
@@ -386,9 +378,11 @@ local function SA_MarketSell(ply, cmd, args)
 	local uid = ply:UniqueID()
 	local num = tonumber(args[2])
 	if num <= 0 then return end
+
 	local amount = 0
 	local index = 0
-	local selling = 0
+	local selling
+
 	for k, v in pairs(TempStorage[uid]) do
 		if k == args[1] then
 			amount = v
@@ -400,7 +394,8 @@ local function SA_MarketSell(ply, cmd, args)
 	else
 		selling = num
 	end
-	if (selling > 0) then
+
+	if selling > 0 then
 		for k, v in pairs(PriceTable) do
 			if v[1] == args[1] then
 				local count = math.ceil(selling * v[2])
@@ -429,10 +424,12 @@ local function SA_MarketBuy(ply, cmd, args)
 	local uid = ply:UniqueID()
 	local num = tonumber(args[2])
 	if num <= 0 then return end
+
 	local index = 0
-	local buying = 0
-	local price = 0
+	local buying
+	local price
 	local pricepu = 0
+
 	for k, v in pairs(BuyPriceTable) do
 		if v[1] == args[1] then
 			pricepu = v[2]
@@ -491,7 +488,7 @@ local function SA_MoveResource(ply, cmd, args)
 	if (not maxamt) or maxamt == 0 then
 		return
 	end
-	local tomove = 0
+	local tomove
 	if num > maxamt then
 		tomove = maxamt
 	else

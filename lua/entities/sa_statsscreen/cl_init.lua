@@ -6,6 +6,8 @@ ENT.allowDraw = false
 
 local SA_PosColors = { Color(255, 255, 0, 255), Color(128, 128, 128, 255), Color(128, 50, 0, 255) }
 
+local WhiteColor = Color(255, 255, 255, 255)
+
 function ENT:Initialize()
 	self.scrollPos = 0
 	self.doScroll = false
@@ -19,16 +21,12 @@ local white = Color(255, 255, 255, 255)
 
 function ENT:Draw()
 	self:DrawModel()
-	if (not self.allowDraw) then return true end
+	if not self.allowDraw then return true end
 
-	local OF = 0
-	local OU = 0
-	local OR = 0
-	local Res = 0
-	local RatioX = 0
+	local Res, RatioX, OR, OU, OF
 
 	local monEntry = WireGPU_Monitors[self:GetModel()]
-	if (monEntry and monEntry.OF) then
+	if monEntry and monEntry.OF then
 		OF = monEntry.OF
 		OU = monEntry.OU
 		OR = monEntry.OR

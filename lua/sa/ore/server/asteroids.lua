@@ -1,4 +1,4 @@
-SA_REQUIRE("config")
+SA.REQUIRE("config")
 
 local AllAsteroids = {
 	{ "models/ce_ls3additional/asteroids/asteroid_200.mdl", 400 },
@@ -87,7 +87,7 @@ concommand.Add("sa_respawn_asteroids", function(ply)
 	if ply:GetLevel() < 3 then return end
 	RespawnAllAsteroids()
 	if (ply and ply:IsPlayer()) then
-		SystemSendMSG(ply, "respawned all asteroids")
+		print(ply, "respawned all asteroids")
 	end
 end)
 

@@ -17,9 +17,6 @@ function surface.DrawTexturedRectRounded(x, y, width, height, cornerRadius, divi
 	local cornerX = x
 	local cornerY = y
 
-	local circleCenterX = 0
-	local circleCenterY = 0
-
 	local startDegrees = 180
 
 	-- default nil round values
@@ -43,8 +40,8 @@ function surface.DrawTexturedRectRounded(x, y, width, height, cornerRadius, divi
 		 roundBR = roundBottomRight
 	end
 
-	circleCenterX = cornerX + cornerRadius
-	circleCenterY = cornerY + cornerRadius
+	local circleCenterX = cornerX + cornerRadius
+	local circleCenterY = cornerY + cornerRadius
 
 -- top left insert
 

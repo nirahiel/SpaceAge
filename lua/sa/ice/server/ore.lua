@@ -1,4 +1,4 @@
-SA_REQUIRE("ice.main")
+SA.REQUIRE("ice.main")
 
 function SA.Ice.GetRefined(ore, efficiency)
 	if not efficiency then

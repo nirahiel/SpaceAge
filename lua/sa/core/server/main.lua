@@ -1,4 +1,4 @@
-SA_REQUIRE("config")
+SA.REQUIRE("config")
 
 local function SetupConvars(name, default, flags)
 	if not ConVarExists(name) then
@@ -266,8 +266,8 @@ local function SA_Autospawner(ply)
 		end
 	end
 
-	if (ply and ply:IsPlayer()) then
-		SystemSendMSG(ply, "respawned all SpaceAge stuff")
+	if ply and ply:IsPlayer() then
+		print(ply, "respawned all SpaceAge stuff")
 	end
 end
 timer.Simple(1, SA_Autospawner)

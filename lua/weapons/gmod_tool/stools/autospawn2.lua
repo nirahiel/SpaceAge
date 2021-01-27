@@ -60,7 +60,6 @@ function TOOL:RightClick(tr)
 		for _, v in pairs(olddata) do
 			table.insert(owner.Autospawner2List, v)
 		end
-		output = util.TableToJSON(owner.Autospawner2List)
 	else
 		local oldConfig = SA.Config.Load("autospawn2")
 		if oldConfig then

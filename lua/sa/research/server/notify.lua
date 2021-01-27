@@ -1,4 +1,4 @@
-SA_REQUIRE("research.main")
+SA.REQUIRE("research.main")
 
 function SA.Research.RemoveEntityWithWarning(ent, research, requiredLevel)
 	local ply = ent:GetTable().Founder

@@ -1,6 +1,4 @@
-SA_REQUIRE("config")
-
-local SA_FactionData = {}
+SA.REQUIRE("config")
 
 local function SA_RefreshApplications(ply1, ply2)
 	local plys
@@ -44,42 +42,6 @@ local function InitSAFactions()
 	end
 end
 timer.Simple(0, InitSAFactions)
-
-local function LoadFactionResults(body, code)
-	if code ~= 200 then
-		return
-	end
-
-	local allply = player.GetAll()
-	for k, v in pairs(allply) do
-		if not v.MayBePoked then allply[k] = nil end
-	end
-
-	for _, faction in pairs(body) do
-		local tbl = {}
-		tbl.credits = tonumber(faction.credits) or -1
-		tbl.score = tonumber(faction.score) or -1
-		local fn = faction.faction_name
-		SA_FactionData[fn] = tbl
-
-		for _, ply in pairs(allply) do
-			if not ply then continue end
-			net.Start("SA_FactionData")
-				net.WriteString(fn)
-				net.WriteString(faction.score or "-1")
-				if ply.sa_data.faction_name == fn then
-					net.WriteString(faction.credits or "-1")
-				else
-					net.WriteString("-1")
-				end
-			net.Send(ply)
-		end
-	end
-end
-
-timer.Create("SA_RefreshFactions", 30, 0, function()
-	SA.API.ListFactions(LoadFactionResults)
-end)
 
 local function SA_SetSpawnPos(ply)
 	ply.HasAlreadySpawned = true
@@ -125,6 +87,7 @@ local function DoApplyFactionResRes(ply, ffid, code)
 		return
 	end
 
+	local plyLeader
 	for k, v in pairs(player.GetAll()) do
 		if v.sa_data.is_faction_leader and v:Team() == ffid then
 			plyLeader = v

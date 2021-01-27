@@ -262,14 +262,9 @@ local function DrawLSBattery(CaptionX, Value, ScH, ScW, ColBack, ColText)
 	local ValCol = Color(255 * (1-Perc), 255 * Perc, 0, 255)
 
 	if Value > 0 then
-		local XWid = (MeterWid - 154)  * Perc
-		XWid = math.max(XWid, 4)
-		--draw.RoundedBox(4, xPos + 150, yPos + 4, XWid, MeterHei - 8, ValCol)
 		draw.SimpleText(tostring(Perc * 100) .. " %", HUDFont, xPos + (MeterWid + batLineWid) / 2, yPos -12, ValCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-	else
-		if (SA_HUDBlink) then
-			draw.SimpleText("EMPTY", HUDFont, xPos + (MeterWid + batLineWid) / 2, yPos - 12, ValCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-		end
+	elseif SA_HUDBlink then
+		draw.SimpleText("EMPTY", HUDFont, xPos + (MeterWid + batLineWid) / 2, yPos - 12, ValCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 	end
 end
 
@@ -382,7 +377,7 @@ local function SA_CustomHUDPaint()
 	draw.SimpleText(health, HUDFont, ScW - 50, ScH - 38, HUDHealth, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 	if (armor > 0) then
 		local ammoPlRelX = armor / 100
-		if PlRelX > 1 then PlRelX = 1 end
+		if ammoPlRelX > 1 then ammoPlRelX = 1 end
 		local ammoPlHeightX = math.max(ammoPlRelX * healthHeightMult, 4)
 		draw.RoundedBox(2, ScW - 70, (ScH - healthInset) - ammoPlHeightX, 10, ammoPlHeightX, HUDArmor)
 		draw.SimpleText(armor, HUDFont, ScW - 50, ScH - 54, HUDArmor, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
@@ -531,7 +526,6 @@ local function SA_CustomHUDPaint()
 		BarNum = BarNum + 1
 		DrawLSBar(BarNum, "Air", ls_air, ScH, ScW, HUDGrey, ColText)
 		if ls_tmp < FairTemp_Min then
-			BarNum = BarNum + 1
 			DrawLSBattery("Energy",ls_energy,ScH,ScW,HUDGrey,ColText)
 		elseif ls_tmp > FairTemp_Max then
 			BarNum = BarNum + 1

@@ -1,8 +1,8 @@
 SA.API = {}
 
-SA_REQUIRE("config")
+SA.REQUIRE("config")
 if CLIENT then
-	SA_REQUIRE("misc.player_loaded")
+	SA.REQUIRE("misc.player_loaded")
 end
 
 local JWT_IN_RENEWAL = true
@@ -164,10 +164,7 @@ setRequestParams = function(request)
 	end
 end
 
-function SA.API.Request(url, method, reqBody, options, callback, retries)
-	if not retries then
-		retries = 0
-	end
+function SA.API.Request(url, method, reqBody, options, callback)
 	if not options then
 		options = {}
 	end
@@ -321,7 +318,7 @@ if CLIENT then
 	end
 	net.Receive("SA_PlayerJWT", function(len, ply)
 		apiConfig.auth = "Client " .. net.ReadString()
-		local _expiry = net.ReadInt(32)
+		net.ReadInt(32) -- expiry
 		local validTime = net.ReadInt(32)
 		JWT_IN_RENEWAL = false
 		if not APIAuthReady then

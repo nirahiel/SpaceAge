@@ -37,9 +37,9 @@ function EFFECT:Render()
 	render.SetMaterial(lGlow2)
 	render.DrawBeam(self.StartPos, self.EndPos, 32, rt, rt + 0.002 * self.Multi, col)
 
-	render.SetMaterial(Glow1)
+	render.SetMaterial(bGlow1)
 	render.DrawSprite(self.EndPos, 64, 64, col)
 
-	render.SetMaterial(Glow2)
+	render.SetMaterial(bGlow2)
 	render.DrawSprite(self.StartPos, 64, 64, col)
 end

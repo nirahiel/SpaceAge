@@ -1,4 +1,4 @@
-SA_REQUIRE("ice.main")
+SA.REQUIRE("ice.main")
 
 SA.Ice.Types = {}
 

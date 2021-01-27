@@ -44,8 +44,7 @@ function TOOL:LeftClick(trace)
 			undo.SetPlayer(ply)
 			undo.AddEntity(sksw)
 			undo.Finish()
-
-		ply:AddCleanup("sa_skin_switchers" , habmod)
+		ply:AddCleanup("sa_skin_switchers" , sksw)
 
 		return true
 	end
@@ -64,7 +63,7 @@ function TOOL.BuildCPanel(panel)
 				Description = "Tool_turn_into_skinswitcher_desc"
 				})
 
-	BindLabel = {}
+	local BindLabel = {}
 	BindLabel.Text = "\nLeft Click to turn a prop into a Skin Switcher. \nThis tool does not yet save constraints, so you will\n need to re-weld things afterwards. Or use\n this tool on the prop before attaching it\n in the first place."
 	BindLabel.Description = "Disclaimer."
 	panel:AddControl("Label", BindLabel)

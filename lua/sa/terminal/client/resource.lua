@@ -94,7 +94,7 @@ function PANEL:SetLocation(loc)
 end
 
 function PANEL:OnMousePressed(mcode)
-	if SA_TermDraggedElement then return end
+	if SA.TermDraggedElement then return end
 	if mcode ~= MOUSE_LEFT and mcode ~= MOUSE_RIGHT then return end
 
 	local t = self:GetParent()
@@ -178,12 +178,12 @@ function PANEL:OnMousePressed(mcode)
 		self:QuitThis()
 	end
 	function item:QuitThis()
-		SA_TermDraggedElement = nil
+		SA.TermDraggedElement = nil
 		self:MouseCapture(false)
 		self:Remove()
 	end
 	item:MouseCapture(true)
-	SA_TermDraggedElement = item
+	SA.TermDraggedElement = item
 end
 
 function PANEL:Paint(w, h)

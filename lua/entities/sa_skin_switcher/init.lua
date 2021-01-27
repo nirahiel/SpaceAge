@@ -16,7 +16,7 @@ function ENT:Think()
 	local skins = self:SkinCount()
 	if skins > 1 then
 		local currentskin = self:GetSkin()
-		local newskin = 0
+		local newskin
 		if (currentskin + 1) >= skins then
 			newskin = currentskin + 1 - skins
 		else

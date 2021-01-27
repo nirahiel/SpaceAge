@@ -1,16 +1,14 @@
 SA.Terminal = {}
 
-SA_REQUIRE("misc.player_loaded")
-SA_REQUIRE("terminal.research")
-SA_REQUIRE("terminal.resource")
-SA_REQUIRE("terminal.goodies")
-SA_REQUIRE("faction.application")
+SA.REQUIRE("misc.player_loaded")
+SA.REQUIRE("terminal.research")
+SA.REQUIRE("terminal.resource")
+SA.REQUIRE("terminal.goodies")
+SA.REQUIRE("faction.application")
 
 require("supernet")
 
-local SA_FactionData = {}
 local ResearchPanels = {}
-local term_info = {}
 local SA_Term_StationCap = 0
 local SA_Term_StationMax = 0
 
@@ -37,15 +35,6 @@ end
 surface.CreateFont("ServerHUDFontS", { font = "Arial", size = 22, weight = 700, antialias = true, shadow = false})
 
 local HASH = ""
-
-local function SA_RecvFactionData(len, ply)
-	local fn = net.ReadString()
-	SA_FactionData[fn] = {
-		Score = tonumber(net.ReadString()),
-		Credits = tonumber(net.ReadString())
-	}
-end
-net.Receive("SA_FactionData", SA_RecvFactionData)
 
 local SA_ErrorText = ""
 local SA_ErrorAlpha = 0
@@ -515,7 +504,7 @@ local function SA_Goodies_Refresh()
 end
 net.Receive("SA_GoodieUpdate", SA_Goodies_Refresh)
 
-local function sa_terminal_msg(len, ply)
+local function sa_terminal_msg()
 	local active = net.ReadBool()
 	if active then
 		SA.Application.Refresh()
@@ -533,14 +522,8 @@ local function sa_terminal_msg(len, ply)
 end
 net.Receive("SA_Terminal_SetVisible", sa_terminal_msg)
 
-local function sa_term_update1(len, ply)
-	term_info.orecount = SA.AddCommasToInt(net.ReadInt(32))
-	term_info.tempore = SA.AddCommasToInt(net.ReadInt(32))
-end
-net.Receive("SA_TerminalUpdateSmall", sa_term_update1)
-
-local function sa_term_update(ply, tbl)
-	ply = LocalPlayer()
+local function sa_term_update(_, tbl)
+	local ply = LocalPlayer()
 
 	local ResearchTable = tbl[7]
 	local canReset = tbl[8]

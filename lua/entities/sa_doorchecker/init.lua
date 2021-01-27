@@ -55,24 +55,13 @@ function ENT:Initialize()
 	self:SetFully(0, true)
 	self:SetBlocked(0)
 
-	self.xswitch = switch {
-		xtopen = function(x) self:SetOpen(1) end,
-		xtclose = function(x) self:SetOpen(0) end,
-		xtbopen = function(x) self:SetOpen(0) self:SetBlocked(1) end,
-		xtbclose = function(x) self:SetOpen(1) self:SetBlocked(1) end,
-		xtubopen = function(x) self:SetOpen(1) self:SetBlocked(0) end,
-		xtubclose = function(x) self:SetOpen(0) self:SetBlocked(0) end,
-		xtfopen = function(x) self:SetFully(1) end,
-		xtfclose = function(x) self:SetFully(0) end,
-		xtabegun = function(x) if (self.animov <= 0) then self:SetOpen(1 - self.isopen) else self.animov = (self.animov - 1) end end,
-		xtadone = function(x) self:SetFully(self.isopen) end,
-	}
+	self.xswitch =
 end
 
 function ENT:Think()
 	if (self.LastFCD == ForceShowDoorCs) then return end
 	self.LastFCD = ForceShowDoorCs
-	if (ForceShowDoorCs == true) then
+	if ForceShowDoorCs == true then
 		self:SetNotSolid(false)
 		self:DrawShadow(true)
 		self:SetNoDraw(false)
@@ -90,8 +79,24 @@ function ENT:Think()
 	timer.Create("SA_KeepUpAtmosphere", 60, 1, function() self:RefreshAtmo() end)
 end
 
+local InputSwitch = {
+	xtopen = function(s) s:SetOpen(1) end,
+	xtclose = function(s) s:SetOpen(0) end,
+	xtbopen = function(s) s:SetOpen(0) s:SetBlocked(1) end,
+	xtbclose = function(s) s:SetOpen(1) s:SetBlocked(1) end,
+	xtubopen = function(s) s:SetOpen(1) s:SetBlocked(0) end,
+	xtubclose = function(s) s:SetOpen(0) s:SetBlocked(0) end,
+	xtfopen = function(s) s:SetFully(1) end,
+	xtfclose = function(s) s:SetFully(0) end,
+	xtabegun = function(s) if s.animov <= 0 then s:SetOpen(1 - s.isopen) else s.animov = (s.animov - 1) end end,
+	xtadone = function(s) s:SetFully(s.isopen) end,
+}
+
 function ENT:AcceptInput(name, activator, caller)
-	self.xswitch:case(name)
+	local case = InputSwitch[name]
+	if case then
+		case(self)
+	end
 end
 
 function ENT:closeself()

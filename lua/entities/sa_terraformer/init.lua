@@ -85,7 +85,6 @@ end
 function ENT:OnTakeDamage(DmgInfo)
 	if self.Shield then
 		self.Shield:ShieldDamage(DmgInfo:GetDamage())
-		CDS_ShieldImpact(self:GetPos())
 		return
 	end
 	self:ChangeStability(-DmgInfo:GetDamage())

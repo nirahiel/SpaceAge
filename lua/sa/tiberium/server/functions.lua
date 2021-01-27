@@ -16,7 +16,7 @@ function SA.Tiberium.AttachStorage(ent, holder, pos)
 	if holder:GetModel() ~= "models/slyfo/sat_rtankstand.mdl" then return false end
 	if ent:GetModel() ~= "models/slyfo/sat_resourcetank.mdl" then return false end
 
-	local relPos = Vector(0, 0, 0)
+	local relPos
 	if pos == 1 then
 		relPos = Vector(1.0884, 18.9070, 21.4414)
 	elseif pos == 2 then
@@ -58,8 +58,7 @@ function SA.Tiberium.FindWorldFloor(fromPos, traceIgno, mayNotHit) --traceIgno A
 	local i = 0
 	while true do
 		i = i + 1
-		local traceData = nil
-		traceData = util.QuickTrace(fromPos, Vector(0, 0, -2000), traceIgno)
+		local traceData = util.QuickTrace(fromPos, Vector(0, 0, -2000), traceIgno)
 		if traceData.HitWorld then
 			return traceData.HitPos
 		elseif i > 10 then
@@ -77,20 +76,20 @@ end
 
 concommand.Add("sa_respawn_crystals", function(ply)
 	if ply:GetLevel() < 3 then return end
-	local tempMax = SA_MaxCrystalCount
-	SA_MaxCrystalCount = 0
+	local tempMax = SA.Tiberium.MaxCrystalCount
+	SA.Tiberium.MaxCrystalCount = 0
 	for k, v in pairs(ents.FindByClass("sa_crystal")) do
 		v:Remove()
 	end
 	for k, v in pairs(ents.FindByClass("sa_crystaltower")) do
 		v.crystalCount = 0
 	end
-	SA_MaxCrystalCount = tempMax
+	SA.Tiberium.MaxCrystalCount = tempMax
 	for k, v in pairs(ents.FindByClass("sa_crystaltower")) do
 		v:AutoSpawn()
 	end
-	if (ply and ply:IsPlayer()) then
-		SystemSendMSG(ply, " respawned all tiberium crystals")
+	if ply and ply:IsPlayer() then
+		print(ply, " respawned all tiberium crystals")
 	end
 end)
 
@@ -132,7 +131,6 @@ function SA.Tiberium.DestroyConstraints(Ent1, Ent2, Bone1, Bone2, cType)
 
 	if not foundConstraint then return false end
 	foundConstraint:Remove()
-	foundConstraint = nil
 
 	return true
 end

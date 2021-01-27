@@ -1,5 +1,5 @@
-SA_REQUIRE("faction.main")
-SA_REQUIRE("misc.player_loaded")
+SA.REQUIRE("faction.main")
+SA.REQUIRE("misc.player_loaded")
 
 local AppPanel = nil
 
@@ -208,12 +208,6 @@ function SA.Application.CreateGUI(BasePanel)
 		BasePanel:SetVisible(false)
 		AppPanel = BasePanel
 	end
-end
-
-function SA.Application.Start()
-	CreateAppGUI()
-	AppPanel:SetVisible(true)
-	gui.EnableScreenClicker(true)
 end
 
 function SA.Application.Close()

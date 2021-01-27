@@ -1,6 +1,6 @@
 SA.Planets = {}
 
-SA_REQUIRE("config")
+SA.REQUIRE("config")
 
 local SB_Terraforming_Target = {o2 = 29, co2 = 0.6, h = 0.4, n = 70, empty = 0}
 
