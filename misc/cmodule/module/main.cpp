@@ -9,13 +9,9 @@ extern "C" {
 
 GMOD_MODULE_OPEN()
 {
-	if (luaopen_ffi(state) == 0) {
-		return 1;
-	}
-	LUA->Push(-1);
+	luaopen_ffi(state);
 	LUA->SetField(GarrysMod::Lua::SPECIAL_GLOB, "ffi");
-
-	return 1;
+	return 0;
 }
 
 GMOD_MODULE_CLOSE()
