@@ -2,6 +2,8 @@
 local RD = CAF.GetAddon("Resource Distribution")
 E2Lib.RegisterExtension("lifesupport", false)
 
+local bool_to_number = SA.bool_to_number
+
 local E2_MAX_ARRAY_SIZE = 64
 
 local function e2defaulttable()
@@ -136,6 +138,86 @@ e2function number entity:lsGetTemperature(string key)
 	local _, _, temperature = ls_get_res_by_ent(this, key)
 	return temperature or 0
 end
+
+-- PUMP FUNCTIONS
+local function ls_ensure_valid_pump(ent)
+	return ent and IsValid(ent) and ent:GetClass() == "rd_pump"
+end
+
+e2function number entity:lsPumpSetResourceAmount(string res, number amount)
+	if not ls_ensure_valid_pump(this) then
+		return 0
+	end
+
+	local ok = this:SetResourceAmount(self.player, res, amount)
+	return bool_to_number(ok)
+end
+
+e2function number entity:lsPumpLink(entity otherpump)
+	if not (ls_ensure_valid_pump(this) and ls_ensure_valid_pump(otherpump)) then
+		return 0
+	end
+
+	local ok = this:LinkToPump(self.player, otherpump)
+	return bool_to_number(ok)
+end
+
+e2function number entity:lsPumpUnlink()
+	if not ls_ensure_valid_pump(this) then
+		return 0
+	end
+
+	local ok = this:Disconnect(self.player)
+	return bool_to_number(ok)
+end
+
+e2function number entity:lsPumpSetActive(number active)
+	if not ls_ensure_valid_pump(this) then
+		return 0
+	end
+
+	local ok
+	if active == 0 then
+		ok = this:TurnOff(self.player)
+	else
+		ok = this:TurnOn(self.player)
+	end
+	return bool_to_number(ok)
+end
+
+e2function number entity:lsPumpSetName(string name)
+	if not ls_ensure_valid_pump(this) then
+		return 0
+	end
+
+	local ok = this:SetPumpName(self.player, name)
+	return bool_to_number(ok)
+end
+
+e2function string entity:lsPumpGetName()
+	if not ls_ensure_valid_pump(this) then
+		return 0
+	end
+
+	return this:GetPumpName()
+end
+
+e2function entity entity:lsPumpGetConnectedPump()
+	if not ls_ensure_valid_pump(this) then
+		return 0
+	end
+
+	return this.otherpump
+end
+
+e2function table entity:lsPumpGetResources()
+	if not ls_ensure_valid_pump(this) then
+		return 0
+	end
+
+	return convert_table_to_e2_table(this.ResourcesToSend)
+end
+-- END PUMP FUNCTIONS
 
 e2function table entity:lsGetData(string key)
 	local amount, capacity, temperature = ls_get_res_by_ent(this, key)
