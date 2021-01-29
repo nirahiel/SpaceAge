@@ -1,12 +1,15 @@
-require("ffi")
+print("FFI Load", pcall(require, "ffi"))
 
-ffi.cdef [[
-	struct RandomResult { int32_t value; };
-	size_t getrandom(void *buf, size_t buflen, unsigned int flags);
-]]
+local randomres, randomresSize
+if ffi then
+	ffi.cdef [[
+		struct RandomResult { int32_t value; };
+		size_t getrandom(void *buf, size_t buflen, unsigned int flags);
+	]]
 
-local randomres = ffi.new("struct RandomResult")
-local randomresSize = ffi.sizeof(randomres)
+	randomres = ffi.new("struct RandomResult")
+	randomresSize = ffi.sizeof(randomres)
+end
 
 local function ReseedRandom()
 	local seed = os.time() + math.random(-2147483647, 2147483647)
