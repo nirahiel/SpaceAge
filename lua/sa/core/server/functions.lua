@@ -79,10 +79,13 @@ end
 function SA.Functions.MineThing(ent, hitent, resType)
 	local own = SA.PP.GetOwner(ent)
 	if own and own.IsAFK then return end
-	if (hitent.health > 0) then
+
+	if hitent.health > 0 then
 		local amount = ent.yield
-		if hitent.health < ent.damage then
-			amount = math.floor(ent.yield * (hitent.health / ent.damage))
+		local damage = ent.damage
+		if hitent.health <= damage then
+			amount = math.floor(ent.yield * (hitent.health / damage))
+			damage = hitent.health
 			hitent:Remove()
 		end
 		ent:SupplyResource(resType, amount)
