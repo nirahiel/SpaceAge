@@ -9,7 +9,7 @@ local AllAsteroids = {
 	{ "models/ce_ls3additional/asteroids/asteroid_450.mdl", 2700 },
 	{ "models/ce_ls3additional/asteroids/asteroid_500.mdl", 3000 },
 }
-local AllAsteroidsCount = table.Count(AllAsteroids)
+local AllAsteroidsCount = #AllAsteroids
 
 SA.Asteroids = {}
 SA.Asteroids.MaxCount = 0
