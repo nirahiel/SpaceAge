@@ -1,13 +1,13 @@
 SA.REQUIRE("config")
 
 local AllAsteroids = {
-	{ "models/ce_ls3additional/asteroids/asteroid_200.mdl", 400 },
-	{ "models/ce_ls3additional/asteroids/asteroid_250.mdl", 500 },
-	{ "models/ce_ls3additional/asteroids/asteroid_300.mdl", 600 },
-	{ "models/ce_ls3additional/asteroids/asteroid_350.mdl", 700 },
-	{ "models/ce_ls3additional/asteroids/asteroid_400.mdl", 800 },
-	{ "models/ce_ls3additional/asteroids/asteroid_450.mdl", 900 },
-	{ "models/ce_ls3additional/asteroids/asteroid_500.mdl", 1000 },
+	{ "models/ce_ls3additional/asteroids/asteroid_200.mdl", 1200 },
+	{ "models/ce_ls3additional/asteroids/asteroid_250.mdl", 1500 },
+	{ "models/ce_ls3additional/asteroids/asteroid_300.mdl", 1800 },
+	{ "models/ce_ls3additional/asteroids/asteroid_350.mdl", 2100 },
+	{ "models/ce_ls3additional/asteroids/asteroid_400.mdl", 2400 },
+	{ "models/ce_ls3additional/asteroids/asteroid_450.mdl", 2700 },
+	{ "models/ce_ls3additional/asteroids/asteroid_500.mdl", 3000 },
 }
 local AllAsteroidsCount = table.Count(AllAsteroids)
 
@@ -43,8 +43,8 @@ local function SpawnAsteroid(model, pos, size)
 	asteroid.RespOnRemove = true
 	asteroid.Autospawned = true
 	asteroid.CDSIgnore = true
-	asteroid.health = size * 3
-	asteroid.maxhealth = size * 3
+	asteroid.health = size
+	asteroid.maxhealth = size
 end
 
 local roids
