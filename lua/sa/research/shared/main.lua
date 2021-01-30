@@ -52,7 +52,7 @@ function SA.Research.SetToPlayer(ply, name, value)
 	ply.sa_data.research[dname][idx] = value
 end
 
-local function SA_VerifyResearchXQINT(res)
+local function CheckIfResearchForEveryone(res)
 	for _, v in pairs(res) do
 		if v[1] == "faction" then return false end
 	end
@@ -77,10 +77,14 @@ local function SA_AddResearch(name, group, displayname, ranks, cost, costinc, de
 
 	local resetreq = ranks
 	if reqtype == "unlock" then
-		if not SA_VerifyResearchXQINT(prereq) then resetreq = 0 end
+		if not CheckIfResearchForEveryone(prereq) then
+			resetreq = 0
+		end
 	elseif reqtype == "perrank" then
 		for k, v in pairs(prereq) do
-			if not SA_VerifyResearchXQINT(v) then resetreq = (k - 1) end
+			if not CheckIfResearchForEveryone(v) and resetreq > (k - 1) then
+				resetreq = k - 1
+			end
 		end
 	end
 	tbl.resetreq = resetreq
