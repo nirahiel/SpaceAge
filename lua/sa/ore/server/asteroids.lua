@@ -1,4 +1,5 @@
 SA.REQUIRE("config")
+SA.REQUIRE("ore.main")
 
 local AllAsteroids = {
 	{ "models/ce_ls3additional/asteroids/asteroid_200.mdl", 1200 },
@@ -11,12 +12,11 @@ local AllAsteroids = {
 }
 local AllAsteroidsCount = #AllAsteroids
 
-SA.Asteroids = {}
-SA.Asteroids.MaxCount = 0
+SA.Ore.MaxAsteroidCount = 0
 
 local SA_Roid_Count = 0
 
-function SA.Asteroids.OnRemove(ent)
+function SA.Ore.OnAsteroidRemove(ent)
 	if ent.RespOnRemove == true then
 		ent.RespOnRemove = false
 		SA_Roid_Count = SA_Roid_Count - 1
@@ -24,7 +24,7 @@ function SA.Asteroids.OnRemove(ent)
 end
 
 local function SpawnAsteroid(model, pos, size)
-	if SA_Roid_Count >= SA.Asteroids.MaxCount then
+	if SA_Roid_Count >= SA.Ore.MaxAsteroidCount then
 		return
 	end
 	SA_Roid_Count = SA_Roid_Count + 1
@@ -51,7 +51,7 @@ local roids
 
 local function CreateAsteroids(cnt)
 	if cnt == 0 then
-		cnt = SA.Asteroids.MaxCount
+		cnt = SA.Ore.MaxAsteroidCount
 	end
 
 	for k = 1, cnt do
@@ -70,7 +70,7 @@ local function RespawnAllAsteroids()
 		return
 	end
 
-	SA.Asteroids.MaxCount = roids.amount
+	SA.Ore.MaxAsteroidCount = roids.amount
 
 	for k, v in pairs(ents.FindByClass("sa_roid")) do
 		v.RespOnRemove = false
@@ -93,7 +93,7 @@ end)
 
 local LastSpawn = 0
 timer.Create("SA_AsteroidReplenishment", 1, 0, function()
-	if SA_Roid_Count >= SA.Asteroids.MaxCount then return end
+	if SA_Roid_Count >= SA.Ore.MaxAsteroidCount then return end
 	local DelayFactor = (SA_Roid_Count ^ 2) / 10
 	if (LastSpawn + DelayFactor) < CurTime() then
 		CreateAsteroids(1)

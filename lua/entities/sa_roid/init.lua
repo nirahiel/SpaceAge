@@ -14,5 +14,5 @@ function ENT:Initialize()
 end
 
 function ENT:OnRemove()
-	SA.Asteroids.OnRemove(self)
+	SA.Ore.OnAsteroidRemove(self)
 end

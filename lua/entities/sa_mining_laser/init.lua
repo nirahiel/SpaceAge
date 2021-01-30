@@ -99,7 +99,7 @@ function ENT:Think()
 			self:TurnOff()
 			Wire_TriggerOutput(self, "Output", 0)
 		else
-			SA.Functions.Discharge(self)
+			SA.Ore.Mine(self)
 			Wire_TriggerOutput(self, "Output", self.yield)
 		end
 	end
