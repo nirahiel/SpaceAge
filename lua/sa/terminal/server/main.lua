@@ -545,17 +545,17 @@ concommand.Add("sa_buy_perm_storage", SA_BuyPermStorage)
 
 local function SA_Research_Int(ply, Research)
 	local cred = ply.sa_data.credits
-	local ok, total = SA.Research.GetNextInfo(ply, Research, true)
-	if not ok then
+	local cur = SA.Research.GetFromPlayer(ply, Research.name)
+	local targetLevel = cur + 1
+
+	local ok, total = SA.Research.GetLevelInfo(ply, Research, true, targetLevel)
+	if not ok or cred < total then
 		return
 	end
 
-	if cred >= total then
-		local cur = SA.Research.GetFromPlayer(ply, Research.name)
-		SA.Research.SetToPlayer(ply, Research.name, cur + 1)
-		ply.sa_data.credits = ply.sa_data.credits - total
-		return true
-	end
+	SA.Research.SetToPlayer(ply, Research.name, targetLevel)
+	ply.sa_data.credits = ply.sa_data.credits - total
+	return true
 end
 
 local function SA_Buy_Research_Cmd(ply, cmd, args)

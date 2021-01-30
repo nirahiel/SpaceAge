@@ -49,17 +49,16 @@ local function Research_Check_Requirements(ply, reqs, missingReqs, fulfilledReqs
 	return #missingReqs == 0
 end
 
-function SA.Research.GetNextInfo(ply, Research, stopOnFail)
-	local cur = SA.Research.GetFromPlayer(ply, Research.name)
+function SA.Research.GetLevelInfo(ply, Research, stopOnFail, level)
 	local cap = Research.ranks
-	if cap ~= 0 and cap <= cur then
+	if cap ~= 0 and cap < level then
 		return false, 0, {}, {}
 	end
 
 	local cost = Research.cost
 	local inc = Research.costinc / 100
 	local devl = ply.sa_data.advancement_level
-	local total = cost + (cost * inc) * cur
+	local total = cost + (cost * inc) * (level - 1)
 	total = math.ceil(total * (devl * devl))
 
 	if ply.sa_data.faction_name == "legion" or ply.sa_data.faction_name == "alliance" then
@@ -79,8 +78,7 @@ function SA.Research.GetNextInfo(ply, Research, stopOnFail)
 				return false, total, missingReqs, fulfilledReqs
 			end
 		elseif reqtype == "perrank" then
-			local idx = cur + 1
-			local tbl = Research.prereq[idx]
+			local tbl = Research.prereq[level]
 			if not Research_Check_Requirements(ply, tbl, missingReqs, fulfilledReqs, stopOnFail) then
 				return false, total, missingReqs, fulfilledReqs
 			end
@@ -88,4 +86,9 @@ function SA.Research.GetNextInfo(ply, Research, stopOnFail)
 	end
 
 	return true, total, missingReqs, fulfilledReqs
+end
+
+function SA.Research.GetNextInfo(ply, Research, stopOnFail)
+	local cur = SA.Research.GetFromPlayer(ply, Research.name)
+	return SA.Research.GetLevelInfo(ply, Research, stopOnFail, cur + 1)
 end
