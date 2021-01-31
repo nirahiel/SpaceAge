@@ -77,13 +77,6 @@ function ENT:Think()
 					creds = math.ceil((creds * 1.11) * 1000) / 1000
 				end
 				ply.sa_data.credits = ply.sa_data.credits + creds
-				if ply.sa_data.score > 100000000 then
-					if ply.sa_data.faction_name  == "legion" then
-						creds = creds * 0.5
-					else
-						creds = creds * 0.4
-					end
-				end
 				ply.sa_data.score = ply.sa_data.score + creds
 				SA.SendBasicInfo(ply)
 			end
