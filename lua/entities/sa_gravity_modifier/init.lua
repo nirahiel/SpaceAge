@@ -101,10 +101,10 @@ function ENT:Think()
 	if (self.Active == 1) then
 		local dif = 1
 		if self.environment then
-			if self.environment:GetGravity() < 0.1 then
+			if self.environment:GetSBGravity() < 0.1 then
 				dif = 10
 			else
-				dif = self.sbenvironment.gravity / self.environment:GetGravity()
+				dif = self.sbenvironment.gravity / self.environment:GetSBGravity()
 			end
 		end
 		local eneeded = math.Round((Energy_Increment * self:GetMultiplier()) + (Energy_Increment * dif * self:GetMultiplier()))
@@ -160,11 +160,11 @@ function ENT:ChangeAtmosphere(newatmosphere)
 	end
 end
 
-function ENT:GetGravity()
+function ENT:GetSBGravity()
 	if self.Active == 1 then
 		return self.sbenvironment.gravity or 0
 	elseif self.environment then
-		return self.environment:GetGravity()
+		return self.environment:GetSBGravity()
 	end
 	return 0
 end
