@@ -32,8 +32,7 @@ function ENT:GetCapacity(ply)
 end
 
 function ENT:UpdateWireOutput()
-	Wire_TriggerOutput(self, "Tiberium", self:GetResourceAmount("tiberium"))
-	Wire_TriggerOutput(self, "Max Tiberium", self:GetNetworkCapacity("tiberium"))
+	self:DoUpdateWireOutput("Tiberium", "tiberium")
 end
 
 function ENT:OnRemove()
