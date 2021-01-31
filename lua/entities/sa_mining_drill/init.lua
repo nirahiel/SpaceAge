@@ -102,12 +102,14 @@ function ENT:Think()
 	self:NextThink(CurTime() + 1)
 
 	if self.Active == 0 then
+		Wire_TriggerOutput(self, "Output", 0)
 		return true
 	end
 
 	local used = self:ConsumeResource("energy", self.consume)
 	if used < self.consume then
 		self:TurnOff()
+		Wire_TriggerOutput(self, "Output", 0)
 		return true
 	end
 
@@ -122,7 +124,10 @@ function ENT:Think()
 			self.yield = self.oldyield
 		end
 		SA.Functions.MineThing(self, self.TouchEnt, "tiberium")
+		Wire_TriggerOutput(self, "Output", self.yield)
 		self.yield = self.oldyield
+	else
+		Wire_TriggerOutput(self, "Output", 0)
 	end
 
 	return true
