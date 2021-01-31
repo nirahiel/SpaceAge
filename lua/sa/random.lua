@@ -7,13 +7,15 @@ if ffi then
 		size_t getrandom(void *buf, size_t buflen, unsigned int flags);
 	]]
 
-	randomres = ffi.new("struct RandomResult")
-	randomresSize = ffi.sizeof(randomres)
+	if ffi.C.getrandom then
+		randomres = ffi.new("struct RandomResult")
+		randomresSize = ffi.sizeof(randomres)
+	end
 end
 
 local function ReseedRandom()
 	local seed = os.time() + math.random(-2147483647, 2147483647)
-	if ffi then
+	if randomres then
 		ffi.C.getrandom(randomres, randomresSize, 0)
 		seed = seed + randomres.value
 	end
