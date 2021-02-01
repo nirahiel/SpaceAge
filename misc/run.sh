@@ -6,17 +6,7 @@ export LD_LIBRARY_PATH="$HOME/s/bin/linux64"
 
 cd "$HOME/s"
 
-upgrade_addon() {
-    pushd "garrysmod/addons/$1"
-    git pull
-    popd
-}
-
-upgrade_addon spaceage
-upgrade_addon spacebuild
-upgrade_addon sbep
-upgrade_addon smartsnap
-upgrade_addon wire-extras
+"$HOME/s/garrysmod/addons/spaceage/misc/upgrade.sh"
 
 INSTALL_TXT="$HOME/s/garrysmod/addons/spaceage/misc/install.txt"
 sed "s~__HOME__~$HOME~" "${INSTALL_TXT}.tpl" > "$INSTALL_TXT"
