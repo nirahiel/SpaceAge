@@ -15,7 +15,7 @@ timer.Create("RestartIfEmpty", 1, 0, function()
 	local mode = convarMode:GetString()
 	if mode == "exit" then
 		RunConsoleCommand("exit")
-	elseif mode == "changelevel" then
+	else
 		RunConsoleCommand("changelevel", game.GetMap())
 	end
 end)
