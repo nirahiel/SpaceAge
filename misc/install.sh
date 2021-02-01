@@ -4,7 +4,7 @@ cd gamemodes
 ln -s ../addons/spaceage/gamemodes/spaceage ./
 ln -s ../addons/spacebuild/gamemodes/spacebuild ./
 cd ../lua
-ln -s ../addons/spaceage/misc/bin ./
+ln -s ../addons/spaceage/lua/bin ./
 
 cd ../cfg
 cp ../addons/spaceage/misc/server.cfg server.cfg
