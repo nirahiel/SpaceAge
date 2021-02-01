@@ -1,5 +1,4 @@
---if (CLIENT and GetConVarNumber("CAF_UseTab") == 1) then TOOL.Tab = "Custom Addon Framework" end
-TOOL.Tab			= "Administration"
+TOOL.Tab			= "Utilities"
 TOOL.Category		= "Administration"
 TOOL.Name			= "#TurnToSkinSwitcher"
 TOOL.Command 		= nil

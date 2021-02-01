@@ -1,8 +1,8 @@
+TOOL.Tab = "Utilities"
 TOOL.Category = "Administration"
 TOOL.Name = "Prop Autospawn Special"
 TOOL.Command = nil
 TOOL.ConfigName = ""
-TOOL.Tab = "Administration"
 
 if (CLIENT) then
 	language.Add("tool.autospawn2.name", "Autospawn Special")

@@ -1,8 +1,8 @@
+TOOL.Tab = "Utilities"
 TOOL.Category = "Administration"
 TOOL.Name = "CDS Prop Toggler"
 TOOL.Command = nil
 TOOL.ConfigName = ""
-TOOL.Tab = "Administration"
 
 if (CLIENT) then
 	language.Add("tool.cds_ignore.name", "CDS Prop Toggler")
