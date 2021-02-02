@@ -1,5 +1,5 @@
 TOOL.Tab = "Utilities"
-TOOL.Category = "Administration"
+TOOL.Category = "Admin"
 TOOL.Name = "Prop Autospawn Special"
 TOOL.Command = nil
 TOOL.ConfigName = ""
