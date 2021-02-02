@@ -1,14 +1,30 @@
 local convarEnabled = CreateConVar("restart_if_empty", 0)
+local convarTime = CreateConVar("restart_if_empty_time", 60 * 5)
 local convarMode = CreateConVar("restart_if_empty_mode", "changelevel")
 
 convarEnabled:SetBool(false)
 
+local function IsServerEmpty()
+	return player.GetCount() <= 0
+end
+
+local serverEmptyCycles = 0
+
 timer.Create("RestartIfEmpty", 1, 0, function()
 	if not convarEnabled:GetBool() then
+		serverEmptyCycles = 0
 		return
 	end
 
-	if player.GetCount() > 0 then
+	if not IsServerEmpty() then
+		serverEmptyCycles = 0
+		return
+	end
+
+	serverEmptyCycles = serverEmptyCycles + 1
+	local requiredCycles = convarTime:GetInt()
+	if serverEmptyCycles <= requiredCycles then
+		print("Seconds until restart: ", requiredCycles - serverEmptyCycles)
 		return
 	end
 
