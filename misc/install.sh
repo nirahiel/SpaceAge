@@ -1,6 +1,17 @@
 cd "$HOME/s"
 
-cd gamemodes
+git clone https://github.com/MattJeanes/Joystick-Module
+
+cd garrysmod/addons
+git clone https://github.com/SpaceAgeMP/sbep
+git clone https://github.com/SpaceAgeMP/spacebuild
+git clone https://github.com/SpaceAgeMP/smartsnap
+git clone https://github.com/wiremod/wire-extras
+
+ln -s ../../Joystick-Module/addons/Joystick joystick
+
+
+cd ../gamemodes
 ln -s ../addons/spaceage/gamemodes/spaceage ./
 ln -s ../addons/spacebuild/gamemodes/spacebuild ./
 cd ../lua
