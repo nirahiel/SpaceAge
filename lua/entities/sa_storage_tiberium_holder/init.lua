@@ -7,18 +7,7 @@ local LS = CAF.GetAddon("Life Support")
 
 DEFINE_BASECLASS("base_rd3_entity")
 
-function ENT:SpawnFunction(ply, tr)
-	if (not tr.Hit) then return end
-	local ent = ents.Create("sa_storage_tiberium_holder")
-	ent:SetPos(tr.HitPos)
-	ent:Spawn()
-	ent:Activate()
-	ent.TouchTable = {}
-	return ent
-end
-
 function ENT:Initialize()
-	self:SetModel("models/slyfo/sat_rtankstand.mdl")
 	BaseClass.Initialize(self)
 	self.Active = 0
 	self.TouchTable = {}

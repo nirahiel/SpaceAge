@@ -61,5 +61,18 @@ TOOL.Devices = {
 				legacy = false,
 			}
 		}
+	},
+	sa_storage_tiberium_holder = {
+		Name = "Tiberium storage holder",
+		class = "sa_storage_tiberium_holder",
+		type = "sa_storage_tiberium_holder",
+		devices = {
+			two = {
+				Name = "Two storages",
+				model = "models/slyfo/sat_rtankstand.mdl",
+				skin = 0,
+				legacy = false,
+			}
+		}
 	}
 }
