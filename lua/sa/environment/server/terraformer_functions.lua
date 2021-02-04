@@ -76,7 +76,7 @@ local function SA_Terraformer_Explosion(terent)
 end
 
 function SA.Terraformer.Run(terent)
-	local ply = SA.PP.GetOwner(terent)
+	local ply = terent:CPPIGetOwner()
 	if not (ply and ply:IsValid() and ply:IsPlayer()) then return end
 
 	if terent.environment.IsProtected or (not terent.environment:IsPlanet()) or terent.environment == SA.SB.GetSpace() then return end
@@ -352,6 +352,4 @@ function SA.Terraformer.SpazzOut(terent, forcekill)
 		SA_Terraformer_Explosion(terent)
 		timer.Simple(0.5, SA_Terraformer_Explosion, terent)
 	end
-	local ply = SA.PP.GetOwner(terent)
-	if not (ply and ply:IsValid() and ply:IsPlayer()) then return end
 end

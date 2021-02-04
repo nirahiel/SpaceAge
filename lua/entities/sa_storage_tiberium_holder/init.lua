@@ -55,9 +55,9 @@ end
 
 function ENT:StartTouch(ent)
 	if (not ent.IsTiberiumStorage) then return end
-	local eOwner = SA.PP.GetOwner(ent)
+	local eOwner = self:CPPIGetOwner()
 	if not (eOwner and eOwner:IsValid() and eOwner:IsPlayer()) then return end
-	if self.Active == 1 and SA.PP.PlyCanPerform(eOwner, self) then
+	if self.Active == 1 then
 		local attachPlace = SA.Tiberium.FindFreeAttachPlace(ent, self)
 		if not attachPlace then return end
 		if not SA.Tiberium.AttachStorage(ent, self, attachPlace) then return end

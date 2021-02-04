@@ -124,7 +124,7 @@ local function SA_SelectNode(ply, cmd, args)
 	local NetID = tonumber(args[1])
 	if not NetID then return end
 	for k, v in pairs(ents.FindByClass("resource_node")) do
-		if (SA.PP.GetOwner(v) == ply and NetID == v:GetNWInt("netid")) then
+		if v:CPPIGetOwner() == ply and NetID == v:GetNWInt("netid") then
 			ply.SelectedNode = v
 			SA_UpdateInfo(ply)
 			break
@@ -135,7 +135,7 @@ concommand.Add("sa_terminal_select_node", SA_SelectNode)
 
 local function SA_SelectedNode(ply)
 	--Use the node the player selected.
-	if SA.ValidEntity(ply.SelectedNode) and SA.PP.GetOwner(ply.SelectedNode) == ply then
+	if SA.ValidEntity(ply.SelectedNode) and ply.SelectedNode:CPPIGetOwner() == ply then
 		local dist = StationPos:Distance(ply.SelectedNode:GetPos())
 		if dist < StationSize and ply.SelectedNode:GetClass() == "resource_node" then
 			return ply.SelectedNode
@@ -144,7 +144,7 @@ local function SA_SelectedNode(ply)
 
 	--No Specific node, select first in range.
 	for k, v in pairs(ents.FindByClass("resource_node")) do
-		if (SA.PP.GetOwner(v) == ply) and (StationPos:Distance(v:GetPos()) < StationSize) then
+		if v:CPPIGetOwner() == ply and StationPos:Distance(v:GetPos()) < StationSize then
 			return v
 		end
 	end
@@ -156,7 +156,7 @@ local function SA_UpdateNodeSelection(ply)
 
 	local Nodes = {}
 	for k, v in pairs(ents.FindByClass("resource_node")) do
-		if (SA.PP.GetOwner(v) == ply) and (StationPos:Distance(v:GetPos()) < StationSize) then
+		if v:CPPIGetOwner() == ply and StationPos:Distance(v:GetPos()) < StationSize then
 			local NetID = v:GetNWInt("netid")
 			table.insert(Nodes, NetID)
 			if (SelectedNode == v) then
@@ -586,7 +586,7 @@ local function SA_Buy_Research_Cmd(ply, cmd, args)
 	local retro = Research.classes
 	for l, b in pairs(retro) do
 		for k, v in pairs(ents.FindByClass(b)) do
-			if (SA.PP.GetOwner(v) == ply) then
+			if v:CPPIGetOwner() == ply then
 				v:CalcVars(ply)
 			end
 		end

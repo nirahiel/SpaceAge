@@ -54,7 +54,7 @@ function ENT:CalcVars(ply)
 end
 
 function ENT:Refine()
-	local own = SA.PP.GetOwner(self)
+	local own = self:CPPIGetOwner()
 	if own and own.IsAFK then return end
 
 	if not self.CurrentRef then

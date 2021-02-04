@@ -32,13 +32,6 @@ function ENT:Use(activator, caller)
 end
 
 function ENT:Think()
-	if not self:IsValid() then
-		return
-	end
-	if not SA.PP.IsWorldEnt(self) then
-		self:Remove()
-		return
-	end
 	local timeUntilDelete = SA.Tiberium.GetTimeUntilDelete(self.MainSpawnedBy)
 
 	if timeUntilDelete then

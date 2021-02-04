@@ -46,7 +46,7 @@ function ENT:CalcVars(ply)
 end
 
 function ENT:Mine()
-	local own = SA.PP.GetOwner(self)
+	local own = self:CPPIGetOwner()
 	if own and own.IsAFK then return end
 
 	--Before we do anything, lets make sure they have power!

@@ -113,7 +113,7 @@ function ENT:Think()
 		return true
 	end
 
-	local myOwner = SA.PP.GetOwner(self)
+	local myOwner = self:CPPIGetOwner()
 	if self.TouchEnt and self.TouchEnt.IsCrystal and myOwner and myOwner:IsValid() and myOwner:GetPos():Distance(self:GetPos()) <= 350 and myOwner:InVehicle() then
 		local skin = self.TouchEnt:GetSkin()
 		if skin == 2 then

@@ -58,7 +58,7 @@ function ENT:Think()
 			continue
 		end
 		RD.Unlink(v)
-		local ply = SA.PP.GetOwner(v)
+		local ply = v:CPPIGetOwner()
 		if ply and ply:IsValid() and ply:IsPlayer() then
 			local am = v:GetResourceAmount("tiberium")
 			local taken = 10000

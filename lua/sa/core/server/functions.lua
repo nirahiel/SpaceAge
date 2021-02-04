@@ -43,7 +43,7 @@ function SA.Functions.PropMoveSlow(ent, endPos, speed)
 end
 
 function SA.Functions.MineThing(ent, hitent, resType)
-	local own = SA.PP.GetOwner(ent)
+	local own = ent:CPPIGetOwner()
 	if own and own.IsAFK then return end
 
 	if hitent.health <= 0 then
