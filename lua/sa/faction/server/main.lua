@@ -51,7 +51,7 @@ local function SA_SetSpawnPos(ply)
 		idx = ply:Team()
 	end
 
-	if not ply.sa_data.is_donator then
+	if not (ply.sa_data and ply.sa_data.is_donator) then
 		local modelIdx = 4
 		if ply.sa_data and ply.sa_data.is_faction_leader then
 			modelIdx = 5
