@@ -75,7 +75,7 @@ function SA.Tiberium.FindWorldFloor(fromPos, traceIgno, mayNotHit) --traceIgno A
 end
 
 concommand.Add("sa_respawn_crystals", function(ply)
-	if ply:GetLevel() < 3 then return end
+	if not ply:IsSuperAdmin() then return end
 	local tempMax = SA.Tiberium.MaxCrystalCount
 	SA.Tiberium.MaxCrystalCount = 0
 	for k, v in pairs(ents.FindByClass("sa_crystal")) do

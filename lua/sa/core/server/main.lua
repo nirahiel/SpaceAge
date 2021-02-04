@@ -271,7 +271,7 @@ local function SA_Autospawner(ply)
 	end
 end
 timer.Simple(1, SA_Autospawner)
-concommand.Add("sa_autospawn_run", function(ply) if ply:GetLevel() >= 3 then SA_Autospawner(ply) end end)
+concommand.Add("sa_autospawn_run", function(ply) if ply:IsSuperAdmin() then SA_Autospawner(ply) end end)
 
 local SA_Don_Toollist = SA.Config.Load("donator_tools", true)
 

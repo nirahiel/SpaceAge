@@ -197,7 +197,7 @@ function SA.Planets.Save()
 end
 
 concommand.Add("sa_restart_environment", function(ply)
-	if ply:GetLevel() < 3 then return end
+	if not ply:IsSuperAdmin() then return end
 	for k, v in pairs(SA_MyPlanets) do
 		local envname = string.lower(v.sbenvironment.name)
 		local filename = "sa_planetsave/" .. game.GetMap():lower() .. "/" .. envname .. "_default.txt"
@@ -215,7 +215,7 @@ concommand.Add("sa_restart_environment", function(ply)
 end)
 
 concommand.Add("sa_print_environment", function(ply)
-	if ply:GetLevel() < 3 then return end
+	if not ply:IsSuperAdmin() then return end
 	local env = SA.SB.FindClosestPlanet(ply:GetPos(), false)
 	local name = env:GetEnvironmentName()
 	local pos = env:GetPos()

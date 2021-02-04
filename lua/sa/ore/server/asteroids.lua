@@ -84,7 +84,7 @@ timer.Simple(5, RespawnAllAsteroids)
 
 
 concommand.Add("sa_respawn_asteroids", function(ply)
-	if ply:GetLevel() < 3 then return end
+	if not ply:IsSuperAdmin() then return end
 	RespawnAllAsteroids()
 	if (ply and ply:IsPlayer()) then
 		print(ply, "respawned all asteroids")
