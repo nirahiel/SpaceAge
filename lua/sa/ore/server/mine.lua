@@ -1,4 +1,4 @@
-SA_REQUIRE("ore.main")
+SA.REQUIRE("ore.main")
 
 function SA.Ore.Mine(ent)
 	local pos = ent:GetPos()
