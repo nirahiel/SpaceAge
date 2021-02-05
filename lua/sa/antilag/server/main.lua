@@ -45,7 +45,7 @@ local function SendAll(msg)
 	end
 end
 
-hook.Add("Tick", "SA_AntiLag_Think", function()
+hook.Add("Think", "SA_AntiLag_Think", function()
 	local sysTime = SysTime()
 	local timeDiff = sysTime - CurTime()
 	local timeDiffDelta = timeDiff - timeDiffLast
