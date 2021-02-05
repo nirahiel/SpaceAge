@@ -1,3 +1,5 @@
+SA_REQUIRE("ore.main")
+
 function SA.Ore.Mine(ent)
 	local pos = ent:GetPos()
 	local Ang = ent:GetAngles()
