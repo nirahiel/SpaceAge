@@ -2,7 +2,7 @@ local timeDiffLast = SysTime() - CurTime()
 local lastLag = 0
 local lagTicks = 0
 
-local convarDelta = CreateConVar("sa_antilag_mindelta", 0.05)
+local convarDelta = CreateConVar("sa_antilag_mindelta", 0.03)
 local convarTimeout = CreateConVar("sa_antilag_timeout", 10)
 local convarWarning = CreateConVar("sa_antilag_warning", 5)
 local convarCritical = CreateConVar("sa_antilag_critical", 50)
