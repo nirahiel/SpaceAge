@@ -16,11 +16,6 @@ local function RunToolBase(tool, tr, categorizer)
 	end
 
 	local owner = tool:GetOwner()
-	if not owner:IsAdmin() then
-		owner:ChatPrint("You are not authorized to use this.")
-		return false
-	end
-
 	if not IsValid(tr.Entity) then
 		owner:ChatPrint("Please point me at something...")
 		return false
