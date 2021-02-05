@@ -8,6 +8,7 @@ git clone https://github.com/SpaceAgeMP/spacebuild
 git clone https://github.com/SpaceAgeMP/smartsnap
 git clone https://github.com/wiremod/wire-extras
 git clone https://github.com/TomyLobo/lua_reloadent.git
+git clone https://github.com/SpaceAgeMP/multi-parent.git
 
 ln -s ../../Joystick-Module/addons/Joystick joystick
 

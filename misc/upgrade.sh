@@ -15,5 +15,7 @@ upgrade_addon spacebuild
 upgrade_addon sbep
 upgrade_addon smartsnap
 upgrade_addon wire-extras
+upgrade_addon lua_reloadent
+upgrade_addon multi-parent
 
 upgrade_addon ../../Joystick-Module
