@@ -35,7 +35,7 @@ local function RunToolBase(tool, tr, categorizer)
 		if IsValid(phys) then
 			frozen = not phys:IsMotionEnabled()
 		end
-		local parented = ent:GetParent() ~= nil
+		local parented = IsValid(ent:GetParent())
 
 		local cat = categorizer(ent)
 
