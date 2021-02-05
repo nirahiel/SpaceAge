@@ -60,7 +60,6 @@ hook.Add("Tick", "SA_AntiLag_Think", function()
 	end
 
 	if timeDiffDelta > convarDelta:GetFloat() then
-		print(timeDiffDelta)
 		lagTicks = lagTicks + 1
 		lastLag = sysTime
 
