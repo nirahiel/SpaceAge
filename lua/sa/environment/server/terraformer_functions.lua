@@ -1,3 +1,5 @@
+SA.REQUIRE("random")
+
 SA.Terraformer = {}
 
 local function SA_Terraformer_PushAtmosphere(terent, resName, atmoname, amount)

@@ -1,3 +1,4 @@
+SA.REQUIRE("random")
 SA.REQUIRE("config")
 SA.REQUIRE("ice.main")
 SA.REQUIRE("ice.types")

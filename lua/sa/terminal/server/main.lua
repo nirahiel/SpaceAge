@@ -1,11 +1,9 @@
+SA.REQUIRE("random")
 SA.REQUIRE("config")
 
 require("supernet")
 
-local HASH = tostring(math.random(1000000, 9999999))
-if SecureRandomString then
-	HASH = SecureRandomString(32)
-end
+local HASH = SA.Random.String(32)
 print("SA security hash: ", HASH)
 
 SA.Terminal = {}

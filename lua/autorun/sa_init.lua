@@ -1,5 +1,4 @@
 if SERVER then
-	include("sa/random.lua")
 	AddCSLuaFile()
 end
 
