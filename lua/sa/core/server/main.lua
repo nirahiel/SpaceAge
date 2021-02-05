@@ -256,6 +256,7 @@ local function SA_Autospawner(ply)
 			spawn.CDSIgnore = true
 			spawn.Autospawned = true
 			spawn.RealAutospawned = true
+			spawn.SkipSBChecks = true
 			if v.sound then
 				local mySND = CreateSound(spawn, Sound(v.sound))
 				if mySND then

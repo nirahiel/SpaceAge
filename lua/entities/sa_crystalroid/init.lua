@@ -36,6 +36,7 @@ function ENT:Initialize()
 		myPl:Kill()
 		self:Remove()
 	end
+	self.SkipSBChecks = true
 	self:SetModel(table.Random(modelTbl))
 	self.CrystalResistant = true
 	self:PhysicsInit(SOLID_VPHYSICS)

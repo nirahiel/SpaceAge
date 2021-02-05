@@ -9,6 +9,7 @@ ENT.WorldInternal = true
 function ENT:Initialize()
 	if self:KillIfSpawned() then return end
 
+	self.SkipSBChecks = true
 	self.CrystalResistant = true
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
@@ -22,17 +23,6 @@ function ENT:Think()
 		local myDmg = math.ceil(math.random(1000, 2000) * ((801 - v:GetPos():Distance(pos)) / 100))
 		if (v:IsPlayer() or v:IsNPC()) and (not (v.InVehicle and v:InVehicle())) then
 			v:TakeDamage(myDmg, self)
-		--[[else
-			local res = cbt_dealdevhit(v, (myDmg/10), 999999)
-			if res == 2 then
-				local wreck = ents.Create("wreckedstuff")
-				wreck:SetModel(v:GetModel())
-				wreck:SetAngles(v:GetAngles())
-				wreck:SetPos(v:GetPos())
-				wreck:Spawn()
-				wreck:Activate()
-				v:Remove()
-			end]]
 		end
 	end
 	SA.Tiberium.RemoveIntersecting(self, {"sa_crystalroid", "sa_crystaltower", "sa_mining_drill"})

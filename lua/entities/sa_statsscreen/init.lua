@@ -17,6 +17,8 @@ end
 function ENT:Initialize()
 	if self:KillIfSpawned() then return end
 
+	self.SkipSBChecks = true
+
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)

@@ -18,6 +18,8 @@ end
 function ENT:Initialize()
 	if self:KillIfSpawned() then return end
 
+	self.SkipSBChecks = true
+
 	self.isopen = 0
 	self.fullyopen = 0
 	self.fullyclosed = 0

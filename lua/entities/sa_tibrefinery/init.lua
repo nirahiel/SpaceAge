@@ -20,6 +20,8 @@ end
 function ENT:Initialize()
 	if self:KillIfSpawned() then return end
 
+	self.SkipSBChecks = true
+
 	if not SA_TheWorld then
 		SA_TheWorld = ents.FindByClass("worldspawn")[1]
 	end

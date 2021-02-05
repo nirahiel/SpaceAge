@@ -7,12 +7,14 @@ ENT.WorldInternal = true
 function ENT:Initialize()
 	if self:KillIfSpawned() then return end
 
+	self.SkipSBChecks = true
+
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_NONE)
 	self:SetSolid(SOLID_VPHYSICS)
 
 	local phys = self:GetPhysicsObject()
-	if (phys:IsValid()) then
+	if phys:IsValid() then
 		phys:Wake()
 		phys:EnableGravity(true)
 		phys:EnableDrag(true)

@@ -8,6 +8,8 @@ ENT.WorldInternal = true
 function ENT:Initialize()
 	if self:KillIfSpawned() then return end
 
+	self.SkipSBChecks = true
+
 	self:SetModel("models/props_combine/combine_intwallunit.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)

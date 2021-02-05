@@ -24,6 +24,7 @@ function ENT:Initialize()
 	if self:KillIfSpawned() then return end
 
 	self:SetModel("models/ce_mining/tiberium/ce_tib_500_200.mdl")
+	self.SkipSBChecks = true
 	self.CrystalResistant = true
 	self:SetSkin(math.random(0, 1))
 	self:PhysicsInit(SOLID_VPHYSICS)
