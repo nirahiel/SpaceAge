@@ -6,8 +6,8 @@ TOOL.ConfigName = ""
 
 if (CLIENT) then
 	language.Add("tool.cds_ignore.name", "CDS Prop Toggler")
-	language.Add("tool.cds_ignore.desc", "Left Click: Enable CDS Damage. Right Click: Disable CDS Damage.")
-	language.Add("tool.cds_ignore.0", "Hai!")
+	language.Add("tool.cds_ignore.desc", "Change CDSIgnore on props")
+	language.Add("tool.cds_ignore.0", "Left Click: Enable CDS Damage. Right Click: Disable CDS Damage.")
 end
 function TOOL:LeftClick(tr)
 	if CLIENT then return end
