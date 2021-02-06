@@ -6,13 +6,18 @@ export LD_LIBRARY_PATH="$HOME/s/bin/linux64"
 
 cd "$HOME/s"
 
+IP="0.0.0.0"
+TICKRATE="20"
+MAXPLAYERS="16"
+MAP="sb_gooniverse_v4"
+source "$HOME/config.sh"
+
 "$HOME/s/garrysmod/addons/spaceage/misc/upgrade.sh"
 
 INSTALL_TXT="$HOME/s/garrysmod/addons/spaceage/misc/install.txt"
 sed "s~__HOME__~$HOME~" "${INSTALL_TXT}.tpl" > "$INSTALL_TXT"
 steamcmd +runscript "$HOME/s/garrysmod/addons/spaceage/misc/install.txt"
 
-export WORKSHOP_COLLECTION=177294269
-"$HOME/s/garrysmod/addons/spaceage/misc/grabaddons.sh"
+"$HOME/s/garrysmod/addons/spaceage/misc/grabaddons.sh" 177294269
 
-exec ./bin/linux64/srcds -usercon -autoupdate -tickrate 20 -game garrysmod +ip 0.0.0.0 +maxplayers 32 +map sb_gooniverse_v4 +host_workshop_collection "2371557248" +gamemode spaceage -disableluarefresh -console
+exec ./bin/linux64/srcds -usercon -autoupdate -tickrate "$TICKRATE" -game garrysmod +ip "$IP" +maxplayers "$MAXPLAYERS" +map "$MAP" +host_workshop_collection "2371557248" +gamemode spaceage -disableluarefresh -console
