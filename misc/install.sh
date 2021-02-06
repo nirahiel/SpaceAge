@@ -1,5 +1,7 @@
 cd "$HOME/s"
 
+"$HOME/s/garrysmod/addons/spaceage/misc/steamcmd.sh"
+
 git clone https://github.com/MattJeanes/Joystick-Module
 
 cd garrysmod/addons
