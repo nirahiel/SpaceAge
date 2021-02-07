@@ -75,10 +75,6 @@ function ENT:TurnOff()
 	end
 end
 
-function ENT:OnRemove()
-
-end
-
 function ENT:TriggerInput(iname, value)
 	if iname == "On" then
 		self:SetActive(value)

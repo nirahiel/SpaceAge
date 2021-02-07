@@ -82,6 +82,7 @@ function ENT:TurnOff()
 end
 
 function ENT:OnRemove()
+	BaseClass.OnRemove(self)
 	self.lasersound:Stop()
 end
 

@@ -7,12 +7,14 @@ DEFINE_BASECLASS("sa_base_rd3_entity")
 function ENT:Initialize()
 	BaseClass.Initialize(self)
 
+	self:SetNWBool("o", false)
+
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)
 
 	local phys = self:GetPhysicsObject()
-	if (phys:IsValid()) then
+	if phys:IsValid() then
 		phys:Wake()
 		phys:EnableGravity(true)
 		phys:EnableDrag(true)
@@ -36,12 +38,10 @@ function ENT:Initialize()
 	self:AddResource("carbon isotopes", 0)
 	self:AddResource("strontium clathrates", 0)
 
-	self:SetOverlayText(self.PrintName .. "\n" .. "Progress: 0%")
-
 	self.Inputs = Wire_CreateInputs(self, { "Activate" })
-	self.Outputs = Wire_CreateOutputs(self, { "Active", "Progress" })
+	self.Outputs = Wire_CreateOutputs(self, { "On", "Active", "Progress" })
 
-	self.ShouldRefine = false
+	self.Active = 0
 	self.CurrentRef = nil
 	self.Volume = 0
 	self.NextCycle = 0
@@ -81,7 +81,6 @@ function ENT:Refine()
 		self.Volume = self.Volume - RefSpeed
 		local Progress = math.Clamp((1000-self.Volume) / 10, 0, 100)
 		Wire_TriggerOutput(self, "Progress", Progress)
-		self:SetOverlayText(self.PrintName .. "\nProgress: " .. tostring(Progress) .. "%")
 		if (self.Volume <= 0) then
 			local gives = SA.Ice.GetRefined(self.CurrentRef, self.RefineEfficiency)
 			for res, count in pairs(gives) do
@@ -90,7 +89,6 @@ function ENT:Refine()
 			self.CurrentRef = nil
 			Wire_TriggerOutput(self, "Active", 0)
 			Wire_TriggerOutput(self, "Progress", 0)
-			self:SetOverlayText(self.PrintName .. "\nProgress: 0%")
 		end
 	end
 end
@@ -98,21 +96,41 @@ end
 function ENT:Think()
 	BaseClass.Think(self)
 
-	if (self.ShouldRefine and self.NextCycle < CurTime()) then
+	if self.Active == 1 and self.NextCycle < CurTime() then
 		self:Refine()
 		self.NextCycle = CurTime() + 1
+	end
+end
+
+function ENT:TurnOn()
+	if self.Active == 0 then
+		self.Active = 1
+		Wire_TriggerOutput(self, "On", 1)
+		self:SetOOO(1)
+		self:SetNWBool("o", true)
+	end
+end
+
+function ENT:TurnOff()
+	if self.Active == 1 then
+		self.Active = 0
+		Wire_TriggerOutput(self, "Active", 0)
+		Wire_TriggerOutput(self, "Progress", 0)
+		Wire_TriggerOutput(self, "On", 0)
+		self:SetOOO(0)
+		self:SetNWBool("o", false)
+		self.CurrentRef = nil
+		self.Volume = 0
+		self.NextCycle = 0
 	end
 end
 
 function ENT:TriggerInput(iname, value)
 	if iname == "Activate" then
 		if value == 1 then
-			self.ShouldRefine = true
+			self:TurnOn()
 		else
-			self.ShouldRefine = false
-			Wire_TriggerOutput(self, "Active", 0)
-			Wire_TriggerOutput(self, "Progress", 0)
-			self:SetOverlayText(self.PrintName .. "\nProgress: 0%")
+			self:TurnOff()
 		end
 	end
 end

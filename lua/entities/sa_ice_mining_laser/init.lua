@@ -4,8 +4,6 @@ include("shared.lua")
 
 DEFINE_BASECLASS("sa_base_rd3_entity")
 
-local RD = CAF.GetAddon("Resource Distribution")
-
 function ENT:Initialize()
 	BaseClass.Initialize(self)
 
@@ -34,7 +32,7 @@ function ENT:Initialize()
 
 	self.IceCollected = {}
 
-	self.ShouldMine = false
+	self.Active = 0
 	self.IsMining = false
 	self.NextPulse = 0
 end
@@ -76,9 +74,6 @@ function ENT:Mine()
 			self:SupplyResource(Type, 1)
 		end
 
-		--Energy Usage--
-
-
 		--Updating shit--
 		Wire_TriggerOutput(self, "Mineral Amount", math.floor(ent.MineralAmount * 10) / 10)
 		Wire_TriggerOutput(self, "Progress", math.floor(self.IceCollected[Type] / 1000 * 1000) / 10)
@@ -89,7 +84,6 @@ function ENT:Mine()
 end
 
 function ENT:SetStatus(bool)
-	self.ShouldMine = bool
 	if bool then
 		Wire_TriggerOutput(self, "Active", 1)
 	else
@@ -100,8 +94,8 @@ function ENT:SetStatus(bool)
 end
 
 function ENT:TurnOn()
-	if not self.ShouldMine then
-		self.ShouldMine = true
+	if self.Active == 0 then
+		self.Active = 1
 		Wire_TriggerOutput(self, "On", 1)
 		self:SetOOO(1)
 		self:SetNWBool("o", true)
@@ -109,24 +103,19 @@ function ENT:TurnOn()
 end
 
 function ENT:TurnOff()
-	if self.ShouldMine then
-		self.ShouldMine = false
+	if self.Active == 1 then
+		self.Active = 0
+		self:SetStatus(false)
 		Wire_TriggerOutput(self, "On", 0)
 		self:SetOOO(0)
 		self:SetNWBool("o", false)
-		self:SetStatus(false)
 	end
-end
-
-function ENT:OnRemove()
-	RD.RemoveRDEntity(self)
-	Wire_Remove(self)
 end
 
 function ENT:Think()
 	BaseClass.Think(self)
 
-	if self.ShouldMine and self.NextPulse < CurTime() then
+	if self.Active == 1 and self.NextPulse < CurTime() then
 		self:Mine()
 		self.NextPulse = CurTime() + 1
 	end
