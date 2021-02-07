@@ -17,18 +17,30 @@ timer.Create("SA_TTS_Cleanup", 10, 0, CleanupTTS)
 
 local function PlayTTS()
 	local url = net.ReadString()
-	local pos = net.ReadVector()
+	local is3d = net.ReadBool()
+
+	local pos
+	if is3d then
+		pos = net.ReadVector()
+	end
 
 	if pos:DistToSqr(LocalPlayer():GetPos()) > MAX_TTS_DIST then
 		return
 	end
 
-	sound.PlayURL(url, "3d noplay", function(station)
+	local mode = "noplay"
+	if is3d then
+		mode = "3d noplay"
+	end
+
+	sound.PlayURL(url, mode, function(station)
 		if not IsValid(station)  then
 			return
 		end
 
-		station:SetPos(pos)
+		if is3d then
+			station:SetPos(pos)
+		end
 		station:Play()
 
 		table.insert(playingSounds, station)

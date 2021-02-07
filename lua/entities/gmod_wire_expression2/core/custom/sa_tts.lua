@@ -17,7 +17,12 @@ local function doTTS(target, filter, text)
 
 		net.Start("SA_TTS_PlayURL")
 			net.WriteString(url)
-			net.WriteVector(target)
+			if target then
+				net.WriteBool(true)
+				net.WriteVector(target)
+			else
+				net.WriteBool(false)
+			end
 
 		if filter then
 			net.Send(filter)
@@ -35,7 +40,7 @@ end
 e2function void playTTSOwner(string text)
 	local owner = self.player
 	if IsValid(owner) then
-		doTTS(owner:GetPos(), owner, text)
+		doTTS(false, owner, text)
 	end
 end
 
