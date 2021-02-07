@@ -28,7 +28,7 @@ function ENT:Initialize()
 	self:AddResource("krystallos", 0)
 
 	self.Inputs = Wire_CreateInputs(self, { "Activate" })
-	self.Outputs = Wire_CreateOutputs(self, { "Active", "Mineral Amount", "Progress" })
+	self.Outputs = Wire_CreateOutputs(self, { "On", "Active", "Mineral Amount", "Progress" })
 
 	self:SetNWBool("o", false)
 
@@ -53,12 +53,11 @@ function ENT:Mine()
 	local EnergyUse = self.LaserConsume / self.LaserCycle
 
 	if self:ConsumeResource("energy", EnergyUse) < EnergyUse then
-		self.ShouldMine = false
-		self:SetStatus(false)
+		self:TurnOff()
 		return
 	end
 
-	local ent = util.QuickTrace(self:GetPos(), self:GetUp() * self.LaserRange, self).Entity
+	local ent = util.QuickTrace(self:GetPos(), self:GetUp() * self.BeamLength, self).Entity
 	if ent and ent.IsIceroid then
 		local Type = ent.MineralName
 		if not self.IceCollected[Type] then
@@ -90,14 +89,32 @@ function ENT:Mine()
 end
 
 function ENT:SetStatus(bool)
-	self.IsMining = bool
-	self:SetNWBool("o", bool)
+	self.ShouldMine = bool
 	if bool then
 		Wire_TriggerOutput(self, "Active", 1)
 	else
 		Wire_TriggerOutput(self, "Active", 0)
 		Wire_TriggerOutput(self, "Mineral Amount", 0)
 		Wire_TriggerOutput(self, "Progress", 0)
+	end
+end
+
+function ENT:TurnOn()
+	if not self.ShouldMine then
+		self.ShouldMine = true
+		Wire_TriggerOutput(self, "On", 1)
+		self:SetOOO(1)
+		self:SetNWBool("o", true)
+	end
+end
+
+function ENT:TurnOff()
+	if self.ShouldMine then
+		self.ShouldMine = false
+		Wire_TriggerOutput(self, "On", 0)
+		self:SetOOO(0)
+		self:SetNWBool("o", false)
+		self:SetStatus(false)
 	end
 end
 
@@ -116,12 +133,11 @@ function ENT:Think()
 end
 
 function ENT:TriggerInput(iname, value)
-	if (iname == "Activate") then
+	if iname == "Activate" then
 		if value == 1 then
-			self.ShouldMine = true
+			self:TurnOn()
 		else
-			self.ShouldMine = false
-			self:SetStatus(false)
+			self:TurnOff()
 		end
 	end
 end

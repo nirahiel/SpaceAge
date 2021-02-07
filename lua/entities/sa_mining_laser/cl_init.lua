@@ -17,53 +17,55 @@ local CalcColorTbl = {
 	function(level) return Color(math.floor(level * 0.85), 255, math.floor(level * 0.85)) end,
 }
 
-function ENT:Draw()
-	BaseClass.Draw(self)
+function ENT:Think()
+	BaseClass.Think(self)
 
 	if not self.rank then
 		return
 	end
 
-	if self:GetNWBool("o") == true then
-		self:DrawLaser()
-	end
-end
-
-function ENT:CalcColor(level)
-	return Color(255, 255 - math.floor(level * 0.85), 0)
-end
-
-function ENT:DrawLaser()
 	local level = self:GetNWInt("level")
 	if level ~= self.LastLevel then
 		self.LastLevel = level
 		self.LaserColor = CalcColorTbl[self.rank](level)
 		self.LaserWidth = self.BeamWidthOffset + math.floor(level / 10)
 	end
-	self:DrawLaserDef(self.LaserColor, self.LaserWidth)
+
+	local tr = SA.LaserTraceCalc(self)
+	self.hitIs = tr and IsValid(tr.Entity) and tr.Entity:GetClass() == "sa_roid"
 end
 
-function ENT:DrawLaserDef(color, width)
-	local width2 = width / 2
-	local ang = self:GetAngles()
-	local up = ang:Up()
-	local right = ang:Right()
-	local fow = ang:Forward()
-	local start = self:GetPos() + (up * self:OBBMaxs().z)
-	local trace = util.TraceLine({start = start, endpos = start + (up * self.BeamLength), filter = { self }})
+function ENT:CalcColor(level)
+	return Color(255, 255 - math.floor(level * 0.85), 0)
+end
 
-	local End = trace.HitPos
+function ENT:Draw()
+	BaseClass.Draw(self)
+
+	if not self.hitPos then
+		return
+	end
+
+	local color = self.LaserColor
+	local width = self.LaserWidth
+	local width2 = width / 2
+	local up = self:GetUp()
+	local right = self:GetRight()
+	local fow = self:GetForward()
+
+	local endPos = self.hitPos
+	local start = self.hitStart
 
 	render.SetMaterial(mat)
-	render.DrawBeam(start, End, width, 0, width * 4, color)
+	render.DrawBeam(start, endPos, width, 0, width * 4, color)
 
 	render.SetMaterial(sprite)
 	render.DrawSprite(start, width2, width2, color)
 
-	if (SA.ValidEntity(trace.Entity) and trace.Entity:GetClass() == "sa_roid") then
-		render.DrawSprite(End, width2, width2, color)
+	if self.hitIs then
+		render.DrawSprite(endPos, width2, width2, color)
 
-		local len = start:Distance(End) / 19
+		local len = start:Distance(endPos) / 19
 
 		local T = RealTime()
 

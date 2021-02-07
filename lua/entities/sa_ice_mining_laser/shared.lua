@@ -14,21 +14,21 @@ list.Set("LSEntOverlayText" , "sa_ice_mining_laser", {HasOOO = true, num = 1, st
 ENT.IsRanked = true
 ENT.RankedVars = {
 	{
-		LaserRange = 1000,
+		BeamLength = 1000,
 		LaserExtract = 1000 * 2,
 		LaserConsume = 2400 * 2,
 		LaserCycle = 60,
 		IceLaserModMin = 0,
 	},
 	{
-		LaserRange = 1200,
+		BeamLength = 1200,
 		LaserExtract = 1000 * 2,
 		LaserConsume = 5625 * 2,
 		LaserCycle = 45,
 		IceLaserModMin = 1,
 	},
 	{
-		LaserRange = 1500,
+		BeamLength = 1500,
 		LaserExtract = 1000 * 2,
 		LaserConsume = 7245 * 2,
 		LaserCycle = 30,

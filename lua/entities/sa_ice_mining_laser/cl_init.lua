@@ -26,35 +26,34 @@ local hitspotMat = CreateMaterial("sc_blue_ball01", "UnLitGeneric", {
 	["$vertexcolor"] = 1
 })
 
+function ENT:Think()
+	BaseClass.Think(self)
+	local tr = SA.LaserTraceCalc(self)
+	self.hitIs = tr and tr.Hit
+end
+
 local col = Color(255, 0, 0, 255)
 function ENT:Draw()
 	BaseClass.Draw(self)
 
-	if not self.LaserRange then
+	if not self.hitPos then
 		return
 	end
 
-	if not self:GetNWBool("o") then
+	local hitPos = self.hitPos
+	local start = self.hitStart
+	local rt = RealTime() * 2
+
+	render.SetMaterial(laserMat)
+	render.DrawBeam(start, hitPos, 32, rt, rt + 0.002, col)
+
+	render.SetMaterial(beginspotMat)
+	render.DrawSprite(start, 64, 64, col)
+
+	if not self.hitIs then
 		return
 	end
 
-	local pos = self:GetPos()
-	local up = self:GetUp()
-	local Trace = util.QuickTrace(pos, up * self.LaserRange, self)
-	if (Trace.Hit) then
-		local Start = pos + up * 24
-		local HitPos = Trace.HitPos
-		local rt = RealTime() * 2
-
-		self:SetRenderBoundsWS(pos, HitPos)
-
-		render.SetMaterial(laserMat)
-		render.DrawBeam(Start, HitPos, 32, rt, rt + 0.002, col)
-
-		render.SetMaterial(beginspotMat)
-		render.DrawSprite(Start, 64, 64, col)
-
-		render.SetMaterial(hitspotMat)
-		render.DrawSprite(HitPos, 64, 64, col)
-	end
+	render.SetMaterial(hitspotMat)
+	render.DrawSprite(hitPos, 64, 64, col)
 end
