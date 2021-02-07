@@ -7,10 +7,10 @@ TOOL.ConfigName = ""
 if (CLIENT) then
 	language.Add("tool.contraption_analyzer.name", "Contraption Analyzer")
 	language.Add("tool.contraption_analyzer.desc", "Tells you about freezing/parenting status of props")
-	language.Add("tool.contraption_analyzer.0", "Left Click: Analyze Contraption. Right Click: Detailed Analyze Contraption.")
+	language.Add("tool.contraption_analyzer.0", "Left Click: Analyze Contraption. Right Click: Detailed Analyze Contraption. Reload: Analyze all people's stuff")
 end
 
-local function RunToolBase(tool, tr, categorizer)
+local function RunToolBase(tool, tr, categorizer, finder)
 	if CLIENT then
 		return
 	end
@@ -21,7 +21,12 @@ local function RunToolBase(tool, tr, categorizer)
 		return false
 	end
 
-	local entities = constraint.GetAllConstrainedEntities(tr.Entity)
+	local entities
+	if not finder then
+		entities = constraint.GetAllConstrainedEntities(tr.Entity)
+	else
+		entities = finder(tr)
+	end
 
 	local result = {}
 	for _, ent in pairs(entities) do
@@ -60,6 +65,8 @@ local function RunToolBase(tool, tr, categorizer)
 	for cat, num in pairs(result) do
 		owner:ChatPrint("[" .. cat .. "] " .. num.numFree .. " free; " .. num.numFrozen .. " just frozen; " .. num.numParented .. " just parented; " .. num.numFrozenAndParented .. " frozen and parented")
 	end
+
+	return true
 end
 
 local function categorizerGlobal()
@@ -70,16 +77,37 @@ local function categorizerClass(ent)
 	return ent:GetClass()
 end
 
-function TOOL:LeftClick(tr)
-	local res = RunToolBase(self, tr, categorizerGlobal)
-	if not res then
-		return res
+local function categorizerOwner(ent)
+	local owner, ownerId = ent:CPPIGetOwner()
+	if not ownerId then
+		return "World"
 	end
+	if not IsValid(owner) then
+		return "Disconnected"
+	end
+	return owner:GetName()
+end
+
+local function finderAll()
+	return ents.GetAll()
+end
+
+function TOOL:LeftClick(tr)
+	return RunToolBase(self, tr, categorizerGlobal)
 end
 
 function TOOL:RightClick(tr)
-	local res = RunToolBase(self, tr, categorizerClass)
-	if not res then
-		return res
+	return RunToolBase(self, tr, categorizerClass)
+end
+
+function TOOL:Reload(tr)
+	local owner = self:GetOwner()
+	if not IsValid(owner) then
+		return false
 	end
+	if not owner:IsAdmin() then
+		owner:ChatPrint("Admin only feature")
+		return false
+	end
+	return RunToolBase(self, tr, categorizerOwner, finderAll)
 end
