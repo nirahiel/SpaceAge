@@ -34,7 +34,7 @@ end
 
 e2function void playTTSOwner(string text)
 	local owner = self.player
-	if IsValid(owner)
+	if IsValid(owner) then
 		doTTS(owner:GetPos(), owner, text)
 	end
 end
