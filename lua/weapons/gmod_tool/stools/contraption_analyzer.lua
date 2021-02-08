@@ -16,13 +16,13 @@ local function RunToolBase(tool, tr, categorizer, finder)
 	end
 
 	local owner = tool:GetOwner()
-	if not IsValid(tr.Entity) then
-		owner:ChatPrint("Please point me at something...")
-		return false
-	end
 
 	local entities
 	if not finder then
+		if not IsValid(tr.Entity) then
+			owner:ChatPrint("Please point me at something...")
+			return false
+		end
 		entities = constraint.GetAllConstrainedEntities(tr.Entity)
 	else
 		entities = finder(tr)
