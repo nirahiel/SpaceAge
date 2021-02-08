@@ -1,6 +1,6 @@
 ENT.Type = "anim"
 ENT.Base = "base_gmodentity"
-ENT.PrintName = "SA Crystal Tower"
+ENT.PrintName = "Tiberium Crystal Tower"
 ENT.Author = "Doridian"
 ENT.Contact = ""
 ENT.Purpose = ""
