@@ -30,6 +30,11 @@ local function RunToolBase(tool, tr, categorizer, finder)
 
 	local result = {}
 	for _, ent in pairs(entities) do
+		local cat = categorizer(ent)
+		if not cat then
+			continue
+		end
+
 		local frozen = true
 		local phys = ent:GetPhysicsObject()
 		if IsValid(phys) then
@@ -37,7 +42,6 @@ local function RunToolBase(tool, tr, categorizer, finder)
 		end
 		local parented = IsValid(ent:GetParent())
 
-		local cat = categorizer(ent)
 
 		local num = result[cat]
 		if not num then
@@ -80,10 +84,10 @@ end
 local function categorizerOwner(ent)
 	local owner, ownerId = ent:CPPIGetOwner()
 	if not ownerId then
-		return "World"
+		return nil
 	end
 	if not IsValid(owner) then
-		return "Disconnected"
+		return "Disconnected (" .. tostring(ownerId) .. ")"
 	end
 	return owner:GetName()
 end
