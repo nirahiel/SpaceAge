@@ -92,7 +92,9 @@ local function requeueRequest(request)
 	print("Requeueing ", newRequest.http.url, newRequest.http.method, " for ", timing, " seconds after ", failureCount, " failures")
 
 	timer.Simple(timing, function()
-		table.insert(requestQueue, newRequest)
+		if not request.options.oneshot then
+			table.insert(requestQueue, newRequest)
+		end
 		processNextRequest()
 	end)
 end
@@ -236,6 +238,7 @@ local function MakeFactionResIDURL(faction, res, id)
 end
 
 local OPTIONS_NOAUTH = { noauth = true }
+local OPTIONS_ONESHOT = { oneshot = true }
 
 -- Basic LIST calls (scoreboard style)
 function SA.API.ListPlayers(callback)
@@ -314,7 +317,7 @@ if SERVER then
 			players = player.GetCount(),
 			maxplayers = game.MaxPlayers(),
 			map = game.GetMap(),
-		}, callback)
+		}, nil, OPTIONS_ONESHOT)
 	end
 	timer.Create("SA_API_Pingback", 5, 0, SA_API_Pingback)
 end
