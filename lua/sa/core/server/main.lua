@@ -215,10 +215,11 @@ local function SA_SaveAllUsers()
 			SA.SaveUser(v)
 		end
 		SA.Planets.Save()
+		SA.API.Pingback()
 	end
 end
 timer.Create("SA_Autosave", 60, 0, SA_SaveAllUsers)
-concommand.Add("sa_save_players", function(ply) if not ply or ply:IsAdmin() then SA_SaveAllUsers() end end)
+concommand.Add("sa_save_players", function(ply) if not IsValid(ply) or ply:IsAdmin() then SA_SaveAllUsers() end end)
 
 local function SA_Autospawner(ply)
 	if not autoSpanwerEnabled:GetBool() then
