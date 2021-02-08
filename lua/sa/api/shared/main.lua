@@ -309,13 +309,14 @@ if SERVER then
 
 	concommand.Add("sa_api_player_maketoken", SA_API_MakePlayerTokenCMD)
 
-	function SA.API.Pingback(callback)
+	local function SA_API_Pingback()
 		return SA.API.Put("/servers/self", {
 			players = player.GetCount(),
 			maxplayers = game.MaxPlayers(),
 			map = game.GetMap(),
 		}, callback)
 	end
+	timer.Create("SA_API_Pingback", 5, 0, SA_API_Pingback)
 end
 
 if CLIENT then

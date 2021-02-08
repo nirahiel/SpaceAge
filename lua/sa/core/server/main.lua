@@ -215,7 +215,6 @@ local function SA_SaveAllUsers()
 			SA.SaveUser(v)
 		end
 		SA.Planets.Save()
-		SA.API.Pingback()
 	end
 end
 timer.Create("SA_Autosave", 60, 0, SA_SaveAllUsers)
