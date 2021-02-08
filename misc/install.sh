@@ -11,6 +11,7 @@ git clone https://github.com/SpaceAgeMP/smartsnap
 git clone https://github.com/wiremod/wire-extras
 git clone https://github.com/TomyLobo/lua_reloadent.git
 git clone https://github.com/SpaceAgeMP/multi-parent.git
+git clone https://github.com/SpaceAgeMP/physgun-build-mode.git
 
 ln -s ../../Joystick-Module/addons/Joystick joystick
 
