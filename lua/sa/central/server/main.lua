@@ -1,11 +1,14 @@
-SA.REQUIRE("api.main")
+SA.REQUIRE("api")
 
 require("gwsockets")
 
-SA.API.Central = {}
+SA.Central = {}
 
 local socket
+
 local centralIdent = "UNK"
+local ourIdent = "UNK"
+
 local idCallbacks = {}
 local cmdCallbacks = {}
 
@@ -40,6 +43,10 @@ local function ReplyToMessage(msg, data)
 end
 
 local function HandleCentralMessage(msg)
+	if msg.ident == ourIdent then
+		return
+	end
+
 	if msg.command == "ping" then
 		ReplyToMessage(msg)
 		return
@@ -49,7 +56,7 @@ local function HandleCentralMessage(msg)
 
 	if msg.command == "error" then
 		if callback then
-			callback(false, msg.data)
+			callback(false, msg.data, msg.ident)
 			idCallbacks[msg.id] = nil
 		else
 			print("Got error", msg.id, msg.data)
@@ -59,7 +66,7 @@ local function HandleCentralMessage(msg)
 
 	if msg.command == "reply" then
 		if callback then
-			callback(true, msg.data)
+			callback(true, msg.data, msg.ident)
 			idCallbacks[msg.id] = nil
 		end
 		return
@@ -67,7 +74,7 @@ local function HandleCentralMessage(msg)
 
 	local handler = cmdCallbacks[msg.command]
 	if handler then
-		handler(msg.data, function(reply)
+		handler(msg.data, msg.ident, function(reply)
 			ReplyToMessage(msg, reply)
 		end)
 	end
@@ -115,27 +122,28 @@ end
 
 TimerConnectCentral()
 
-timer.Create("SA_API_Central_Ping", 5, 0, function()
-	SA.API.Central.SendToCentral("ping")
-end)
-
-function SA.API.Central.SendTo(target, command, data, callback)
+function SA.Central.SendTo(target, command, data, callback)
 	SendCommand(command, target, data, callback)
 end
 
-function SA.API.Central.SendToCentral(command, data, callback)
+function SA.Central.SendToCentral(command, data, callback)
 	SendCommand(command, centralIdent, data, callback)
 end
 
-function SA.API.Central.Broadcast(command, data)
+function SA.Central.Broadcast(command, data)
 	SendCommand(command, nil, data)
 end
 
-function SA.API.Central.Handle(command, callback)
+function SA.Central.Handle(command, callback)
 	cmdCallbacks[command] = callback
 end
 
-SA.API.Central.Handle("welcome", function(data)
-	centralIdent = data
-	print("[Central] is", data)
+SA.Central.Handle("welcome", function(data, from)
+	centralIdent = from
+	ourIdent = data
+	print("[Central] Central is", centralIdent, "; we are ", ourIdent)
+end)
+
+timer.Create("SA_Central_Ping", 5, 0, function()
+	SA.Central.SendToCentral("ping")
 end)
