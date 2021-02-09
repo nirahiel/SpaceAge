@@ -8,6 +8,8 @@ local SPHERE_MODEL_SIZE = 12.0
 
 local screenW, screenH, screenFOV
 local drawTeleporterUI = false
+local serverDisplayName = "N/A"
+local teleporterEntity
 local drawnPlanets = {}
 local drawAngle = Angle(0,0,0)
 local drawLastTime
@@ -30,7 +32,32 @@ local function MakePlanetModel(planetData)
 	return mdl
 end
 
+local function ChangeServer(srv)
+	if not teleporterEntity then
+		return
+	end
+	SA.Teleporter.Reload(teleporterEntity, srv)
+end
+
 function SA.Teleporter.Open(ent)
+	local srv = SA.API.GetServerByName(SA.API.GetServerName())
+	if not srv then
+		srv = {
+			name = "Local",
+			map = game.GetMap(),
+			location = "N/A"
+		}
+	end
+	SA.Teleporter.Reload(ent, srv)
+	SA.API.RefreshServerList()
+end
+
+function SA.Teleporter.Reload(ent, server)
+	SA.Teleporter.Close(true)
+	teleporterEntity = ent
+
+	serverDisplayName = server.name .. " (" .. server.location .. ") [" .. server.map .. "]"
+
 	screenW = ScrW()
 	screenH = ScrH()
 	screenFOV = 75
@@ -38,7 +65,7 @@ function SA.Teleporter.Open(ent)
 
 	drawnPlanets = {}
 
-	local data = SA.Teleporter.GetMapData()
+	local data = SA.Teleporter.GetMapData(server.map)
 	local planets = data.planets
 
 	local myPlanet = SA.SB.FindClosestPlanet(ent:GetPos(), false).name
@@ -149,6 +176,7 @@ function SA.Teleporter.Close(dontNotifyServer)
 
 	if not drawTeleporterUI then return end
 
+	teleporterEntity = nil
 	drawTeleporterUI = false
 	for _, planetData in pairs(drawnPlanets) do
 		if planetData.model then
@@ -161,6 +189,26 @@ function SA.Teleporter.Close(dontNotifyServer)
 end
 
 local dragStartAngle, dragStartX, dragStartY
+
+local function DrawRoundedTextBox(color, x, y, w, h, text)
+	local bw = w + 10
+	local bh = h + 10
+	local bx = x - 5
+	local by = y - 5
+
+	draw.RoundedBox(8, bx, by, bw, bh, Color(0, 0, 0, 128))
+
+	surface.SetTextColor(color.r, color.g, color.b)
+	surface.SetTextPos(x, y)
+	surface.DrawText(text)
+
+	return {
+		x1 = bx,
+		x2 = bx + bw,
+		y1 = by,
+		y2 = by + bh,
+	}
+end
 
 local function DrawTeleporterUI()
 	if not drawTeleporterUI then return end
@@ -287,24 +335,11 @@ local function DrawTeleporterUI()
 		local x = planetData.textCenterPos.x - (w / 2)
 		local y = planetData.textCenterPos.y + 10
 
-		local bw = w + 10
-		local bh = h + 10
-		local bx = x - 5
-		local by = y - 5
-
-		planetData.textBoxPos = {
-			x1 = bx,
-			x2 = bx + bw,
-			y1 = by,
-			y2 = by + bh,
-		}
-
-		draw.RoundedBox(8, bx, by, bw, bh, Color(0,0,0,128))
-
-		surface.SetTextColor(planetData.drawColor.r, planetData.drawColor.g, planetData.drawColor.b)
-		surface.SetTextPos(x, y)
-		surface.DrawText(planetData.label)
+		planetData.textBoxPos = DrawRoundedTextBox(planetData.drawColor, x, y, w, h, planetData.label)
 	end
+
+	local w, h = surface.GetTextSize(serverDisplayName)
+	DrawRoundedTextBox(Color(0,0,255,128), (screenW - w) / 2, 120, w, h, serverDisplayName)
 
 	if input.IsMouseDown(MOUSE_LEFT) then
 		if planetMouseOver and planetMouseOver.canTeleportTo then

@@ -152,6 +152,7 @@ end
 SA.Central.Handle("welcome", function(data, from)
 	centralIdent = from
 	ourIdent = data
+	SA.API.SetOwnName(ourIdent)
 	print("[Central] Central is", centralIdent, "; we are ", ourIdent)
 end)
 

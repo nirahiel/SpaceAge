@@ -295,6 +295,14 @@ function SA.API.AcceptFactionApplication(faction, steamid, callback)
 	return SA.API.Post(MakeFactionResIDURL(faction, "applications", steamid) .. "/accept", {}, callback)
 end
 
+-- SERVER functions
+function SA.API.ListServers(callback)
+	return SA.API.Get("/servers", callback, OPTIONS_NOAUTH)
+end
+
+function SA.API.GetServerName()
+	return GetGlobalString("sa_server_name")
+end
 
 -- Player auth handling
 if SERVER then
@@ -319,7 +327,12 @@ if SERVER then
 			players = player.GetCount(),
 			maxplayers = game.MaxPlayers(),
 			map = game.GetMap(),
-		}, nil, OPTIONS_ONESHOT)
+		}, function (data)
+			if not data then
+				return
+			end
+			SA.API.SetOwnName(data.name)
+		end, OPTIONS_ONESHOT)
 	end
 	timer.Create("SA_API_Pingback", 5, 0, SA_API_Pingback)
 end
