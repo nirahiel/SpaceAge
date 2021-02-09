@@ -21,6 +21,8 @@ local function PlayerChat(server, teamChat, name, color, alive, text)
 	local isMe = text:sub(1,4) == "/me "
 	if isMe then
 		text = " " .. text:sub(5)
+		table.insert(tab, color_white)
+		table.insert(tab, "* ")
 	else
 		text = ": " .. text
 	end
