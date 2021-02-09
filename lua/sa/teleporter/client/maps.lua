@@ -79,3 +79,45 @@ DefineMap("sb_gooniverse_v4", { planets = {
 		position = Vector(1536,7680,-10240),
 	},
 }})
+
+DefineMap("sb_wuwgalaxy_fix", { planets = {
+	["Magmite"] = {
+		radius = 3072,
+		position = Vector(-6274,-2767,9846),
+	},
+	["Spawn"] = {
+		radius = 1300,
+		position = Vector(-80,-335,16313.5),
+	},
+	["Shakuras"] = {
+		radius = 5120,
+		teleporterName = "Forlorn",
+		position = Vector(9758,-7744,-10112),
+	},
+	["Asteroid Base"] = {
+		radius = 3000,
+		teleporterName = "Asteroid",
+		position = Vector(-8590,-9865,-11666),
+	},
+	["Kobol"] = {
+		radius = 4032,
+		position = Vector(-9180.09375,9216.78125,-1198),
+	},
+	["Space Station"] = {
+		radius = 2500,
+		teleporterName = "Terminal station",
+		position = Vector(8420,5365,7122),
+	},
+	["Planet 5"] = {
+		radius = 3008,
+		position = Vector(1536,7680,-10240),
+	},
+	["Vimana"] = {
+		radius = 3122,
+		position = Vector(-8824,-9144,204),
+	},
+	["Shoosh"] = {
+		radius = 2048,
+		position = Vector(12151,12362,12425),
+	},
+}})
