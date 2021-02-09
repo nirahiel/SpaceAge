@@ -9,12 +9,16 @@ local JWT_IN_RENEWAL = true
 
 local MakeUserAgent
 
-local function CommonUserAgent(side, id)
+local function GetIPPortAndOk()
 	local ip = game.GetIPAddress()
-	local ipOk = true
 	if ip:find("0.0.0.0", 1, true) then
-		ipOk = false
+		return false, ip
 	end
+	return true, ip
+end
+
+local function CommonUserAgent(side, id)
+	local ipOk, ip = GetIPPortAndOk()
 	return "SpaceAge/GMod-" .. side .. " " .. ip .. " " .. id, ipOk
 end
 
@@ -323,10 +327,15 @@ if SERVER then
 	concommand.Add("sa_api_player_maketoken", SA_API_MakePlayerTokenCMD)
 
 	local function SA_API_Pingback()
+		local ipport, ok = GetIPPortAndOk()
+		if not ok then
+			ipport = nil
+		end
 		return SA.API.Put("/servers/self", {
 			players = player.GetCount(),
 			maxplayers = game.MaxPlayers(),
 			map = game.GetMap(),
+			ipport = ipport,
 		}, function (data)
 			if not data then
 				return
