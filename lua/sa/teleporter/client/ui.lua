@@ -409,6 +409,13 @@ local function DrawTeleporterUI()
 end
 hook.Add("HUDPaint", "SA_HUDPaint_TeleporterUI", DrawTeleporterUI)
 
+hook.Add("InitPostEntity", "SA_Teleporter_ResetPW", function()
+	local password = GetConVar("password"):GetString()
+	if password and password:sub(1, 6) == "SA_TP " then
+		RunConsoleCommand("password", "")
+	end
+end)
+
 net.Receive("SA_Teleporter_Open", function()
 	SA.Teleporter.Open(net.ReadEntity())
 end)

@@ -19,7 +19,6 @@ function SA.Teleporter.TriggerOnJoin(ply)
 	if loc and loc ~= "" then
 		print("Join teleport", ply, loc)
 		SA.Teleporter.GoTo(ply, loc)
-		ply:ConCommand("password \"\"")
 		return true
 	end
 	return false
