@@ -163,7 +163,6 @@ hook.Add("PlayerAuthed", "SA_LoadPlayer", SA_InitSpawn)
 local function SA_PlayerFullLoad(ply)
 	ply.MayBePoked = true
 	SA.SendBasicInfo(ply)
-	ply:ChatPrint("Spawn limitations disengaged. Happy travels.")
 end
 hook.Add("PlayerFullLoad", "SA_LoadPlayerSendData", SA_PlayerFullLoad)
 
