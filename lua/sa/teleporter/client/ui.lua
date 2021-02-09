@@ -1,6 +1,5 @@
-if SA.Teleporter then SA.Teleporter.Close() end
-
-SA.Teleporter = {}
+SA.REQUIRE("teleporter.main")
+SA.REQUIRE("teleporter.maps")
 
 local FONT = "Trebuchet24"
 local SPHERE_MODEL = "models/holograms/hq_icosphere.mdl"
@@ -39,20 +38,10 @@ function SA.Teleporter.Open(ent)
 
 	drawnPlanets = {}
 
-	local otherLocations = {}
-	local planetTeleporters = {}
-	local planets = table.Copy(SA.SB.GetPlanets())
+	local data = SA.Teleporter.GetMapData()
+	local planets = data.planets
 
 	local myPlanet = SA.SB.FindClosestPlanet(ent:GetPos(), false).name
-
-	for _, otherEnt in pairs(ents.FindByClass("sa_teleport_panel")) do
-		local otherName = otherEnt:GetNWString("TeleKey")
-		if not otherLocations[otherName] then
-			local otherPlanet = SA.SB.FindClosestPlanet(otherEnt:GetPos(), false).name
-			otherLocations[otherName] = otherPlanet
-			planetTeleporters[otherPlanet] = otherName
-		end
-	end
 
 	--[[
 	local stars = SA.SB.GetStars()
@@ -102,22 +91,18 @@ function SA.Teleporter.Open(ent)
 
 	local offset = ((maxPlanetCoord + minPlanetCoord) / 2) * scaleFactor
 
-	for _, planet in pairs(planets) do
-		if IsValid(planet.ent) and planet.ent:GetColor() == Color(255,0,0,255) then
-			continue
-		end
-
+	for name, planet in pairs(planets) do
 		local size = planet.radius * 2.0 * scaleFactor
 
-		local curModelPlanet = drawnPlanets[planet.name]
+		local curModelPlanet = drawnPlanets[name]
 
 		if curModelPlanet and curModelPlanet.size >= size then
 			continue
 		end
 
-		local teleporterName = planetTeleporters[planet.name]
+		local teleporterName = planet.teleporterName
 
-		local isMyPlanet = planet.name == myPlanet
+		local isMyPlanet = name == myPlanet
 
 		local planetColor = Color(255,0,0,64)
 		if planet.isStar then
@@ -131,7 +116,7 @@ function SA.Teleporter.Open(ent)
 		local position = (planet.position * scaleFactor) - offset
 		local r = size / 2.0
 
-		local label = planet.name
+		local label = name
 		if teleporterName then
 			label = label .. " (" .. teleporterName .. ")"
 		end
@@ -143,14 +128,14 @@ function SA.Teleporter.Open(ent)
 			r = r,
 			r2 = r * r,
 
-			name = planet.name,
+			name = name,
 			teleporterName = teleporterName,
 			canTeleportTo = teleporterName and not isMyPlanet,
 			label = label,
 
 			color = planetColor,
 		}
-		drawnPlanets[planet.name] = planetData
+		drawnPlanets[name] = planetData
 	end
 
 	drawTeleporterUI = true
