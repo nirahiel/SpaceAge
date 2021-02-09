@@ -141,6 +141,14 @@ function SA.Central.Handle(command, callback)
 	cmdCallbacks[command] = callback
 end
 
+function SA.Central.GetOurIdent()
+	return ourIdent
+end
+
+function SA.Central.GetCentralIdent()
+	return centralIdent
+end
+
 SA.Central.Handle("welcome", function(data, from)
 	centralIdent = from
 	ourIdent = data

@@ -1,10 +1,10 @@
-SA.REQUIRE("central.types")
+SA.REQUIRE("central.enums")
 
 local function PlayerChat(server, teamChat, name, color, alive, text)
 	local tab = {}
 
 	if server ~= "" then
-		table.insert(tab, Color(30, 160, 40))
+		table.insert(tab, SA.Central.COLOR_NOTIFY_SEVERNAME)
 		table.insert(tab, "[" .. server .. "] ")
 	end
 
@@ -66,7 +66,7 @@ net.Receive("SA_Central_ChatRaw", function()
 	local elements = net.ReadUInt(32)
 
 	if server ~= "" then
-		table.insert(tab, Color(30, 160, 40))
+		table.insert(tab, SA.Central.COLOR_NOTIFY_SEVERNAME)
 		table.insert(tab, "[" .. server .. "] ")
 	end
 

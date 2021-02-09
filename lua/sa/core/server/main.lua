@@ -108,7 +108,6 @@ local function LoadRes(ply, body, code)
 		SA_AddSAData(ply)
 		ply.sa_data.faction_name = "freelancer"
 		ply.sa_data.loaded = true
-		ply:ChatPrint("You have not been found in the database, an account has been created for you.")
 		SA.Terminal.SetupStorage(ply)
 		ply:AssignFaction()
 		SA.SaveUser(ply)
@@ -117,7 +116,6 @@ local function LoadRes(ply, body, code)
 		SA_AddSAData(ply)
 		ply.sa_data.loaded = true
 		SA.Terminal.SetupStorage(ply)
-		ply:ChatPrint("Your account has been loaded, welcome on duty.")
 		ply:AssignFaction()
 	end
 

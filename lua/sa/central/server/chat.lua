@@ -1,41 +1,15 @@
 SA.REQUIRE("central.main")
-SA.REQUIRE("central.types")
-
-local function WriteMessageElement(ele)
-	if not ele or not ele.type then
-		net.WriteUInt(SA.Central.TYPE_NIL, 8)
-		return
-	end
-
-	net.WriteUInt(ele.type, 8)
-	if ele.type == SA.Central.TYPE_NIL then
-		return
-	end
-
-	if ele.type == SA.Central.TYPE_TEXT then
-		net.WriteString(ele.text)
-		return
-	end
-
-	if ele.type == SA.Central.TYPE_COLOR then
-		net.WriteColor(Color(ele.r, ele.g, ele.b, ele.a))
-		return
-	end
-
-	if ele.type == SA.Central.TYPE_PLAYER then
-		net.WriteString(ele.name)
-		net.WriteUInt(ele.team, 8)
-		net.WriteBool(ele.alive)
-		net.WriteColor(Color(ele.color.r, ele.color.g, ele.color.b, ele.color.a))
-		return
-	end
-end
+SA.REQUIRE("central.enums")
 
 local function TranslateObjectToCentral(element)
 	if not element then
 		return {
 			type = Sa.Central.TYPE_NIL,
 		}
+	end
+
+	if element.type then
+		return element
 	end
 
 	if element.IsPlayer and element:IsPlayer() then
@@ -62,6 +36,40 @@ local function TranslateObjectToCentral(element)
 		type = SA.Central.TYPE_TEXT,
 		text = tostring(element),
 	}
+end
+
+local function WriteMessageElement(ele)
+	if not ele then
+		net.WriteUInt(SA.Central.TYPE_NIL, 8)
+		return
+	end
+
+	if not ele.type then
+		ele = TranslateObjectToCentral(ele)
+	end
+
+	net.WriteUInt(ele.type, 8)
+	if ele.type == SA.Central.TYPE_NIL then
+		return
+	end
+
+	if ele.type == SA.Central.TYPE_TEXT then
+		net.WriteString(ele.text)
+		return
+	end
+
+	if ele.type == SA.Central.TYPE_COLOR then
+		net.WriteColor(Color(ele.r, ele.g, ele.b, ele.a))
+		return
+	end
+
+	if ele.type == SA.Central.TYPE_PLAYER then
+		net.WriteString(ele.name)
+		net.WriteUInt(ele.team, 8)
+		net.WriteBool(ele.alive)
+		net.WriteColor(Color(ele.color.r, ele.color.g, ele.color.b, ele.color.a))
+		return
+	end
 end
 
 hook.Add("PlayerSay", "SA_Central_PlayerSay", function (ply, text, teamChat)
@@ -103,7 +111,7 @@ SA.Central.Handle("chat", function(data, ident)
 end)
 
 local function HandleChatRaw(data, ident)
-	local msg = data.message
+	local msg = data.message or data
 	net.Start("SA_Central_ChatRaw")
 		net.WriteString(ident)
 		net.WriteUInt(#msg, 32)
@@ -113,6 +121,24 @@ local function HandleChatRaw(data, ident)
 	net.Broadcast()
 end
 SA.Central.Handle("chatraw", HandleChatRaw)
+
+function SA.Central.LocalChatRaw(...)
+	HandleCentralMessage({...}, "")
+end
+
+SA.Central.Handle("serverjoin", function(data, ident)
+	if data == SA.Central.GetOurIdent() then
+		return
+	end
+	HandleChatRaw({SA.Central.COLOR_NOTIFY_BLUE, "Server came online"}, data)
+end)
+
+SA.Central.Handle("serverleave", function(data, ident)
+	if data == SA.Central.GetOurIdent() then
+		return
+	end
+	HandleChatRaw({SA.Central.COLOR_NOTIFY_BLUE, "Server went offline"}, data)
+end)
 
 function SA.Central.SendChatRaw(...)
 	local out = {
