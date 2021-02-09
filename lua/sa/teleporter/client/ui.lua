@@ -56,6 +56,7 @@ function SA.Teleporter.Reload(ent, server)
 	local serverData = SA.API.GetServerByName(serverName)
 	if not serverData then
 		serverData = {
+			isself = true,
 			map = game.GetMap(),
 		}
 	end
@@ -133,7 +134,7 @@ function SA.Teleporter.Reload(ent, server)
 
 		local teleporterName = planet.teleporterName
 
-		local isMyPlanet = name == myPlanet
+		local isMyPlanet = name == myPlanet and serverData.isself
 
 		local planetColor = Color(255,0,0,64)
 		if planet.isStar then

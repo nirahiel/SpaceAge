@@ -39,6 +39,7 @@ function SA.API.RefreshServerList(cb)
 				table.insert(serverIndexedList, selfServer)
 			end
 
+			selfServer.isself = true
 			selfServer.map = game.GetMap()
 			selfServer.ipport = game.GetIPAddress()
 			selfServer.online = true
