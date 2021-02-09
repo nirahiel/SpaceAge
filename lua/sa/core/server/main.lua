@@ -135,11 +135,11 @@ local function LoadRes(ply, body, code)
 		ply:Spawn()
 	end
 
-	SA.Central.SendChatRaw(ply, SA.Central.COLOR_NOTIFY, " joined the server")
-
 	if ply.MayBePoked then
 		SA.SendBasicInfo(ply)
 	end
+
+	SA.Central.SendChatRaw(ply, SA.Central.COLOR_NOTIFY_YELLOW, " joined the server")
 end
 
 local function SA_InitSpawn(ply)
@@ -210,7 +210,7 @@ end
 
 local function DisconnectedUser(ply)
 	SA.SaveUser(ply)
-	SA.Central.SendChatRaw(ply, SA.Central.COLOR_NOTIFY, " left the server")
+	SA.Central.SendChatRaw(ply, SA.Central.COLOR_NOTIFY_YELLOW, " left the server")
 end
 hook.Add("PlayerDisconnected", "SA_Save_Disconnect", DisconnectedUser)
 
