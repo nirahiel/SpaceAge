@@ -130,16 +130,18 @@ local function successRequest(request)
 	timer.Simple(0, processNextRequest)
 end
 
-setRequestParams = function(request)
+function SA.API.GetHTTPHeaders(noauth)
 	local headers = {}
-	local callback = request.callback
-
-	if not request.options.noauth then
+	if not noauth then
 		headers.Authorization = apiConfig.auth
 	end
 	headers["Client-ID"] = clientID or "N/A"
+	return headers
+end
 
-	request.http.headers = headers
+setRequestParams = function(request)
+	local callback = request.callback
+	request.http.headers = SA.API.GetHTTPHeaders(request.options.noauth)
 
 	request.http.failure = function(err)
 		print("Request ", request.http.url, request.http.method, " failed with error ", err)
