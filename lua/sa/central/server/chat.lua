@@ -103,10 +103,11 @@ SA.Central.Handle("chat", function(data, ident)
 end)
 
 local function HandleChatRaw(data, ident)
+	local msg = data.message
 	net.Start("SA_Central_ChatRaw")
 		net.WriteString(ident)
-		net.WriteUInt(#data, 32)
-		for _, v in pairs(data) do
+		net.WriteUInt(#msg, 32)
+		for _, v in pairs(msg) do
 			WriteMessageElement(v)
 		end
 	net.Broadcast()

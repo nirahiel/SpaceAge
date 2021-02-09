@@ -135,6 +135,8 @@ local function LoadRes(ply, body, code)
 		ply:Spawn()
 	end
 
+	SA.Central.SendChatRaw(ply, color_white, " joined the server")
+
 	if ply.MayBePoked then
 		SA.SendBasicInfo(ply)
 	end
@@ -205,7 +207,12 @@ function SA.SaveUser(ply, cb)
 	SA.API.UpsertPlayer(ply, cb)
 	return true
 end
-hook.Add("PlayerDisconnected", "SA_Save_Disconnect", SA.SaveUser)
+
+local function DisconnectedUser(ply)
+	SA.SaveUser(ply)
+	SA.Central.SendChatRaw(ply, color_white, " left the server")
+end
+hook.Add("PlayerDisconnected", "SA_Save_Disconnect", DisconnectedUser)
 
 local function SA_SaveAllUsers()
 	local autoSaveTime = autoSaveTimeCVar:GetInt()
