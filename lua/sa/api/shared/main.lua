@@ -331,7 +331,7 @@ if SERVER then
 			if not data then
 				return
 			end
-			SA.API.SetOwnName(data.name)
+			SA.API.SetOwnInfo(data)
 		end, OPTIONS_ONESHOT)
 	end
 	timer.Create("SA_API_Pingback", 5, 0, SA_API_Pingback)
