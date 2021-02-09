@@ -327,8 +327,8 @@ if SERVER then
 	concommand.Add("sa_api_player_maketoken", SA_API_MakePlayerTokenCMD)
 
 	local function SA_API_Pingback()
-		local ipport, ok = GetIPPortAndOk()
-		if not ok then
+		local ipportOk, ipport = GetIPPortAndOk()
+		if not ipportOk then
 			ipport = nil
 		end
 		return SA.API.Put("/servers/self", {
