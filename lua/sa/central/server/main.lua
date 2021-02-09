@@ -135,6 +135,9 @@ function SA.Central.Broadcast(command, data)
 end
 
 function SA.Central.Handle(command, callback)
+	if cmdCallbacks[command] then
+		print("[Central] WARNING: Overwriting old handler for " .. command)
+	end
 	cmdCallbacks[command] = callback
 end
 
