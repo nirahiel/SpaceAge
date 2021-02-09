@@ -11,6 +11,7 @@ function SA.Teleporter.GoTo(ply, key)
 
 	local pos = table.Random(TeleTBL)
 	ply:SetPos(pos)
+	return pos
 end
 
 local function InitSATeleporters()
@@ -58,8 +59,7 @@ concommand.Add("sa_teleporter_do", function(ply, cmd, args)
 	if teleporter.TeleKey == TeleKey then ply:ChatPrint("CANT TELEPORT SAME") return end
 
 	local oldPos = ply:GetPos()
-
-	SA.Teleporter.GoTo(ply, TeleKey)
+	local pos = SA.Teleporter.GoTo(ply, TeleKey)
 
 	sound.Play("ambient/levels/citadel/weapon_disintegrate1.wav", oldPos)
 	sound.Play("ambient/levels/citadel/weapon_disintegrate1.wav", pos)
