@@ -17,6 +17,16 @@ end
 function SA.API.RefreshServerList(cb)
 	SA.API.ListServers(function(data)
 		serverList = data
+
+		local name = SA.API.GetServerName()
+		if name and not SA.API.GetServerByName(name) then
+			table.insert(serverList, {
+				name = name,
+				map = game.GetMap(),
+				location = "N/A",
+			})
+		end
+
 		if cb then
 			cb(data)
 		end

@@ -45,7 +45,7 @@ function SA.Teleporter.Open(ent)
 		srv = {
 			name = "Local",
 			map = game.GetMap(),
-			location = "N/A"
+			location = "Loading"
 		}
 	end
 	SA.Teleporter.Reload(ent, srv)
