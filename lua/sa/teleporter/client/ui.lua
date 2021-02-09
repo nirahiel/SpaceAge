@@ -5,6 +5,8 @@ local FONT = "Trebuchet24"
 local SPHERE_MODEL = "models/holograms/hq_icosphere.mdl"
 local SPHERE_MATERIAL = "models/wireframe"
 local SPHERE_MODEL_SIZE = 12.0
+local SHADE_COLOR = Color(0, 0, 0, 128)
+local SHADE_COLOR_DARK = Color(0, 0, 0, 200)
 
 local screenW, screenH, screenFOV
 local sideButtonW
@@ -192,8 +194,6 @@ end
 
 local dragStartAngle, dragStartX, dragStartY
 
-local SHADE_COLOR = Color(0, 0, 0, 128)
-
 local function DrawRoundedTextBox(color, x, y, w, h, text)
 	local bw = w + 10
 	local bh = h + 10
@@ -365,13 +365,24 @@ local function DrawTeleporterUI()
 	end
 	local server = SA.API.GetServerByName(serverName)
 	if server then
-		local serverDisplayName = server.name .. " (" .. server.location .. ") [" .. server.map .. "]"
+		local serverDisplayName = "Server:" .. server.name .. " (" .. server.location .. ") [" .. server.map .. "]"
 		local w, h = surface.GetTextSize(serverDisplayName)
-		DrawRoundedTextBox(Color(0,0,255,128), (screenW - w) / 2, 120, w, h, serverDisplayName)
+		DrawRoundedTextBox(Color(255, 255, 255, 128), (screenW - w) / 2, 120, w, h, serverDisplayName)
 
-		surface.SetDrawColor(SHADE_COLOR.r, SHADE_COLOR.g, SHADE_COLOR.b, SHADE_COLOR.a)
+		surface.SetDrawColor((cursorX <= sideButtonW) and SHADE_COLOR_DARK or SHADE_COLOR)
 		surface.DrawRect(0, 0, sideButtonW, screenH)
+		surface.SetDrawColor((cursorX >= screenW - sideButtonW) and SHADE_COLOR_DARK or SHADE_COLOR)
 		surface.DrawRect(screenW - sideButtonW, 0, sideButtonW, screenH)
+
+		local chevrunPadding = 20
+		local screenH2 = screenH / 2
+		local chevronY = (sideButtonW / 2) - chevrunPadding
+
+		surface.SetDrawColor(255, 255, 255, 128)
+		surface.DrawLine(sideButtonW - chevrunPadding, screenH2 - chevronY, chevrunPadding, screenH2)
+		surface.DrawLine(sideButtonW - chevrunPadding, screenH2 + chevronY, chevrunPadding, screenH2)
+		surface.DrawLine(screenW - (sideButtonW - chevrunPadding), screenH2 - chevronY, screenW - chevrunPadding, screenH2)
+		surface.DrawLine(screenW - (sideButtonW - chevrunPadding), screenH2 + chevronY, screenW - chevrunPadding, screenH2)
 	end
 
 	local isLeftDown = input.IsMouseDown(MOUSE_LEFT)
