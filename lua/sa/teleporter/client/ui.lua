@@ -365,7 +365,7 @@ local function DrawTeleporterUI()
 	end
 	local server = SA.API.GetServerByName(serverName)
 	if server then
-		local serverDisplayName = "Server:" .. server.name .. " (" .. server.location .. ") [" .. server.map .. "]"
+		local serverDisplayName = "Server: " .. server.name .. " (" .. server.location .. ") [" .. server.map .. "]"
 		local w, h = surface.GetTextSize(serverDisplayName)
 		DrawRoundedTextBox(Color(255, 255, 255, 128), (screenW - w) / 2, 120, w, h, serverDisplayName)
 
