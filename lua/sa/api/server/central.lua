@@ -41,7 +41,6 @@ end
 
 local function HandleCentralMessage(msg)
 	if msg.command == "ping" then
-		print("[Central] Ping< Pong>")
 		ReplyToMessage(msg)
 		return
 	end
@@ -117,9 +116,7 @@ end
 TimerConnectCentral()
 
 timer.Create("SA_API_Central_Ping", 5, 0, function()
-	SA.API.Central.SendToCentral("ping", nil, function()
-		print("[Central] Ping> Pong<")
-	end)
+	SA.API.Central.SendToCentral("ping")
 end)
 
 function SA.API.Central.SendTo(target, command, data, callback)
