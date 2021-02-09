@@ -96,7 +96,7 @@ ConnectCentral = function()
 	local headers = SA.API.GetHTTPHeaders()
 
 	idCallbacks = {}
-	socket = GWSockets.createWebSocket("wss://api.spaceage.mp/ws/central")
+	socket = GWSockets.createWebSocket("wss://api.spaceage.mp/ws/server")
 	for k, v in pairs(headers) do
 		socket:setHeader(k, v)
 	end
