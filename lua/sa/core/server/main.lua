@@ -131,6 +131,7 @@ local function LoadRes(ply, body, code)
 	ply:SetNWBool("isloaded", true)
 	if ply.sa_data.loaded and ply.HasAlreadySpawned then
 		ply:Spawn()
+		SA.Teleporter.TriggerOnJoin(ply)
 	end
 
 	if ply.MayBePoked then
@@ -163,6 +164,7 @@ hook.Add("PlayerAuthed", "SA_LoadPlayer", SA_InitSpawn)
 local function SA_PlayerFullLoad(ply)
 	ply.MayBePoked = true
 	SA.SendBasicInfo(ply)
+	SA.Teleporter.TriggerOnJoin(ply)
 end
 hook.Add("PlayerFullLoad", "SA_LoadPlayerSendData", SA_PlayerFullLoad)
 

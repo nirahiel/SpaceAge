@@ -371,10 +371,14 @@ local function DrawTeleporterUI()
 			end
 			ChangeServer(SA.API.GetServerByIndex(idx).name)
 		elseif planetMouseOver and planetMouseOver.canTeleportTo then
-			SA.Teleporter.Close(true)
-			if serverName == SA.API.GetServerName() then
+			--[[if not serverName or serverName == "" or serverName == SA.API.GetServerName() then
+				SA.Teleporter.Close(true)
 				RunConsoleCommand("sa_teleporter_do", planetMouseOver.teleporterName)
-			end
+			else]]
+				RunConsoleCommand("password", "SA_TP " .. planetMouseOver.teleporterName)
+				RunConsoleCommand("connect", server.ipport)
+				SA.Teleporter.Close()
+			--end
 		else
 			SA.Teleporter.Close()
 		end

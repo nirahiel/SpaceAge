@@ -1,9 +1,17 @@
 SA.REQUIRE("config")
-SA.Teleporter = {}
+SA.REQUIRE("teleporter.main")
 
 local SA_TeleportLocs = {}
 
 util.PrecacheModel("models/holograms/hq_icosphere.mdl")
+
+function SA.Teleporter.GoTo(ply, key)
+	local TeleTBL = SA_TeleportLocs[key]
+	if not TeleTBL then ply:ChatPrint("INVALID TELEPORT LOCATION") return end
+
+	local pos = table.Random(TeleTBL)
+	ply:SetPos(pos)
+end
 
 local function InitSATeleporters()
 	for k, v in pairs(ents.FindByClass("sa_teleport_panel")) do
@@ -49,12 +57,9 @@ concommand.Add("sa_teleporter_do", function(ply, cmd, args)
 
 	if teleporter.TeleKey == TeleKey then ply:ChatPrint("CANT TELEPORT SAME") return end
 
-	local TeleTBL = SA_TeleportLocs[TeleKey]
-	if not TeleTBL then ply:ChatPrint("INVALID TELEPORT LOCATION") return end
-
 	local oldPos = ply:GetPos()
-	local pos = table.Random(TeleTBL)
-	ply:SetPos(pos)
+
+	SA.Teleporter.GoTo(ply, TeleKey)
 
 	sound.Play("ambient/levels/citadel/weapon_disintegrate1.wav", oldPos)
 	sound.Play("ambient/levels/citadel/weapon_disintegrate1.wav", pos)
