@@ -214,6 +214,24 @@ local function DrawRoundedTextBox(color, x, y, w, h, text)
 	}
 end
 
+local function SwapServer(delta, server)
+	while true do
+		local idx = server.idx + delta
+		local max = #SA.API.GetServerList()
+		if idx <= 0 then
+			idx = max
+		end
+		if idx > max then
+			idx = 1
+		end
+		server = SA.API.GetServerByIndex(idx)
+		if server.online then
+			ChangeServer(server.name)
+			return
+		end
+	end
+end
+
 local function DrawTeleporterUI()
 	if not drawTeleporterUI then return end
 
@@ -359,26 +377,18 @@ local function DrawTeleporterUI()
 	local isLeftDown = input.IsMouseDown(MOUSE_LEFT)
 	if isLeftDown and not lastMouseLeftDown then
 		if cursorX <= sideButtonW and server then
-			local idx = server.idx - 1
-			if idx <= 0 then
-				idx = #SA.API.GetServerList()
-			end
-			ChangeServer(SA.API.GetServerByIndex(idx).name)
+			SwapServer(-1, server)
 		elseif cursorX >= screenW - sideButtonW and server then
-			local idx = server.idx + 1
-			if idx > #SA.API.GetServerList() then
-				idx = 1
-			end
-			ChangeServer(SA.API.GetServerByIndex(idx).name)
+			SwapServer(1, server)
 		elseif planetMouseOver and planetMouseOver.canTeleportTo then
-			--[[if not serverName or serverName == "" or serverName == SA.API.GetServerName() then
+			if not serverName or serverName == "" or serverName == SA.API.GetServerName() then
 				SA.Teleporter.Close(true)
 				RunConsoleCommand("sa_teleporter_do", planetMouseOver.teleporterName)
-			else]]
+			else
 				RunConsoleCommand("password", "SA_TP " .. planetMouseOver.teleporterName)
 				RunConsoleCommand("connect", server.ipport)
 				SA.Teleporter.Close()
-			--end
+			end
 		else
 			SA.Teleporter.Close()
 		end

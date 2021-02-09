@@ -28,18 +28,20 @@ function SA.API.RefreshServerList(cb)
 
 		local name = SA.API.GetServerName()
 		local selfServer = SA.API.GetServerByName(name)
-		if name and not selfServer then
-			local dummy = {
-				idx = #serverIndexedList + 1,
-				name = name,
-				map = game.GetMap(),
-				location = "N/A",
-				ipport = game.GetIPAddress(),
-			}
-			serverList[name] = dummy
-			table.insert(serverIndexedList, dummy)
-		elseif selfServer.ipport == "" then
+		if name then
+			if not selfServer then
+				selfServer = {
+					idx = #serverIndexedList + 1,
+					name = name,
+					location = "N/A",
+				}
+				serverList[name] = selfServer
+				table.insert(serverIndexedList, selfServer)
+			end
+
+			selfServer.map = game.GetMap()
 			selfServer.ipport = game.GetIPAddress()
+			selfServer.online = true
 		end
 
 		if cb then
