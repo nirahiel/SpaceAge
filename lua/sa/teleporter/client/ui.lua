@@ -7,12 +7,14 @@ local SPHERE_MATERIAL = "models/wireframe"
 local SPHERE_MODEL_SIZE = 12.0
 
 local screenW, screenH, screenFOV
+local sideButtonW
 local drawTeleporterUI = false
-local serverDisplayName = "N/A"
+local serverName = nil
 local teleporterEntity
 local drawnPlanets = {}
 local drawAngle = Angle(0,0,0)
 local drawLastTime
+local lastMouseLeftDown
 
 local MAX_MAP_SIZE = 300
 local BIGGER_THAN_MAP = 9999999999
@@ -32,40 +34,40 @@ local function MakePlanetModel(planetData)
 	return mdl
 end
 
-local function ChangeServer(srv)
+local function ChangeServer(server)
 	if not teleporterEntity then
 		return
 	end
-	SA.Teleporter.Reload(teleporterEntity, srv)
+	SA.Teleporter.Reload(teleporterEntity, server)
 end
 
 function SA.Teleporter.Open(ent)
-	local srv = SA.API.GetServerByName(SA.API.GetServerName())
-	if not srv then
-		srv = {
-			name = "Local",
-			map = game.GetMap(),
-			location = "Loading"
-		}
-	end
-	SA.Teleporter.Reload(ent, srv)
+	SA.Teleporter.Reload(ent, SA.API.GetServerName())
 	SA.API.RefreshServerList()
 end
 
 function SA.Teleporter.Reload(ent, server)
 	SA.Teleporter.Close(true)
 	teleporterEntity = ent
+	serverName = server
 
-	serverDisplayName = server.name .. " (" .. server.location .. ") [" .. server.map .. "]"
+	local serverData = SA.API.GetServerByName(serverName)
+	if not serverData then
+		serverData = {
+			map = game.GetMap(),
+		}
+	end
 
 	screenW = ScrW()
 	screenH = ScrH()
 	screenFOV = 75
 	drawLastTime = RealTime()
 
+	sideButtonW = math.floor(screenW / 10)
+
 	drawnPlanets = {}
 
-	local data = SA.Teleporter.GetMapData(server.map)
+	local data = SA.Teleporter.GetMapData(serverData.map)
 	local planets = data.planets
 
 	local myPlanet = SA.SB.FindClosestPlanet(ent:GetPos(), false).name
@@ -190,13 +192,15 @@ end
 
 local dragStartAngle, dragStartX, dragStartY
 
+local SHADE_COLOR = Color(0, 0, 0, 128)
+
 local function DrawRoundedTextBox(color, x, y, w, h, text)
 	local bw = w + 10
 	local bh = h + 10
 	local bx = x - 5
 	local by = y - 5
 
-	draw.RoundedBox(8, bx, by, bw, bh, Color(0, 0, 0, 128))
+	draw.RoundedBox(8, bx, by, bw, bh, SHADE_COLOR)
 
 	surface.SetTextColor(color.r, color.g, color.b)
 	surface.SetTextPos(x, y)
@@ -338,17 +342,44 @@ local function DrawTeleporterUI()
 		planetData.textBoxPos = DrawRoundedTextBox(planetData.drawColor, x, y, w, h, planetData.label)
 	end
 
-	local w, h = surface.GetTextSize(serverDisplayName)
-	DrawRoundedTextBox(Color(0,0,255,128), (screenW - w) / 2, 120, w, h, serverDisplayName)
+	if not serverName or serverName == "" then
+		serverName = SA.API.GetServerName()
+	end
+	local server = SA.API.GetServerByName(serverName)
+	if server then
+		local serverDisplayName = server.name .. " (" .. server.location .. ") [" .. server.map .. "]"
+		local w, h = surface.GetTextSize(serverDisplayName)
+		DrawRoundedTextBox(Color(0,0,255,128), (screenW - w) / 2, 120, w, h, serverDisplayName)
 
-	if input.IsMouseDown(MOUSE_LEFT) then
-		if planetMouseOver and planetMouseOver.canTeleportTo then
+		surface.SetDrawColor(SHADE_COLOR.r, SHADE_COLOR.g, SHADE_COLOR.b, SHADE_COLOR.a)
+		surface.DrawRect(0, 0, sideButtonW, screenH)
+		surface.DrawRect(screenW - sideButtonW, 0, sideButtonW, screenH)
+	end
+
+	local isLeftDown = input.IsMouseDown(MOUSE_LEFT)
+	if isLeftDown and not lastMouseLeftDown then
+		if cursorX <= sideButtonW and server then
+			local idx = server.idx - 1
+			if idx <= 0 then
+				idx = #SA.API.GetServerList()
+			end
+			ChangeServer(SA.API.GetServerByIndex(idx).name)
+		elseif cursorX >= screenW - sideButtonW and server then
+			local idx = server.idx + 1
+			if idx > #SA.API.GetServerList() then
+				idx = 1
+			end
+			ChangeServer(SA.API.GetServerByIndex(idx).name)
+		elseif planetMouseOver and planetMouseOver.canTeleportTo then
 			SA.Teleporter.Close(true)
-			RunConsoleCommand("sa_teleporter_do", planetMouseOver.teleporterName)
+			if serverName == SA.API.GetServerName() then
+				RunConsoleCommand("sa_teleporter_do", planetMouseOver.teleporterName)
+			end
 		else
 			SA.Teleporter.Close()
 		end
 	end
+	lastMouseLeftDown = isLeftDown
 end
 hook.Add("HUDPaint", "SA_HUDPaint_TeleporterUI", DrawTeleporterUI)
 

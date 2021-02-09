@@ -1,30 +1,41 @@
 SA.REQUIRE("api.main")
 
 local serverList = {}
+local serverIndexedList = {}
 
 function SA.API.GetServerList()
-	return serverList
+	return serverIndexedList
+end
+
+function SA.API.GetServerByIndex(idx)
+	return serverIndexedList[idx]
 end
 
 function SA.API.GetServerByName(name)
-	for _, srv in pairs(serverList) do
-		if srv.name == name then
-			return srv
-		end
-	end
+	return serverList[name]
 end
 
 function SA.API.RefreshServerList(cb)
 	SA.API.ListServers(function(data)
-		serverList = data
+		serverList = {}
+
+		for k, srv in pairs(data) do
+			srv.idx = k
+			serverList[srv.name] = srv
+		end
+
+		serverIndexedList = data
 
 		local name = SA.API.GetServerName()
 		if name and not SA.API.GetServerByName(name) then
-			table.insert(serverList, {
+			local dummy = {
+				idx = #serverIndexedList + 1,
 				name = name,
 				map = game.GetMap(),
 				location = "N/A",
-			})
+			}
+			serverList[name] = dummy
+			table.insert(serverIndexedList, dummy)
 		end
 
 		if cb then
