@@ -97,7 +97,7 @@ SA.Central.Handle("chat", function(data, ident)
 		net.WriteBool(data.teamChat)
 		net.WriteString(data.ply.name)
 		net.WriteUInt(data.ply.team, 8)
-		net.WriteColor(data.ply.color)
+		net.WriteColor(Color(data.ply.color.r, data.ply.color.g, data.ply.color.b, data.ply.color.a))
 		net.WriteBool(data.ply.alive)
 		net.WriteString(data.text)
 
