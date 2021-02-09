@@ -108,7 +108,7 @@ DefineMap("sb_wuwgalaxy_fix", { planets = {
 		teleporterName = "Terminal station",
 		position = Vector(8420,5365,7122),
 	},
-	["Planet 5"] = {
+	["Endgame"] = {
 		radius = 3008,
 		position = Vector(1536,7680,-10240),
 	},
