@@ -114,9 +114,11 @@ end
 SA.Central.Handle("chatraw", HandleChatRaw)
 
 function SA.Central.SendChatRaw(...)
-	local out = {}
+	local out = {
+		message = {}
+	}
 	for _, v in pairs({...}) do
-		table.insert(out, TranslateObjectToCentral(v))
+		table.insert(out.message, TranslateObjectToCentral(v))
 	end
 	HandleChatRaw(out, "")
 	SA.Central.Broadcast("chatraw", out)
