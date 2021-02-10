@@ -56,14 +56,18 @@ hook.Add("Think", "SA_AntiLag_Think", function()
 			SendAll("Normalized! All restrictions lifted!")
 			hook.Run("SA_AntiLagReturnNormal")
 		end
+		if lagTicks > 1 then
+			print("Lag tick", 0)
+		end
 		lagTicks = 0
-		print("Lag tick", lagTicks)
 	end
 
 	if timeDiffDelta > convarDelta:GetFloat() then
 		lagTicks = lagTicks + 1
 		lastLag = sysTime
-		print("Lag tick", lagTicks, timeDiffDelta)
+		if lagTicks > 1 then
+			print("Lag tick", lagTicks, timeDiffDelta)
+		end
 
 		if lagTicks == convarWarning:GetInt() then
 			SendAll("Warning! Disabling prop spawning and physgun reload!")
