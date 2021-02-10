@@ -7,6 +7,8 @@ hook.Add("CheckPassword", "SA_Teleporter_OnJoin", function(sid64, _, _, password
 	local sid = util.SteamIDFrom64(sid64)
 	if password:sub(1, 6) == "SA_TP " then
 		onjoinDb[sid] = password:sub(7)
+	else
+		onjoinDb[sid] = nil
 	end
 end)
 
