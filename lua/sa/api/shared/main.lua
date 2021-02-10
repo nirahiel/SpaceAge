@@ -79,9 +79,18 @@ local function requeueRequest(request)
 	end
 	request.done = true
 
-	failureCount = failureCount + 1
 	requestInProgress = false
 	timer.Remove("SA_API_HTTPTimeout")
+
+	if request.options.oneshot then
+		if request.callback then
+			request.callback(nil, 599)
+		end
+		processNextRequest()
+		return
+	end
+
+	failureCount = failureCount + 1
 
 	local timing = backoffTimings[failureCount] or backoffMax
 
@@ -96,9 +105,7 @@ local function requeueRequest(request)
 	print("Requeueing ", newRequest.http.url, newRequest.http.method, " for ", timing, " seconds after ", failureCount, " failures")
 
 	timer.Simple(timing, function()
-		if not request.options.oneshot then
-			table.insert(requestQueue, newRequest)
-		end
+		table.insert(requestQueue, newRequest)
 		processNextRequest()
 	end)
 end
