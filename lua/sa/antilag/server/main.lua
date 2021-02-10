@@ -52,7 +52,7 @@ hook.Add("Think", "SA_AntiLag_Think", function()
 	timeDiffLast = timeDiff
 
 	if lagTicks > 0 and sysTime - lastLag > convarTimeout:GetFloat() then
-		if lagTicks > convarWarning:GetInt() then
+		if lagTicks >= convarWarning:GetInt() then
 			SendAll("Normalized! All restrictions lifted!")
 			hook.Run("SA_AntiLagReturnNormal")
 		end
@@ -66,7 +66,7 @@ hook.Add("Think", "SA_AntiLag_Think", function()
 		print("Lag tick", lagTicks, timeDiffDelta)
 
 		if lagTicks == convarWarning:GetInt() then
-			SendAll("warning! Disabling prop spawning and physgun reload!")
+			SendAll("Warning! Disabling prop spawning and physgun reload!")
 			hook.Run("SA_AntiLagEnterWarning")
 		elseif lagTicks == convarCritical:GetInt() then
 			SendAll("Critical! Disabling toolgun and physgun use!")
