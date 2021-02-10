@@ -265,7 +265,7 @@ function SA.API.GetPlayerFull(ply, callback)
 end
 
 function SA.API.UpsertPlayer(ply, callback)
-	return SA.API.Put(MakePlayerURL(ply), ply.sa_data, callback)
+	return SA.API.Put(MakePlayerURL(ply), ply.sa_data, callback, OPTIONS_ONESHOT)
 end
 
 -- PLAYER -> APPLICATION functions
