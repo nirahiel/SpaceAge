@@ -333,13 +333,21 @@ if SERVER then
 
 	concommand.Add("sa_api_player_maketoken", SA_API_MakePlayerTokenCMD)
 
+	local function MkPlayerMap()
+		local res = {}
+		for _, ply in pairs(player.GetHumans()) do
+			table.insert(res, ply:SteamID())
+		end
+		return res
+	end
+
 	local function SA_API_Pingback()
 		local ipportOk, ipport = GetIPPortAndOk()
 		if not ipportOk then
 			ipport = nil
 		end
 		return SA.API.Put("/servers/self", {
-			players = player.GetCount(),
+			players = MkPlayerMap(),
 			maxplayers = game.MaxPlayers(),
 			map = game.GetMap(),
 			ipport = ipport,
