@@ -38,6 +38,8 @@ local function TranslateObjectToCentral(element)
 	}
 end
 
+SA.Central.TranslateObjectToCentral = TranslateObjectToCentral
+
 local function WriteMessageElement(ele)
 	if not ele then
 		net.WriteUInt(SA.Central.TYPE_NIL, 8)
@@ -71,22 +73,6 @@ local function WriteMessageElement(ele)
 		return
 	end
 end
-
-hook.Add("PlayerSay", "SA_Central_PlayerSay", function (ply, text, teamChat)
-	if text == "" then
-		return
-	end
-	local first = text:sub(1, 1)
-	if first == "!" or first == "@" then
-		return
-	end
-
-	SA.Central.Broadcast("chat", {
-		ply = TranslateObjectToCentral(ply),
-		text = text,
-		teamChat = teamChat,
-	})
-end)
 
 util.AddNetworkString("SA_Central_Chat")
 util.AddNetworkString("SA_Central_ChatRaw")
