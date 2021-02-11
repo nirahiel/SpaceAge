@@ -1,4 +1,4 @@
-SA.API = {}
+SA.REQUIRE("api.core")
 
 SA.REQUIRE("config")
 if CLIENT then
