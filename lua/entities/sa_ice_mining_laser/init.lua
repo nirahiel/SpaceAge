@@ -45,7 +45,7 @@ end
 
 function ENT:Mine()
 	local own = self:CPPIGetOwner()
-	if own and own.IsAFK then return end
+	if not IsValid(own) or own.IsAFK then return end
 
 	--Before we do anything, lets make sure they have power!
 	local EnergyUse = self.LaserConsume / self.LaserCycle

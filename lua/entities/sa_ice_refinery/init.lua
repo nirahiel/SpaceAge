@@ -55,7 +55,7 @@ end
 
 function ENT:Refine()
 	local own = self:CPPIGetOwner()
-	if own and own.IsAFK then return end
+	if not IsValid(own) or own.IsAFK then return end
 
 	if not self.CurrentRef then
 		for type, _ in pairs(SA.Ice.Types) do
