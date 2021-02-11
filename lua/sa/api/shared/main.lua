@@ -351,8 +351,8 @@ if SERVER then
 			maxplayers = game.MaxPlayers(),
 			map = game.GetMap(),
 			ipport = ipport,
-		}, function (data)
-			if not data then
+		}, function (data, code)
+			if code ~= 200 or not data then
 				return
 			end
 			SA.API.SetOwnInfo(data)
