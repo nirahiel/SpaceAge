@@ -346,11 +346,18 @@ if SERVER then
 		if not ipportOk then
 			ipport = nil
 		end
+
+		local hidden = apiConfig.hidden or false
+		if hidden then
+			ipport = "127.0.0.1:27015"
+		end
+
 		return SA.API.Put("/servers/self", {
 			players = MkPlayerMap(),
 			maxplayers = game.MaxPlayers(),
 			map = game.GetMap(),
 			ipport = ipport,
+			hidden = hidden,
 		}, function (data, code)
 			if code ~= 200 or not data then
 				return
