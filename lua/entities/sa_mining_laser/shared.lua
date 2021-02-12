@@ -46,7 +46,7 @@ ENT.RankedVars = {
 		MinMiningTheory = 4,
 		EnergyBase = 3000,
 		YieldOffset = 30000,
-		YieldIncrement = 200,
+		YieldIncrement = 100,
 
 		BeamLength = 3000,
 		BeamWidthOffset = 50,
@@ -55,7 +55,7 @@ ENT.RankedVars = {
 		MinMiningTheory = 5,
 		EnergyBase = 5000,
 		YieldOffset = 60000,
-		YieldIncrement = 400,
+		YieldIncrement = 200,
 
 		BeamLength = 5000,
 		BeamWidthOffset = 60,
