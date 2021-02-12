@@ -9,8 +9,9 @@ local function sa_info_msg_credsc()
 	end
 
 	local c = net.ReadString()
+	local sc = ply:GetNWString("score")
 	ply.sa_data.credits = tonumber(c)
-	ply.sa_data.score = ply:GetNWString("score")
+	ply.sa_data.score = tonumber(sc)
 	ply.sa_data.playtime = net.ReadUInt(32)
 
 	ply.sa_data.formatted_credits = SA.AddCommasToInt(c)
@@ -26,6 +27,13 @@ timer.Create("SA_IncPlayTime", 1, 0, function()
 	end
 	ply.sa_data.playtime = ply.sa_data.playtime + 1
 	ply.sa_data.formatted_playtime = SA.FormatTime(ply.sa_data.playtime)
+
+	local sc = ply:GetNWString("score")
+	local scn = tonumber(sc)
+	if scn ~= ply.sa_data.score then
+		ply.sa_data.score = scn
+		ply.sa_data.formatted_score = SA.AddCommasToInt(sc)
+	end
 end)
 
 local function SA_ReceiveStatsUpdate(body, code)

@@ -1,15 +1,6 @@
 include("player_row.lua")
 include("player_frame.lua")
 
---checking for utime for the hours
-utimecheck = false
-
---checking for ulib for the team names
-ulibcheck = false
-if file.Exists("ulib/cl_init.lua", "LUA") then
-	ulibcheck = true
-end
-
 surface.CreateFont("suiscoreboardheader", {
 	font = "coolvetica",
 	size = 28,
@@ -91,19 +82,17 @@ function PANEL:Paint(w, h)
 	surface.SetDrawColor(100, 100, 100, 155)
 	surface.DrawTexturedRect(0, 0, w, h)
 
-	--White Inner Box
 	draw.RoundedBox(6, 15, self.Description.y - 8, w - 30, h - self.Description.y - 6, Color(230, 230, 230, 100))
 	surface.SetTexture(texGradient)
 	surface.SetDrawColor(255, 255, 255, 50)
 	surface.DrawTexturedRect(15, self.Description.y - 8, w - 30, h - self.Description.y - 8)
 
-	--Sub Header
 	draw.RoundedBox(6, 108, self.Description.y - 4, w - 128, self.Description:GetTall() + 8, Color(100, 100, 100, 155))
 	surface.SetTexture(texGradient)
 	surface.SetDrawColor(255, 255, 255, 50)
 	surface.DrawTexturedRect(108, self.Description.y - 4, w - 128, self.Description:GetTall() + 8)
 
-	tColor = Color(0, 155, 255, 255) --team.GetColor(21)
+	local tColor = Color(0, 155, 255, 255)
 
 	if (tColor.r < 255) then
 		tColorGradientR = tColor.r + 15
@@ -124,8 +113,6 @@ function PANEL:Paint(w, h)
 	surface.SetTexture(texGradient)
 	surface.SetDrawColor(tColorGradientR, tColorGradientG, tColorGradientB, 225)
 	surface.DrawTexturedRect(24, 12, 80, 80)
-
-	-- draw.RoundedBox(4, 20, self.Description.y + self.Description:GetTall() + 6, w - 40, 12, Color(0, 0, 0, 50))
 end
 
 function PANEL:PerformLayout(w, h)
@@ -138,7 +125,6 @@ function PANEL:PerformLayout(w, h)
 
 	self.Logog:SetSize(80, 80)
 	self.Logog:SetPos(45, 5)
-	-- self.Logog:SetColor(Color(30, 30, 30, 255))
 	self.Logog:SetColor(color_white)
 
 	self.SuiSc:SetSize(400, 15)
@@ -187,7 +173,6 @@ function PANEL:PerformLayout(w, h)
 end
 
 function PANEL:ApplySchemeSettings()
-
 	self.Hostname:SetFont("suiscoreboardheader")
 	self.Description:SetFont("suiscoreboardsubtitle")
 	self.Logog:SetFont("suiscoreboardlogotext")
@@ -205,7 +190,6 @@ function PANEL:ApplySchemeSettings()
 	self.lblScore:SetFont("DefaultSmall")
 	self.lblTeam:SetFont("DefaultSmall")
 
-	-- self.Hostname:SetTextColor(tColor)
 	self.Hostname:SetTextColor(Color(230, 230, 230, 200))
 	self.Description:SetTextColor(Color(55, 55, 55, 255))
 	self.Logog:SetTextColor(Color(0, 0, 0, 255))
@@ -225,7 +209,7 @@ function PANEL:UpdateScoreboard(force)
 		end
 	end
 
-	local PlayerList = player.GetAll()
+	local PlayerList = player.GetHumans()
 	for id, pl in pairs(PlayerList) do
 		if not self:GetPlayerRow(pl) then
 			self:AddPlayerRow(pl)

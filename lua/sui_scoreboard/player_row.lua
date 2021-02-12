@@ -126,4 +126,4 @@ function PANEL:HigherOrLower(row)
 	return false
 end
 
-vgui.Register("suiscoreplayerrow", PANEL, "DButton")
+vgui.Register("suiscoreplayerrow", PANEL, "DPanel")
