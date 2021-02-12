@@ -117,8 +117,8 @@ function PANEL:HigherOrLower(row)
 		return self.Player:Team() < row.Player:Team()
 	end
 
-	local selfScore = tonumber(self.Player:GetNWString("score"))
-	local otherScore = tonumber(row.Player:GetNWString("score"))
+	local selfScore = tonumber(self.Player:GetNWString("score")) or 0
+	local otherScore = tonumber(row.Player:GetNWString("score")) or 0
 	if selfScore ~= otherScore then
 		return selfScore > otherScore
 	end
