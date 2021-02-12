@@ -9,10 +9,9 @@ local function sa_info_msg_credsc()
 	end
 
 	local c = net.ReadString()
-	local sc = net.ReadString()
 	ply.sa_data.credits = tonumber(c)
-	ply.sa_data.score = tonumber(sc)
-	ply.sa_data.playtime = net.ReadInt(32)
+	ply.sa_data.score = ply:GetNWString("score")
+	ply.sa_data.playtime = net.ReadUInt(32)
 
 	ply.sa_data.formatted_credits = SA.AddCommasToInt(c)
 	ply.sa_data.formatted_score = SA.AddCommasToInt(sc)

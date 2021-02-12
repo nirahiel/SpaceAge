@@ -15,6 +15,21 @@ function SA.API.GetServerByName(name)
 	return serverList[name]
 end
 
+local function MkPlayerMap()
+	local res = {}
+	for _, ply in pairs(player.GetHumans()) do
+		table.insert(res, {
+			faction_name = SA.Factions.Table[ply:Team()][2],
+			is_faction_leader = ply:GetNWBool("isleader"),
+			name = ply:Nick(),
+			playtime = 0,
+			score = tonumber(ply:GetNWString("score")),
+			steamid = ply:SteamID(),
+		})
+	end
+	return res
+end
+
 function SA.API.RefreshServerList(cb)
 	SA.API.ListServers(function(data)
 		serverList = {}
@@ -35,6 +50,7 @@ function SA.API.RefreshServerList(cb)
 					name = name,
 					location = "N/A",
 				}
+				selfServer.players = MkPlayerMap()
 				serverList[name] = selfServer
 				table.insert(serverIndexedList, selfServer)
 			end

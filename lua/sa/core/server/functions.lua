@@ -3,10 +3,10 @@ SA.Functions = {}
 function SA.SendBasicInfo(ply)
 	ply.sa_data.credits = math.floor(ply.sa_data.credits)
 	ply.sa_data.score = math.floor(ply.sa_data.score)
+	ply:SetNWString("score", ply.sa_data.score)
 	net.Start("SA_SendBasicInfo")
 		net.WriteString(ply.sa_data.credits)
-		net.WriteString(ply.sa_data.score)
-		net.WriteInt(ply.sa_data.playtime, 32)
+		net.WriteUInt(ply.sa_data.playtime, 32)
 	net.Send(ply)
 end
 

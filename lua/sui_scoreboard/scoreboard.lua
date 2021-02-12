@@ -67,23 +67,11 @@ function PANEL:Init()
 	self.lblPing = vgui.Create("DLabel", self)
 	self.lblPing:SetText("Ping")
 
-	self.lblKills = vgui.Create("DLabel", self)
-	self.lblKills:SetText("Kills")
+	self.lblScore = vgui.Create("DLabel", self)
+	self.lblScore:SetText("Score")
 
-	self.lblDeaths = vgui.Create("DLabel", self)
-	self.lblDeaths:SetText("Deaths")
-
-	self.lblRatio = vgui.Create("DLabel", self)
-	self.lblRatio:SetText("Ratio")
-
-	self.lblHealth = vgui.Create("DLabel", self)
-	self.lblHealth:SetText("Health")
-
-	if utimecheck then self.lblHours = vgui.Create("DLabel", self) end
-	if utimecheck then self.lblHours:SetText("Hours") end
-
-	if ulibcheck then self.lblTeam = vgui.Create("DLabel", self) end
-	if ulibcheck then self.lblTeam:SetText("Team") end
+	self.lblTeam = vgui.Create("DLabel", self)
+	self.lblTeam:SetText("Team")
 
 end
 
@@ -190,20 +178,12 @@ function PANEL:PerformLayout(w, h)
 		self.lblPing:SizeToContents()
 	end
 
-	self.lblKills:SizeToContents()
-	self.lblRatio:SizeToContents()
-	self.lblDeaths:SizeToContents()
-	self.lblHealth:SizeToContents()
-	if utimecheck then self.lblHours:SizeToContents() end
-	if ulibcheck then self.lblTeam:SizeToContents() end
+	self.lblScore:SizeToContents()
+	self.lblTeam:SizeToContents()
 
 	self.lblPing:SetPos(w - 45 - self.lblPing:GetWide() / 2, self.PlayerFrame.y - self.lblPing:GetTall() - 3 )
-	self.lblRatio:SetPos(w - 45 * 2.4 - self.lblDeaths:GetWide() / 2, self.PlayerFrame.y - self.lblPing:GetTall() - 3 )
-	self.lblDeaths:SetPos(w - 45 * 3.4 - self.lblDeaths:GetWide() / 2, self.PlayerFrame.y - self.lblPing:GetTall() - 3 )
-	self.lblKills:SetPos(w - 45 * 4.4 - self.lblKills:GetWide() / 2, self.PlayerFrame.y - self.lblPing:GetTall() - 3 )
-	self.lblHealth:SetPos(w - 45 * 5.4 - self.lblKills:GetWide() / 2, self.PlayerFrame.y - self.lblPing:GetTall() - 3 )
-	if ulibcheck then  self.lblTeam:SetPos(w - 45 * 10.2 - self.lblKills:GetWide() / 2, self.PlayerFrame.y - self.lblPing:GetTall() - 3 ) end
-	if utimecheck then self.lblHours:SetPos(w - 45 * 13.7 - self.lblKills:GetWide() / 2, self.PlayerFrame.y - self.lblPing:GetTall() - 3 ) end
+	self.lblScore:SetPos(w - 45 * 5.4 - self.lblScore:GetWide() / 2, self.PlayerFrame.y - self.lblPing:GetTall() - 3 )
+	self.lblTeam:SetPos(w - 45 * 10.2 - self.lblTeam:GetWide() / 2, self.PlayerFrame.y - self.lblPing:GetTall() - 3 )
 end
 
 function PANEL:ApplySchemeSettings()
@@ -222,12 +202,8 @@ function PANEL:ApplySchemeSettings()
 		self.lblPing:SetFont("DefaultSmall")
 	end
 
-	self.lblKills:SetFont("DefaultSmall")
-	self.lblDeaths:SetFont("DefaultSmall")
-	if ulibcheck then self.lblTeam:SetFont("DefaultSmall") end
-	self.lblHealth:SetFont("DefaultSmall")
-	self.lblRatio:SetFont("DefaultSmall")
-	if utimecheck then self.lblHours:SetFont("DefaultSmall") end
+	self.lblScore:SetFont("DefaultSmall")
+	self.lblTeam:SetFont("DefaultSmall")
 
 	-- self.Hostname:SetTextColor(tColor)
 	self.Hostname:SetTextColor(Color(230, 230, 230, 200))
@@ -235,12 +211,8 @@ function PANEL:ApplySchemeSettings()
 	self.Logog:SetTextColor(Color(0, 0, 0, 255))
 	self.SuiSc:SetTextColor(Color(200, 200, 200, 200))
 	self.lblPing:SetTextColor(Color(0, 0, 0, 255))
-	self.lblKills:SetTextColor(Color(0, 0, 0, 255))
-	self.lblDeaths:SetTextColor(Color(0, 0, 0, 255))
-	if ulibcheck then self.lblTeam:SetTextColor(Color(0, 0, 0, 255)) end
-	self.lblHealth:SetTextColor(Color(0, 0, 0, 255))
-	self.lblRatio:SetTextColor(Color(0, 0, 0, 255))
-	if utimecheck then self.lblHours:SetTextColor(Color(0, 0, 0, 255)) end
+	self.lblScore:SetTextColor(Color(0, 0, 0, 255))
+	self.lblTeam:SetTextColor(Color(0, 0, 0, 255))
 end
 
 
