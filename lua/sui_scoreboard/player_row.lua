@@ -120,7 +120,7 @@ function PANEL:HigherOrLower(row)
 	local selfScore = tonumber(self.Player:GetNWString("score"))
 	local otherScore = tonumber(row.Player:GetNWString("score"))
 	if selfScore ~= otherScore then
-		return selfScore < otherScore
+		return selfScore > otherScore
 	end
 
 	return false
