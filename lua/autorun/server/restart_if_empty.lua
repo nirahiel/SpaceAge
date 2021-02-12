@@ -1,5 +1,5 @@
 local convarEnabled = CreateConVar("restart_if_empty", 0)
-local convarTime = CreateConVar("restart_if_empty_time", 60 * 3)
+local convarTime = CreateConVar("restart_if_empty_time", 60 * 10)
 local convarMode = CreateConVar("restart_if_empty_mode", "exit")
 
 convarEnabled:SetBool(false)
