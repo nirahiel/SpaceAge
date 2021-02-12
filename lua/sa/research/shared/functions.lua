@@ -61,7 +61,7 @@ function SA.Research.GetLevelInfo(ply, Research, stopOnFail, level)
 		devl = 0
 	end
 	local total = cost + (cost * Research.costinc) * (level - 1)
-	total = total + math.ceil(total * (devl * 0.8))
+	total = mmath.ceil(total + (total * (devl * 0.8)))
 
 	if ply.sa_data.faction_name == "legion" or ply.sa_data.faction_name == "alliance" then
 		total = math.ceil(total * 0.66)
