@@ -136,6 +136,10 @@ local function SA_DoAcceptPlayer(ply, cmd, args)
 		end
 
 		if not trgPly then
+			SA.Central.Broadcast("factionchange", {
+				steamid = steamId,
+				faction = factionName,
+			})
 			return
 		end
 
@@ -143,6 +147,16 @@ local function SA_DoAcceptPlayer(ply, cmd, args)
 	end)
 end
 concommand.Add("sa_application_accept", SA_DoAcceptPlayer)
+
+SA.Central.Handle("factionchange", function (data, ident)
+	local steamId = data.steamid
+	local factionName = data.faction
+
+	local trgPly = player.GetBySteamID(steamId)
+	if IsValid(trgPly) then
+		trgPly:AssignFaction(factionName)
+	end
+end)
 
 local function SA_DoDenyPlayer(ply, cmd, args)
 	if #args ~= 1 then return end
