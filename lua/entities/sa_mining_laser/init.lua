@@ -53,7 +53,7 @@ function ENT:CalcVars(ply)
 		energycost = self.EnergyBase * 0.75
 	end
 	self.consume = self.EnergyBase - energycost
-	self.yield = math.floor((self.YieldOffset + (level * self.YieldIncrement)) * miningmod) * 2
+	self.yield = math.floor((self.YieldOffset + (level * self.YieldIncrement)) * miningmod)
 end
 
 function ENT:TurnOn()
