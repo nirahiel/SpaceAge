@@ -135,11 +135,12 @@ local function SA_DoAcceptPlayer(ply, cmd, args)
 			return
 		end
 
+		SA.Central.Broadcast("factionchange", {
+			steamid = steamId,
+			faction = factionName,
+		})
+
 		if not trgPly then
-			SA.Central.Broadcast("factionchange", {
-				steamid = steamId,
-				faction = factionName,
-			})
 			return
 		end
 
