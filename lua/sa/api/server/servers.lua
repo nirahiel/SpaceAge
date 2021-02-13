@@ -3,6 +3,10 @@ SA.REQUIRE("api.main")
 local ourNameSet = nil
 local weAreHidden = nil
 
+function SA.API.GetServerName()
+	return ourNameSet
+end
+
 function SA.API.SetOwnInfo(info)
 	local name = info.name
 	weAreHidden = info.hidden

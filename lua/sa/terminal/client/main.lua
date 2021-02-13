@@ -3,7 +3,6 @@ SA.Terminal = {}
 SA.REQUIRE("misc.player_loaded")
 SA.REQUIRE("terminal.research")
 SA.REQUIRE("terminal.resource")
-SA.REQUIRE("terminal.goodies")
 SA.REQUIRE("faction.application")
 
 require("supernet")
@@ -13,7 +12,6 @@ local SA_Term_StationCap = 0
 local SA_Term_StationMax = 0
 
 local SA_Term_GUI
-local SA_Term_GoodieList
 local SA_Term_StatList
 
 local SA_Term_MarketBuy
@@ -150,24 +148,6 @@ local function CreateTerminalGUI()
 	SA_Term_StatList = StatsList
 
 	SA_Term_UpdateStats()
-
-	local GoodieTab = vgui.Create ("DPanel")
-	GoodieTab:SetPos(5, 25)
-	GoodieTab:SetSize(790, 625)
-	GoodieTab.Paint = function()
-		local text = "Goodies"
-		local width = GetTextBackgroundWidth(font, text)
-		draw.RoundedBox(4, guiSizeX / 2 - width / 2, 10, width, 30, Color(50, 50, 50, 255))
-		draw.SimpleText(text, font, guiSizeX / 2, 25, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-	end
-
-	local GoodieList = vgui.Create ("DPanelList", GoodieTab)
-	GoodieList:SetPos(30, 70)
-	GoodieList:SetSize(730, 500)
-	GoodieList:SetSpacing(5)
-	GoodieList:EnableVerticalScrollbar(true)
-
-	SA_Term_GoodieList = GoodieList
 
 	local Tabs = vgui.Create("DPropertySheet", BasePanel)
 	Tabs:SetPos(5, 25)
@@ -451,7 +431,6 @@ local function CreateTerminalGUI()
 	Tabs:AddSheet("Resources", ResourceTab, "VGUI/box", false, false, "Storage")
 	Tabs:AddSheet("Research", ResearchTab, "VGUI/blueprint", false, false, "Research")
 	Tabs:AddSheet("Application", ApplicationTab, "VGUI/auction-hammer-gavel", false, false, "Application")
-	Tabs:AddSheet("Goodies", GoodieTab, "VGUI/box", false, false, "Goodies")
 
 	BasePanel:MakePopup()
 	BasePanel:SetVisible(false)
@@ -472,43 +451,10 @@ local function SA_DrawTerminalError()
 end
 hook.Add("PostRenderVGUI", "SA_DrawTerminalError", SA_DrawTerminalError)
 
-local ReloadingGoodies = false
-
-local function SA_RefreshGoodiesRecv(ply, decoded)
-	if not SA_Term_GoodieList then return end
-
-	SA_Term_GoodieList:Clear()
-	local goodie
-	for _, v in pairs(decoded) do
-		goodie = vgui.Create("SA_Terminal_Goodie")
-		goodie:SetSize(700, 74)
-		goodie:SetNameDescID(v.type, v.id)
-		SA_Term_GoodieList:AddItem(goodie)
-	end
-end
-
-local function SA_Goodies_Refresh()
-	if ReloadingGoodies then
-		return
-	end
-	ReloadingGoodies = true
-
-	local ply = LocalPlayer()
-	SA.API.GetPlayerGoodies(ply, function(body, code)
-		ReloadingGoodies = false
-		if code ~= 200 then
-			return
-		end
-		SA_RefreshGoodiesRecv(ply, body)
-	end)
-end
-net.Receive("SA_GoodieUpdate", SA_Goodies_Refresh)
-
 local function sa_terminal_msg()
 	local active = net.ReadBool()
 	if active then
 		SA.Application.Refresh()
-		SA_Goodies_Refresh()
 		if not SA_Term_GUI then
 			CreateTerminalGUI()
 			if not SA_Term_GUI then

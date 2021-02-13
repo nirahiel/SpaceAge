@@ -144,7 +144,11 @@ end
 function SA.API.GetHTTPHeaders(noauth)
 	local headers = {}
 	if not noauth then
-		headers.Authorization = apiConfig.auth
+		if apiConfig.serverToken then
+			headers.Authorization = "Server " .. apiConfig.serverToken
+		else
+			headers.Authorization = apiConfig.auth
+		end
 	end
 	headers["Client-ID"] = clientID or "N/A"
 	return headers
@@ -230,14 +234,6 @@ local function MakePlayerResURL(ply, res)
 	return MakePlayerURL(ply) .. "/" .. res
 end
 
-local function MakePlayerResIDURL(ply, res, id)
-	return MakePlayerResURL(ply, res) .. "/" .. id
-end
-
-local function MakePlayerResIDResURL(ply, res, id, res2)
-	return MakePlayerResIDURL(ply, res, id) .. "/" .. res2
-end
-
 local function MakeFactionURL(faction)
 	return "/factions/" .. faction
 end
@@ -284,15 +280,6 @@ function SA.API.UpsertPlayerApplication(ply, body, callback)
 	return SA.API.Put(MakePlayerResURL(ply, "application"), body, callback)
 end
 
--- PLAYER -> GOODIE functions
-function SA.API.GetPlayerGoodies(ply, callback)
-	return SA.API.Get(MakePlayerResURL(ply, "goodies"), callback)
-end
-
-function SA.API.UsePlayerGoodie(ply, id, callback)
-	return SA.API.Post(MakePlayerResIDResURL(ply, "goodies", id, "use"), {}, callback)
-end
-
 -- FACTION -> APPLICATION functions
 function SA.API.ListFactionApplications(faction, callback)
 	return SA.API.Get(MakeFactionResURL(faction, "applications"), callback)
@@ -317,6 +304,10 @@ end
 
 -- Player auth handling
 if SERVER then
+	function SA.API.GetServerToken()
+		return apiConfig.serverToken
+	end
+
 	local function SA_API_MakePlayerJWT(ply, callback)
 		return SA.API.Post(MakePlayerResURL(ply, "jwt"), {}, callback)
 	end
@@ -366,6 +357,7 @@ if SERVER then
 		end, OPTIONS_ONESHOT)
 	end
 	timer.Create("SA_API_Pingback", 5, 0, SA_API_Pingback)
+	timer.Simple(0, SA_API_Pingback)
 end
 
 if CLIENT then

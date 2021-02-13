@@ -1,90 +1,44 @@
 SA.REQUIRE("api")
 
-require("gwsockets")
+require("stomp")
 
 SA.Central = {}
 
 local socket
-
-local centralIdent = "UNK"
-local ourIdent = "UNK"
-
-local idCallbacks = {}
+local ourIdent
 local cmdCallbacks = {}
-
 local SendCentralMessage
 
-local lastID = 0
-local function GetCommandID()
-	lastID = lastID + 1
-	return "LUA_" .. tostring(lastID)
-end
-
-local function SendCommand(command, target, data, callback)
-	local id = GetCommandID()
+local function SendCommand(command, target, data)
 	local cmd = {
-		id = id,
 		command = command,
-		target = target,
 		data = data,
 	}
-	idCallbacks[id] = callback
-	SendCentralMessage(cmd)
+	SendCentralMessage(cmd, target)
 end
 
-local function ReplyToMessage(msg, data)
-	local cmd = {
-		id = msg.id,
-		command = "reply",
-		target = msg.ident,
-		data = data,
-	}
-	SendCentralMessage(cmd)
-end
-
-local function HandleCentralMessage(msg)
-	if msg.ident == ourIdent then
+local function HandleCentralMessage(msg, headers)
+	local ident = headers["user-id"]
+	if (not ident) or (ident == ourIdent) then
 		return
 	end
-
-	if msg.command == "ping" then
-		ReplyToMessage(msg)
-		return
-	end
-
-	local callback = idCallbacks[msg.id]
 
 	if msg.command == "error" then
-		if callback then
-			callback(false, msg.data, msg.ident)
-			idCallbacks[msg.id] = nil
-		else
-			print("Got error", msg.id, msg.data)
-		end
-		return
-	end
-
-	if msg.command == "reply" then
-		if callback then
-			callback(true, msg.data, msg.ident)
-			idCallbacks[msg.id] = nil
-		end
+		print("Got error", msg.id, msg.data)
 		return
 	end
 
 	local handler = cmdCallbacks[msg.command]
 	if handler then
-		handler(msg.data, msg.ident, function(reply)
-			ReplyToMessage(msg, reply)
-		end)
+		handler(msg.data, ident)
 	end
 end
 
-SendCentralMessage = function(msg)
+SendCentralMessage = function(msg, target)
 	if not socket then
 		return
 	end
-	socket:write(util.TableToJSON(msg))
+	socket:send((target or "broadcast"):lower(), msg)
 end
 
 local ConnectCentral
@@ -93,28 +47,36 @@ local function TimerConnectCentral()
 end
 
 ConnectCentral = function()
-	local headers = SA.API.GetHTTPHeaders()
+	ourIdent = SA.API.GetServerName()
+	local ourKey = SA.API.GetServerToken()
 
-	idCallbacks = {}
-	socket = GWSockets.createWebSocket("wss://api.spaceage.mp/ws/server")
-	for k, v in pairs(headers) do
-		socket:setHeader(k, v)
+	if not ourIdent then
+		TimerConnectCentral()
+		return
 	end
+
+	socket = NewSTOMPSocket({
+		url = "wss://live.spaceage.mp/ws/stomp",
+		vhost = "spaceage",
+		login = ourIdent,
+		passcode = ourKey,
+		autoReconnect = true,
+	})
+	socket:subscribe("broadcast", HandleCentralMessage)
+	socket:subscribe(ourIdent:lower(), HandleCentralMessage)
 
 	function socket:onConnected()
 		print("[Central] Link connected...")
+		if not SA.Central.StartupSent then
+			if not SA.API.IsServerHidden() then
+				SA.Central.Broadcast("serverjoin")
+			end
+			SA.Central.StartupSent = true
+		end
 	end
 
 	function socket:onDisconnected()
 		print("[Central] Link lost...")
-		TimerConnectCentral()
-	end
-
-	function socket:onMessage(txt)
-		local res = util.JSONToTable(txt)
-		if res then
-			HandleCentralMessage(res)
-		end
 	end
 
 	socket:open()
@@ -122,12 +84,8 @@ end
 
 TimerConnectCentral()
 
-function SA.Central.SendTo(target, command, data, callback)
-	SendCommand(command, target, data, callback)
-end
-
-function SA.Central.SendToCentral(command, data, callback)
-	SendCommand(command, centralIdent, data, callback)
+function SA.Central.SendTo(target, command, data)
+	SendCommand(command, target, data)
 end
 
 function SA.Central.Broadcast(command, data)
@@ -140,21 +98,3 @@ function SA.Central.Handle(command, callback)
 	end
 	cmdCallbacks[command] = callback
 end
-
-function SA.Central.GetOurIdent()
-	return ourIdent
-end
-
-function SA.Central.GetCentralIdent()
-	return centralIdent
-end
-
-SA.Central.Handle("welcome", function(data, from)
-	centralIdent = from
-	ourIdent = data
-	print("[Central] Central is", centralIdent, "; we are ", ourIdent)
-end)
-
-timer.Create("SA_Central_Ping", 5, 0, function()
-	SA.Central.SendToCentral("ping")
-end)

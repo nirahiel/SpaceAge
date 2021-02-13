@@ -41,11 +41,11 @@ function SA.Central.LocalChatRaw(...)
 end
 
 SA.Central.Handle("serverjoin", function(data, ident)
-	HandleChatRaw({SA.Central.COLOR_NOTIFY_BLUE, "Server came online"}, data)
+	HandleChatRaw({SA.Central.COLOR_NOTIFY_BLUE, "Server came online"}, ident)
 end)
 
 SA.Central.Handle("serverleave", function(data, ident)
-	HandleChatRaw({SA.Central.COLOR_NOTIFY_BLUE, "Server went offline"}, data)
+	HandleChatRaw({SA.Central.COLOR_NOTIFY_BLUE, "Server went offline"}, ident)
 end)
 
 function SA.Central.SendChatRaw(...)

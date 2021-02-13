@@ -312,32 +312,6 @@ SA_UpdateInfo = function(ply, CanPass)
 end
 concommand.Add("sa_terminal_update", SA_UpdateInfo)
 
-local function SA_UseGoodie(ply, cmd, args)
-	local id = tonumber(args[1])
-
-	SA.API.UsePlayerGoodie(ply, id, function(body, code)
-		net.Start("SA_GoodieUpdate")
-		net.Send(ply)
-
-		if code > 299 then
-			print(ply, "tried to use goodie", id, "and got code", code)
-			return
-		end
-
-		local goodie = SA.Goodies[body.type]
-		if not goodie then
-			print(ply, "tried to use goodie", id, "and got unknown type", body.type)
-			return
-		end
-
-		print(ply, "used goodie type", body.type)
-
-		goodie.func(ply)
-		SA.SaveUser(ply)
-	end)
-end
-concommand.Add("sa_goodies_use", SA_UseGoodie)
-
 local function SA_RefineOre(ply, cmd, args)
 	if not ply.AtTerminal then return end
 	if ply.IsAFK then return end
