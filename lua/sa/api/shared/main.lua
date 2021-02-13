@@ -381,3 +381,6 @@ if CLIENT then
 
 	SA.RunOnLoaded("SA_API_RenewPlayerJWT_Initial", SA_API_RenewPlayerJWT)
 end
+
+function SA.API.GetPlayerGoodies()
+end
