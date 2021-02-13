@@ -135,11 +135,6 @@ function SA.Application.CreateGUI(BasePanel)
 			SelFCombo:AddChoice(fact[1])
 		end
 
-		SelFCombo:AddChoice("Major Miners")
-		SelFCombo:AddChoice("The Legion")
-		SelFCombo:AddChoice("The Corporation")
-		SelFCombo:AddChoice("I.C.E.")
-
 		function SelFCombo:OnSelect(index, value, data)
 			SA.Application.Me.faction_name = SA.Factions.ToShort[value] or defaultFaction
 		end
