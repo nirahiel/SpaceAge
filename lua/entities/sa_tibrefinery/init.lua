@@ -75,8 +75,6 @@ function ENT:Think()
 				local creds = math.Round(taken * (math.random(20, 30)))
 				if ply.sa_data.faction_name == "corporation" or ply.sa_data.faction_name == "alliance" then
 					creds = math.ceil((creds * 1.33) * 1000) / 1000
-				elseif ply.sa_data.faction_name == "starfleet" then
-					creds = math.ceil((creds * 1.11) * 1000) / 1000
 				end
 				ply.sa_data.credits = ply.sa_data.credits + creds
 				ply.sa_data.score = ply.sa_data.score + creds

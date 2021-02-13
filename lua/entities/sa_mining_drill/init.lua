@@ -40,8 +40,6 @@ function ENT:CalcVars(ply)
 	local miningmod = 1
 	if ply.sa_data.faction_name == "miners" or ply.sa_data.faction_name == "alliance" then
 		miningmod = 1.33
-	elseif ply.sa_data.faction_name == "starfleet" then
-		miningmod = 1.11
 	end
 	local level = self:GetPlayerLevel(ply)
 	local energycost = ply.sa_data.research.mining_energy_efficiency[1] * 50

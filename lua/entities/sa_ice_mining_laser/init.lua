@@ -64,12 +64,17 @@ function ENT:Mine()
 
 		--Collect every think, rather than every cycle.
 		local Gather = self.LaserExtract / self.LaserCycle
+
+		if own.sa_data.faction_name == "starfleet" or own.sa_data.faction_name == "alliance" then
+			Gather = Gather * 1.33
+		end
+
 		local IceLeft = ent.MineralAmount * 1000
 		self.IceCollected[Type] = self.IceCollected[Type] + Gather
 		ent.MineralAmount = (IceLeft - Gather) / 1000
 
 		--Oh look, our laser is full, dump it into cargo.
-		if (self.IceCollected[Type] >= 1000) then
+		if self.IceCollected[Type] >= 1000 then
 			self.IceCollected[Type] = self.IceCollected[Type] - 1000
 			self:SupplyResource(Type, 1)
 		end

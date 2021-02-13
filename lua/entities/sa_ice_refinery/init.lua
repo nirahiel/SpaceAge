@@ -82,7 +82,7 @@ function ENT:Refine()
 		local Progress = math.Clamp((1000-self.Volume) / 10, 0, 100)
 		Wire_TriggerOutput(self, "Progress", Progress)
 		if (self.Volume <= 0) then
-			local gives = SA.Ice.GetRefined(self.CurrentRef, self.RefineEfficiency)
+			local gives = SA.Ice.GetRefined(own, self.CurrentRef, self.RefineEfficiency)
 			for res, count in pairs(gives) do
 				self:SupplyResource(res, count)
 			end
