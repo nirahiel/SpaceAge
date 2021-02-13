@@ -130,10 +130,15 @@ function SA.Application.CreateGUI(BasePanel)
 			SA.Application.Me.text = ApplyText:GetValue()
 		end
 
+		for i = SA.Factions.ApplyMin, SA.Factions.ApplyMax do
+			local fact = SA.Factions.Table[i]
+			SelFCombo:AddChoice(fact[1])
+		end
+
 		SelFCombo:AddChoice("Major Miners")
 		SelFCombo:AddChoice("The Legion")
 		SelFCombo:AddChoice("The Corporation")
-		SelFCombo:AddChoice("Star Fleet")
+		SelFCombo:AddChoice("I.C.E.")
 
 		function SelFCombo:OnSelect(index, value, data)
 			SA.Application.Me.faction_name = SA.Factions.ToShort[value] or defaultFaction
