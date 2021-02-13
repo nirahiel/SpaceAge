@@ -6,7 +6,7 @@ function SA.Ice.GetRefined(ply, ore, efficiency)
 	end
 
 	local factionmul = 1.00
-	if ply.sa_data.faction_name == "starfleet" or ply.sa_data.faction_name == "alliance" then
+	if ply.sa_data.faction_name == "ice" or ply.sa_data.faction_name == "alliance" then
 		factionmul = 1.33
 	end
 

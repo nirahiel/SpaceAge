@@ -65,7 +65,7 @@ function ENT:Mine()
 		--Collect every think, rather than every cycle.
 		local Gather = self.LaserExtract / self.LaserCycle
 
-		if own.sa_data.faction_name == "starfleet" or own.sa_data.faction_name == "alliance" then
+		if own.sa_data.faction_name == "ice" or own.sa_data.faction_name == "alliance" then
 			Gather = Gather * 1.33
 		end
 
