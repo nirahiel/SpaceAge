@@ -26,10 +26,6 @@ function PlayerMeta:AssignFaction(name, cb)
 		self.sa_data.faction_name = "freelancer"
 	end
 
-	if self.sa_data.faction_name == "starfleet" then
-		self.sa_data.faction_name = "ice"
-	end
-
 	local idx = SA.Factions.IndexByShort[self.sa_data.faction_name]
 	self:SetTeam(idx)
 
