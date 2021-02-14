@@ -49,6 +49,10 @@ function SA.Planets.MakeSpace(planet)
 	end
 end
 
+local function JSONToVector(a)
+	return Vector(unpack(a))
+end
+
 local function InitHabitablePlanets()
 	local dirname = "sa_planetsave/" .. game.GetMap():lower() .. "/"
 	if not file.Exists(dirname, "DATA") then
@@ -86,7 +90,7 @@ local function InitHabitablePlanets()
 	end
 	for k, v in pairs(config.Add) do
 		local cls
-		if v.Type == "sphere" then
+		if v.Type == "sphere" or v.Type == "custom" then
 			cls = "base_sb_planet2"
 		elseif v.Type == "cube" then
 			cls = "base_cube_environment"
@@ -101,7 +105,7 @@ local function InitHabitablePlanets()
 
 		local planet = ents.Create(cls)
 		planet:SetModel("models/props_lab/huladoll.mdl")
-		planet:SetPos(Vector(unpack(v.Position)))
+		planet:SetPos(JSONToVector(v.Position))
 		if v.Angle then
 			planet:SetAngles(Angle(unpack(v.Angle)))
 		end
@@ -114,7 +118,49 @@ local function InitHabitablePlanets()
 		planet:CreateEnvironment(0, 0, 0, 0, 0, 0, 0, 0, v.Name)
 
 		if v.Type == "box" then
-			planet:UpdateOBB(Vector(unpack(v.OBBMin)), Vector(unpack(v.OBBMax)))
+			planet:UpdateOBB(JSONToVector(v.OBBMin), JSONToVector(v.OBBMax))
+		elseif v.Type == "custom" then
+			local mins
+			local maxs
+			local vertices = {}
+			for _, vtxRaw in pairs(v.Vertices) do
+				local vtx = JSONToVector(vtxRaw)
+				if not mins then
+					mins = Vector(vtx.x, vtx.y, vtx.z)
+				end
+				if not maxs then
+					maxs = Vector(vtx.x, vtx.y, vtx.z)
+				end
+
+				if vtx.x < mins.x then
+					mins.x = vtx.x
+				end
+				if vtx.y < mins.y then
+					mins.y = vtx.y
+				end
+				if vtx.z < mins.z then
+					mins.z = vtx.z
+				end
+
+				if vtx.x > maxs.x then
+					maxs.x = vtx.x
+				end
+				if vtx.y > maxs.y then
+					maxs.y = vtx.y
+				end
+				if vtx.z > maxs.z then
+					maxs.z = vtx.z
+				end
+
+				table.insert(vertices, vtx)
+			end
+			function planet:SBEnvPhysics(ent)
+				ent:PhysicsInitConvex(vertices)
+				ent:SetCollisionBounds(mins, maxs)
+				ent:EnableCustomCollisions(true)
+				ent:SetSolid(SOLID_VPHYSICS)
+				ent:SetNotSolid(true)
+			end
 		end
 		planet:UpdateSize(0, v.Size)
 
@@ -129,10 +175,17 @@ local function InitHabitablePlanets()
 		planet:SetRenderMode(RENDERMODE_NONE)
 		planet.sbenvironment.name = v.Name
 		planet.SA_Created = true
+
+		local priority = v.Priority or 2
 		function planet:GetPriority()
-			return 2
+			return priority
 		end
 		SA.Planets.MakeHabitable(planet)
+
+		if v.Gravity then
+			planet:ChangeGravity(v.Gravity)
+		end
+
 		MakePlanetProtected(planet)
 	end
 	local envname
