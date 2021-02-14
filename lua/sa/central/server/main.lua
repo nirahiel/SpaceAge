@@ -1,5 +1,5 @@
 SA.REQUIRE("api")
-SA.REQIORE("central.core")
+SA.REQUIRE("central.core")
 
 require("stomp")
 

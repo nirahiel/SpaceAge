@@ -1,4 +1,4 @@
-SA.REQIORE("central.core")
+SA.REQUIRE("central.core")
 SA.REQUIRE("central.enums")
 
 local function PlayerChat(server, teamChat, name, color, alive, text)

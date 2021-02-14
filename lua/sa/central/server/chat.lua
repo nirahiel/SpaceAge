@@ -1,4 +1,4 @@
-SA.REQIORE("central.core")
+SA.REQUIRE("central.core")
 SA.REQUIRE("central.main")
 SA.REQUIRE("central.enums")
 SA.REQUIRE("central.encoding")
