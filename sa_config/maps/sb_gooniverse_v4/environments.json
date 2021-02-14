@@ -6,6 +6,7 @@
         -10656,
         -1991
       ],
+      "Type": "sphere",
       "Name": "Cerebus",
       "Radius": 700
     },
@@ -15,6 +16,7 @@
         -9866,
         -2047
       ],
+      "Type": "sphere",
       "Name": "Cerebus",
       "Radius": 640
     }

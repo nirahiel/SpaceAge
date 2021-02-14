@@ -6,6 +6,7 @@
         -9818,
         -11428
       ],
+      "Type": "sphere",
       "Name": "Naar'ak Asteroid Base",
       "Radius": 900
     },
@@ -15,6 +16,7 @@
         -8609,
         -11229
       ],
+      "Type": "sphere",
       "Name": "Naar'ak Asteroid Base",
       "Radius": 600
     },
@@ -24,6 +26,7 @@
         -7112,
         -7624
       ],
+      "Type": "sphere",
       "Name": "Kestrel",
       "Radius": 600
     }
