@@ -8,6 +8,8 @@ function SA.Ice.GetRefined(ply, ore, efficiency)
 	local factionmul = 1.00
 	if ply.sa_data.faction_name == "ice" or ply.sa_data.faction_name == "alliance" then
 		factionmul = 1.33
+	elseif ply.sa_data.faction_name == "corporation" then
+		factionmul = 1.11
 	end
 
 	local refineTable = SA.Ice.Types[ore].refineTable

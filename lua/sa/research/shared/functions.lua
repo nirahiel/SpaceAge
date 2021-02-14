@@ -65,8 +65,6 @@ function SA.Research.GetLevelInfo(ply, Research, stopOnFail, level)
 
 	if ply.sa_data.faction_name == "legion" or ply.sa_data.faction_name == "alliance" then
 		total = total * 0.66
-	elseif ply.sa_data.faction_name == "ice" then
-		total = total * 0.88
 	end
 
 	total = math.ceil(total)

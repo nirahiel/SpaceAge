@@ -42,6 +42,8 @@ function ENT:CalcVars(ply)
 	local miningmod = 1
 	if ply.sa_data.faction_name == "miners" or ply.sa_data.faction_name == "alliance" then
 		miningmod = 1.33
+	elseif ply.sa_data.faction_name == "corporation" then
+		factionmul = 1.11
 	end
 	local level = self:GetPlayerLevel(ply)
 	self:SetNWInt("level", level)
