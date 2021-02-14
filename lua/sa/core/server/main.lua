@@ -138,7 +138,9 @@ local function LoadRes(ply, body, code)
 		SA.SendBasicInfo(ply)
 	end
 
-	SA.Central.SendChatRaw(ply, SA.Central.COLOR_NOTIFY_BLUE, " joined the server")
+	if not SA.API.IsServerHidden() then
+		SA.Central.SendChatRaw(ply, SA.Central.COLOR_NOTIFY_BLUE, " joined the server")
+	end
 end
 
 local function SA_InitSpawn(ply)
@@ -209,7 +211,9 @@ end
 
 local function DisconnectedUser(ply)
 	SA.SaveUser(ply)
-	SA.Central.SendChatRaw(ply, SA.Central.COLOR_NOTIFY_BLUE, " left the server")
+	if not SA.API.IsServerHidden() then
+		SA.Central.SendChatRaw(ply, SA.Central.COLOR_NOTIFY_BLUE, " left the server")
+	end
 end
 hook.Add("PlayerDisconnected", "SA_Save_Disconnect", DisconnectedUser)
 
