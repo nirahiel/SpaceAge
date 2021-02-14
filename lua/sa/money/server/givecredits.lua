@@ -1,4 +1,4 @@
-SA.GiveCredits = {}
+SA.GiveCredits = SA.GiveCredits or {}
 
 local SA_GiveRequests = {}
 

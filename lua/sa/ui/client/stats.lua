@@ -1,6 +1,6 @@
 local SA_MaxNameLength = 24
 
-SA.StatsTable = {}
+SA.StatsTable = SA.StatsTable or {}
 
 local function sa_info_msg_credsc()
 	local ply = LocalPlayer()

@@ -1,4 +1,4 @@
-SA.FlyMode = {}
+SA.FlyMode = SA.FlyMode or {}
 
 local convarEnable = CreateConVar("sa_use_flymode", "0", FCVAR_REPLICATED)
 

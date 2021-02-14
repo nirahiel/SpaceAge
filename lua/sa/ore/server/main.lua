@@ -1,1 +1,1 @@
-SA.Ore = {}
+SA.Ore = SA.Ore or {}

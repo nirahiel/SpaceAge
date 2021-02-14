@@ -1,4 +1,4 @@
-SA.Config = {}
+SA.Config = SA.Config or {}
 
 function SA.Config.Load(typ, isGlobal)
 	if not isGlobal then

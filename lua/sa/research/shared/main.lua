@@ -1,4 +1,4 @@
-SA.Research = {}
+SA.Research = SA.Research or {}
 
 local Researches = {}
 local ResearchGroups = {"Asteroid Mining", "Tiberium Mining", "Ice Mining", "Miscellaneous"}

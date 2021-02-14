@@ -1,1 +1,1 @@
-SA.Teleporter = {}
+SA.Teleporter = SA.Teleporter or {}

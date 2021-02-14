@@ -1,4 +1,4 @@
-SA.Factions = {}
+SA.Factions = SA.Factions or {}
 SA.Factions.Table = {
 	{ "Freelancers", "freelancer", Color(158, 134, 97, 255), "models/player/Group01/male_02.mdl", "models/player/Group01/male_02.mdl", nil, "have"},
 	{ "I.C.E.", "ice", Color(210, 210, 210, 255), "models/player/police.mdl", "models/player/combine_super_soldier.mdl", nil, "has"},

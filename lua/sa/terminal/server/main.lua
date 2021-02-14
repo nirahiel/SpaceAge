@@ -6,7 +6,7 @@ require("supernet")
 local HASH = SA.Random.String(32)
 print("SA security hash: ", HASH)
 
-SA.Terminal = {}
+SA.Terminal = SA.Terminal or {}
 
 local SA_UpdateInfo
 

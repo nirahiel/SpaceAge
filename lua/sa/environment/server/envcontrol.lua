@@ -1,4 +1,4 @@
-SA.Planets = {}
+SA.Planets = SA.Planets or {}
 
 SA.REQUIRE("config")
 

@@ -1,4 +1,4 @@
-SA.Functions = {}
+SA.Functions = SA.Functions or {}
 
 function SA.SendBasicInfo(ply)
 	ply.sa_data.credits = math.floor(ply.sa_data.credits)

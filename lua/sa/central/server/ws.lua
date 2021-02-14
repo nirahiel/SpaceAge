@@ -1,5 +1,5 @@
 SA.REQUIRE("api")
-SA.REQUIRE("central.core")
+SA.REQUIRE("central.main")
 
 require("stomp")
 

@@ -1,4 +1,4 @@
-SA.REQUIRE("central.core")
+SA.REQUIRE("central.main")
 
 SA.Central.TYPE_NIL = 0
 SA.Central.TYPE_TEXT = 1

@@ -1,4 +1,4 @@
-SA.FileBrowser = {}
+SA.FileBrowser = SA.FileBrowser or {}
 
 function SA.FileBrowser.CanRunAll(ply)
 	return ply:IsSuperAdmin()

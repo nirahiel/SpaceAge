@@ -6,7 +6,7 @@ local AppPanel = nil
 local defaultText = "Hi"
 local defaultFaction = "miners"
 
-SA.Application = {}
+SA.Application = SA.Application or {}
 SA.Application.Table = {}
 
 local function InitSelfApplication()

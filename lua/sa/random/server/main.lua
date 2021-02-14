@@ -1,6 +1,6 @@
 print("Random Load", pcall(require, "random"))
 
-SA.Random = {}
+SA.Random = SA.Random or {}
 
 if SecureRandomString then
 	SA.Random.String = SecureRandomString

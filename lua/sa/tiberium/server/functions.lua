@@ -1,4 +1,4 @@
-SA.Tiberium = {}
+SA.Tiberium = SA.Tiberium or {}
 
 SA.Tiberium.MaxCrystalCount = 6
 SA.Tiberium.CrystalRadius = 1024

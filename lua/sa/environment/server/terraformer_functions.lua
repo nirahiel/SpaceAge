@@ -1,6 +1,6 @@
 SA.REQUIRE("random")
 
-SA.Terraformer = {}
+SA.Terraformer = SA.Terraformer or {}
 
 local function SA_Terraformer_PushAtmosphere(terent, resName, atmoname, amount)
 	terent:ConsumeResource(resName, amount)

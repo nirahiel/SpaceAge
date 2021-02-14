@@ -1,1 +1,1 @@
-SA.UI = {}
+SA.UI = SA.UI or {}

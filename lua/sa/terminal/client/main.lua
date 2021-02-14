@@ -1,4 +1,4 @@
-SA.Terminal = {}
+SA.Terminal = SA.Terminal or {}
 
 SA.REQUIRE("misc.player_loaded")
 SA.REQUIRE("terminal.research")

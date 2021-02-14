@@ -1,1 +1,1 @@
-SA.Ice = {}
+SA.Ice = SA.Ice or {}
