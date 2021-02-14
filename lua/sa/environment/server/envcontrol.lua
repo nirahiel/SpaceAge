@@ -76,7 +76,7 @@ local function InitHabitablePlanets()
 	end
 
 	for k, v in pairs(ents.FindByClass("base_sb_planet*")) do
-		if (v.SA_Created) then
+		if v.SA_Created then
 			print("Found SpaceAge environment: " .. v.sbenvironment.name .. "! Removing!")
 			v:Remove()
 		elseif table.HasValue(config.Remove, string.lower(v.sbenvironment.name)) then
@@ -85,20 +85,39 @@ local function InitHabitablePlanets()
 		end
 	end
 	for k, v in pairs(config.Add) do
-		local position = Vector(unpack(v.Position))
+		local cls
+		if v.Type == "sphere" then
+			cls = "base_sb_planet2"
+		elseif v.Type == "cube" then
+			cls = "base_cube_environment"
+		elseif v.Type == "box" then
+			cls = "base_box_environment"
+		end
 
-		local planet = ents.Create("base_sb_planet2")
+		if not cls then
+			print("Unknown environment type", v.Type)
+			continue
+		end
+
+		local planet = ents.Create(cls)
 		planet:SetModel("models/props_lab/huladoll.mdl")
-		planet:SetPos(position)
+		planet:SetPos(Vector(unpack(v.Position)))
+		if v.Angle then
+			planet:SetAngles(Angle(unpack(v.Angle)))
+		end
+
 		planet:SetColor(Color(255,0,0,255))
 		planet:Spawn()
 
-		local closestPlan = SA.SB.FindClosestPlanet(position, false)
-		local plSB = closestPlan.sbenvironment
-		planet.sbenvironment.bloom = table.Copy(plSB.bloom)
-		planet.sbenvironment.color = table.Copy(plSB.color)
+		planet.sbenvironment.bloom = nil
+		planet.sbenvironment.color = nil
 		planet:CreateEnvironment(0, 0, 0, 0, 0, 0, 0, 0, v.Name)
-		planet:UpdateSize(0, v.Radius)
+
+		if v.Type == "box" then
+			planet:UpdateOBB(Vector(unpack(v.OBBMin)), Vector(unpack(v.OBBMax)))
+		end
+		planet:UpdateSize(0, v.Size)
+
 		planet:PhysicsInit(SOLID_NONE)
 		planet:SetMoveType(MOVETYPE_NONE)
 		planet:SetSolid(SOLID_NONE)

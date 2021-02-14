@@ -14,7 +14,7 @@
       ],
       "Type": "sphere",
       "Name": "Space Station",
-      "Radius": 1150
+      "Size": 1150
     },
     {
       "Position": [
@@ -24,7 +24,7 @@
       ],
       "Type": "sphere",
       "Name": "Space Station",
-      "Radius": 600
+      "Size": 600
     },
     {
       "Position": [
@@ -34,7 +34,7 @@
       ],
       "Type": "sphere",
       "Name": "Space Station",
-      "Radius": 850
+      "Size": 850
     },
     {
       "Position": [
@@ -44,7 +44,7 @@
       ],
       "Type": "sphere",
       "Name": "Space Station",
-      "Radius": 850
+      "Size": 850
     },
     {
       "Position": [
@@ -54,7 +54,7 @@
       ],
       "Type": "sphere",
       "Name": "Space Station",
-      "Radius": 800
+      "Size": 800
     },
     {
       "Position": [
@@ -64,7 +64,7 @@
       ],
       "Type": "sphere",
       "Name": "Space Station",
-      "Radius": 2500
+      "Size": 2500
     }
   ],
   "Protect": [

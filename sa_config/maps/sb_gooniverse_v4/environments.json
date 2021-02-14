@@ -8,7 +8,7 @@
       ],
       "Type": "sphere",
       "Name": "Cerebus",
-      "Radius": 700
+      "Size": 700
     },
     {
       "Position": [
@@ -18,7 +18,7 @@
       ],
       "Type": "sphere",
       "Name": "Cerebus",
-      "Radius": 640
+      "Size": 640
     }
   ],
   "Protect": [

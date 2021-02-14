@@ -8,7 +8,7 @@
       ],
       "Type": "sphere",
       "Name": "Naar'ak Asteroid Base",
-      "Radius": 900
+      "Size": 900
     },
     {
       "Position": [
@@ -18,7 +18,7 @@
       ],
       "Type": "sphere",
       "Name": "Naar'ak Asteroid Base",
-      "Radius": 600
+      "Size": 600
     },
     {
       "Position": [
@@ -28,7 +28,7 @@
       ],
       "Type": "sphere",
       "Name": "Kestrel",
-      "Radius": 600
+      "Size": 600
     }
   ],
   "Protect": [

@@ -8,7 +8,7 @@
       ],
       "Type": "sphere",
       "Name": "Umemeru",
-      "Radius": 400
+      "Size": 400
     }
   ],
   "Protect": [
