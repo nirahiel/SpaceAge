@@ -1,8 +1,7 @@
 SA.REQUIRE("api")
+SA.REQIORE("central.core")
 
 require("stomp")
-
-SA.Central = {}
 
 local socket
 local ourIdent
