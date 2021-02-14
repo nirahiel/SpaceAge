@@ -110,7 +110,9 @@ local function InitHabitablePlanets()
 		planet:SetRenderMode(RENDERMODE_NONE)
 		planet.sbenvironment.name = v.Name
 		planet.SA_Created = true
-		planet.MyPriority = 2
+		function planet:GetPriority()
+			return 2
+		end
 		SA.Planets.MakeHabitable(planet)
 		MakePlanetProtected(planet)
 	end
