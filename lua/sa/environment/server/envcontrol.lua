@@ -284,18 +284,6 @@ concommand.Add("sa_restart_environment", function(ply)
 	SA.Planets.Save()
 end)
 
-concommand.Add("sa_print_environment", function(ply)
-	if not ply:IsSuperAdmin() then return end
-	local env = SA.SB.FindClosestPlanet(ply:GetPos(), false)
-	local name = env:GetEnvironmentName()
-	local pos = env:GetPos()
-	local size = env:GetSize()
-	ply:ChatPrint(name)
-	ply:ChatPrint(tostring(pos))
-	ply:ChatPrint(tostring(size))
-	ply:ChatPrint(tostring(ply:GetPos().z - pos.z))
-end)
-
 timer.Simple(10, function()
 	for k,v in pairs(ents.FindByModel("models/props_lab/huladoll.mdl")) do
 		v:SetRenderMode(RENDERMODE_NONE)

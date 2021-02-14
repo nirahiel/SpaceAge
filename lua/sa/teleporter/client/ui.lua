@@ -73,7 +73,7 @@ function SA.Teleporter.Reload(ent, server)
 	local data = SA.Teleporter.GetMapData(serverData.map)
 	local planets = data.planets
 
-	local myPlanet = SA.SB.FindClosestPlanet(ent:GetPos(), false).name
+	local teleKey = ent:GetNWString("TeleKey")
 
 	--[[
 	local stars = SA.SB.GetStars()
@@ -134,7 +134,7 @@ function SA.Teleporter.Reload(ent, server)
 
 		local teleporterName = planet.teleporterName
 
-		local isMyPlanet = name == myPlanet and serverData.isself
+		local isMyPlanet = teleporterName == teleKey and serverData.isself
 
 		local planetColor = Color(255,0,0,64)
 		if planet.isStar then
