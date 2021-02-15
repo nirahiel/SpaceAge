@@ -13,7 +13,7 @@ function ENT:Initialize()
 	end
 
 	local phys = self:GetPhysicsObject()
-	if (phys:IsValid()) then
+	if phys:IsValid() then
 		phys:Wake()
 		phys:SetMass(500)
 	end

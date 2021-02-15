@@ -6,7 +6,6 @@ include("shared.lua")
 DEFINE_BASECLASS("base_gmodentity")
 
 local RD = CAF.GetAddon("Resource Distribution")
-local SA_TheWorld
 
 function ENT:SpawnFunction(ply, tr)
 	if (not tr.Hit) then return end
@@ -22,12 +21,9 @@ function ENT:Initialize()
 
 	self.SkipSBChecks = true
 
-	if not SA_TheWorld then
-		SA_TheWorld = ents.FindByClass("worldspawn")[1]
-	end
-
 	self:SetModel("models/slyfo/sat_rtankstand.mdl")
 	self.TouchTable = {}
+	self.IgnoreTable = {}
 	--self.TouchNetTable = {}
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
@@ -40,13 +36,15 @@ function ENT:Initialize()
 end
 
 function ENT:StartTouch(ent)
-	if ent.IsTiberiumStorage and ent:GetResourceAmount("tiberium") >= 0 then
+	local tibAmount = ent:GetResourceAmount("tiberium")
+	if ent.IsTiberiumStorage and tibAmount > 0 then
 		local attachPlace = SA.Tiberium.FindFreeAttachPlace(ent, self)
 		if not attachPlace then return end
 		if not SA.Tiberium.AttachStorage(ent, self, attachPlace) then return end
 		RD.Unlink(ent)
+		constraint.RemoveAll(ent)
 		ent.TibRefineWeld = constraint.Weld(ent, self, 0, 0, false)
-		ent.TibRefineAmount = ent:GetResourceAmount("tiberium")
+		ent.TibRefineAmount = tibAmount
 		ent:ConsumeResource("tiberium", ent.TibRefineAmount)
 		self.TouchTable[attachPlace] = ent
 	end
@@ -69,11 +67,11 @@ function ENT:Think()
 			v.TibRefineAmount = v.TibRefineAmount - taken
 			if taken <= 0 then
 				v.TibRefineAmount = nil
-				if IsValid(v.TibRefineWeld) then
-					v.TibRefineWeld:Remove()
-					v.TibRefineWeld = nil
-				else
-					v:Remove()
+				v.TibRefineWeld:Remove()
+
+				local phys = v:GetPhysicsObject()
+				if IsValid(phys) then
+					phys:ApplyForceCenter(self:GetAngles():Up() * 10)
 				end
 				self.TouchTable[k] = nil
 			else
