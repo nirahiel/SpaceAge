@@ -68,6 +68,8 @@ function ENT:Think()
 			if taken <= 0 then
 				v.TibRefineAmount = nil
 				v.TibRefineWeld:Remove()
+				v.FPPRestrictConstraint = {}
+				v.FPPConstraintReasons = {}
 
 				local phys = v:GetPhysicsObject()
 				if IsValid(phys) then
