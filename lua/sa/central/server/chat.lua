@@ -1,4 +1,4 @@
-SA.REQUIRE("central.main")
+SA.REQUIRE("central.ws")
 SA.REQUIRE("central.enums")
 SA.REQUIRE("central.encoding")
 
