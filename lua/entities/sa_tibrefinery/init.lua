@@ -69,9 +69,9 @@ function ENT:Think()
 			v.TibRefineAmount = v.TibRefineAmount - taken
 			if taken <= 0 then
 				v.TibRefineAmount = nil
-				if IsValid(v.TibStorageWeld) then
-					v.TibStorageWeld:Remove()
-					v.TibStorageWeld = nil
+				if IsValid(v.TibRefineWeld) then
+					v.TibRefineWeld:Remove()
+					v.TibRefineWeld = nil
 				else
 					v:Remove()
 				end
