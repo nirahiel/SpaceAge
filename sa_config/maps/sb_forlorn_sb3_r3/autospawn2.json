@@ -238,5 +238,25 @@
     "model": "models/props_phx/construct/metal_plate2x4.mdl",
     "z": -9186.0957,
     "rol": 180
+  },
+  "436": {
+    "pit": 0,
+    "yaw": 0,
+    "rol": 0,
+    "x": 9536.843750,
+    "y": 8530.687500,
+    "z": 321.343750,
+    "model": "models/Combine_Helicopter/helicopter_bomb01.mdl",
+    "class": "sa_doorchecker"
+  },
+  "437": {
+    "pit": 0,
+    "yaw": 0,
+    "rol": 0,
+    "x": 10655.718750,
+    "y": 10727.562500,
+    "z": 623.593750,
+    "model": "models/Combine_Helicopter/helicopter_bomb01.mdl",
+    "class": "sa_doorchecker"
   }
 }

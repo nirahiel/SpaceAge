@@ -2,66 +2,71 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
-local ForceShowDoorCs = false
-
 function ENT:SpawnFunction(ply, tr)
-	if (ForceShowDoorCs == false or not tr.Hit) then return end
+	if not tr.Hit then return end
 	local SpawnPos = tr.HitPos + Vector(0, 0, 100)
 	local ent = ents.Create("sa_doorchecker")
-	ent:SetModel("models/props/cs_assault/Billboard.mdl")
+	ent:SetModel("models/Combine_Helicopter/helicopter_bomb01.mdl")
 	ent:SetPos(SpawnPos)
 	ent:Spawn()
 	ent:Activate()
+	ent:SetVisible(true)
 	return ent
+end
+
+function ENT:FindEnvironment()
+	if not IsValid(self.xenvironment) then
+		local closestEnvironment = SA.FindClosestEnt(self:GetPos(), {"base_sb_environment_collider"})
+		if not IsValid(closestEnvironment) then
+			return
+		end
+		self.xenvironment = closestEnvironment.sbenv
+	end
+	return self.xenvironment
 end
 
 function ENT:Initialize()
 	if self:KillIfSpawned() then return end
 
-	self.SkipSBChecks = true
+	self:SetVisible(false)
 
-	self.isopen = 0
-	self.fullyopen = 0
-	self.fullyclosed = 0
-	self.blocked = 0
-	self.animov = 0
-	self.LastFCD = not ForceShowDoorCs
+	self.isopen = false
+	self.fullyopen = false
+	self.fullyclosed = false
+	self.blocked = false
 
 	local xuuid = "sa_dchecker_" .. tostring(CurTime())
 
 	self:Fire("addoutput", "targetname " .. xuuid, 0)
 
-	self:Think()
+	local closestDoor = SA.FindClosestEnt(self:GetPos(), {"func_door", "func_movelinear"})
 
-	local entitT = ents.FindByName("Silo_L")
-	if (#entitT <= 0) then
+	if not IsValid(closestDoor) then
+		print(self, "no door found!")
 		self:Remove()
 		return
 	end
-	local entit = entitT[1]
 
+	closestDoor:Fire("addoutput", "OnAnimationBegun " .. xuuid .. ",xtabegun", 0)
+	closestDoor:Fire("addoutput", "OnAnimationDone " .. xuuid .. ",xtadone", 0)
+	closestDoor:Fire("addoutput", "OnOpen " .. xuuid .. ",xtopen", 0)
+	closestDoor:Fire("addoutput", "OnClose " .. xuuid .. ",xtclose", 0)
+	closestDoor:Fire("addoutput", "OnBlockedOpening " .. xuuid .. ",xtbopen", 0)
+	closestDoor:Fire("addoutput", "OnBlockedClosing " .. xuuid .. ",xtbclose", 0)
+	closestDoor:Fire("addoutput", "OnUnblockedOpening " .. xuuid .. ",xtubopen", 0)
+	closestDoor:Fire("addoutput", "OnUnblockedClosing " .. xuuid .. ",xtubclose", 0)
+	closestDoor:Fire("addoutput", "OnFullyOpen " .. xuuid .. ",xtfopen", 0)
+	closestDoor:Fire("addoutput", "OnFullyClosed " .. xuuid .. ",xtfclose", 0)
 
-	entit:Fire("addoutput", "OnAnimationBegun " .. xuuid .. ", xtabegun", 0)
-	entit:Fire("addoutput", "OnAnimationDone " .. xuuid .. ", xtadone", 0)
-	entit:Fire("addoutput", "OnOpen " .. xuuid .. ", xtopen", 0)
-	entit:Fire("addoutput", "OnClose " .. xuuid .. ", xtclose", 0)
-	entit:Fire("addoutput", "OnBlockedOpening " .. xuuid .. ", xtbopen", 0)
-	entit:Fire("addoutput", "OnBlockedClosing " .. xuuid .. ", xtbclose", 0)
-	entit:Fire("addoutput", "OnUnblockedOpening " .. xuuid .. ", xtubopen", 0)
-	entit:Fire("addoutput", "OnUnblockedClosing " .. xuuid .. ", xtubclose", 0)
-	entit:Fire("addoutput", "OnFullyOpen " .. xuuid .. ", xtfopen", 0)
-	entit:Fire("addoutput", "OnFullyClosed " .. xuuid .. ", xtfclose", 0)
+	self.xent = closestDoor
+	self.xenvironment = nil
 
-	self.xent = entit
-
-	self:SetFully(0, true)
-	self:SetBlocked(0)
+	self:SetFully(false, true)
+	self:SetBlocked(false)
 end
 
-function ENT:Think()
-	if (self.LastFCD == ForceShowDoorCs) then return end
-	self.LastFCD = ForceShowDoorCs
-	if ForceShowDoorCs == true then
+function ENT:SetVisible(shown)
+	if shown then
 		self:SetNotSolid(false)
 		self:DrawShadow(true)
 		self:SetNoDraw(false)
@@ -76,19 +81,18 @@ function ENT:Think()
 		self:DrawShadow(false)
 		self:SetNoDraw(true)
 	end
-	timer.Create("SA_KeepUpAtmosphere", 60, 1, function() self:RefreshAtmo() end)
 end
 
 local InputSwitch = {
-	xtopen = function(s) s:SetOpen(1) end,
-	xtclose = function(s) s:SetOpen(0) end,
-	xtbopen = function(s) s:SetOpen(0) s:SetBlocked(1) end,
-	xtbclose = function(s) s:SetOpen(1) s:SetBlocked(1) end,
-	xtubopen = function(s) s:SetOpen(1) s:SetBlocked(0) end,
-	xtubclose = function(s) s:SetOpen(0) s:SetBlocked(0) end,
-	xtfopen = function(s) s:SetFully(1) end,
-	xtfclose = function(s) s:SetFully(0) end,
-	xtabegun = function(s) if s.animov <= 0 then s:SetOpen(1 - s.isopen) else s.animov = (s.animov - 1) end end,
+	xtopen = function(s) s:SetOpen(true) end,
+	xtclose = function(s) s:SetOpen(false) end,
+	xtbopen = function(s) s:SetOpen(false) s:SetBlocked(true) end,
+	xtbclose = function(s) s:SetOpen(true) s:SetBlocked(true) end,
+	xtubopen = function(s) s:SetOpen(true) s:SetBlocked(false) end,
+	xtubclose = function(s) s:SetOpen(false) s:SetBlocked(false) end,
+	xtfopen = function(s) s:SetFully(true) end,
+	xtfclose = function(s) s:SetFully(false) end,
+	xtabegun = function(s) s:SetOpen(not s.isopen) end,
 	xtadone = function(s) s:SetFully(s.isopen) end,
 }
 
@@ -99,69 +103,38 @@ function ENT:AcceptInput(name, activator, caller)
 	end
 end
 
-function ENT:closeself()
-	if (self.isopen == 1) then
-		self.animov = self.animov + 1
-		self:SetOpen(0)
-		self.xent:Fire("close")
-	end
-end
-
-function ENT:openself()
-	if (self.isopen == 0) then
-		self.animov = self.animov + 1
-		self.xent:Fire("open")
-		self:SetOpen(1)
-	end
-end
-
 function ENT:SetOpen(val, norefresh)
-	self.fullyopen = 0
-	self.fullyclosed = 0
-	if (val == self.isopen) then return end
-	if (val == 1) then
-		self.isopen = 1
-	elseif (val == 0) then
-		self.isopen = 0
-	else
-		return
-	end
-	if (not norefresh) then self:RefreshAtmo() end
+	self.fullyopen = false
+	self.fullyclosed = false
+
+	self.isopen = val
+
+	if not norefresh then self:RefreshAtmo() end
 end
 
 function ENT:SetFully(val, norefresh)
-	if val == 0 then
-		self:SetOpen(0, true)
-		self.fullyclosed = 1
-	elseif val == 1 then
-		self:SetOpen(1, true)
-		self.fullyopen = 1
+	self:SetOpen(val, true)
+	if val then
+		self.fullyopen = true
 	else
-		return
+		self.fullyclosed = true
 	end
 
-	self:SetBlocked(0)
+	self:SetBlocked(false)
 
-	if (not norefresh) then self:RefreshAtmo() end
+	if not norefresh then self:RefreshAtmo() end
 end
 
 function ENT:SetBlocked(val)
-	if val == self.blocked then return end
-	if val == 0 then
-		self.blocked = 0
-	elseif val == 1 then
-		self.blocked = 1
-	else
-		return
-	end
+	self.blocked = val
 end
 
 function ENT:RefreshAtmo()
-	local env = self.environment
+	local env = self:FindEnvironment()
 	if not env then return end
-	if self.isopen ~= 0 then
+	if self.isopen then
 		SA.Planets.MakeSpace(env)
-	elseif self.fullyclosed ~= 0 then
+	elseif self.fullyclosed then
 		SA.Planets.MakeHabitable(env)
 	end
 end
