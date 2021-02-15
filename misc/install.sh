@@ -12,9 +12,9 @@ git clone https://github.com/wiremod/wire-extras
 git clone https://github.com/TomyLobo/lua_reloadent.git
 git clone https://github.com/SpaceAgeMP/multi-parent.git
 git clone https://github.com/SpaceAgeMP/physgun-build-mode.git
+git clone https://github.com/SpaceAgeMP/Falcos-Prop-protection.git fpp
 
 ln -s ../../Joystick-Module/addons/Joystick joystick
-
 
 cd ../gamemodes
 ln -s ../addons/spaceage/gamemodes/spaceage ./
