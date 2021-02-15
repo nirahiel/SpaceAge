@@ -132,9 +132,12 @@ end
 function ENT:RefreshAtmo()
 	local env = self:FindEnvironment()
 	if not env then return end
+
+	local g = env:GetSBGravity()
 	if self.isopen then
 		SA.Planets.MakeSpace(env)
 	elseif self.fullyclosed then
 		SA.Planets.MakeHabitable(env)
 	end
+	env:ChangeGravity(g)
 end
