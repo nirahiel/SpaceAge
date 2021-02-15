@@ -1,7 +1,7 @@
 local convarEnabled = CreateConVar("restart_if_empty", 0)
 local convarTime = CreateConVar("restart_if_empty_time", 60 * 10)
 local convarTimeAFK = CreateConVar("restart_if_empty_time_afk", 60 * 30)
-local convarMode = CreateConVar("restart_if_empty_mode", "exit")
+local convarMode = CreateConVar("restart_if_empty_mode", "close")
 
 convarEnabled:SetBool(false)
 
@@ -48,8 +48,8 @@ timer.Create("RestartIfEmpty", 1, 0, function()
 	end
 
 	local mode = convarMode:GetString()
-	if mode == "exit" then
-		RunConsoleCommand("exit")
+	if mode == "close" then
+		RunConsoleCommand("close")
 	else
 		RunConsoleCommand("changelevel", game.GetMap())
 	end
