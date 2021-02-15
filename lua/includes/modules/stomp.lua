@@ -6,12 +6,19 @@ local stompId = 1
 
 local HEARTBEAT_RATE = 5
 
+STOMP_DEFAULT_DURABLE = {
+	["x-expires"] = 60 * 1000,
+	durable = "true",
+	["auto-delete"] = "false",
+}
+
 function NewSTOMPSocket(opts)
 	local sock = {
 		timerId = "STOMP_HeartBeat_" .. stompId,
 		connected = false,
+		sendQueue = {},
 		subscriptionIds = {},
-		subcriptionHandlers = {},
+		subscriptions = {},
 		maxSubscriptionId = 1,
 	}
 	stompId = stompId + 1
@@ -86,9 +93,13 @@ end
 
 function stomp:_handle_connected(data, headers)
 	self:onConnected()
-	for topic, id in pairs(self.subscriptionIds) do
-		self:_subscribe(id, topic)
+	for destination, _ in pairs(self.subscriptions) do
+		self:_subscribe(destination)
 	end
+	for _, toSend in pairs(self.sendQueue) do
+		self:_command(unpack(toSend))
+	end
+	self.sendQueue = {}
 end
 
 function stomp:_handle_error(data)
@@ -97,8 +108,15 @@ function stomp:_handle_error(data)
 end
 
 function stomp:_handle_message(data, headers)
-	local id = tonumber(headers.subscription)
-	local handler = self.subcriptionHandlers[id]
+	local destination = headers.subscription
+	local subInfo = self.subscriptions[destination]
+	if not subInfo then
+		return
+	end
+	local handler = subInfo.handler
+	if not handler then
+		return
+	end
 
 	if headers["content-type"] == "application/json" then
 		data = util.JSONToTable(data)
@@ -181,40 +199,64 @@ function stomp:_command(cmd, data, headers)
 	return true
 end
 
-function stomp:subscribe(topic, handler)
-	local id = self.subscriptionIds[topic]
-	if id then
-		return id
+function stomp:subscribe(destination, handler, config)
+	if self.subscriptions[destination] then
+		return
 	end
 
-	id = self.maxSubscriptionId
-	self.maxSubscriptionId = self.maxSubscriptionId + 1
+	local sub = {
+		handler = handler,
+		data = {
+			destination = destination,
+			ack = "auto",
+			id = destination,
+		}
+	}
 
-	self.subscriptionIds[topic] = id
-	self.subcriptionHandlers[id] = handler
+	for k, v in pairs(config) do
+		sub.data[k] = v
+	end
 
-	self:_subscribe(id, topic)
+	self.subscriptions[destination] = sub
 
-	return id
+	self:_subscribe(destination)
+
+	return destination
 end
 
-function stomp:_subscribe(id, topic)
-	self:_command("SUBSCRIBE", "", {
-		destination = "/topic/" .. topic,
-		ack = "auto",
-		id = id,
-	})
+function stomp:unsubscribe(destination)
+	if not self.subscriptions[destination] then
+		return
+	end
+	self:_unsubscribe(destination)
 end
 
-function stomp:send(topic, data)
-	return self:_command("SEND", util.TableToJSON(data), {
-		destination = "/topic/" .. topic,
+function stomp:_unsubscribe(destination)
+	local data = self.subscriptions[destination]
+	self:_command("UNSUBSCRIBE", "", data.data)
+end
+
+function stomp:_subscribe(destination)
+	local data = self.subscriptions[destination]
+	self:_command("SUBSCRIBE", "", data.data)
+end
+
+function stomp:send(destination, data)
+	data = util.TableToJSON(data)
+	local headers = {
+		destination = destination,
 		["user-id"] = self.login,
 		["content-type"] = "application/json",
-	})
+	}
+	local res = self:_command("SEND", data, headers)
+	if self.autoReconnect and not res then
+		table.insert(self.sendQueue, {"SEND", data, headers})
+		return true
+	end
+	return res
 end
 
-function stomp:onMessage(msg, topic)
+function stomp:onMessage(msg, destination)
 end
 function stomp:onConnected()
 end

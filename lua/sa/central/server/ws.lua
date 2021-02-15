@@ -37,7 +37,7 @@ SendCentralMessage = function(msg, target)
 	if not socket then
 		return
 	end
-	socket:send((target or "broadcast"):lower(), msg)
+	socket:send("/topic/" .. (target or "broadcast"):lower(), msg)
 end
 
 local ConnectCentral
@@ -61,8 +61,8 @@ ConnectCentral = function()
 		passcode = ourKey,
 		autoReconnect = true,
 	})
-	socket:subscribe("broadcast", HandleCentralMessage)
-	socket:subscribe(ourIdent:lower(), HandleCentralMessage)
+	socket:subscribe("/topic/broadcast", HandleCentralMessage, STOMP_DEFAULT_DURABLE)
+	socket:subscribe("/topic/" .. ourIdent:lower(), HandleCentralMessage, STOMP_DEFAULT_DURABLE)
 
 	function socket:onConnected()
 		print("[Central] Link connected...")
