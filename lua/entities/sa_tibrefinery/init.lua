@@ -45,7 +45,7 @@ function ENT:StartTouch(ent)
 		if not attachPlace then return end
 		if not SA.Tiberium.AttachStorage(ent, self, attachPlace) then return end
 		RD.Unlink(ent)
-		ent.TibRefineWeld = constraint.Weld(ent, SA_TheWorld, 0, 0, false)
+		ent.TibRefineWeld = constraint.Weld(ent, self, 0, 0, false)
 		ent.TibRefineAmount = ent:GetResourceAmount("tiberium")
 		ent:ConsumeResource("tiberium", ent.TibRefineAmount)
 		self.TouchTable[attachPlace] = ent
