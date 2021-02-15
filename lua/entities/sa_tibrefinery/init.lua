@@ -44,35 +44,40 @@ function ENT:StartTouch(ent)
 		local attachPlace = SA.Tiberium.FindFreeAttachPlace(ent, self)
 		if not attachPlace then return end
 		if not SA.Tiberium.AttachStorage(ent, self, attachPlace) then return end
-		constraint.Weld(ent, SA_TheWorld, 0, 0, false)
-		self.TouchTable[attachPlace] = ent
-		--local tmp = RD.GetEntityTable(ent)
-		--self.TouchNetTable[ent:EntIndex()] = tmp.network
 		RD.Unlink(ent)
+		ent.TibRefineWeld = constraint.Weld(ent, SA_TheWorld, 0, 0, false)
+		ent.TibRefineAmount = ent:GetResourceAmount("tiberium")
+		ent:ConsumeResource("tiberium", ent.TibRefineAmount)
+		self.TouchTable[attachPlace] = ent
 	end
 end
 
 function ENT:Think()
 	BaseClass.Think(self)
 	for k, v in pairs(self.TouchTable) do
-		if not v.IsTiberiumStorage then
+		if not IsValid(v) or not v.IsTiberiumStorage then
 			self.TouchTable[k] = nil
 			continue
 		end
 		RD.Unlink(v)
 		local ply = v:CPPIGetOwner()
-		if ply and ply:IsValid() and ply:IsPlayer() then
-			local am = v:GetResourceAmount("tiberium")
-			local taken = 10000
-			if am < taken then
-				taken = am
+		if IsValid(ply) and ply:IsPlayer() then
+			local taken = v.TibRefineAmount
+			if taken > 10000 then
+				taken = 10000
 			end
+			v.TibRefineAmount = v.TibRefineAmount - taken
 			if taken <= 0 then
-				v:Remove()
+				v.TibRefineAmount = nil
+				if IsValid(v.TibStorageWeld) then
+					v.TibStorageWeld:Remove()
+					v.TibStorageWeld = nil
+				else
+					v:Remove()
+				end
 				self.TouchTable[k] = nil
 			else
-				v:ConsumeResource("tiberium", taken)
-				local creds = math.Round(taken * (math.random(20, 30)))
+				local creds = math.Round(taken * 25)
 				if ply.sa_data.faction_name == "corporation" or ply.sa_data.faction_name == "alliance" then
 					creds = math.ceil((creds * 1.33) * 1000) / 1000
 				end
