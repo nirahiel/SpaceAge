@@ -105,7 +105,7 @@ function SA.SaveSystem.Save(ply)
 			Entity = {
 				{ Bone = 0, World = false, Index = ent:EntIndex() },
 			},
-			NetTable = data.resources,
+			NetTable = nodeData.resources,
 		}
 		dupe.Constraints["RDNet_" .. netId] = tblC
 		NodeDupeTables[netId] = {
