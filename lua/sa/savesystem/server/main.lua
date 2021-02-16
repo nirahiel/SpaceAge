@@ -34,7 +34,7 @@ duplicator.RegisterConstraint("SA_RDNetData", function(ent, tbl)
 
 	local netid = ent:GetNWInt("netid")
 
-	for name, data in pairs(tbl.resources) do
+	for name, data in pairs(tbl) do
 		if data.value <= 0 then
 			continue
 		end
@@ -89,27 +89,36 @@ function SA.SaveSystem.Save(ply)
 	end
 
 	for ent, data in pairs(nodes) do
+		if not data and data.resources then
+			continue
+		end
 		dupe.Constraints["RDNet_" .. ent:EntIndex()] = {
 			Type = "SA_RDNetData",
 			Entity = {
 				{ Bone = 0, World = false, Index = ent:EntIndex() },
 			},
-			NetTable = data,
+			NetTable = data.resources,
 		}
 	end
 
 	file.Write(SaveFileName(ply), util.TableToJSON(dupe))
 end
 
-function SA.SaveSystem.Restore(ply)
+function SA.SaveSystem.Restore(ply, delete)
 	if not IsValid(ply) then
 		return
 	end
-	local data = file.Read(SaveFileName(ply), "DATA")
+
+	local fileName = SaveFileName(ply)
+	local data = file.Read(fileName, "DATA")
 	if not data then
 		return
 	end
 	data = util.JSONToTable(data)
+
+	if delete then
+		file.Delete(fileName)
+	end
 
 	DisablePropCreateEffect = true
 
