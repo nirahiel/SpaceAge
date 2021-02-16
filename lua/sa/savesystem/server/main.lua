@@ -2,6 +2,7 @@ SA.SaveSystem = {}
 
 local SA_PASTE_RUNNING = false
 local NodeDupeTables = {}
+local PlayersHaveRestored = {}
 
 local function SaveFileName(ply)
 	if ply and ply.SteamID then
@@ -164,9 +165,11 @@ function SA.SaveSystem.SaveDupe(dupe)
 	file.Write(SaveFileName(dupe.Owner), util.TableToJSON(dupe))
 end
 
-function SA.SaveSystem.Delete(ply)
-	file.Delete(SaveFileName(ply))
+function SA.SaveSystem.Delete(steamid)
+	PlayersHaveRestored[steamid] = nil
+	file.Delete(SaveFileName(steamid))
 end
+
 hook.Add("PlayerDisconnected", "SA_SaveSystem_Cleanup", function(ply)
 	local sid = ply:SteamID()
 	timer.Create("SA_SaveSystem_CleanupTimer_" .. sid, 300, 1, function()
@@ -181,6 +184,14 @@ function SA.SaveSystem.Restore(ply, triggeredByUser)
 	if not IsValid(ply) then
 		return
 	end
+	local sid = ply:SteamID()
+
+	if triggeredByUser then
+		if PlayersHaveRestored[sid] then
+			return
+		end
+		PlayersHaveRestored[sid] = true
+	end
 
 	local fileName = SaveFileName(ply)
 	local data = file.Read(fileName, "DATA")
@@ -190,9 +201,6 @@ function SA.SaveSystem.Restore(ply, triggeredByUser)
 	data = util.JSONToTable(data)
 
 	if triggeredByUser then
-		if ply.SAHasRestored then
-			return
-		end
 		for _, ent in pairs(ents.GetAll()) do
 			local own = ent:CPPIGetOwner()
 			if own ~= ply then
@@ -201,7 +209,6 @@ function SA.SaveSystem.Restore(ply, triggeredByUser)
 			ent:Remove()
 		end
 		file.Delete(fileName)
-		ply.SAHasRestored = true
 	end
 
 	DisablePropCreateEffect = true
@@ -227,6 +234,9 @@ function SA.SaveSystem.Restore(ply, triggeredByUser)
 	DisablePropCreateEffect = nil
 end
 
-concommand.Add("sa_restore_me", function (ply)
+local function RestorePlayer(ply)
 	SA.SaveSystem.Restore(ply, true)
-end)
+end
+
+concommand.Add("sa_restore_me", RestorePlayer)
+hook.Add("PlayerInitialSpawn", "SA_SaveSystem_Restore", RestorePlayer)
