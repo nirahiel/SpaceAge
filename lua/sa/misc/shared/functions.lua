@@ -75,6 +75,9 @@ end
 function SA.IsValidRoidPos(vector, mins, maxs)
 	if not util.IsInWorld(vector) then return false end
 
+	return true
+
+	--[[
 	local tr = {
 		start = vector,
 		endpos = vector,
@@ -82,7 +85,8 @@ function SA.IsValidRoidPos(vector, mins, maxs)
 		maxs = maxs,
 	}
 
-	local hullTrace = util.TraceHull( tr )
+	local hullTrace = util.TraceHull(tr)
 
 	return hullTrace.Hit or hullTrace.HitSky
+	]]
 end
