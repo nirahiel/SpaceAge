@@ -10,7 +10,7 @@ local function SaveFileName(ply)
 	return "sa_save_" .. ply:Replace(":", "_") .. ".txt"
 end
 
-function SA.SaveSystem.SaveAll(cb)
+function SA.SaveSystem.SaveAll(cb, saveapi)
 	NodeDupeTables = {}
 	local i = 0
 	for _, ply in pairs(player.GetHumans()) do

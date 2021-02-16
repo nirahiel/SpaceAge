@@ -13,6 +13,24 @@ timer.Simple(0, function()
 	end)
 end)
 
+function DoRestartServer()
+	SA.SaveAllUsers()
+	SA.SaveSystem.SaveAll(function()
+		local mode = convarMode:GetString()
+		if mode == "close" then
+			RunConsoleCommand("close")
+		else
+			RunConsoleCommand("changelevel", game.GetMap())
+		end
+	end)
+end
+concommand.Add("restart_server_now", function(ply)
+	if IsValid(ply) and not ply:IsSuperAdmin() then
+		return
+	end
+	DoRestartServer()
+end)
+
 timer.Create("RestartIfEmpty", 1, 0, function()
 	if not convarEnabled:GetBool() then
 		serverEmptyCycles = 0
@@ -47,10 +65,5 @@ timer.Create("RestartIfEmpty", 1, 0, function()
 		return
 	end
 
-	local mode = convarMode:GetString()
-	if mode == "close" then
-		RunConsoleCommand("close")
-	else
-		RunConsoleCommand("changelevel", game.GetMap())
-	end
+	DoRestartServer()
 end)

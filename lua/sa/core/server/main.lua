@@ -237,17 +237,17 @@ local function DisconnectedUser(ply)
 end
 hook.Add("PlayerDisconnected", "SA_Save_Disconnect", DisconnectedUser)
 
-local function SA_SaveAllUsers()
+function SA.SaveAllUsers()
 	local autoSaveTime = autoSaveTimeCVar:GetInt()
 	if autoSaveTime > 0 then
-		timer.Adjust("SA_Autosave", autoSaveTime * 60, 0, SA_SaveAllUsers)
+		timer.Adjust("SA_Autosave", autoSaveTime * 60)
 		for _, v in ipairs(player.GetHumans()) do
 			SA.SaveUser(v)
 		end
 		SA.Planets.Save()
 	end
 end
-timer.Create("SA_Autosave", 60, 0, SA_SaveAllUsers)
+timer.Create("SA_Autosave", 60, 0, SA.SaveAllUsers)
 concommand.Add("sa_save_players", function(ply) if not IsValid(ply) or ply:IsAdmin() then SA_SaveAllUsers() end end)
 
 local function SA_Autospawner(ply)
