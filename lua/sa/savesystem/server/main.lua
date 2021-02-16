@@ -1,8 +1,7 @@
 SA.SaveSystem = {}
 
-local RD = CAF.GetAddon("Resource Distribution")
-
 local SA_PASTE_RUNNING = false
+local NodeDupeTables = {}
 
 local function SaveFileName(ply)
 	if ply and ply.SteamID then
@@ -12,6 +11,7 @@ local function SaveFileName(ply)
 end
 
 function SA.SaveSystem.SaveAll()
+	NodeDupeTables = {}
 	for _, ply in pairs(player.GetHumans()) do
 		SA.SaveSystem.Save(ply)
 	end
@@ -39,25 +39,30 @@ duplicator.RegisterConstraint("SA_RDNetData", function(ent, tbl)
 			continue
 		end
 
-		RD.SupplyNetResource(netid, name, data.value, data.temperature)
+		SA.RD.SupplyNetResource(netid, name, data.value, data.temperature)
 	end
 end, "Ent1", "NetTable")
+
+local function GetRDNetIDData(netid)
+	if netid <= 0 then
+		return
+	end
+	return SA.RD.GetNetTable(netid)
+end
 
 local function GetRDNetData(node)
 	if node:GetClass() ~= "resource_node" then
 		return
 	end
 	local netid = node:GetNWInt("netid")
-	if netid <= 0 then
-		return
-	end
-	return RD.GetNetTable(netid)
+	return netid, GetRDNetIDData(netid)
 end
 
 function SA.SaveSystem.Save(ply)
 	if not IsValid(ply) then
 		return
 	end
+	local sid = ply:SteamID()
 
 	local nodes = {}
 	local parents = {}
@@ -69,10 +74,11 @@ function SA.SaveSystem.Save(ply)
 		end
 		parents[ent] = ent:GetParent()
 		table.insert(toSave, ent)
-		nodes[ent] = GetRDNetData(ent)
+		nodes[ent] = {GetRDNetData(ent)}
 	end
 
 	local dupe = duplicator.CopyEnts(toSave)
+	dupe.Owner = sid
 
 	for ent, parent in pairs(parents) do
 		local own = parent:CPPIGetOwner()
@@ -89,15 +95,23 @@ function SA.SaveSystem.Save(ply)
 	end
 
 	for ent, data in pairs(nodes) do
-		if not data and data.resources then
+		local netId = data[1]
+		local nodeData = data[2]
+		if not netId or not nodeData or not nodeData.resources then
 			continue
 		end
-		dupe.Constraints["RDNet_" .. ent:EntIndex()] = {
+		local tblC = {
 			Type = "SA_RDNetData",
 			Entity = {
 				{ Bone = 0, World = false, Index = ent:EntIndex() },
 			},
 			NetTable = data.resources,
+		}
+		dupe.Constraints["RDNet_" .. netId] = tblC
+		NodeDupeTables[netId] = {
+			tbl = tblC,
+			dupe = dupe,
+			ply = sid,
 		}
 	end
 
@@ -109,7 +123,32 @@ function SA.SaveSystem.Save(ply)
 		end
 	end
 
-	file.Write(SaveFileName(ply), util.TableToJSON(dupe))
+	SA.SaveSystem.SaveDupe(dupe)
+end
+
+function SA.SaveSystem.SaveNetID(netId)
+	if not netId or netId < 0 then
+		return
+	end
+	local data = GetRDNetIDData(netId)
+
+	local tbl = NodeDupeTables[netId]
+	if not tbl then
+		return
+	end
+
+	if not data or not data.resources then
+		tbl.tbl.NetTable = nil
+		tbl.dupe.Constraints["RDNet_" .. netId] = nil
+	else
+		tbl.tbl.NetTable = data.resources
+	end
+
+	return tbl.dupe
+end
+
+function SA.SaveSystem.SaveDupe(dupe)
+	file.Write(SaveFileName(dupe.Owner), util.TableToJSON(dupe))
 end
 
 function SA.SaveSystem.Restore(ply, delete)

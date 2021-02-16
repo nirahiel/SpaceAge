@@ -50,6 +50,9 @@ function PlayerMeta:AssignFaction(name, cb)
 end
 
 local function SA_AddSAData(ply)
+	if not ply.SARDDirtyNets then
+		ply.SARDDirtyNets = {}
+	end
 	if not ply.sa_data then
 		ply.sa_data = {}
 	end
@@ -197,7 +200,7 @@ timer.Create("SA_PlayTimeTracker", 1, 0, function()
 	end
 end)
 
-function SA.SaveUser(ply, cb)
+function SA.SaveUser(ply)
 	local sid = ply:SteamID()
 	if not ply.sa_data or not ply.sa_data.loaded or not SA_IsValidSteamID(sid) then
 		return false
@@ -205,7 +208,24 @@ function SA.SaveUser(ply, cb)
 
 	ply.sa_data.name = ply:Nick()
 	ply.sa_data.station_storage.contents = SA.Terminal.GetPermStorage(ply)
-	SA.API.UpsertPlayer(ply, cb)
+	SA.API.UpsertPlayer(ply)
+
+	if not ply.SARDDirtyNets then
+		return true
+	end
+
+	local dupes = {}
+	for netid, _ in pairs(ply.SARDDirtyNets) do
+		local dupe = SA.SaveSystem.SaveNetID(netid)
+		if dupe then
+			dupes[dupe] = true
+		end
+	end
+	for dupe, _ in pairs(dupes) do
+		SA.SaveSystem.SaveDupe(dupe)
+	end
+	ply.SARDDirtyNets = {}
+
 	return true
 end
 

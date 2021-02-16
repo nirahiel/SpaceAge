@@ -205,6 +205,7 @@ local function SA_SupplyResource(ply, res, num)
 	local SelNode = SA_SelectedNode(ply)
 	if (SA.ValidEntity(SelNode)) then
 		SA.RD.SupplyNetResource(SelNode.netid, res, num, 293)
+		ply.SARDDirtyNets[SelNode.netid] = true
 	end
 	return 0
 end
@@ -333,6 +334,7 @@ local function SA_RefineOre(ply, cmd, args)
 			end
 		end
 		SA.RD.ConsumeNetResource(netid, "ore", orecount)
+		ply.SARDDirtyNets[netid] = true
 		TempStorage[uid].ore = 0
 	end
 	SA_UpdateInfo(ply)
@@ -485,6 +487,7 @@ local function SA_MoveResource(ply, cmd, args)
 		ply.sa_data.station_storage.contents[res] = ply.sa_data.station_storage.contents[res] - tomove
 	elseif (from == "ship") then
 		SA.RD.ConsumeNetResource(netid, res, tomove)
+		ply.SARDDirtyNets[netid] = true
 	end
 	UpdateCapacity(ply)
 	SA_UpdateInfo(ply)

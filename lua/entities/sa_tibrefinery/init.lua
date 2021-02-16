@@ -36,8 +36,12 @@ function ENT:Initialize()
 end
 
 function ENT:StartTouch(ent)
+	if not ent.IsTiberiumStorage then
+		return
+	end
+
 	local tibAmount = ent:GetResourceAmount("tiberium")
-	if ent.IsTiberiumStorage and tibAmount > 0 then
+	if tibAmount > 0 then
 		local attachPlace = SA.Tiberium.FindFreeAttachPlace(ent, self)
 		if not attachPlace then return end
 		if not SA.Tiberium.AttachStorage(ent, self, attachPlace) then return end
