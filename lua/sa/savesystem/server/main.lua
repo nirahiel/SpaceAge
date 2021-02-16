@@ -157,6 +157,10 @@ function SA.SaveSystem.SaveNetID(netId)
 end
 
 function SA.SaveSystem.SaveDupe(dupe)
+	local ply = player.GetBySteamID(dupe.Owner)
+	if IsValid(ply) then
+		dupe.OwnerPos = ply:GetPos()
+	end
 	file.Write(SaveFileName(dupe.Owner), util.TableToJSON(dupe))
 end
 
