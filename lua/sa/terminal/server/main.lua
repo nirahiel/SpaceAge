@@ -122,7 +122,7 @@ local function SA_SelectNode(ply, cmd, args)
 	local NetID = tonumber(args[1])
 	if not NetID then return end
 	for k, v in pairs(ents.FindByClass("resource_node")) do
-		if v:CPPIGetOwner() == ply and NetID == v:GetNWInt("netid") then
+		if v:CPPIGetOwner() == ply and NetID == v.netid then
 			ply.SelectedNode = v
 			SA_UpdateInfo(ply)
 			break
@@ -155,7 +155,7 @@ local function SA_UpdateNodeSelection(ply)
 	local Nodes = {}
 	for k, v in pairs(ents.FindByClass("resource_node")) do
 		if v:CPPIGetOwner() == ply and StationPos:Distance(v:GetPos()) < StationSize then
-			local NetID = v:GetNWInt("netid")
+			local NetID = v.netid
 			table.insert(Nodes, NetID)
 			if (SelectedNode == v) then
 				SelectedID = NetID

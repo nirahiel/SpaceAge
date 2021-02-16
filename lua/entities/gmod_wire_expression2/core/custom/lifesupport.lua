@@ -78,7 +78,7 @@ end
 
 local function ls_get_ent_netid(this)
 	if not SA.ValidEntity(this) then return nil end
-	local netid = this:GetNWInt("netid")
+	local netid = this.netid
 	if netid <= 0 then return nil end
 	return netid
 end
