@@ -237,6 +237,8 @@ end
 local function RestorePlayer(ply)
 	SA.SaveSystem.Restore(ply, true)
 end
-
 concommand.Add("sa_restore_me", RestorePlayer)
 hook.Add("PlayerInitialSpawn", "SA_SaveSystem_Restore", RestorePlayer)
+for _, ply in pairs(player.GetHumans()) do
+	PlayersHaveRestored[ply:SteamID()] = true
+end
