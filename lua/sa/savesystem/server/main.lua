@@ -10,12 +10,21 @@ local function SaveFileName(ply)
 	return "sa_save_" .. ply:Replace(":", "_") .. ".txt"
 end
 
-function SA.SaveSystem.SaveAll()
+function SA.SaveSystem.SaveAll(cb)
 	NodeDupeTables = {}
+	local i = 0
 	for _, ply in pairs(player.GetHumans()) do
-		SA.SaveSystem.Save(ply)
+		local xply = ply
+		timer.Simple(i, function()
+			SA.SaveSystem.Save(xply)
+		end)
+		i = i + 1
+	end
+	if cb then
+		timer.Simple(i, cb)
 	end
 end
+timer.Create("SA_SaveSystem_SaveAll", 60 * 10, 0, SA.SaveSystem.SaveAll)
 
 duplicator.RegisterConstraint("SA_Parent", function(ent1, ent2)
 	if not SA_PASTE_RUNNING then
