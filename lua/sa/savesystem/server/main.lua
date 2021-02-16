@@ -177,7 +177,7 @@ hook.Add("PlayerDisconnected", "SA_SaveSystem_Cleanup", function(ply)
 	end)
 end)
 
-function SA.SaveSystem.Restore(ply, delete)
+function SA.SaveSystem.Restore(ply, triggeredByUser)
 	if not IsValid(ply) then
 		return
 	end
@@ -189,8 +189,19 @@ function SA.SaveSystem.Restore(ply, delete)
 	end
 	data = util.JSONToTable(data)
 
-	if delete then
+	if triggeredByUser then
+		if ply.SAHasRestored then
+			return
+		end
+		for _, ent in pairs(ents.GetAll()) do
+			local own = ent:CPPIGetOwner()
+			if own ~= ply then
+				continue
+			end
+			ent:Remove()
+		end
 		file.Delete(fileName)
+		ply.SAHasRestored = true
 	end
 
 	DisablePropCreateEffect = true
@@ -215,3 +226,7 @@ function SA.SaveSystem.Restore(ply, delete)
 
 	DisablePropCreateEffect = nil
 end
+
+concommand.Add("sa_restore_me", function (ply)
+	SA.SaveSystem.Restore(ply, true)
+end)
