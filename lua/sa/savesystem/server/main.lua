@@ -209,5 +209,9 @@ function SA.SaveSystem.Restore(ply, delete)
 		ply:AddCleanup("duplicates", ent)
 	end
 
+	if data.OwnerPos then
+		ply:SetPos(data.OwnerPos)
+	end
+
 	DisablePropCreateEffect = nil
 end
