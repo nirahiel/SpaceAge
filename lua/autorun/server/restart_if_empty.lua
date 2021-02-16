@@ -15,7 +15,8 @@ end)
 
 function DoRestartServer()
 	SA.SaveAllUsers()
-	SA.SaveSystem.SaveAll(function()
+	SA.SaveSystem.SaveAll()
+	timer.Simple(5, function()
 		local mode = convarMode:GetString()
 		if mode == "close" then
 			RunConsoleCommand("close")

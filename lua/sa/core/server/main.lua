@@ -43,16 +43,14 @@ function PlayerMeta:AssignFaction(name, cb)
 	if self.sa_data.faction_name ~= old_name then
 		self.sa_data.is_faction_leader = false
 		local steamId = self:SteamID()
-		SA.SaveUser(self, function()
+		SA.SaveUser(self)
+		timer.Simple(5, function()
 			http.Fetch("https://spaceage.mp/sa_group_sync.php?steam_id=" .. steamId .. "&authkey=TwB8a4yUKkF13bpI")
 		end)
 	end
 end
 
 local function SA_AddSAData(ply)
-	if not ply.SARDDirtyNets then
-		ply.SARDDirtyNets = {}
-	end
 	if not ply.sa_data then
 		ply.sa_data = {}
 	end
@@ -200,7 +198,7 @@ timer.Create("SA_PlayTimeTracker", 1, 0, function()
 	end
 end)
 
-function SA.SaveUser(ply)
+function SA.SaveUser(ply, dontsaverd)
 	local sid = ply:SteamID()
 	if not ply.sa_data or not ply.sa_data.loaded or not SA_IsValidSteamID(sid) then
 		return false
@@ -210,21 +208,9 @@ function SA.SaveUser(ply)
 	ply.sa_data.station_storage.contents = SA.Terminal.GetPermStorage(ply)
 	SA.API.UpsertPlayer(ply)
 
-	if not ply.SARDDirtyNets then
-		return true
+	if not dontsaverd then
+		SA.SaveSystem.Save(ply)
 	end
-
-	local dupes = {}
-	for netid, _ in pairs(ply.SARDDirtyNets) do
-		local dupe = SA.SaveSystem.SaveNetID(netid)
-		if dupe then
-			dupes[dupe] = true
-		end
-	end
-	for dupe, _ in pairs(dupes) do
-		SA.SaveSystem.SaveDupe(dupe)
-	end
-	ply.SARDDirtyNets = {}
 
 	return true
 end
@@ -242,9 +228,10 @@ function SA.SaveAllUsers()
 	if autoSaveTime > 0 then
 		timer.Adjust("SA_Autosave", autoSaveTime * 60)
 		for _, v in ipairs(player.GetHumans()) do
-			SA.SaveUser(v)
+			SA.SaveUser(v, true)
 		end
 		SA.Planets.Save()
+		SA.SaveSystem.SaveAll()
 	end
 end
 timer.Create("SA_Autosave", 60, 0, SA.SaveAllUsers)

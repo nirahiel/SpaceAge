@@ -1,32 +1,43 @@
+local valuables = {}
+
+function SA.GetValuableResources()
+	return valuables
+end
+
+local function AddValuableResource(name, fancyName)
+	valuables[name] = true
+	SA.RD.AddProperResourceName(name, fancyName)
+end
+
 function SA.CAFInit()
 	SA.RD = CAF.GetAddon("Resource Distribution")
 	SA.SB = CAF.GetAddon("Spacebuild")
 	SA.LS = CAF.GetAddon("Life Support")
 
 	timer.Simple(0, function()
-		SA.RD.AddProperResourceName("valuable minerals", "Valuable Minerals")
-		SA.RD.AddProperResourceName("dark matter", "Dark Matter")
-		SA.RD.AddProperResourceName("terracrystal", "Terracrystal")
-		SA.RD.AddProperResourceName("permafrost", "Permafrost")
-		SA.RD.AddProperResourceName("ore", "Ore")
-		SA.RD.AddProperResourceName("tiberium", "Tiberium")
-		SA.RD.AddProperResourceName("metals", "Metals")
+		AddValuableResource("valuable minerals", "Valuable Minerals")
+		AddValuableResource("dark matter", "Dark Matter")
+		AddValuableResource("terracrystal", "Terracrystal")
+		AddValuableResource("permafrost", "Permafrost")
+		AddValuableResource("ore", "Ore")
+		AddValuableResource("tiberium", "Tiberium")
+		AddValuableResource("metals", "Metals")
 
-		SA.RD.AddProperResourceName("oxygen isotopes", "Oxygen Isotopes")
-		SA.RD.AddProperResourceName("hydrogen isotopes", "Hydrogen Isotopes")
-		SA.RD.AddProperResourceName("helium isotopes", "Helium Isotopes")
-		SA.RD.AddProperResourceName("nitrogen isotopes", "Nitrogen Isotopes")
-		SA.RD.AddProperResourceName("carbon isotopes", "Carbon Isotopes")
-		SA.RD.AddProperResourceName("strontium clathrates", "Strontium Clathrates")
+		AddValuableResource("oxygen isotopes", "Oxygen Isotopes")
+		AddValuableResource("hydrogen isotopes", "Hydrogen Isotopes")
+		AddValuableResource("helium isotopes", "Helium Isotopes")
+		AddValuableResource("nitrogen isotopes", "Nitrogen Isotopes")
+		AddValuableResource("carbon isotopes", "Carbon Isotopes")
+		AddValuableResource("strontium clathrates", "Strontium Clathrates")
 
-		SA.RD.AddProperResourceName("blue ice", "Blue Ice")
-		SA.RD.AddProperResourceName("clear ice", "Clear Ice")
-		SA.RD.AddProperResourceName("glacial mass", "Glacial Mass")
-		SA.RD.AddProperResourceName("white glaze", "White Glaze")
-		SA.RD.AddProperResourceName("dark glitter", "Dark Glitter")
-		SA.RD.AddProperResourceName("glare crust", "Glare Crust")
-		SA.RD.AddProperResourceName("gelidus", "Gelidus")
-		SA.RD.AddProperResourceName("krystallos", "Krystallos")
+		AddValuableResource("blue ice", "Blue Ice")
+		AddValuableResource("clear ice", "Clear Ice")
+		AddValuableResource("glacial mass", "Glacial Mass")
+		AddValuableResource("white glaze", "White Glaze")
+		AddValuableResource("dark glitter", "Dark Glitter")
+		AddValuableResource("glare crust", "Glare Crust")
+		AddValuableResource("gelidus", "Gelidus")
+		AddValuableResource("krystallos", "Krystallos")
 	end)
 
 	hook.Run("SA_CAFInitComplete")
