@@ -164,6 +164,19 @@ function SA.SaveSystem.SaveDupe(dupe)
 	file.Write(SaveFileName(dupe.Owner), util.TableToJSON(dupe))
 end
 
+function SA.SaveSystem.Delete(ply)
+	file.Delete(SaveFileName(ply))
+end
+hook.Add("PlayerDisconnected", "SA_SaveSystem_Cleanup", function(ply)
+	local sid = ply:SteamID()
+	timer.Create("SA_SaveSystem_CleanupTimer_" .. sid, 300, 1, function()
+		if IsValid(player.GetBySteamID(sid)) then
+			return
+		end
+		SA.SaveSystem.Delete(sid)
+	end)
+end)
+
 function SA.SaveSystem.Restore(ply, delete)
 	if not IsValid(ply) then
 		return
