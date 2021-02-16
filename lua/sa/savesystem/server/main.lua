@@ -101,6 +101,14 @@ function SA.SaveSystem.Save(ply)
 		}
 	end
 
+	for idx, _ in pairs(dupe.Entities) do
+		local ent = Entity(idx)
+		local own = ent:CPPIGetOwner()
+		if own ~= ply then
+			dupe.Entities[idx] = nil
+		end
+	end
+
 	file.Write(SaveFileName(ply), util.TableToJSON(dupe))
 end
 
