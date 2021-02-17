@@ -16,6 +16,28 @@ local function SA_RefreshApplications(ply1, ply2)
 	net.Send(plys)
 end
 
+local function SA_RefreshFactionApplications(steamid, faction, fromcentral)
+	local ply1 = player.GetBySteamID(steamid)
+	local ply2
+	for _, ply in pairs(player.GetHumans()) do
+		if ply.sa_data and ply.sa_data.is_faction_leader and ply.sa_data.faction_name == faction then
+			ply2 = ply
+			break
+		end
+	end
+	SA_RefreshApplications(ply1, ply2)
+
+	if not fromcentral then
+		SA.Central.Broadcast("applicationreload", {
+			steamid = steamid,
+			faction = faction,
+		})
+	end
+end
+SA.Central.Handle("applicationreload", function(data)
+	SA_RefreshFactionApplications(data.steamid, data.faction, true)
+end)
+
 local function SetFactionSpawn(tbl)
 	local ent = {}
 	for _, pos in ipairs(tbl) do
@@ -82,19 +104,13 @@ local function SA_FriendlyFire(vic, atk)
 end
 hook.Add("PlayerShouldTakeDamage", "SA_FriendlyFire", SA_FriendlyFire)
 
-local function DoApplyFactionResRes(ply, ffid, code)
+local function DoApplyFactionResRes(ply, faction, code)
 	if code > 299 then
 		return
 	end
 
-	local plyLeader
-	for k, v in pairs(player.GetAll()) do
-		if v.sa_data.is_faction_leader and v:Team() == ffid then
-			plyLeader = v
-			break
-		end
-	end
-	SA_RefreshApplications(ply, plyLeader)
+	SA_RefreshFactionApplications(ply:SteamID(), faction)
+
 	ply:SendLua("SA.Application.Close()")
 end
 
@@ -115,7 +131,7 @@ local function SA_DoApplyFaction(len, ply)
 	SA.API.UpsertPlayerApplication(ply, {
 		text = text,
 		faction_name = faction,
-	}, function(_body, status) DoApplyFactionResRes(ply, ffid, status) end)
+	}, function(_body, status) DoApplyFactionResRes(ply, faction, status) end)
 end
 net.Receive("SA_DoApplyFaction", SA_DoApplyFaction)
 
@@ -128,7 +144,7 @@ local function SA_DoAcceptPlayer(ply, cmd, args)
 	local trgPly = player.GetBySteamID(steamId)
 
 	SA.API.AcceptFactionApplication(factionName, steamId, function(_body, code)
-		SA_RefreshApplications(ply, trgPly)
+		SA_RefreshFactionApplications(steamId, factionName)
 
 		-- TODO: Reload player on error codes
 		if code > 299 then
@@ -165,10 +181,9 @@ local function SA_DoDenyPlayer(ply, cmd, args)
 
 	local steamId = args[1]
 	local factionName = ply.sa_data.faction_name
-	local trgPly = player.GetBySteamID(steamId)
 
 	SA.API.DeleteFactionApplication(factionName, steamId, function(_body, _code)
-		SA_RefreshApplications(ply, trgPly)
+		SA_RefreshFactionApplications(steamId, factionName)
 	end)
 end
 concommand.Add("sa_application_deny", SA_DoDenyPlayer)
