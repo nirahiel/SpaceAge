@@ -93,8 +93,8 @@ end
 
 function stomp:_handle_connected(data, headers)
 	self:onConnected()
-	for destination, _ in pairs(self.subscriptions) do
-		self:_subscribe(destination)
+	for id, _ in pairs(self.subscriptions) do
+		self:_subscribe(id)
 	end
 	for _, toSend in pairs(self.sendQueue) do
 		self:_command(unpack(toSend))
@@ -108,8 +108,8 @@ function stomp:_handle_error(data)
 end
 
 function stomp:_handle_message(data, headers)
-	local destination = headers.subscription
-	local subInfo = self.subscriptions[destination]
+	local id = headers.subscription
+	local subInfo = self.subscriptions[id]
 	if not subInfo then
 		return
 	end
@@ -200,7 +200,9 @@ function stomp:_command(cmd, data, headers)
 end
 
 function stomp:subscribe(destination, handler, config)
-	if self.subscriptions[destination] then
+	local id = self.login .. "|" .. destination
+
+	if self.subscriptions[id] then
 		return
 	end
 
@@ -209,7 +211,7 @@ function stomp:subscribe(destination, handler, config)
 		data = {
 			destination = destination,
 			ack = "auto",
-			id = destination,
+			id = id,
 		}
 	}
 
@@ -217,27 +219,27 @@ function stomp:subscribe(destination, handler, config)
 		sub.data[k] = v
 	end
 
-	self.subscriptions[destination] = sub
+	self.subscriptions[id] = sub
 
-	self:_subscribe(destination)
+	self:_subscribe(id)
 
-	return destination
+	return id
 end
 
-function stomp:unsubscribe(destination)
-	if not self.subscriptions[destination] then
+function stomp:unsubscribe(id)
+	if not self.subscriptions[id] then
 		return
 	end
-	self:_unsubscribe(destination)
+	self:_unsubscribe(id)
 end
 
-function stomp:_unsubscribe(destination)
-	local data = self.subscriptions[destination]
+function stomp:_unsubscribe(id)
+	local data = self.subscriptions[id]
 	self:_command("UNSUBSCRIBE", "", data.data)
 end
 
-function stomp:_subscribe(destination)
-	local data = self.subscriptions[destination]
+function stomp:_subscribe(id)
+	local data = self.subscriptions[id]
 	self:_command("SUBSCRIBE", "", data.data)
 end
 
