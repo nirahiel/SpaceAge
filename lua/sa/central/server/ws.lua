@@ -3,9 +3,15 @@ SA.REQUIRE("central.main")
 
 require("stomp")
 
+if SA.Central.Socket then
+	SA.Central.Socket:close()
+	SA.Central.Socket = nil
+end
+
+SA.Central.Handlers = SA.Central.Handlers or {}
+
 local socket
 local ourIdent
-local cmdCallbacks = {}
 local SendCentralMessage
 
 local function SendCommand(command, target, data)
@@ -27,7 +33,7 @@ local function HandleCentralMessage(msg, headers)
 		return
 	end
 
-	local handler = cmdCallbacks[msg.command]
+	local handler = SA.Central.Handlers[msg.command]
 	if handler then
 		handler(msg.data, ident)
 	end
@@ -61,6 +67,7 @@ ConnectCentral = function()
 		passcode = ourKey,
 		autoReconnect = true,
 	})
+	SA.Central.Socket = socket
 	socket:subscribe("/topic/broadcast", HandleCentralMessage, STOMP_DEFAULT_DURABLE)
 	socket:subscribe("/topic/" .. ourIdent:lower(), HandleCentralMessage, STOMP_DEFAULT_DURABLE)
 
@@ -92,8 +99,8 @@ function SA.Central.Broadcast(command, data)
 end
 
 function SA.Central.Handle(command, callback)
-	if cmdCallbacks[command] then
+	if SA.Central.Handlers[command] then
 		print("[Central] WARNING: Overwriting old handler for " .. command)
 	end
-	cmdCallbacks[command] = callback
+	SA.Central.Handlers[command] = callback
 end
