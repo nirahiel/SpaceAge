@@ -60,6 +60,9 @@ function SA.SaveSystem.SaveAll()
 		}))
 	end
 end
+timer.Create("SA_SaveSystem_SaveAll", 10, 0, function()
+	SA.SaveSystem.SaveAll()
+end)
 
 function SA.SaveSystem.Save(ply)
 	SA.SaveSystem.SaveAll()
@@ -98,7 +101,6 @@ function SA.SaveSystem.Restore(ply)
 	end
 	ply.sa_data.station_storage.remaining = remaining
 end
-
 hook.Add("PlayerInitialSpawn", "SA_SaveSystem_RestorePlayer", function(ply)
 	SA.SaveSystem.Restore(ply)
 end)
