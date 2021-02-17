@@ -1,5 +1,7 @@
 SA.SaveSystem = {}
 
+local RestoredFiles = {}
+
 local function SaveFileName(ply)
 	if ply and ply.SteamID then
 		ply = ply:SteamID()
@@ -65,6 +67,11 @@ end
 
 function SA.SaveSystem.Restore(ply)
 	local name = SaveFileName(ply)
+	if RestoredFiles[name] then
+		return
+	end
+	RestoredFiles[name] = true
+
 	local data = file.Read(name, "DATA")
 	if not data then
 		return
@@ -87,7 +94,14 @@ function SA.SaveSystem.Restore(ply)
 		end
 		stationStorage[resource] = (stationStorage[resource] or 0) + value
 		remaining = remaining - value
+		ply:ChatPrint("Restored " .. tostring(value) .. " " .. SA.RD.GetProperResourceName(resource) .. " to station storage!")
 	end
-
 	ply.sa_data.station_storage.remaining = remaining
+end
+
+hook.Add("PlayerInitialSpawn", "SA_SaveSystem_RestorePlayer", function(ply)
+	SA.SaveSystem.Restore(ply)
+end)
+for _, ply in pairs(player.GetHumans()) do
+	RestoredFiles[SaveFileName(ply)] = true
 end
