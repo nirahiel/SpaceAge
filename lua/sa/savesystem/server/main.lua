@@ -101,7 +101,7 @@ function SA.SaveSystem.Restore(ply)
 	end
 	ply.sa_data.station_storage.remaining = remaining
 end
-hook.Add("PlayerInitialSpawn", "SA_SaveSystem_RestorePlayer", function(ply)
+hook.Add("PlayerFullLoad", "SA_SaveSystem_RestorePlayer", function(ply)
 	SA.SaveSystem.Restore(ply)
 end)
 for _, ply in pairs(player.GetHumans()) do
