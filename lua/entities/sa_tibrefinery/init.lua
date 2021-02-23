@@ -48,8 +48,7 @@ function ENT:StartTouch(ent)
 		RD.Unlink(ent)
 		constraint.RemoveAll(ent)
 		ent.TibRefineWeld = constraint.Weld(ent, self, 0, 0, false)
-		ent.TibRefineAmount = tibAmount
-		ent:ConsumeResource("tiberium", ent.TibRefineAmount)
+		ent.TibRefineAmount = ent:ConsumeResource("tiberium", tibAmount)
 		self.TouchTable[attachPlace] = ent
 	end
 end
