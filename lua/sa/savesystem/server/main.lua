@@ -56,6 +56,7 @@ function SA.SaveSystem.SaveAll()
 	for ownId, data in pairs(playerData) do
 		file.Write(SaveFileName(ownId), util.TableToJSON({
 			owner = ownId,
+			time = os.time(),
 			resData = data,
 		}))
 	end
