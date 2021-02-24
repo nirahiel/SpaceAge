@@ -1,5 +1,7 @@
 SA.SaveSystem = {}
 
+local MAX_AGE = 60 * 30
+
 local RestoredFiles = {}
 
 local function SaveFileName(ply)
@@ -82,6 +84,14 @@ function SA.SaveSystem.Restore(ply)
 	end
 	data = util.JSONToTable(data)
 	file.Delete(name)
+
+	if not data.time then
+		return
+	end
+	local timeDiff = os.time() - data.time
+	if timeDiff > MAX_AGE then
+		return
+	end
 
 	local remaining = ply.sa_data.station_storage.remaining
 	if remaining <= 0 then
