@@ -133,9 +133,3 @@ SA_AddResearch("ice_refinery_level", "Ice Mining", "Ice Refineries", 2, 75000000
 SA_AddResearch("ice_laser_level", "Ice Mining", "Ice Lasers", 2, 1000000000, 1.5, "Allows using better ice lasers.", "perrank", {{}, {}, {{"faction", {"ice", "alliance"}}}}, 2, {}, "ice_icon_research.png")
 SA_AddResearch("ice_raw_storage_level", "Ice Mining", "Ice Storages", 4, 300000000, 1.5, "Allows using better raw Ice Storages.", "perrank", {{}, {}, {}, {}, {}, {{"faction", {"ice", "alliance"}}}}, 3, {}, "storage_icon_research.png")
 SA_AddResearch("ice_product_storage_level", "Ice Mining", "Ice Product Storages", 6, 300000000, 1.5, "Allows using better ice product storages.", "perrank", {{}, {}, {}, {}, {}, {{"faction", {"ice", "alliance"}}}}, 4, {}, "storage_icon_research.png")
-
-if SERVER then
-	for k, v in pairs(ResearchIcons) do
-		resource.AddFile("materials/spaceage/" .. k)
-	end
-end
