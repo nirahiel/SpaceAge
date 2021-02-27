@@ -254,6 +254,10 @@ function SA.API.ListPlayers(callback)
 	return SA.API.Get("/players", callback, OPTIONS_NOAUTH)
 end
 
+function SA.API.ListBannedPlayers(callback)
+	return SA.API.Get("/players/banned", callback, OPTIONS_NOAUTH)
+end
+
 function SA.API.ListFactions(callback)
 	return SA.API.Get("/factions", callback, OPTIONS_NOAUTH)
 end
@@ -269,6 +273,13 @@ end
 
 function SA.API.UpsertPlayer(ply, callback)
 	return SA.API.Put(MakePlayerURL(ply), ply.sa_data, callback, OPTIONS_ONESHOT)
+end
+
+function SA.API.BanPlayer(steamid, reason, admin, callback)
+	return SA.API.Put("/players/" .. steamid .. "/ban", {
+		ban_reason = reason,
+		banned_by = admin,
+	}, callback)
 end
 
 -- PLAYER -> APPLICATION functions

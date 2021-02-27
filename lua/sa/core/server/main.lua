@@ -90,6 +90,12 @@ local function SA_AddSAData(ply)
 	if data.research == nil then
 		data.research = {}
 	end
+	if data.group == nil then
+		data.group = "user"
+	end
+	if data.is_banned == false then
+		data.is_banned = nil
+	end
 	SA.Research.InitPlayer(ply)
 	if data.advancement_level == nil or data.advancement_level <= 0 then
 		data.advancement_level = 1
@@ -120,6 +126,11 @@ local function LoadRes(ply, body, code)
 		ply:AssignFaction()
 	end
 
+	if ply.sa_data.is_banned then
+		ply:Kick("Banned: " .. ply.sa_data.ban_reason or "N/A")
+		return
+	end
+
 	if sa_faction_only:GetBool() and
 		(ply:Team() < SA.Factions.Min or
 		ply:Team() > SA.Factions.Max or
@@ -138,6 +149,8 @@ local function LoadRes(ply, body, code)
 	if ply.MayBePoked then
 		SA.SendBasicInfo(ply)
 	end
+
+	ULib.ucl.addUser(ply:SteamID(), {}, {}, ply.sa_data.group)
 
 	if not SA.API.IsServerHidden() then
 		SA.Central.SendChatRaw(ply, SA.Central.COLOR_NOTIFY_BLUE, " joined the server")
@@ -235,7 +248,7 @@ function SA.SaveAllUsers()
 	end
 end
 timer.Create("SA_Autosave", 60, 0, SA.SaveAllUsers)
-concommand.Add("sa_save_players", function(ply) if not IsValid(ply) or ply:IsAdmin() then SA_SaveAllUsers() end end)
+concommand.Add("sa_save_players", function(ply) if not IsValid(ply) or ply:IsAdmin() then SA.SaveAllUsers() end end)
 
 local function SA_Autospawner(ply)
 	if not autoSpanwerEnabled:GetBool() then
