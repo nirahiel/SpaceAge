@@ -15,7 +15,6 @@ function SA.API.SetOwnInfo(info)
 	end
 	ourNameSet = name
 	RunConsoleCommand("hostname", "SpaceAge [" .. name .. "]")
-	RunConsoleCommand("rcon_password", info.rcon_password)
 	SetGlobalString("sa_server_name", name)
 end
 
