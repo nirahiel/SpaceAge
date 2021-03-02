@@ -4,7 +4,7 @@ SA.REQUIRE("central")
 local PlayerBans = {}
 
 local function time_is_perm(time)
-	return time == nil or time == 0
+	return time == nil or time <= 0
 end
 
 local function default_bandata(reason, admin)
