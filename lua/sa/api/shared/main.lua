@@ -276,7 +276,7 @@ function SA.API.UpsertPlayer(ply, callback)
 end
 
 function SA.API.BanPlayer(steamid, reason, admin, callback)
-	return SA.API.Put("/players/" .. steamid .. "/ban", {
+	return SA.API.Post("/players/" .. steamid .. "/ban", {
 		ban_reason = reason,
 		banned_by = admin,
 	}, callback)
