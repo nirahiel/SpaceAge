@@ -68,10 +68,6 @@ function SA.FormatTime(time)
 	return outTime
 end
 
-function SA.ValidEntity(ent)
-	return ent and ent:IsValid()
-end
-
 function SA.IsValidRoidPos(vector, mins, maxs)
 	if not util.IsInWorld(vector) then return false end
 

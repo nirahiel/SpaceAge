@@ -133,7 +133,7 @@ concommand.Add("sa_terminal_select_node", SA_SelectNode)
 
 local function SA_SelectedNode(ply)
 	--Use the node the player selected.
-	if SA.ValidEntity(ply.SelectedNode) and ply.SelectedNode:CPPIGetOwner() == ply then
+	if IsValid(ply.SelectedNode) and ply.SelectedNode:CPPIGetOwner() == ply then
 		local dist = StationPos:Distance(ply.SelectedNode:GetPos())
 		if dist < StationSize and ply.SelectedNode:GetClass() == "resource_node" then
 			return ply.SelectedNode
@@ -181,7 +181,7 @@ end
 
 local function SA_GetResource(ply, res)
 	local SelNode = SA_SelectedNode(ply)
-	if (SA.ValidEntity(SelNode)) then
+	if (IsValid(SelNode)) then
 		local count = SA.RD.GetNetResourceAmount(SelNode.netid, res)
 		if count > 0 then
 			return count, SelNode.netid
@@ -192,7 +192,7 @@ end
 
 local function SA_FindCapacity(ply, res)
 	local SelNode = SA_SelectedNode(ply)
-	if (SA.ValidEntity(SelNode)) then
+	if (IsValid(SelNode)) then
 		local capacity = SA.RD.GetNetNetworkCapacity(SelNode.netid, res)
 		if (capacity > 0) then
 			return capacity, SelNode.netid
@@ -203,7 +203,7 @@ end
 
 local function SA_SupplyResource(ply, res, num)
 	local SelNode = SA_SelectedNode(ply)
-	if (SA.ValidEntity(SelNode)) then
+	if (IsValid(SelNode)) then
 		SA.RD.SupplyNetResource(SelNode.netid, res, num, 293)
 	end
 	return 0
@@ -211,7 +211,7 @@ end
 
 local function SA_GetShipResources(ply)
 	local SelNode = SA_SelectedNode(ply)
-	if (SA.ValidEntity(SelNode)) then
+	if (IsValid(SelNode)) then
 		local tbl = SA.RD.GetNetTable(SelNode.netid).resources
 		return tbl, SelNode.netid
 	end

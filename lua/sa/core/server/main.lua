@@ -267,7 +267,7 @@ local function SA_Autospawner(ply)
 	if autospawn2 then
 		for k, v in pairs(autospawn2) do
 			local spawn = ents.Create(v.class)
-			if not SA.ValidEntity(spawn) then
+			if not IsValid(spawn) then
 				print("Could not create: " .. v.class)
 				continue
 			end

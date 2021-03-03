@@ -14,7 +14,7 @@ local OKAY_CALLERS = { "addons/spaceage/", "lua/fpp/", "lua/ulib/" }
 SA.Ice.RunAntiIceDebug = false
 
 local function IsOkay(ent)
-	if SA.ValidEntity(ent) and GetEntityClass(ent) == "sa_iceroid" then
+	if IsValid(ent) and GetEntityClass(ent) == "sa_iceroid" then
 		return false
 	end
 
