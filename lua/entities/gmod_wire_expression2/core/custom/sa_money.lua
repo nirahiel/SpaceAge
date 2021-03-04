@@ -30,12 +30,12 @@ end
 
 __e2setcost(50)
 e2function number entity:giveCredits(amount)
-	if not (callMoneyFunc(self.player) and this and SA.ValidEntity(this) and this:IsPlayer()) then return 0 end
+	if not (callMoneyFunc(self.player) and this and IsValid(this) and this:IsPlayer()) then return 0 end
 	return bool_to_number(SA.GiveCredits.Do(self.player, this, amount))
 end
 
 e2function number entity:payCredits(amount)
-	if not (callMoneyFunc(self.player) and this and SA.ValidEntity(this) and this:IsPlayer()) then return 0 end
+	if not (callMoneyFunc(self.player) and this and IsValid(this) and this:IsPlayer()) then return 0 end
 	return bool_to_number(SA.GiveCredits.Confirm(this, self.player, amount,
 		function(resultTable, allowed)
 			callMyselfGive(self, resultTable, allowed)
@@ -45,7 +45,7 @@ end
 
 __e2setcost(10)
 e2function number entity:credits()
-	if not (this and SA.ValidEntity(this) and this:IsPlayer() and this.sa_data.credits) then return 0 end
+	if not (this and IsValid(this) and this:IsPlayer() and this.sa_data.credits) then return 0 end
 	return this.sa_data.credits
 end
 

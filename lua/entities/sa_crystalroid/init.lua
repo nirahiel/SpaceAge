@@ -76,7 +76,7 @@ function ENT:FindCrystalPos()
 	local tries = 0
 	while not res or res.Entity ~= self do
 		res = util.TraceLine(tracedata)
-		if not (res.Hit and res.HitNonWorld and SA.ValidEntity(res.Entity)) then return end
+		if not (res.Hit and res.HitNonWorld and IsValid(res.Entity)) then return end
 		table.insert(tracedata.filter, res.Entity)
 		if tries > 100 then return end
 		tries = tries + 1
