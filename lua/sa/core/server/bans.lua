@@ -104,4 +104,4 @@ local function RefreshBans()
 	SA.API.ListBannedPlayers(GotBans)
 end
 timer.Create("SA_RefreshBans", 10, 0, RefreshBans)
-RefreshBans()
+timer.Simple(0, RefreshBans)
