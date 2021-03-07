@@ -92,6 +92,7 @@ function stomp:_handleData(cmd, headers, data)
 end
 
 function stomp:_handle_connected(data, headers)
+	self.handshakeDone = true
 	self:onConnected()
 	for id, _ in pairs(self.subscriptions) do
 		self:_subscribe(id)
@@ -104,7 +105,9 @@ end
 
 function stomp:_handle_error(data)
 	print("Got STOMP error", data)
-	self.ws:close()
+	if not self.handshakeDone then
+		self.ws:close()
+	end
 end
 
 function stomp:_handle_message(data, headers)
@@ -126,6 +129,7 @@ end
 
 function stomp:open()
 	local sock = self
+	self.handshakeDone = false
 
 	timer.Create(sock.timerId, HEARTBEAT_RATE, 0, function()
 		sock:_heartbeat()
