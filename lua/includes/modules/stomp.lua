@@ -226,11 +226,19 @@ function stomp:subscribe(destination, handler, config)
 	return id
 end
 
+function stomp:unsubscribeAll()
+	for id, _ in pairs(self.subscriptions) do
+		self:_unsubscribe(id)
+	end
+	self.subscriptions = {}
+end
+
 function stomp:unsubscribe(id)
 	if not self.subscriptions[id] then
 		return
 	end
 	self:_unsubscribe(id)
+	self.subscriptions[id] = nil
 end
 
 function stomp:_unsubscribe(id)

@@ -104,3 +104,21 @@ function SA.Central.Handle(command, callback)
 	end
 	SA.Central.Handlers[command] = callback
 end
+
+function SA.Central.Reconnect()
+	if socket then
+		local _socket = socket
+		socket = nil
+		_socket:unsubscribeAll()
+		timer.Simple(2, function()
+			_socket:close()
+		end)
+	end
+	timer.Simple(5, ConnectCentral)
+end
+concommand.Add("sa_central_reconnect", function (ply)
+	if IsValid(ply) and not ply:IsAdmin() then
+		return
+	end
+	SA.Central.Reconnect()
+end)
