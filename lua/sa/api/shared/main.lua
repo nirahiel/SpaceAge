@@ -120,7 +120,12 @@ processNextRequest = function()
 	end
 
 	requestInProgress = true
-	HTTP(request.http)
+	local ok, err = pcall(HTTP, request.http)
+	if not ok then
+		print("Request ", request.http.url, request.http.method, " failed with early error ", err)
+		requeueRequest(request)
+		return
+	end
 
 	timer.Create("SA_API_HTTPTimeout", httpTimeout, 1, function()
 		print("Request ", request.http.url, request.http.method, " failed with timeout")
