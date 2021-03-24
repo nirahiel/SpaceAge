@@ -63,7 +63,7 @@ timer.Create("SA_API_Make_ClientID", 1, 0, TryMakeUserAgentTimer)
 TryMakeUserAgentTimer()
 
 local requestQueue = {}
-local requestInProgress = false
+local requestInProgress = nil
 
 local failureCount = 0
 local backoffTimings = {1, 5, 10, 15, 30}
@@ -74,12 +74,15 @@ local processNextRequest
 local setRequestParams
 
 local function requeueRequest(request)
+	if requestInProgress == request then
+		requestInProgress = nil
+	end
+
 	if request.done then
 		return
 	end
 	request.done = true
 
-	requestInProgress = false
 	timer.Remove("SA_API_HTTPTimeout")
 
 	if request.options.oneshot then
@@ -111,7 +114,7 @@ local function requeueRequest(request)
 end
 
 processNextRequest = function()
-	if requestInProgress then
+	if requestInProgress and not requestInProgress.done then
 		return
 	end
 	local request = table.remove(requestQueue, 1)
@@ -119,7 +122,7 @@ processNextRequest = function()
 		return
 	end
 
-	requestInProgress = true
+	requestInProgress = request
 	HTTP(request.http)
 
 	timer.Create("SA_API_HTTPTimeout", httpTimeout, 1, function()
@@ -129,13 +132,16 @@ processNextRequest = function()
 end
 
 local function successRequest(request)
+	if requestInProgress == request then
+		requestInProgress = nil
+	end
 	if request.done then
 		return
 	end
 	request.done = true
 
 	failureCount = 0
-	requestInProgress = false
+
 	timer.Remove("SA_API_HTTPTimeout")
 
 	timer.Simple(0, processNextRequest)
