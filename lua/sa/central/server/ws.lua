@@ -1,5 +1,9 @@
+SA.REQUIRE("config")
 SA.REQUIRE("api")
 SA.REQUIRE("central.main")
+
+local apiConfig = SA.Config.Load("api", true) or {}
+apiConfig.centralUrl = apiConfig.centralUrl or "NONE"
 
 require("stomp")
 
@@ -52,6 +56,10 @@ local function TimerConnectCentral()
 end
 
 ConnectCentral = function()
+	if apiConfig.centralUrl == "NONE" then
+		return
+	end
+
 	ourIdent = SA.API.GetServerName()
 	local ourKey = SA.API.GetServerToken()
 
@@ -61,7 +69,7 @@ ConnectCentral = function()
 	end
 
 	socket = NewSTOMPSocket({
-		url = "wss://live.spaceage.mp/ws/stomp",
+		url = apiConfig.centralUrl,
 		vhost = "spaceage",
 		login = ourIdent,
 		passcode = ourKey,
