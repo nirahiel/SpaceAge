@@ -7,6 +7,17 @@ convarEnabled:SetBool(false)
 
 local serverEmptyCycles = 0
 
+local restartIfEmptyOverrideOn = false
+local restartIfEmptyOverrides = {}
+function AddRestartIfEmptyOverride(name)
+	restartIfEmptyOverrides[name] = true
+	restartIfEmptyOverrideOn = true
+end
+function RemoveRestartIfEmptyOverride(name)
+	restartIfEmptyOverrides[name] = nil
+	restartIfEmptyOverrideOn = not table.IsEmpty(restartIfEmptyOverrides)
+end
+
 timer.Simple(0, function()
 	SA.Central.Handle("restart_if_empty", function()
 		convarEnabled:SetBool(true)
@@ -33,7 +44,8 @@ concommand.Add("restart_server_now", function(ply)
 end)
 
 timer.Create("RestartIfEmpty", 1, 0, function()
-	if not convarEnabled:GetBool() then
+	local enabled = convarEnabled:GetBool() or restartIfEmptyOverrideOn
+	if not enabled then
 		serverEmptyCycles = 0
 		return
 	end

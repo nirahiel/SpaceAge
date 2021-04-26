@@ -101,5 +101,9 @@ hook.Add("SA_AntiLagEnterCritical", "SA_AntiLag_FreezeAll", function()
 end)
 
 hook.Add("SA_AntiLagEnterCritical", "SA_AntiLag_RestartIfEmpty", function()
-	RunConsoleCommand("restart_if_empty", "1")
+	AddRestartIfEmptyOverride("SA_AntiLag")
+end)
+
+hook.Add("SA_AntiLagReturnNormal", "SA_AntiLag_RestartIfEmpty_Off", function()
+	RemoveRestartIfEmptyOverride("SA_AntiLag")
 end)
