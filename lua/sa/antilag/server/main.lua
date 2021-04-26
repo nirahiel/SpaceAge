@@ -99,3 +99,7 @@ hook.Add("SA_AntiLagEnterCritical", "SA_AntiLag_FreezeAll", function()
 	end
 	SendAll("Froze all props!")
 end)
+
+hook.Add("SA_AntiLagEnterCritical", "SA_AntiLag_RestartIfEmpty", function()
+	RunConsoleCommand("restart_if_empty", "1")
+end)
