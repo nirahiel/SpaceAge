@@ -82,7 +82,7 @@ let errorCount = 0, warningCount = 0;
 const annotations = [];
 
 function endCheck() {
-    defineCheck({
+    return defineCheck({
         status: 'completed',
         completed_at: new Date(),
         conclusion: (errorCount > 0) ? 'failure' : 'success',
