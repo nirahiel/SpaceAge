@@ -113,7 +113,6 @@ if (res.status !== 1) {
 }
 
 const errRegExp = /^(.+): \[(Warning|Error)\] line (\d+), column (\d+) - line (\d+), column (\d+): (.+)$/;
-console.info(res.stdout.toString());
 const output = res.stdout.toString().trim().split(/\r?\n/).filter(l => !!l).map(l => l.match(errRegExp)).map(m => ({
     file: normalize(m[1]),
     type: m[2].toLowerCase(),
