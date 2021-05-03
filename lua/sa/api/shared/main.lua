@@ -332,9 +332,9 @@ if SERVER then
 	local function SA_API_MakePlayerTokenCMD(ply)
 		SA_API_MakePlayerJWT(ply, function (data)
 			net.Start("SA_PlayerJWT")
-				net.WriteString(data.token or "")
-				net.WriteInt(data.expiry or 0, 32)
-				net.WriteInt(data.valid_time or 0, 32)
+				net.WriteString(data.token)
+				net.WriteInt(data.expiry, 32)
+				net.WriteInt(data.valid_time, 32)
 			net.Send(ply)
 		end)
 	end
