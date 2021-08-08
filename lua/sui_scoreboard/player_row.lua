@@ -1,5 +1,3 @@
-include("player_infocard.lua")
-
 local texGradient = surface.GetTextureID("gui/center_gradient")
 
 local PANEL = {}
