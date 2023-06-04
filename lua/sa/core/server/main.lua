@@ -179,8 +179,10 @@ hook.Add("PlayerAuthed", "SA_LoadPlayer", SA_InitSpawn)
 
 local function SA_PlayerFullLoad(ply)
 	ply.MayBePoked = true
-	SA.SendBasicInfo(ply)
-	SA.Teleporter.TriggerOnJoin(ply)
+	if ply.sa_data and ply.sa_data.loaded then
+		SA.SendBasicInfo(ply)
+		SA.Teleporter.TriggerOnJoin(ply)
+	end
 end
 hook.Add("PlayerFullLoad", "SA_LoadPlayerSendData", SA_PlayerFullLoad)
 
