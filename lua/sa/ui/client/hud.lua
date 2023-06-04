@@ -157,13 +157,9 @@ local function DrawLSBar(BarNum, CaptionX, Value, ScH, ScW, ColBack, ColText)
 end
 
 local function DrawMeterSlantSection(slantAmount, width, height, xMax, yMax, yMaxCut, yMinCut)
-
 	--remember gmod y axis is flipped if you go to change anything! variable names can be confusing, always think about y direction!
-
 	local xMin = xMax - width
 	local yMin = yMax - height
-
-
 
 	-- if the top right point is less than  our current value (as a bar y position)
 	local cutAmount = 0
@@ -189,9 +185,7 @@ local function DrawMeterSlantSection(slantAmount, width, height, xMax, yMax, yMa
 end
 
 local function DrawLSBattery(CaptionX, Value, ScH, ScW, ColBack, ColText)
-
 	--remember gmod y axis is flipped if you go to change anything! variable names can be confusing, always think about y direction!
-
 	local Caption = CAF.GetLangVar(CaptionX)
 	local MeterHei = 80-14
 	local MeterWid = 30
@@ -363,7 +357,6 @@ local function SA_CustomHUDPaint()
 	end
 
 	--BEGIN OF HEALTH AND ARMOR
-
 	local healthHeightMult = 290
 	local healthInset = 40
 	if armor > 0 then
