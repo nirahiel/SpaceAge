@@ -215,9 +215,11 @@ local function InitHabitablePlanets()
 			if file.Exists(filename .. ".txt", "DATA") then
 				local envfile = file.Read(filename .. ".txt")
 				local envdata = util.JSONToTable(envfile)
-				envdata.bloom = v.sbenvironment.bloom
-				envdata.color = v.sbenvironment.color
-				v.sbenvironment = envdata
+				if envdata then
+					envdata.bloom = v.sbenvironment.bloom
+					envdata.color = v.sbenvironment.color
+					v.sbenvironment = envdata
+				end
 			end
 			print("DEBUG: " .. filename .. " : " .. tostring(v))
 			table.insert(SA_MyPlanets, v)
