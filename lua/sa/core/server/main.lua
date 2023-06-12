@@ -28,7 +28,7 @@ function PlayerMeta:AssignFaction(name, cb)
 	end
 
 	if not self:Team() then
-		self:SetTeam(7)
+		self:SetTeam(SA.Factions.IndexByShort["noload"])
 		self.sa_data.faction_name = "noload"
 		return
 	end
