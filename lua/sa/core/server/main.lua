@@ -25,7 +25,7 @@ function PlayerMeta:AssignFaction(name, cb)
 	local idx = SA.Factions.IndexByShort[self.sa_data.faction_name]
 	if idx then
 		self:SetTeam(idx)
-	else
+	end
 
 	if not self:Team() then
 		self:SetTeam(7)
