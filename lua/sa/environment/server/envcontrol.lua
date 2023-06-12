@@ -196,14 +196,14 @@ local function InitHabitablePlanets()
 			envname = string.lower(v.sbenvironment.name)
 		end
 		if (table.HasValue(config.Terraform, envname)) then
-			print("Making planet \"" .. v.sbenvironment.name .. "\" habitable!")
+			print("[SA] Making planet \"" .. v.sbenvironment.name .. "\" habitable!")
 			SA.Planets.MakeHabitable(v)
 		end
 		if (table.HasValue(config.Protect, envname)) then
 			MakePlanetProtected(v)
 			v.sbenvironment.pressure = 1
 			v.sbenvironment.atmosphere = 1
-			print("Protecting planet \"" .. v.sbenvironment.name .. "\"!")
+			print("[SA] Protecting planet \"" .. v.sbenvironment.name .. "\"!")
 		elseif envname ~= "no name" and not v.IsProtected then
 			local filename = dirname .. envname
 			SA_DefEnvsA[envname] = v.sbenvironment.air
@@ -221,7 +221,7 @@ local function InitHabitablePlanets()
 					v.sbenvironment = envdata
 				end
 			end
-			print("DEBUG: " .. filename .. " : " .. tostring(v))
+			print("[SA] Loaded planet \"" .. v.sbenvironment.name .. "\"!")
 			table.insert(SA_MyPlanets, v)
 		end
 	end
