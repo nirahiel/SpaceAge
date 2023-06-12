@@ -130,9 +130,10 @@ function SA.Application.CreateGUI(BasePanel)
 			SA.Application.Me.text = ApplyText:GetValue()
 		end
 
-		for i = SA.Factions.ApplyMin, SA.Factions.ApplyMax do
-			local fact = SA.Factions.Table[i]
-			SelFCombo:AddChoice(fact[1])
+		for _, v in pairs(SA.Factions.Table) do
+			if v[8] then
+				SelFCombo:AddChoice(v[1])
+			end
 		end
 
 		function SelFCombo:OnSelect(index, value, data)

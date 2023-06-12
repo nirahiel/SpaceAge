@@ -10,7 +10,6 @@ local autoSaveTimeCVar = SetupConvars("sa_autosave_time", "0")
 local autoSpanwerEnabled = SetupConvars("sa_autospawner", "1")
 SetupConvars("sa_friendlyfire", "0")
 SetupConvars("sa_pirating", "1", { FCVAR_NOTIFY, FCVAR_REPLICATED })
-local sa_faction_only = SetupConvars("sa_faction_only", "0", { FCVAR_NOTIFY })
 
 local PlayerMeta = FindMetaTable("Player")
 function PlayerMeta:AssignFaction(name, cb)
@@ -24,7 +23,9 @@ function PlayerMeta:AssignFaction(name, cb)
 	end
 
 	local idx = SA.Factions.IndexByShort[self.sa_data.faction_name]
-	self:SetTeam(idx)
+	if idx then
+		self:SetTeam(idx)
+	else
 
 	if not self:Team() then
 		self:SetTeam(7)
@@ -123,13 +124,6 @@ local function LoadRes(ply, body, code)
 	if ply.sa_data.is_banned then
 		ply:Kick("Banned: " .. ply.sa_data.ban_reason or "N/A")
 		return
-	end
-
-	if sa_faction_only:GetBool() and
-		(ply:Team() < SA.Factions.Min or
-		ply:Team() > SA.Factions.Max or
-		tonumber(ply.sa_data.score) < 100000000) then
-			ply:Kick("You don't meet the requirements for this server!")
 	end
 
 	ply:SetNWBool("isleader", ply.sa_data.is_faction_leader)

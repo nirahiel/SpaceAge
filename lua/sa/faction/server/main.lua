@@ -68,7 +68,7 @@ timer.Simple(0, InitSAFactions)
 local function SA_SetSpawnPos(ply)
 	ply.HasAlreadySpawned = true
 
-	local idx = SA.Factions.Max + 1
+	local idx = SA.Factions.IndexByShort["noload"]
 	if ply.sa_data and ply.sa_data.loaded then
 		idx = ply:Team()
 	end
@@ -116,15 +116,13 @@ local function SA_DoApplyFaction(len, ply)
 	local text = net.ReadString()
 	local faction = net.ReadString()
 
-	local ffid = 0
-	for k, v in pairs(SA.Factions.Table) do
-		if (v[2] == faction) then
-			ffid = k
-			break
-		end
-	end
-	if ffid < SA.Factions.ApplyMin then return end
-	if ffid > SA.Factions.ApplyMax then return end
+	local ffid = SA.Factions.IndexByShort[faction]
+	if not ffid then return end
+	local faction_data = SA.Factions.Table[ffid]
+	if not faction_data then return end
+
+	local can_apply = faction_data[8]
+	if not can_apply then return end
 
 	SA.API.UpsertPlayerApplication(ply, {
 		text = text,
