@@ -1,0 +1,1 @@
+apt update && apt install -y build-essential gcc-multilib g++-multilib luajit libssl-dev libssl-dev:i386 libboost-system-dev libboost-system-dev:i386
