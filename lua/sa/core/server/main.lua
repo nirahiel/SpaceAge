@@ -22,9 +22,6 @@ function PlayerMeta:AssignFaction(name, cb)
 	if not self.sa_data.faction_name then
 		self.sa_data.faction_name = "freelancer"
 	end
-	if self.sa_data.faction_name == "alliance" and self.sa_data.alliance_membership_expiry < os.time() then
-		self.sa_data.faction_name = "freelancer"
-	end
 
 	local idx = SA.Factions.IndexByShort[self.sa_data.faction_name]
 	self:SetTeam(idx)
@@ -80,9 +77,6 @@ local function SA_AddSAData(ply)
 	end
 	if data.station_storage.contents == nil then
 		data.station_storage.contents = {}
-	end
-	if data.alliance_membership_expiry == nil then
-		data.alliance_membership_expiry = 0
 	end
 	if data.faction_name == nil then
 		data.faction_name = "noload"

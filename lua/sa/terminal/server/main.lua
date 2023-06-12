@@ -291,7 +291,7 @@ SA_UpdateInfo = function(ply, CanPass)
 				break
 			end
 		end
-		if ply.sa_data.faction_name == "corporation" or ply.sa_data.faction_name == "alliance" then
+		if ply.sa_data.faction_name == "corporation" then
 			price = math.ceil((price * 1.33) * 1000) / 1000
 		end
 		ResTabl[k] = {v, tostring(price)}
@@ -369,7 +369,7 @@ local function SA_MarketSell(ply, cmd, args)
 		for k, v in pairs(PriceTable) do
 			if v[1] == args[1] then
 				local count = math.ceil(selling * v[2])
-				if ply.sa_data.faction_name == "corporation" or ply.sa_data.faction_name == "alliance" then
+				if ply.sa_data.faction_name == "corporation" then
 					count = math.ceil(count * 1.33)
 				end
 				ply.sa_data.credits = ply.sa_data.credits + count

@@ -40,7 +40,7 @@ function ENT:CalcVars(ply)
 	end
 
 	local miningmod = 1
-	if ply.sa_data.faction_name == "miners" or ply.sa_data.faction_name == "alliance" then
+	if ply.sa_data.faction_name == "miners" then
 		miningmod = 1.33
 	elseif ply.sa_data.faction_name == "corporation" then
 		factionmul = 1.11

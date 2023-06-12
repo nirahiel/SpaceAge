@@ -81,7 +81,7 @@ function ENT:Think()
 				self.TouchTable[k] = nil
 			else
 				local creds = math.Round(taken * 25)
-				if ply.sa_data.faction_name == "corporation" or ply.sa_data.faction_name == "alliance" then
+				if ply.sa_data.faction_name == "corporation" then
 					creds = math.ceil((creds * 1.33) * 1000) / 1000
 				end
 				ply.sa_data.credits = ply.sa_data.credits + creds

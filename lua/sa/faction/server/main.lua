@@ -73,17 +73,15 @@ local function SA_SetSpawnPos(ply)
 		idx = ply:Team()
 	end
 
-	if not (ply.sa_data and ply.sa_data.is_donator) then
-		local modelIdx = 4
-		if ply.sa_data and ply.sa_data.is_faction_leader then
-			modelIdx = 5
-		end
-		timer.Simple(2, function()
-			if IsValid(ply) then
-				ply:SetModel(SA.Factions.Table[idx][modelIdx])
-			end
-		end)
+	local modelIdx = 4
+	if ply.sa_data and ply.sa_data.is_faction_leader then
+		modelIdx = 5
 	end
+	timer.Simple(2, function()
+		if IsValid(ply) then
+			ply:SetModel(SA.Factions.Table[idx][modelIdx])
+		end
+	end)
 
 	if SA.Factions.Table[idx][6] then
 		return table.Random(SA.Factions.Table[idx][6])

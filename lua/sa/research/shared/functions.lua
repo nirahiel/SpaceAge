@@ -63,7 +63,7 @@ function SA.Research.GetLevelInfo(ply, Research, stopOnFail, level)
 	local total = cost + ((cost * Research.costinc) * (level - 1))
 	total = total + (total * (devl * 0.8))
 
-	if ply.sa_data.faction_name == "legion" or ply.sa_data.faction_name == "alliance" then
+	if ply.sa_data.faction_name == "legion" then
 		total = total * 0.66
 	end
 
