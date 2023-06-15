@@ -233,7 +233,10 @@
     "pit": 90,
     "x": 7663.7749,
     "yaw": -0.0002,
-    "class": "afk_room_sign",
+    "class": "sa_sign",
+    "info": {
+      "type": "afk_room"
+    },
     "y": -11147.9941,
     "model": "models/props_phx/construct/metal_plate2x4.mdl",
     "z": -9186.0957,

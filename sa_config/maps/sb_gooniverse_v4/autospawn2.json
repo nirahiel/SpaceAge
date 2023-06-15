@@ -34,7 +34,10 @@
     "model": "models/props_phx/construct/metal_plate2x4.mdl",
     "yaw": 0.1488,
     "y": -7537.1479,
-    "class": "no_build_zone_sign",
+    "class": "sa_sign",
+    "info": {
+      "type": "no_build_zone"
+    },
     "z": -8051.8135,
     "rol": 0.1507
   },
@@ -44,7 +47,10 @@
     "model": "models/props_phx/construct/metal_plate2x4.mdl",
     "yaw": 179.9998,
     "y": -8070.2651,
-    "class": "no_build_zone_sign",
+    "class": "sa_sign",
+    "info": {
+      "type": "no_build_zone"
+    },
     "z": -8052.0605,
     "rol": 180
   },
@@ -104,7 +110,10 @@
     "model": "models/props_phx/construct/metal_plate2x4.mdl",
     "yaw": 0,
     "y": -7368.561,
-    "class": "no_build_zone_sign",
+    "class": "sa_sign",
+    "info": {
+      "type": "no_build_zone"
+    },
     "z": -8045.4854,
     "rol": 180
   },
@@ -134,7 +143,10 @@
     "model": "models/props_phx/construct/metal_plate2x4.mdl",
     "yaw": -179.9973,
     "y": -6655.4795,
-    "class": "no_build_zone_sign",
+    "class": "sa_sign",
+    "info": {
+      "type": "no_build_zone"
+    },
     "z": -8046.2012,
     "rol": 90.1035
   },
@@ -166,7 +178,10 @@
     "y": 733.2536,
     "model": "models/props_phx/construct/metal_plate2x4.mdl",
     "yaw": 180,
-    "class": "no_build_zone_sign"
+    "class": "sa_sign",
+    "info": {
+      "type": "no_build_zone"
+    }
   },
   "96": {
     "pit": 89.7966,
@@ -186,7 +201,10 @@
     "y": -2611.1423,
     "model": "models/props_phx/construct/metal_plate2x4.mdl",
     "yaw": 1.0898,
-    "class": "afk_room_sign"
+    "class": "sa_sign",
+    "info": {
+      "type": "afk_room"
+    }
   },
   "102": {
     "pit": 89.9291,
@@ -196,7 +214,10 @@
     "y": -2939.158,
     "model": "models/props_phx/construct/metal_plate2x2.mdl",
     "yaw": -91.812,
-    "class": "x_sign"
+    "class": "sa_sign",
+    "info": {
+      "type": "x"
+    }
   },
   "104": {
     "pit": -0.0539,
@@ -234,7 +255,10 @@
     "model": "models/props_phx/construct/metal_plate2x4.mdl",
     "yaw": 179.9998,
     "y": -7023.0044,
-    "class": "no_build_zone_sign",
+    "class": "sa_sign",
+    "info": {
+      "type": "no_build_zone"
+    },
     "z": -8052.0693,
     "rol": 180
   },
@@ -326,7 +350,10 @@
     "y": -767.9913,
     "model": "models/props_phx/construct/metal_plate2x4.mdl",
     "yaw": -135,
-    "class": "no_build_zone_sign"
+    "class": "sa_sign",
+    "info": {
+      "type": "no_build_zone"
+    }
   },
   "123": {
     "pit": 0,

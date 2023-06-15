@@ -259,15 +259,17 @@ local function SA_Autospawner(ply)
 				spawn:SetModel(v.model)
 			end
 
+			spawn.CDSIgnore = true
+			spawn.Autospawned = true
+			spawn.RealAutospawned = true
+			spawn.SkipSBChecks = true
+			spawn.AutospawnInfo = v.info
+
 			spawn:Spawn()
 			local phys = spawn:GetPhysicsObject()
 			if phys and phys:IsValid() then
 				phys:EnableMotion(false)
 			end
-			spawn.CDSIgnore = true
-			spawn.Autospawned = true
-			spawn.RealAutospawned = true
-			spawn.SkipSBChecks = true
 			if v.sound then
 				local mySND = CreateSound(spawn, Sound(v.sound))
 				if mySND then
