@@ -23,7 +23,7 @@ SA.Factions.Table = {
 		name = "legion",
 		color = Color(85, 221, 34, 255),
 		model = "models/player/Hostage/Hostage_01.mdl",
-		model_leader = "models/player/breen.mdl"
+		model_leader = "models/player/breen.mdl",
 		pronoun = "has",
 		can_apply = true,
 	},
