@@ -13,10 +13,10 @@ SA.Factions.Table = {
 		display_name = "I.C.E.",
 		name = "ice",
 		color = Color(210, 210, 210, 255),
-		model = "models/player/police.mdl"
+		model = "models/player/police.mdl",
 		model_leader = "models/player/combine_super_soldier.mdl",
 		pronoun = "has",
-		can_apply = true
+		can_apply = true,
 	},
 	{
 		display_name = "The Legion",
@@ -34,7 +34,7 @@ SA.Factions.Table = {
 		model = "models/player/Group03/male_01.mdl",
 		model_leader = "models/player/Group03/male_06.mdl",
 		pronoun = "have",
-		can_apply = true
+		can_apply = true,
 	},
 	{
 		display_name = "The Corporation",
@@ -43,7 +43,7 @@ SA.Factions.Table = {
 		model = "models/player/Hostage/Hostage_02.mdl",
 		model_leader = "models/player/gman_high.mdl",
 		pronon = "has",
-		can_apply = true
+		can_apply = true,
 	},
 	{
 		display_name = "Error",
