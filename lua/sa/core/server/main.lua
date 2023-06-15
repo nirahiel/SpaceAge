@@ -1,4 +1,5 @@
 SA.REQUIRE("config")
+SA.REQUIRE("faction.main")
 
 local function SetupConvars(name, default, flags)
 	if not ConVarExists(name) then
@@ -15,23 +16,13 @@ local PlayerMeta = FindMetaTable("Player")
 function PlayerMeta:AssignFaction(name, cb)
 	local old_name = self.sa_data.faction_name
 
-	if name then
-		self.sa_data.faction_name = name
-	end
-	if not self.sa_data.faction_name then
-		self.sa_data.faction_name = "freelancer"
+	local fact = SA.Factions.GetByName(name or self.sa_data.faction_name)
+	if fact.is_invalid then
+		fact = SA.Factions.GetDefault()
 	end
 
-	local idx = SA.Factions.IndexByShort[self.sa_data.faction_name]
-	if idx then
-		self:SetTeam(idx)
-	end
-
-	if not self:Team() then
-		self:SetTeam(SA.Factions.IndexByShort["noload"])
-		self.sa_data.faction_name = "noload"
-		return
-	end
+	self:SetTeam(fact.index)
+	self.sa_data.faction_name = fact.name
 
 	if name then
 		self:Spawn()
@@ -80,7 +71,7 @@ local function SA_AddSAData(ply)
 		data.station_storage.contents = {}
 	end
 	if data.faction_name == nil then
-		data.faction_name = "noload"
+		data.faction_name = SA.Factions.GetError().name
 	end
 	if data.research == nil then
 		data.research = {}
@@ -108,7 +99,7 @@ local function LoadRes(ply, body, code)
 	print("Loaded:", ply:Name(), code)
 	if code == 404 then
 		SA_AddSAData(ply)
-		ply.sa_data.faction_name = "freelancer"
+		ply.sa_data.faction_name = SA.Factions.GetDefault().name
 		ply.sa_data.loaded = true
 		SA.Terminal.SetupStorage(ply)
 		ply:AssignFaction()

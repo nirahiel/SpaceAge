@@ -27,7 +27,7 @@ hook.Add("Move", "SA_FlyMode_Move", function(ply, mv)
 	end
 
 	local speed = 0.05 * FrameTime()
-	if ( mv:KeyDown( IN_SPEED ) ) then speed = 0.25 * FrameTime() end
+	if mv:KeyDown(IN_SPEED) then speed = speed * 5 end
 
 	mv:SetMoveAngles(Angle(0,0,0))
 	local vel = Vector(

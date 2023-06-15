@@ -19,7 +19,7 @@ local function MkPlayerMap()
 	local res = {}
 	for _, ply in pairs(player.GetHumans()) do
 		table.insert(res, {
-			faction_name = SA.Factions.Table[ply:Team()][2],
+			faction_name = SA.Factions.GetByPlayer(ply).name,
 			is_faction_leader = ply:GetNWBool("isleader"),
 			name = ply:Nick(),
 			playtime = 0,

@@ -4,7 +4,7 @@ SA.REQUIRE("misc.player_loaded")
 local AppPanel = nil
 
 local defaultText = "Hi"
-local defaultFaction = "miners"
+local defaultFaction = SA.Factions.GetDefault().name
 
 SA.Application = SA.Application or {}
 SA.Application.Table = {}
@@ -26,17 +26,13 @@ local function SA_RefreshApplications()
 	local ply = LocalPlayer()
 	local isleader = ply:GetNWBool("isleader")
 
-	local faction = SA.Factions.Table[ply:Team()]
-	if not faction then
-		timer.Simple(1, SA_RefreshApplications)
-		return
-	end
-	local faction_name = faction[2]
-	if not faction_name then
+	local faction = SA.Factions.GetByPlayer(ply)
+	if faction.is_invalid then
 		timer.Simple(1, SA_RefreshApplications)
 		return
 	end
 
+	local faction_name = faction.name
 	if isleader then
 		SA.API.ListFactionApplications(faction_name, function(body, code)
 			if code == 404 then
@@ -77,7 +73,7 @@ function SA.Application.Refresh()
 			SelFCombo:ChooseOptionID(1)
 		end
 	else
-		SelFCombo:ChooseOption(SA.Factions.ToLong[SA.Application.Me.faction_name])
+		SelFCombo:ChooseOption(SA.Factions.GetByName(SA.Application.Me.faction_name).display_name)
 		ApplyText:SetValue(SA.Application.Me.text)
 	end
 end
@@ -131,16 +127,17 @@ function SA.Application.CreateGUI(BasePanel)
 		end
 
 		for _, v in pairs(SA.Factions.Table) do
-			if v[8] then
-				SelFCombo:AddChoice(v[1])
+			if v.can_apply then
+				SelFCombo:AddChoice(v.display_name)
 			end
 		end
 
 		function SelFCombo:OnSelect(index, value, data)
-			SA.Application.Me.faction_name = SA.Factions.ToShort[value] or defaultFaction
+			local fact = SA.Factions.GetByDisplayName(value)
+			SA.Application.Me.faction_name = fact.is_invalid and defaultFaction or fact.name
 		end
 
-		SelFCombo:ChooseOption(SA.Factions.ToLong[SA.Application.Me.faction_name or defaultFaction])
+		SelFCombo:ChooseOption(SA.Factions.GetByName(SA.Application.Me.faction_name or defaultFaction).display_name)
 
 		local ApplyButton = vgui.Create("DButton", BasePanel)
 		ApplyButton:SetText("Submit")

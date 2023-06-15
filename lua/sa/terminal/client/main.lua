@@ -46,7 +46,8 @@ local function SA_Term_UpdateStats()
 	if not SA_Term_StatList then return end
 	SA_Term_StatList:Clear()
 	for k, v in pairs(SA.StatsTable) do
-		SA_Term_StatList:AddLine(tostring(k) , v.name, v.score, SA.Factions.ToLong[v.info.faction_name or ""] or "Freelancers")
+		local fact = SA.Factions.GetByName(v.info.faction_name)
+		SA_Term_StatList:AddLine(tostring(k) , v.name, v.score, fact.display_name)
 	end
 end
 hook.Add("SA_StatsUpdate", "SA_Term_UpdateStats", SA_Term_UpdateStats)
@@ -479,7 +480,8 @@ local function sa_term_update(_, tbl)
 		ply.sa_data = {}
 	end
 	ply.sa_data.advancement_level = lv
-	ply.sa_data.faction_name = SA.Factions.Table[ply:Team()][2]
+	local fact = SA.Factions.GetByPlayer(ply)
+	ply.sa_data.faction_name = fact.name
 	ply.sa_data.research = ResearchTable
 
 	local ResourceTabl = tbl[1]

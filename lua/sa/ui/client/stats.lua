@@ -43,13 +43,11 @@ local function SA_ReceiveStatsUpdate(body, code)
 
 	SA.StatsTable = {}
 	for i, v in pairs(body) do
-
 		local newEntry = {}
 		newEntry.name = string.Left(v.name, SA_MaxNameLength)
 		newEntry.score = SA.AddCommasToInt(v.score)
-		local tempColor = SA.Factions.Colors[v.faction_name]
-		if not tempColor then tempColor = Color(255, 100, 0, 255) end
-		newEntry.faction_color = tempColor
+		local fact = SA.Factions.GetByName(v.faction_name)
+		newEntry.faction_color = fact.color
 		newEntry.info = v
 
 		table.insert(SA.StatsTable, newEntry)

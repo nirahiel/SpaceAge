@@ -12,7 +12,7 @@ function SA.Research.RequirementToString(v)
 	if v[1] == "faction" then
 		local o = {}
 		for _, f in pairs(v[2]) do
-			table.insert(o, SA.Factions.ToLong[f])
+			table.insert(o, SA.Factions.GetByName(f).display_name)
 		end
 		return "Factions: " .. table.concat(o, ", ")
 	end

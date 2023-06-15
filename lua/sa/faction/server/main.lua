@@ -60,7 +60,7 @@ local function InitSAFactions()
 	end
 
 	for name, fSpawns in pairs(spawns) do
-		SA.Factions.Table[SA.Factions.IndexByShort[name]][6] = SetFactionSpawn(fSpawns)
+		SA.Factions.GetByName(name).spawns = SetFactionSpawn(fSpawns)
 	end
 end
 timer.Simple(0, InitSAFactions)
@@ -68,23 +68,22 @@ timer.Simple(0, InitSAFactions)
 local function SA_SetSpawnPos(ply)
 	ply.HasAlreadySpawned = true
 
-	local idx = SA.Factions.IndexByShort["noload"]
-	if ply.sa_data and ply.sa_data.loaded then
-		idx = ply:Team()
+	local fact = SA.Factions.GetByPlayer(ply)
+
+	local model = fact.model
+	if ply.sa_data and ply.sa_data.is_faction_leader then
+		model = fact.model_leader
 	end
 
-	local modelIdx = 4
-	if ply.sa_data and ply.sa_data.is_faction_leader then
-		modelIdx = 5
-	end
+
 	timer.Simple(2, function()
 		if IsValid(ply) then
-			ply:SetModel(SA.Factions.Table[idx][modelIdx])
+			ply:SetModel(model)
 		end
 	end)
 
-	if SA.Factions.Table[idx][6] then
-		return table.Random(SA.Factions.Table[idx][6])
+	if fact.spawns then
+		return table.Random(fact.spawns)
 	end
 end
 hook.Add("PlayerSelectSpawn", "SA_ChooseSpawn", SA_SetSpawnPos)
@@ -114,20 +113,15 @@ end
 
 local function SA_DoApplyFaction(len, ply)
 	local text = net.ReadString()
-	local faction = net.ReadString()
+	local faction_name = net.ReadString()
 
-	local ffid = SA.Factions.IndexByShort[faction]
-	if not ffid then return end
-	local faction_data = SA.Factions.Table[ffid]
-	if not faction_data then return end
-
-	local can_apply = faction_data[8]
-	if not can_apply then return end
+	local fact = SA.Factions.GetByName(faction_name)
+	if not fact.can_apply then return end
 
 	SA.API.UpsertPlayerApplication(ply, {
 		text = text,
-		faction_name = faction,
-	}, function(_body, status) DoApplyFactionResRes(ply, faction, status) end)
+		faction_name = faction_name,
+	}, function(_body, status) DoApplyFactionResRes(ply, faction_name, status) end)
 end
 net.Receive("SA_DoApplyFaction", SA_DoApplyFaction)
 
@@ -195,6 +189,6 @@ local function SA_DoKickPlayer(ply, cmd, args)
 		return
 	end
 
-	trgPly:AssignFaction("freelancer")
+	trgPly:AssignFaction(SA.Factions.GetDefault().name)
 end
 concommand.Add("sa_faction_kick", SA_DoKickPlayer)
