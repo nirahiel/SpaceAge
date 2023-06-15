@@ -65,7 +65,7 @@ for k, v in pairs(SA.Factions.Table) do
 	name_to_index[v.name] = k
 	display_name_to_index[v.display_name] = k
 
-	team.SetUp(k, v.name, v.color)
+	team.SetUp(k, v.display_name, v.color)
 end
 
 local error_faction = SA.Factions.Table[name_to_index["error"]]
