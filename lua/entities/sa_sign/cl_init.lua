@@ -4,6 +4,7 @@ surface.CreateFont("signText", { font = "Trebuchet18", size = 200, weight = 700,
 
 local typeTexts = {
 	x = "X",
+	afk = "AFK",
 	afk_room = "AFK room",
 	no_build_zone = "No-build zone",
 }
