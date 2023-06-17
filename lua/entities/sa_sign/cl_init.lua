@@ -3,15 +3,15 @@ include("shared.lua")
 surface.CreateFont("signText", { font = "Trebuchet18", size = 200, weight = 700, antialias = true, shadow = false})
 
 local typeTexts = {
+	blank = "",
 	x = "X",
-	afk = "AFK",
 	afk_room = "AFK room",
 	no_build_zone = "No-build zone",
 }
 
 function ENT:DrawSign()
     local typeName = self:GetNWString("type") or ""
-	local text = typeTexts[typeName] or "..."
+	local text = typeTexts[typeName] or typeName
 
 	surface.SetTextColor(255, 0, 0, 255)
 	surface.SetFont("signText")
