@@ -18,12 +18,12 @@ function ENT:DrawSign()
 end
 
 function ENT:Draw()
-	cam.Start3D2D(self:GetPos(), Angle(0, 90, 90), 0.1)
+	cam.Start3D2D(self:GetPos(), self:GetAngles() + Angle(0, 90, 90), 0.1)
 		self:DrawSign()
 	cam.End3D2D()
-	-- cam.Start3D2D(self:GetPos(), Angle(0, -90, 90), 0.1)
-	-- 	self:DrawSign()
-	-- cam.End3D2D()
+	cam.Start3D2D(self:GetPos(), self:GetAngles() + Angle(0, -90, 90), 0.1)
+		self:DrawSign()
+	cam.End3D2D()
 end
 
 function ENT:DrawTranslucent()
