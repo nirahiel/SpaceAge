@@ -5,7 +5,7 @@ include("shared.lua")
 
 function ENT:SpawnFunction(ply, tr)
 	if not tr.Hit then return end
-	local ent = ents.Create("sa_terminal")
+	local ent = ents.Create("sa_sign")
 	ent:SetPos(tr.HitPos)
 	ent:Spawn()
 	ent:Activate()
@@ -17,7 +17,6 @@ function ENT:Initialize()
 
 	self.SkipSBChecks = true
 
-	self:SetModel("models/props/terminal.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)
@@ -27,8 +26,4 @@ function ENT:Initialize()
 		phys:EnableMotion(false)
 		phys:SetMass(50000)
 	end
-end
-
-function ENT:Use(ply, called)
-	SA.Terminal.Open(ply, self)
 end
