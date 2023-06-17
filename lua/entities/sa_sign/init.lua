@@ -17,9 +17,12 @@ function ENT:Initialize()
 
 	self.SkipSBChecks = true
 
-	self:PhysicsInit(SOLID_VPHYSICS)
-	self:SetMoveType(MOVETYPE_VPHYSICS)
-	self:SetSolid(SOLID_VPHYSICS)
+	self:PhysicsInit(SOLID_NONE)
+	self:SetMoveType(MOVETYPE_NONE)
+	self:SetSolid(SOLID_NONE)
+	self:SetNotSolid(true)
+	self:DrawShadow(false)
+
 	self.ownerchecked = false
 	local phys = self:GetPhysicsObject()
 	if phys:IsValid() then

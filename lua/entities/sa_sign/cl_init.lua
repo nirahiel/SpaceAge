@@ -1,9 +1,9 @@
 include("shared.lua")
 
 function ENT:Draw()
-	self:DrawModel()
+	-- TODO: Draw text and stuff
 end
 
 function ENT:DrawTranslucent()
-	self:DrawModel()
+	self:Draw()
 end
