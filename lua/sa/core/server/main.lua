@@ -277,6 +277,10 @@ local function SA_Autospawner(ply)
 					spawn.SASound:Play()
 				end
 			end
+
+			if spawn.AutospawnDone then
+				spawn:AutospawnDone()
+			end
 		end
 	end
 

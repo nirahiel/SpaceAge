@@ -30,3 +30,7 @@ function ENT:Initialize()
 		phys:SetMass(50000)
 	end
 end
+
+function ENT:AutospawnDone()
+	self:SetNWString("type", self.AutospawnInfo.type)
+end
