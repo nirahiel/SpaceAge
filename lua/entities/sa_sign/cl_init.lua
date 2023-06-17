@@ -4,26 +4,33 @@ surface.CreateFont("signText", { font = "Trebuchet18", size = 200, weight = 700,
 
 local typeTexts = {
 	x = "X",
-	afk = "AFK\nroom",
-	no_build_zone = "No-build\nzone"
+	afk_room = "AFK room",
+	no_build_zone = "No-build zone",
 }
 
 function ENT:DrawSign()
-	local text = typeTexts[self:GetNWString("type") or ""] or "..."
+    local typeName = self:GetNWString("type") or ""
+	local text = typeTexts[typeName] or "..."
 
-	surface.SetTextPos(0, 0)
 	surface.SetTextColor(255, 0, 0, 255)
 	surface.SetFont("signText")
+    local w, h = surface.GetTextSize(text)
+	surface.SetTextPos(-w/2, -h/2)
 	surface.DrawText(text)
 end
 
 function ENT:Draw()
-	-- cam.Start3D2D(self:GetPos(), self:GetAngles() + Angle(90, 90, 90), 0.1)
-	-- 	self:DrawSign()
-	-- cam.End3D2D()
-	-- cam.Start3D2D(self:GetPos(), self:GetAngles() + Angle(90, -90, 90), 0.1)
-	-- 	self:DrawSign()
-	-- cam.End3D2D()
+    local pos = self:LocalToWorld(self:OBBCenter())
+    local ang = self:GetAngles()
+    ang:RotateAroundAxis(self:GetUp(), 90)
+	cam.Start3D2D(pos, ang, 0.1)
+		self:DrawSign()
+	cam.End3D2D()
+
+    ang:RotateAroundAxis(self:GetForward(), 180)
+	cam.Start3D2D(pos, ang, 0.1)
+		self:DrawSign()
+	cam.End3D2D()
 end
 
 function ENT:DrawTranslucent()
