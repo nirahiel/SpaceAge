@@ -1,26 +1,38 @@
-local function RunOn(def, path, pathType)
+local function RunOnSilent(def, path, pathType)
 	local checkFunc = SA.FileLoader.CanRunAll
 	if def == SA.FileLoader.RUN_CLIENTSIDE then
 		checkFunc = SA.FileLoader.CanRunClientside
 	end
 	if not checkFunc(LocalPlayer()) then
-		return
+		return false
 	end
 
 	local data = file.Read(path, pathType or "GAME")
 	if not data then
-		return
+		return false
 	end
 	if def == SA.FileLoader.RUN_CLIENTSIDE then
-		notification.AddLegacy("Script ran " .. def, NOTIFY_GENERIC, 5)
 		RunString(data)
-		return
+		return true
 	end
 
 	net.Start("SA_RunLua")
 		net.WriteString(def)
 		net.WriteString(data)
 	net.SendToServer()
+	return true
+end
+
+local function RunOnNotify(def, path, pathType)
+	local res = RunOnSilent(def, path, pathType)
+	if not res then
+		notification.AddLegacy("Error running script!", NOTIFY_ERROR, 2)
+		return
+	end
+
+	if def == SA.FileLoader.RUN_CLIENTSIDE then
+		notification.AddLegacy("Script ran " .. def, NOTIFY_GENERIC, 5)
+	end
 end
 
 net.Receive("SA_RunLua", function()
@@ -51,7 +63,7 @@ local function OpenFileBrowser()
 	function browser:OnRightClick(path, pnl)
 		local menu = DermaMenu()
 		local function AddSendOption(str)
-			menu:AddOption("Run " .. str, function() RunOn(str, path) end)
+			menu:AddOption("Run " .. str, function() RunOnNotify(str, path) end)
 		end
 		AddSendOption(SA.FileLoader.RUN_CLIENTSIDE)
 		if SA.FileLoader.CanRunAll(LocalPlayer()) then
@@ -61,7 +73,7 @@ local function OpenFileBrowser()
 			menu:AddSpacer()
 			for _, ply in pairs(player.GetHumans()) do
 				local pid = ply:SteamID()
-				menu:AddOption("Run on " .. ply:GetName(), function() RunOn(pid, path) end)
+				menu:AddOption("Run on " .. ply:GetName(), function() RunOnNotify(pid, path) end)
 			end
 			menu:Open()
 		end
@@ -69,7 +81,7 @@ local function OpenFileBrowser()
 end
 
 hook.Add("InitPostEntity", "SA_FileLoader_Load", function()
-	RunOn(SA.FileLoader.RUN_CLIENTSIDE, "sa_clientlua_autoload.lua", "LUA")
+	RunOnSilent(SA.FileLoader.RUN_CLIENTSIDE, "sa_clientlua_autoload.lua", "LUA")
 end)
 
 concommand.Add("sa_open_file_browser", function()
@@ -100,5 +112,5 @@ concommand.Add("sa_load_file", function(_, _, args)
 
 	local target = args[1]
 	target = targetRemaps[target] or target
-	RunOn(target, args[2], args[3])
+	RunOnNotify(target, args[2], args[3])
 end)
