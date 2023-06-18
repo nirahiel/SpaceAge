@@ -16,7 +16,7 @@ function ENT:DrawSign()
 	surface.SetTextColor(255, 0, 0, 255)
 	surface.SetFont("signText")
 	local w, h = surface.GetTextSize(text)
-	surface.SetTextPos(-w/2, -h/2)
+	surface.SetTextPos(-(w / 2), -(h / 2))
 	surface.DrawText(text)
 end
 
