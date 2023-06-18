@@ -31,6 +31,14 @@ local function MkPlayerMap()
 end
 
 function SA.API.RefreshServerList(cb)
+	local name = SA.API.GetServerName()
+	if not name then
+		timer.Simple(0.1, function()
+			SA.API.RefreshServerList(cb)
+		end)
+		return
+	end
+
 	SA.API.ListServers(function(data)
 		serverList = {}
 
@@ -41,7 +49,6 @@ function SA.API.RefreshServerList(cb)
 
 		serverIndexedList = data
 
-		local name = SA.API.GetServerName()
 		local selfServer = SA.API.GetServerByName(name)
 		if name then
 			if not selfServer then

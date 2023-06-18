@@ -45,7 +45,6 @@ end
 
 function SA.Teleporter.Open(ent)
 	SA.Teleporter.Reload(ent, SA.API.GetServerName())
-	SA.API.RefreshServerList()
 end
 
 function SA.Teleporter.Reload(ent, server)
