@@ -5,8 +5,8 @@ local function NotifyRun(ply, targetName)
 end
 
 local function RunLuaRecv(_, ply)
-	if not SA.FileBrowser.CanRunAll(ply) then
-		ply:AddHint("You cannot run lua remotely", NOTIFY_ERROR, 2)
+	if not SA.FileLoader.CanRunAll(ply) then
+		ply:AddHint("You cannot run Lua remotely", NOTIFY_ERROR, 2)
 		return
 	end
 	local def = net.ReadString()
@@ -16,9 +16,9 @@ local function RunLuaRecv(_, ply)
 	end
 
 	local target = nil
-	if def == "serverside" or def == "shared" then
+	if def == SA.FileLoader.RUN_SERVERSIDE or def == SA.FileLoader.RUN_SHARED then
 		RunString(data)
-	elseif def ~= "on all clients" then
+	elseif def ~= SA.FileLoader.RUN_ALL_CLIENTS then
 		target = player.GetBySteamID(def)
 		if not IsValid(target) then
 			ply:AddHint("Could not find target for script " .. def, NOTIFY_ERROR, 2)
@@ -27,7 +27,7 @@ local function RunLuaRecv(_, ply)
 		def = "on " .. target:GetName()
 	end
 
-	if def ~= "serverside" then
+	if def ~= SA.FileLoader.RUN_SERVERSIDE then
 		net.Start("SA_RunLua")
 			net.WriteString(data)
 

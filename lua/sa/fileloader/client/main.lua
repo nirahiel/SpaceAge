@@ -1,12 +1,19 @@
-local function RunOn(def, path)
-	local data = file.Read(path, "GAME")
-	if not data then
-		notification.AddLegacy("File could not be read!", NOTIFY_ERROR, 2)
+local function RunOn(def, path, pathType)
+	local checkFunc = SA.FileLoader.CanRunAll
+	if def == SA.FileLoader.RUN_CLIENTSIDE then
+		checkFunc = SA.FileLoader.CanRunClientside
+	end
+	if not checkFunc(LocalPlayer()) then
 		return
 	end
-	if def == "clientside" then
-		RunString(data)
+
+	local data = file.Read(path, pathType or "GAME")
+	if not data then
+		return
+	end
+	if def == SA.FileLoader.RUN_CLIENTSIDE then
 		notification.AddLegacy("Script ran " .. def, NOTIFY_GENERIC, 5)
+		RunString(data)
 		return
 	end
 
@@ -46,9 +53,9 @@ local function OpenFileBrowser()
 		local function AddSendOption(str)
 			menu:AddOption("Run " .. str, function() RunOn(str, path) end)
 		end
-		AddSendOption("clientside")
-		if SA.FileBrowser.CanRunAll(LocalPlayer()) then
-			AddSendOption("serverside")
+		AddSendOption(SA.FileLoader.RUN_CLIENTSIDE)
+		if SA.FileLoader.CanRunAll(LocalPlayer()) then
+			AddSendOption(SA.FileLoader.RUN_SERVERSIDE)
 			AddSendOption("shared")
 			AddSendOption("on all clients")
 			menu:AddSpacer()
@@ -60,21 +67,38 @@ local function OpenFileBrowser()
 		end
 	end
 end
-concommand.Add("sa_open_file_browser", function ()
-	if not SA.FileBrowser.CanRunClientside(LocalPlayer()) then
+
+hook.Add("InitPostEntity", "SA_FileLoader_Load", function()
+	RunOn(SA.FileLoader.RUN_CLIENTSIDE, "sa_clientlua_autoload.lua", "LUA")
+end)
+
+concommand.Add("sa_open_file_browser", function()
+	if not SA.FileLoader.CanRunClientside(LocalPlayer()) then
 		return
 	end
 	OpenFileBrowser()
 end)
 
-hook.Add("InitPostEntity", "SA_FileBrowser_Load", function()
-	if not SA.FileBrowser.CanRunClientside(LocalPlayer()) then
+local targetRemaps = {
+	client = SA.FileLoader.RUN_CLIENTSIDE,
+	["local"] = SA.FileLoader.RUN_CLIENTSIDE,
+	["self"] = SA.FileLoader.RUN_CLIENTSIDE,
+	me = SA.FileLoader.RUN_CLIENTSIDE,
+
+	server = SA.FileLoader.RUN_SERVERSIDE,
+
+	everyone = SA.FileLoader.RUN_ALL_CLIENTS,
+
+	all = SA.FileLoader.RUN_SHARED,
+	["global"] = SA.FileLoader.RUN_SHARED,
+}
+
+concommand.Add("sa_load_file", function(_, _, args)
+	if #args < 2 then
 		return
 	end
 
-	local data = file.Read("sa_clientlua_autoload.lua", "LUA")
-	if not data then
-		return
-	end
-	RunString(data)
+	local target = args[1]
+	target = targetRemaps[target] or target
+	RunOn(target, args[2], args[3])
 end)
