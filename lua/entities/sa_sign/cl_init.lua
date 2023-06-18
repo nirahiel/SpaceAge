@@ -10,25 +10,25 @@ local typeTexts = {
 }
 
 function ENT:DrawSign()
-    local typeName = self:GetNWString("type") or ""
+	local typeName = self:GetNWString("type") or ""
 	local text = typeTexts[typeName] or typeName
 
 	surface.SetTextColor(255, 0, 0, 255)
 	surface.SetFont("signText")
-    local w, h = surface.GetTextSize(text)
+	local w, h = surface.GetTextSize(text)
 	surface.SetTextPos(-w/2, -h/2)
 	surface.DrawText(text)
 end
 
 function ENT:Draw()
-    local pos = self:LocalToWorld(self:OBBCenter())
-    local ang = self:GetAngles()
-    ang:RotateAroundAxis(self:GetUp(), 90)
+	local pos = self:LocalToWorld(self:OBBCenter())
+	local ang = self:GetAngles()
+	ang:RotateAroundAxis(self:GetUp(), 90)
 	cam.Start3D2D(pos, ang, 0.1)
 		self:DrawSign()
 	cam.End3D2D()
 
-    ang:RotateAroundAxis(self:GetForward(), 180)
+	ang:RotateAroundAxis(self:GetForward(), 180)
 	cam.Start3D2D(pos, ang, 0.1)
 		self:DrawSign()
 	cam.End3D2D()
