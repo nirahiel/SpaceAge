@@ -32,7 +32,7 @@ end
 
 function SA.API.RefreshServerList(cb)
 	local name = SA.API.GetServerName()
-	if not name then
+	if (not name) or name == "" then
 		timer.Simple(0.1, function()
 			SA.API.RefreshServerList(cb)
 		end)
