@@ -409,7 +409,11 @@ end
 hook.Add("HUDPaint", "SA_HUDPaint_TeleporterUI", DrawTeleporterUI)
 
 hook.Add("InitPostEntity", "SA_Teleporter_ResetPW", function()
-	local password = GetConVar("password"):GetString()
+	local password_convar = GetConVar("password")
+	if not password_convar then
+		return
+	end
+	local password = password_convar:GetString()
 	if password and password:sub(1, 6) == "SA_TP " then
 		RunConsoleCommand("password", "")
 	end
