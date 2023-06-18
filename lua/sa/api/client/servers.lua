@@ -74,4 +74,9 @@ function SA.API.RefreshServerList(cb)
 	end)
 end
 
-SA.API.RefreshServerList()
+local function SA_PeriodicServerListRefresh()
+	SA.API.RefreshServerList(function()
+		timer.Simple(60, SA_PeriodicServerListRefresh)
+	end)	
+end
+SA_PeriodicServerListRefresh()
