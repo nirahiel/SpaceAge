@@ -505,7 +505,6 @@ local function SA_CustomHUDPaint()
 
 
 		-- temperature texts
-
 		draw.SimpleTextOutlined(tostring(ls_tmp) .. tempUnit, "ScoreboardDefault", XWidX-3, tempY-32, xMyTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 0, veryDarkGrey)
 
 		draw.SimpleTextOutlined(tostring(GlobalTemp_Min) .. tempUnit, "Default", tempX, tempY + 35, coolTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 0, veryDarkGrey)
@@ -527,4 +526,8 @@ local function SA_CustomHUDPaint()
 		end
 	end
 end
-hook.Add("HUDPaint", "SA_CustomHUDPaint", SA_CustomHUDPaint)
+hook.Add("SA_HUDPaint", "SA_CustomHUDPaint", SA_CustomHUDPaint)
+
+hook.Add("HUDPaint", "SA_HudPaintWrapper", function()
+	hook.Call("SA_HUDPaint")
+end)
