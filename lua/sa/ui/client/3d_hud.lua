@@ -13,7 +13,7 @@ local SA_HUD_MESH = Mesh(SA_HUD_RT_MAT)
 -- configuration
 local screen_fov = 75
 local x_distance_factor = 0.75
-local fov_allowed_rot = 5
+local fov_allowed_rot = 2
 local screen_dist = 200
 local tri_cols = 20
 local tri_rows = 20
@@ -119,10 +119,13 @@ hook.Add("HUDPaint", "SA_HudPaintWrapper", function()
 	local aimAngle = LocalPlayer():GetAimVector():Angle()
 	aimAngle.roll = 0
 
-	local max_angle_vel_frame = FrameTime() * hud_max_angle_vel
 
 	local angleDiff = aimAngle - hudAtAngle
 	angleDiff:Normalize()
+
+	local max_angle_vel_pitch = hud_max_angle_vel * math.Clamp(math.abs(angleDiff.pitch) / fov_allowed_rot, 0.01, 1)
+	local max_angle_vel_yaw = hud_max_angle_vel * math.Clamp(math.abs(angleDiff.yaw) / fov_allowed_rot, 0.01, 1)
+	local max_angle_vel_frame = FrameTime() * math.max(max_angle_vel_pitch, max_angle_vel_yaw)
 
 	hudAtAngle.pitch = hudAtAngle.pitch + math.Clamp(angleDiff.pitch, -max_angle_vel_frame, max_angle_vel_frame)
 	hudAtAngle.yaw = hudAtAngle.yaw + math.Clamp(angleDiff.yaw, -max_angle_vel_frame, max_angle_vel_frame)
