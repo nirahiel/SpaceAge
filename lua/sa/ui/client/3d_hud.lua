@@ -117,7 +117,7 @@ end
 UpdateHUDRT()
 hook.Add("OnScreenSizeChanged", "SA_3DHUD_ScreenSizeChanged", UpdateHUDRT)
 
-local use_3d_hud = CreateClientConVar("cl_sa_use_3dhud", 0, true, false)
+local use_3d_hud = CreateClientConVar("cl_sa_use_3dhud", 1, true, false)
 local hud_at_angle = LocalPlayer():GetAimVector():Angle()
 hook.Add("HUDPaint", "SA_3DHUD_PaintWrapper", function()
 	if use_3d_hud:GetInt() == 0 then
