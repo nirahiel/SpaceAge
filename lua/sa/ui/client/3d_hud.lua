@@ -3,13 +3,13 @@ local screen_fov = 75
 local x_distance_factor = 0.75
 local fov_allowed_rot = 2
 local screen_dist = 200
-local tri_cols = 20
-local tri_rows = 20
+local tri_cols = 50
+local tri_rows = 1
 local hud_max_angle_vel = 20
+local supersample_multiplier = 1
 
 local SA_HUD_RT, SA_HUD_RT_MAT, SA_HUD_MESH
 local function UpdateHUDRT()
-
 	SA_HUD_MESH = Mesh(SA_HUD_RT_MAT)
 
 	-- automatic calculations
@@ -28,8 +28,8 @@ local function UpdateHUDRT()
 	local screen_y_size_max = 2 * math.tan((screen_fov_y_rad / 2) + fov_allowed_rot_rad) * (screen_dist + tri_max_dist)
 
 	local rt_width_circle = 2 * math.pi * (tri_max_dist + screen_dist) * (screen_fov / 360)
-	local rt_width = math.ceil(ScrW() * (rt_width_circle / screen_x_size))
-	local rt_height = ScrH()
+	local rt_width = math.ceil(ScrW() * supersample_multiplier * (rt_width_circle / screen_x_size))
+	local rt_height = ScrH() * supersample_multiplier
 
 	local i = 0
 	-- Create render target
