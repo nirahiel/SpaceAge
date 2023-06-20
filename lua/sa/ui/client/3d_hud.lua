@@ -20,24 +20,26 @@ local SA_HUD_MESH = Mesh(SA_HUD_RT_MAT)
 -- configuration
 local screen_fov = 75
 local x_distance_factor = 0.75
-local screen_spacing = 0
+local fov_allowed_rot = 5
 local screen_dist = 200
 local tri_cols = 20
 local tri_rows = 20
+local hud_max_angle_vel = 20
 
 -- automatic calculations
 local screen_fov_rad = math.rad(screen_fov)
 local screen_fov_y_rad = 2*math.atan(math.tan(screen_fov_rad/2)/(ScrW()/ScrH()))
+
+-- adjust for FOV differences to avoid blanks peeking through
+local fov_allowed_rot_rad = math.rad(fov_allowed_rot) * (math.max(screen_fov_rad, screen_fov_y_rad) / math.min(screen_fov_rad, screen_fov_y_rad))
 
 local screen_x_size = 2*math.tan(screen_fov_rad/2)*screen_dist
 local screen_y_size = 2*math.tan(screen_fov_y_rad/2)*screen_dist
 
 local tri_max_dist = math.tan((math.pi/2)-screen_fov_rad)*(screen_x_size/2)
 
-local screen_y_size_max = 2*math.tan(screen_fov_y_rad/2)*(screen_dist+tri_max_dist)
-
-screen_x_size = screen_x_size + screen_spacing*(screen_x_size/ScrW())
-screen_y_size = screen_y_size + screen_spacing*(screen_y_size/ScrH())
+local screen_x_size_max = 2*math.tan((screen_fov_rad/2)+fov_allowed_rot_rad)*screen_dist
+local screen_y_size_max = 2*math.tan((screen_fov_y_rad/2)+fov_allowed_rot_rad)*(screen_dist+tri_max_dist)
 
 local one_pixel_u_w = 1/ScrW()
 local one_pixel_v_y = 1/ScrH()
@@ -45,13 +47,8 @@ local one_pixel_v_y = 1/ScrH()
 local tri_width = screen_x_size / tri_cols
 local tri_height = screen_y_size / tri_rows
 
-local tri_rows_skip = 0
-local tri_cols_skip = 0
-
-tri_cols_skip = tri_cols_skip + 1
-while tri_height * (tri_rows + tri_rows_skip*2) < screen_y_size_max do
-	tri_rows_skip = tri_rows_skip + 1
-end
+local tri_cols_skip = math.floor(((screen_x_size_max / tri_width) - tri_cols)/2)+1
+local tri_rows_skip = math.floor(((screen_y_size_max / tri_height) - tri_rows)/2)+1
 
 local triangles = {}
 local tri_rows_half = tri_rows / 2
@@ -109,7 +106,7 @@ end
 SA_HUD_MESH:BuildFromTriangles(triangles)
 
 local use3DHUD = CreateClientConVar("cl_sa_use_3dhud", 0, true, false)
-
+local hudAtAngle = Angle(0,0,0)
 hook.Add("HUDPaint", "SA_HudPaintWrapper", function()
 	if use3DHUD:GetInt() == 0 then
         hook.Call("SA_HUDPaint")
@@ -126,7 +123,25 @@ hook.Add("HUDPaint", "SA_HudPaintWrapper", function()
 		cam.End2D()
 	render.PopRenderTarget()
 
-	cam.Start3D(Vector(-screen_dist,0,0), Angle(0,0,0), screen_fov)
+	local aimAngle = LocalPlayer():GetAimVector():Angle()
+	aimAngle.roll = 0
+
+	local max_angle_vel_frame = FrameTime() * hud_max_angle_vel
+
+	local angleDiff = aimAngle - hudAtAngle
+	angleDiff:Normalize()
+
+	hudAtAngle.pitch = hudAtAngle.pitch + math.Clamp(angleDiff.pitch, -max_angle_vel_frame, max_angle_vel_frame)
+	hudAtAngle.yaw = hudAtAngle.yaw + math.Clamp(angleDiff.yaw, -max_angle_vel_frame, max_angle_vel_frame)
+
+	local clampedAngle = aimAngle - hudAtAngle
+	clampedAngle:Normalize()
+	clampedAngle.pitch = math.Clamp(clampedAngle.pitch, -fov_allowed_rot, fov_allowed_rot)
+	clampedAngle.yaw = math.Clamp(clampedAngle.yaw, -fov_allowed_rot, fov_allowed_rot)
+
+	hudAtAngle = aimAngle - clampedAngle
+
+	cam.Start3D(Vector(-screen_dist,0,0), clampedAngle, screen_fov)
 		render.SetMaterial(SA_HUD_RT_MAT)
 		SA_HUD_MESH:Draw()
 	cam.End3D()
