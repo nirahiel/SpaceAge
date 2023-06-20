@@ -102,9 +102,9 @@ local use3DHUD = CreateClientConVar("cl_sa_use_3dhud", 0, true, false)
 local hudAtAngle = Angle(0,0,0)
 hook.Add("HUDPaint", "SA_HudPaintWrapper", function()
 	if use3DHUD:GetInt() == 0 then
-        hook.Call("SA_HUDPaint")
-        return
-    end
+		hook.Call("SA_HUDPaint")
+		return
+	end
 
 	render.PushRenderTarget(SA_HUD_RT, 0, 0, ScrW(), ScrH())
 		cam.Start2D()
