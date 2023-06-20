@@ -128,9 +128,7 @@ hook.Add("HUDPaint", "SA_3DHUD_PaintWrapper", function()
 	render.PushRenderTarget(SA_HUD_RT)
 	cam.Start2D()
 		render.OverrideAlphaWriteEnable(true, true)
-
-		render.ClearDepth()
-		render.Clear(0, 0, 0, 0)
+		render.Clear(0, 0, 0, 0, true, true)
 
 		local oldClipping = DisableClipping(true)
 		hook.Call("SA_HUDPaint")
