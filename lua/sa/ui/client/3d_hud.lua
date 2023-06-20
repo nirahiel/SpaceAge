@@ -7,13 +7,6 @@ local SA_HUD_RT_MAT = CreateMaterial("SA_HUD_RT_MAT", "UnlitGeneric", {
     ["$vertexalpha"] = 1,
     ["$vertexcolor"] = 1,
 })
-local SA_HUD_WHITE_MAT = CreateMaterial("SA_HUD_WHITE_MAT", "UnlitGeneric", {
-    ["$basetexture"] = "color/white",
-    ["$model"] = 1,
-    ["$translucent"] = 1,
-    ["$vertexalpha"] = 1,
-    ["$vertexcolor"] = 1,
-})
 
 local SA_HUD_MESH = Mesh(SA_HUD_RT_MAT)
 
