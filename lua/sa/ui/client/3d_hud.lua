@@ -9,23 +9,6 @@ local hud_max_angle_vel = 20
 
 local SA_HUD_RT, SA_HUD_RT_MAT, SA_HUD_MESH
 local function UpdateHUDRT()
-	local i = 0
-	-- Create render target
-	while true do
-		SA_HUD_RT = GetRenderTarget("SA_HUD_RT_" .. tostring(i), ScrW(), ScrH())
-		if SA_HUD_RT:Width() == ScrW() and SA_HUD_RT:Height() == ScrH() then
-			break
-		end
-		i = i + 1
-	end
-
-	SA_HUD_RT_MAT = CreateMaterial("SA_HUD_RT_MAT_" .. tostring(i), "UnlitGeneric", {
-		["$basetexture"] = SA_HUD_RT:GetName(),
-		["$model"] = 1,
-		["$translucent"] = 1,
-		["$vertexalpha"] = 1,
-		["$vertexcolor"] = 1,
-	})
 
 	SA_HUD_MESH = Mesh(SA_HUD_RT_MAT)
 
@@ -44,8 +27,30 @@ local function UpdateHUDRT()
 	local screen_x_size_max = 2 * math.tan((screen_fov_rad / 2) + fov_allowed_rot_rad) * screen_dist
 	local screen_y_size_max = 2 * math.tan((screen_fov_y_rad / 2) + fov_allowed_rot_rad) * (screen_dist + tri_max_dist)
 
-	local one_pixel_u_w = 1 / ScrW()
-	local one_pixel_v_y = 1 / ScrH()
+	local rt_width_circle = 2 * math.pi * (tri_max_dist+screen_dist) * (screen_fov / 360)
+	local rt_width = math.ceil(ScrW() * (rt_width_circle / screen_x_size))
+	local rt_height = ScrH()
+
+	local i = 0
+	-- Create render target
+	while true do
+		SA_HUD_RT = GetRenderTarget("SA_HUD_RT_" .. tostring(i), rt_width, rt_height)
+		if SA_HUD_RT:Width() == rt_width and SA_HUD_RT:Height() == rt_height then
+			break
+		end
+		i = i + 1
+	end
+
+	SA_HUD_RT_MAT = CreateMaterial("SA_HUD_RT_MAT_" .. tostring(i), "UnlitGeneric", {
+		["$basetexture"] = SA_HUD_RT:GetName(),
+		["$model"] = 1,
+		["$translucent"] = 1,
+		["$vertexalpha"] = 1,
+		["$vertexcolor"] = 1,
+	})
+
+	local one_pixel_u_w = 1 / rt_width
+	local one_pixel_v_y = 1 / rt_height
 
 	local tri_width = screen_x_size / tri_cols
 	local tri_height = screen_y_size / tri_rows
@@ -113,7 +118,7 @@ UpdateHUDRT()
 hook.Add("OnScreenSizeChanged", "SA_3DHUD_ScreenSizeChanged", UpdateHUDRT)
 
 local use_3d_hud = CreateClientConVar("cl_sa_use_3dhud", 0, true, false)
-local hud_at_angle = Angle(0,0,0)
+local hud_at_angle = LocalPlayer():GetAimVector():Angle()
 hook.Add("HUDPaint", "SA_3DHUD_PaintWrapper", function()
 	if use_3d_hud:GetInt() == 0 then
 		hook.Call("SA_HUDPaint")
@@ -121,13 +126,18 @@ hook.Add("HUDPaint", "SA_3DHUD_PaintWrapper", function()
 	end
 
 	render.PushRenderTarget(SA_HUD_RT)
-		cam.Start2D()
-			render.OverrideAlphaWriteEnable(true, true)
-			render.ClearDepth()
-			render.Clear(0, 0, 0, 0)
-			hook.Call("SA_HUDPaint")
-			render.OverrideAlphaWriteEnable(false)
-		cam.End2D()
+	cam.Start2D()
+		render.OverrideAlphaWriteEnable(true, true)
+
+		render.ClearDepth()
+		render.Clear(0, 0, 0, 0)
+
+		local oldClipping = DisableClipping(true)
+		hook.Call("SA_HUDPaint")
+		DisableClipping(oldClipping)
+
+		render.OverrideAlphaWriteEnable(false)
+	cam.End2D()
 	render.PopRenderTarget()
 
 	local aim_angle = LocalPlayer():GetAimVector():Angle()
