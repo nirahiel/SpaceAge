@@ -27,7 +27,7 @@ local function UpdateHUDRT()
 	local screen_x_size_max = 2 * math.tan((screen_fov_rad / 2) + fov_allowed_rot_rad) * screen_dist
 	local screen_y_size_max = 2 * math.tan((screen_fov_y_rad / 2) + fov_allowed_rot_rad) * (screen_dist + tri_max_dist)
 
-	local rt_width_circle = 2 * math.pi * (tri_max_dist+screen_dist) * (screen_fov / 360)
+	local rt_width_circle = 2 * math.pi * (tri_max_dist + screen_dist) * (screen_fov / 360)
 	local rt_width = math.ceil(ScrW() * (rt_width_circle / screen_x_size))
 	local rt_height = ScrH()
 
