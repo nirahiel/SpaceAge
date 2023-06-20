@@ -1,11 +1,11 @@
 -- Create render target
 local SA_HUD_RT = GetRenderTarget("SA_HUD_RT", ScrW(), ScrH())
 local SA_HUD_RT_MAT = CreateMaterial("SA_HUD_RT_MAT", "UnlitGeneric", {
-    ["$basetexture"] = SA_HUD_RT:GetName(),
-    ["$model"] = 1,
-    ["$translucent"] = 1,
-    ["$vertexalpha"] = 1,
-    ["$vertexcolor"] = 1,
+	["$basetexture"] = SA_HUD_RT:GetName(),
+	["$model"] = 1,
+	["$translucent"] = 1,
+	["$vertexalpha"] = 1,
+	["$vertexcolor"] = 1,
 })
 
 local SA_HUD_MESH = Mesh(SA_HUD_RT_MAT)
