@@ -21,18 +21,18 @@ local hud_max_angle_vel = 20
 
 -- automatic calculations
 local screen_fov_rad = math.rad(screen_fov)
-local screen_fov_y_rad = 2 * math.atan(math.tan(screen_fov_rad / 2) / (ScrW()/ScrH()))
+local screen_fov_y_rad = 2 * math.atan(math.tan(screen_fov_rad / 2) / (ScrW() / ScrH()))
 
 -- adjust for FOV differences to avoid blanks peeking through
 local fov_allowed_rot_rad = math.rad(fov_allowed_rot) * (math.max(screen_fov_rad, screen_fov_y_rad) / math.min(screen_fov_rad, screen_fov_y_rad))
 
-local screen_x_size = 2*math.tan(screen_fov_rad/2)*screen_dist
-local screen_y_size = 2*math.tan(screen_fov_y_rad/2)*screen_dist
+local screen_x_size = 2 * math.tan(screen_fov_rad / 2) * screen_dist
+local screen_y_size = 2 * math.tan(screen_fov_y_rad / 2) * screen_dist
 
 local tri_max_dist = math.tan((math.pi / 2) - screen_fov_rad) * (screen_x_size / 2)
 
-local screen_x_size_max = 2*math.tan((screen_fov_rad / 2) + fov_allowed_rot_rad) * screen_dist
-local screen_y_size_max = 2*math.tan((screen_fov_y_rad / 2) + fov_allowed_rot_rad) * (screen_dist + tri_max_dist)
+local screen_x_size_max = 2 * math.tan((screen_fov_rad / 2) + fov_allowed_rot_rad) * screen_dist
+local screen_y_size_max = 2 * math.tan((screen_fov_y_rad / 2) + fov_allowed_rot_rad) * (screen_dist + tri_max_dist)
 
 local one_pixel_u_w = 1 / ScrW()
 local one_pixel_v_y = 1 / ScrH()
@@ -81,7 +81,7 @@ for y = start_y,end_y do
 		local xleft = tri_cols_lim - x
 		local U2 = xleft / tri_cols
 		local U1 = (xleft + 1) / tri_cols
-	
+
 		U1 = math.Clamp(U1, one_pixel_u_w, 1 - one_pixel_u_w)
 		U2 = math.Clamp(U2, one_pixel_u_w, 1 - one_pixel_u_w)
 
