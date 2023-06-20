@@ -21,7 +21,7 @@ local hud_max_angle_vel = 20
 
 -- automatic calculations
 local screen_fov_rad = math.rad(screen_fov)
-local screen_fov_y_rad = 2*math.atan(math.tan(screen_fov_rad/2)/(ScrW()/ScrH()))
+local screen_fov_y_rad = 2 * math.atan(math.tan(screen_fov_rad / 2) / (ScrW()/ScrH()))
 
 -- adjust for FOV differences to avoid blanks peeking through
 local fov_allowed_rot_rad = math.rad(fov_allowed_rot) * (math.max(screen_fov_rad, screen_fov_y_rad) / math.min(screen_fov_rad, screen_fov_y_rad))
@@ -29,19 +29,19 @@ local fov_allowed_rot_rad = math.rad(fov_allowed_rot) * (math.max(screen_fov_rad
 local screen_x_size = 2*math.tan(screen_fov_rad/2)*screen_dist
 local screen_y_size = 2*math.tan(screen_fov_y_rad/2)*screen_dist
 
-local tri_max_dist = math.tan((math.pi/2)-screen_fov_rad)*(screen_x_size/2)
+local tri_max_dist = math.tan((math.pi / 2) - screen_fov_rad) * (screen_x_size / 2)
 
-local screen_x_size_max = 2*math.tan((screen_fov_rad/2)+fov_allowed_rot_rad)*screen_dist
-local screen_y_size_max = 2*math.tan((screen_fov_y_rad/2)+fov_allowed_rot_rad)*(screen_dist+tri_max_dist)
+local screen_x_size_max = 2*math.tan((screen_fov_rad / 2) + fov_allowed_rot_rad) * screen_dist
+local screen_y_size_max = 2*math.tan((screen_fov_y_rad / 2) + fov_allowed_rot_rad) * (screen_dist + tri_max_dist)
 
-local one_pixel_u_w = 1/ScrW()
-local one_pixel_v_y = 1/ScrH()
+local one_pixel_u_w = 1 / ScrW()
+local one_pixel_v_y = 1 / ScrH()
 
 local tri_width = screen_x_size / tri_cols
 local tri_height = screen_y_size / tri_rows
 
-local tri_cols_skip = math.floor(((screen_x_size_max / tri_width) - tri_cols)/2)+1
-local tri_rows_skip = math.floor(((screen_y_size_max / tri_height) - tri_rows)/2)+1
+local tri_cols_skip = math.floor(((screen_x_size_max / tri_width) - tri_cols) / 2) + 1
+local tri_rows_skip = math.floor(((screen_y_size_max / tri_height) - tri_rows) / 2) + 1
 
 local triangles = {}
 local tri_rows_half = tri_rows / 2
@@ -54,36 +54,36 @@ local end_x = tri_cols_lim + tri_cols_skip
 local start_y = -tri_rows_skip
 local end_y = tri_rows_lim + tri_rows_skip
 
-local pi_half = math.pi/2
-local D_offset = math.cos(-pi_half*x_distance_factor)*(tri_max_dist*x_distance_factor)
+local pi_half = math.pi / 2
+local D_offset = math.cos(-pi_half * x_distance_factor) * (tri_max_dist * x_distance_factor)
 
 for y = start_y,end_y do
 	local Y1 = (y - tri_rows_half) * tri_height
 	local Y2 = Y1 + tri_height
 
 	local yleft = tri_rows_lim - y
-	local V2 = (yleft/tri_rows)
-	local V1 = ((yleft+1)/tri_rows)
+	local V2 = yleft / tri_rows
+	local V1 = (yleft + 1) / tri_rows
 
-	V1 = math.Clamp(V1, one_pixel_v_y, 1-one_pixel_v_y)
-	V2 = math.Clamp(V2, one_pixel_v_y, 1-one_pixel_v_y)
+	V1 = math.Clamp(V1, one_pixel_v_y, 1 - one_pixel_v_y)
+	V2 = math.Clamp(V2, one_pixel_v_y, 1 - one_pixel_v_y)
 
 	for x = start_x,end_x do
 		local X1 = (x - tri_cols_half) * tri_width
 		local X2 = X1 + tri_width
 
-		local D1 = math.cos((((x/tri_cols)*math.pi)-pi_half)*x_distance_factor)*(tri_max_dist*x_distance_factor)
-		local D2 = math.cos(((((x+1)/tri_cols)*math.pi)-pi_half)*x_distance_factor)*(tri_max_dist*x_distance_factor)
+		local D1 = math.cos((((x / tri_cols) * math.pi) - pi_half) *  x_distance_factor) * (tri_max_dist * x_distance_factor)
+		local D2 = math.cos(((((x + 1) / tri_cols) * math.pi) - pi_half) * x_distance_factor) * (tri_max_dist * x_distance_factor)
 
 		D1 = D1 - D_offset
 		D2 = D2 - D_offset
 
 		local xleft = tri_cols_lim - x
-		local U2 = (xleft/tri_cols)
-		local U1 = ((xleft+1)/tri_cols)
+		local U2 = xleft / tri_cols
+		local U1 = (xleft + 1) / tri_cols
 	
-		U1 = math.Clamp(U1, one_pixel_u_w, 1-one_pixel_u_w)
-		U2 = math.Clamp(U2, one_pixel_u_w, 1-one_pixel_u_w)
+		U1 = math.Clamp(U1, one_pixel_u_w, 1 - one_pixel_u_w)
+		U2 = math.Clamp(U2, one_pixel_u_w, 1 - one_pixel_u_w)
 
 		-- D, X=U, Y=V
 		-- clockwise ordering
