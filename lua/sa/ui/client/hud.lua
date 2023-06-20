@@ -58,11 +58,12 @@ local function CheckHookIn()
 end
 timer.Create("SA_CheckHUDHookIn", 1, 0, CheckHookIn)
 
-surface.CreateFont("DefaultLarge", {
+local HUDFont = "SAHUD"
+surface.CreateFont(HUDFont, {
 	font = "Arial", -- Use the font-name which is shown to you by your operating system Font Viewer, not the file name
 	extended = false,
-	size = 13,
-	weight = 500,
+	size = 18,
+	weight = 700,
 	blursize = 0,
 	scanlines = 0,
 	antialias = true,
@@ -75,7 +76,6 @@ surface.CreateFont("DefaultLarge", {
 	additive = false,
 	outline = false,
 })
-local HUDFont = "Default"
 
 local SA_HUDBlink = true
 timer.Create("SA_HUDBlink", 0.5, 0, function() SA_HUDBlink = not SA_HUDBlink end)
@@ -432,6 +432,8 @@ local function SA_CustomHUDPaint()
 		local hotTemp = red
 		local goodTemp = green
 
+		local tempBarHeight = 30
+
 		-- draw background box
 
 		local XMinX = (ScW - 388) / 2
@@ -440,50 +442,48 @@ local function SA_CustomHUDPaint()
 		local Wid = Perc * tempGaugeWid
 
 		local tempX = ScW / 2 - tempGaugeWid / 2
-		local tempY = ScrH() - 55
+		local tempY = ScrH() - (35 + tempBarHeight)
 
 		local outlineW = 2
 
 		--temp bar outline
 		surface.SetDrawColor(black)
 		draw.NoTexture()
-		DrawTexturedRectRounded(tempX - outlineW, tempY + 5 - outlineW, tempGaugeWid + outlineW * 2 + 1, 20 + outlineW * 2, 4, 4, true, true, true, true)
+		DrawTexturedRectRounded(tempX - outlineW, tempY + 5 - outlineW, tempGaugeWid + outlineW * 2 + 1, tempBarHeight + outlineW * 2, 4, 4, true, true, true, true)
 
 		-- cool temp
 		surface.SetDrawColor(coolTemp)
 		draw.NoTexture()
-		DrawTexturedRectRounded(tempX, tempY + 5, Wid, 20, 4, 4, true, false, true, false)
+		DrawTexturedRectRounded(tempX, tempY + 5, Wid, tempBarHeight, 4, 4, true, false, true, false)
 
 		-- hot temp
 		surface.SetDrawColor(hotTemp)
-		DrawTexturedRectRounded(tempX + Wid, tempY + 5, tempGaugeWid - Wid, 20, 4, 4, false, true, false ,true)
+		DrawTexturedRectRounded(tempX + Wid, tempY + 5, tempGaugeWid - Wid, tempBarHeight, 4, 4, false, true, false ,true)
 
 		local MinWid = math.Clamp(FairTemp_Min / GlobalTemp_Max, 0, 1) * tempGaugeWid
 		local Perc2 = math.Clamp(FairTemp_Max / GlobalTemp_Max, 0, 1)
 		local Wid2 = math.Clamp(Perc2 - Perc, 0, 1) * tempGaugeWid
 
 		-- good temp
-
 		surface.SetDrawColor(goodTemp)
 		DrawTexturedRectRounded(tempX + MinWid, tempY + 5, Wid2-2, 20, 1, 3, true, true, true ,true)
 
 
 		-- fade blue-red-green
-
 		surface.SetDrawColor(green)
 		surface.SetTexture(texGradR)
-		surface.DrawTexturedRect(tempX + MinWid-1, tempY + 5, 5, 20)
+		surface.DrawTexturedRect(tempX + MinWid-1, tempY + 5, 5, tempBarHeight)
 
 		surface.SetTexture(texGradL)
-		surface.DrawTexturedRect(tempX + MinWid + Wid2 -5, tempY + 5, 5, 20)
+		surface.DrawTexturedRect(tempX + MinWid + Wid2 -5, tempY + 5, 5, tempBarHeight)
 
 		--dark gradients
 		surface.SetDrawColor(Color(0, 0, 0, 235))
 		surface.SetTexture(texGradD)
-		DrawTexturedRectRounded(tempX, tempY + 5, MinWid, 20, 4, 4, true, false, true, false)
-		DrawTexturedRectRounded(MinWid + tempX + Wid2, tempY + 5, tempGaugeWid - MinWid - Wid2 + 1, 20, 4, 4, false, true, false ,true)
+		DrawTexturedRectRounded(tempX, tempY + 5, MinWid, tempBarHeight, 4, 4, true, false, true, false)
+		DrawTexturedRectRounded(MinWid + tempX + Wid2, tempY + 5, tempGaugeWid - MinWid - Wid2 + 1, tempBarHeight, 4, 4, false, true, false ,true)
 
-		DrawTexturedRectRounded(MinWid + tempX, tempY + 5, Wid2, 20, 2, 2, false, false, false, false)
+		DrawTexturedRectRounded(MinWid + tempX, tempY + 5, Wid2, tempBarHeight, 2, 2, false, false, false, false)
 
 
 		surface.SetTexture(texGradU)
@@ -495,9 +495,9 @@ local function SA_CustomHUDPaint()
 		local XWidX = math.min(XMinX + XWid, XMinX + tempGaugeWid-2)
 
 		--surface.RoundedBoxTextued(cornerRadius, x, y, width, height, divisions)
-		surface.DrawTexturedRect(XWidX, tempY - 8, 2, 34)
+		surface.DrawTexturedRect(XWidX, tempY - 8, 2, 14 +  tempBarHeight)
 		--surface.DrawTexturedRect(XWidX - 8+4, ScH - 98, 2, 34)
-		surface.DrawTexturedRect(XWidX, tempY - 8, 6, 10)
+		surface.DrawTexturedRect(XWidX, tempY - 8, 6, -10 + tempBarHeight)
 
 		local xMyTemp = goodTemp
 		if ls_tmp < FairTemp_Min then xMyTemp = coolTemp
@@ -507,8 +507,8 @@ local function SA_CustomHUDPaint()
 		-- temperature texts
 		draw.SimpleTextOutlined(tostring(ls_tmp) .. tempUnit, "ScoreboardDefault", XWidX-3, tempY-32, xMyTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 0, veryDarkGrey)
 
-		draw.SimpleTextOutlined(tostring(GlobalTemp_Min) .. tempUnit, "Default", tempX, tempY + 35, coolTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 0, veryDarkGrey)
-		draw.SimpleTextOutlined(tostring(GlobalTemp_Max) .. tempUnit, "Default", tempX + 380, tempY + 35, hotTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 0, veryDarkGrey)
+		draw.SimpleTextOutlined(tostring(GlobalTemp_Min) .. tempUnit, HUDFont, tempX, tempY + 15 + tempBarHeight, coolTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 0, veryDarkGrey)
+		draw.SimpleTextOutlined(tostring(GlobalTemp_Max) .. tempUnit, HUDFont, tempX + 380, tempY + 15 + tempBarHeight, hotTemp, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 0, veryDarkGrey)
 
 	end
 	--END OF TEMPERATURE
@@ -527,7 +527,3 @@ local function SA_CustomHUDPaint()
 	end
 end
 hook.Add("SA_HUDPaint", "SA_CustomHUDPaint", SA_CustomHUDPaint)
-
-hook.Add("HUDPaint", "SA_HudPaintWrapper", function()
-	hook.Call("SA_HUDPaint")
-end)
