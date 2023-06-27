@@ -121,7 +121,7 @@ local use_3d_hud = CreateClientConVar("cl_sa_use_3dhud", 1, true, false)
 local hud_at_angle = nil
 hook.Add("HUDPaint", "SA_3DHUD_PaintWrapper", function()
 	if use_3d_hud:GetInt() == 0 then
-		hook.Call("SA_HUDPaint")
+		hook.Run("SA_HUDPaint")
 		return
 	end
 
@@ -131,7 +131,7 @@ hook.Add("HUDPaint", "SA_3DHUD_PaintWrapper", function()
 		render.Clear(0, 0, 0, 0, true, true)
 
 		local oldClipping = DisableClipping(true)
-		hook.Call("SA_HUDPaint")
+		hook.Run("SA_HUDPaint")
 		DisableClipping(oldClipping)
 
 		render.OverrideAlphaWriteEnable(false)
