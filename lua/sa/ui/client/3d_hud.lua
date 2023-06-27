@@ -138,7 +138,7 @@ hook.Add("HUDPaint", "SA_3DHUD_PaintWrapper", function()
 	cam.End2D()
 	render.PopRenderTarget()
 
-	local aim_angle = LocalPlayer():GetAimVector():Angle()
+	local aim_angle = LocalPlayer():EyeAngles()
 	aim_angle.roll = 0
 	if hud_at_angle == nil then
 		hud_at_angle = aim_angle
