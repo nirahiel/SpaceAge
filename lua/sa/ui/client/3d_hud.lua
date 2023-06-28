@@ -1,3 +1,5 @@
+SA.REQUIRE("ui.main")
+
 -- configuration
 local screen_fov = 75
 local x_distance_factor = 0.75

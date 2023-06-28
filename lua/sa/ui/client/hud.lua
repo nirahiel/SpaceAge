@@ -1,3 +1,5 @@
+SA.REQUIRE("ui.main")
+
 local Color = Color
 local draw = draw
 local math = math
