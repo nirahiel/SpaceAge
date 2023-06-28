@@ -77,7 +77,9 @@ function GM:HUDPaintBackground()
 		BaseClass:HUDPaintBackground()
 	end
 
-	SA.UI.PaintStart()
+	if SA.UI.PaintStart then
+		SA.UI.PaintStart()
+	end
 end
 
 function GM:HUDDrawScoreBoard()
@@ -85,5 +87,7 @@ function GM:HUDDrawScoreBoard()
 		BaseClass:HUDDrawScoreBoard()
 	end
 
-	SA.UI.PaintEnd()
+	if SA.UI.PaintEnd then
+		SA.UI.PaintEnd()
+	end
 end
