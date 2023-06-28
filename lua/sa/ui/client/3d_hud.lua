@@ -119,22 +119,31 @@ hook.Add("OnScreenSizeChanged", "SA_3DHUD_ScreenSizeChanged", UpdateHUDRT)
 
 local use_3d_hud = CreateClientConVar("cl_sa_use_3dhud", 1, true, false)
 local hud_at_angle = nil
-hook.Add("HUDPaint", "SA_3DHUD_PaintWrapper", function()
+local old_clipping = nil
+
+function SA.UI.PaintStart()
+	old_clipping = nil
 	if use_3d_hud:GetInt() == 0 then
-		hook.Run("SA_HUDPaint")
 		return
 	end
 
 	render.PushRenderTarget(SA_HUD_RT)
 	cam.Start2D()
-		render.OverrideAlphaWriteEnable(true, true)
-		render.Clear(0, 0, 0, 0, true, true)
 
-		local oldClipping = DisableClipping(true)
-		hook.Run("SA_HUDPaint")
-		DisableClipping(oldClipping)
+	render.OverrideAlphaWriteEnable(true, true)
+	render.Clear(0, 0, 0, 0, true, true)
 
-		render.OverrideAlphaWriteEnable(false)
+	old_clipping = DisableClipping(true) or false
+end
+
+function SA.UI.PaintEnd()
+	if old_clipping == nil then
+		return
+	end
+	DisableClipping(old_clipping)
+	old_clipping = nil
+
+	render.OverrideAlphaWriteEnable(false)
 	cam.End2D()
 	render.PopRenderTarget()
 
@@ -165,4 +174,4 @@ hook.Add("HUDPaint", "SA_3DHUD_PaintWrapper", function()
 		render.SetMaterial(SA_HUD_RT_MAT)
 		SA_HUD_MESH:Draw()
 	cam.End3D()
-end)
+end

@@ -531,4 +531,4 @@ local function SA_CustomHUDPaint()
 		end
 	end
 end
-hook.Add("SA_HUDPaint", "SA_CustomHUDPaint", SA_CustomHUDPaint)
+hook.Add("HUDPaint", "SA_CustomHUDPaint", SA_CustomHUDPaint)

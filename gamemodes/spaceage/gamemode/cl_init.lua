@@ -1,4 +1,5 @@
 include("shared.lua")
+DEFINE_BASECLASS("spacebuild")
 
 surface.CreateFont("SAToolTipFont",
 {
@@ -69,4 +70,20 @@ function GM:PaintWorldTips()
 	drawThiccBox(bX, bY, bW, bH, border)
 
 	draw.DrawText(worldTip.text, "SAToolTipFont", x + (w - padding) / 2, y - padding / 2, fdColor, TEXT_ALIGN_CENTER)
+end
+
+function GM:HUDPaintBackground()
+	if BaseClass.HUDPaintBackground then
+		BaseClass:HUDPaintBackground()
+	end
+
+	SA.UI.PaintStart()
+end
+
+function GM:HUDDrawScoreBoard()
+	if BaseClass.HUDDrawScoreBoard then
+		BaseClass:HUDDrawScoreBoard()
+	end
+
+	SA.UI.PaintEnd()
 end
