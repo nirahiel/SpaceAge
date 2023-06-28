@@ -280,9 +280,11 @@ local function SA_DrawHelmet(color)
 	surface.DrawRect(0, 25, w, 5)
 
 	-- draw invisible border to prevent black edges
-	render.OverrideBlend(true, BLEND_ONE, BLEND_ZERO, BLENDFUNC_ADD, BLEND_ZERO, BLEND_ZERO, BLENDFUNC_ADD)
-	surface.DrawRect(0, 30, w, 5)
-	render.OverrideBlend(false)
+	if SA.UI.In3DRender() then
+		render.OverrideBlend(true, BLEND_ONE, BLEND_ZERO, BLENDFUNC_ADD, BLEND_ZERO, BLEND_ZERO, BLENDFUNC_ADD)
+		surface.DrawRect(0, 30, w, 5)
+		render.OverrideBlend(false)
+	end
 end
 
 local function SA_DrawTopBar()

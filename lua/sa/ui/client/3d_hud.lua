@@ -123,6 +123,10 @@ local use_3d_hud = CreateClientConVar("cl_sa_use_3dhud", 1, true, false)
 local hud_at_angle = nil
 local old_clipping = nil
 
+function SA.UI.In3DRender()
+	return old_clipping ~= nil
+end
+
 function SA.UI.PaintStart()
 	old_clipping = nil
 	if use_3d_hud:GetInt() == 0 then
