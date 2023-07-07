@@ -90,4 +90,6 @@ function GM:HUDDrawScoreBoard()
 	if SA.UI.PaintEnd then
 		SA.UI.PaintEnd()
 	end
+
+	hook.Run("SA_HUDPaintDirect")
 end

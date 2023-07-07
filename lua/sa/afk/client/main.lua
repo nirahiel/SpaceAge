@@ -1,6 +1,6 @@
 local function PlyAFKSet(enabled)
 	if enabled then
-		hook.Add("HUDPaint", "SA_AFK_HUDPaint", function()
+		hook.Add("SA_HUDPaintDirect", "SA_AFK_HUDPaintDirect", function()
 			local scrW = ScrW()
 			local scrH = ScrH()
 
@@ -15,7 +15,7 @@ local function PlyAFKSet(enabled)
 			surface.DrawText(afkText)
 		end)
 	else
-		hook.Remove("HUDPaint", "SA_AFK_HUDPaint")
+		hook.Remove("SA_HUDPaintDirect", "SA_AFK_HUDPaintDirect")
 	end
 end
 

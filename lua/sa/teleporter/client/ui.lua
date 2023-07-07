@@ -406,7 +406,7 @@ local function DrawTeleporterUI()
 	end
 	lastMouseLeftDown = isLeftDown
 end
-hook.Add("HUDPaint", "SA_HUDPaint_TeleporterUI", DrawTeleporterUI)
+hook.Add("SA_HUDPaintDirect", "SA_HUDPaintDirect_TeleporterUI", DrawTeleporterUI)
 
 hook.Add("InitPostEntity", "SA_Teleporter_ResetPW", function()
 	local password_convar = GetConVar("password")
