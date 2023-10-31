@@ -33,9 +33,6 @@ function PlayerMeta:AssignFaction(name, cb)
 		self.sa_data.is_faction_leader = false
 		local steamId = self:SteamID()
 		SA.SaveUser(self)
-		timer.Simple(5, function()
-			http.Fetch("https://spaceage.mp/sa_group_sync.php?steam_id=" .. steamId .. "&authkey=TwB8a4yUKkF13bpI")
-		end)
 	end
 end
 
