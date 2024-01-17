@@ -7,7 +7,7 @@ function SA.RunOnLoaded(name, func)
 end
 local function SA_CheckLoad()
 	local ply = LocalPlayer()
-	if not ply or not ply:GetNWBool("isloaded") then
+	if (not IsValid(ply)) or (not ply:GetNWBool("isloaded")) then
 		timer.Simple(1, SA_CheckLoad)
 		return
 	end
