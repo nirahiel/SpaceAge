@@ -45,12 +45,22 @@ end
 
 __e2setcost(10)
 e2function number entity:credits()
-	if not (this and IsValid(this) and this:IsPlayer() and this.sa_data.credits) then return 0 end
+	if not (this and IsValid(this) and this:IsPlayer() and this.sa_data.credits) then return -1 end
 	return this.sa_data.credits
+end
+
+__e2setcost(10)
+e2function number entity:score()
+	if not (this and IsValid(this) and this:IsPlayer() and this.sa_data.score) then return -1 end
+	return this.sa_data.score
 end
 
 e2function number credits()
 	return self.player.sa_data.credits
+end
+
+e2function number score()
+	return self.player.sa_data.score
 end
 
 __e2setcost(1)
