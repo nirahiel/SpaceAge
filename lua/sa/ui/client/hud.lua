@@ -267,22 +267,24 @@ local function DrawLSBattery(CaptionX, Value, ScH, ScW, ColBack, ColText)
 	end
 end
 
+local HELMET_TEXT_Y_POS = 10
+
 local function SA_DrawHelmet(color)
 	draw.NoTexture()
 	local w = ScrW()
 
 	-- draw fills
 	surface.SetDrawColor(0, 0, 0, 160)
-	surface.DrawRect(0, 0, w, 25)
+	surface.DrawRect(0, 0, w, 25 + HELMET_TEXT_Y_POS)
 
 	-- draw border
 	surface.SetDrawColor(color)
-	surface.DrawRect(0, 25, w, 5)
+	surface.DrawRect(0, 25 + HELMET_TEXT_Y_POS, w, 5)
 
 	-- draw invisible border to prevent black edges
 	if SA.UI.In3DRender() then
 		render.OverrideBlend(true, BLEND_ONE, BLEND_ZERO, BLENDFUNC_ADD, BLEND_ZERO, BLEND_ZERO, BLENDFUNC_ADD)
-		surface.DrawRect(0, 30, w, 5)
+		surface.DrawRect(0, 30 + HELMET_TEXT_Y_POS, w, 5)
 		render.OverrideBlend(false)
 	end
 end
@@ -291,7 +293,6 @@ local function SA_DrawTopBar()
 	local topBarSections = 5
 	local lp = LocalPlayer()
 
-	local yPos = 0
 	--section width
 	local sectionWid = ScrW() / topBarSections
 
@@ -305,17 +306,17 @@ local function SA_DrawTopBar()
 
 	local topBarFont = "ScoreboardDefault"
 
-	draw.SimpleText("Name: " .. lp:Name(), topBarFont, section[1], yPos, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-	draw.SimpleText("Faction: " .. team.GetName(lp:Team()), topBarFont, section[2], yPos, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Name: " .. lp:Name(), topBarFont, section[1], HELMET_TEXT_Y_POS, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Faction: " .. team.GetName(lp:Team()), topBarFont, section[2], HELMET_TEXT_Y_POS, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 
 	if not lp.sa_data then
 		return
 	end
 
-	draw.SimpleText("Playtime: " .. lp.sa_data.formatted_playtime, topBarFont, section[3], yPos, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-	draw.SimpleText("Score: " .. lp.sa_data.formatted_score, topBarFont, section[4], yPos, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Playtime: " .. lp.sa_data.formatted_playtime, topBarFont, section[3], HELMET_TEXT_Y_POS, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Score: " .. lp.sa_data.formatted_score, topBarFont, section[4], HELMET_TEXT_Y_POS, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 
-	draw.SimpleText("Credits: " .. lp.sa_data.formatted_credits, topBarFont, section[5], yPos, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Credits: " .. lp.sa_data.formatted_credits, topBarFont, section[5], HELMET_TEXT_Y_POS, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 end
 
 local texGradR = surface.GetTextureID("vgui/gradient-r")
