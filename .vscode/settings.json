@@ -1,0 +1,6 @@
+{
+    "workbench.iconTheme": "glua",
+    "files.associations": {
+        "*.lua": "glua"
+    }
+}
