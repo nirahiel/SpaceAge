@@ -17,3 +17,14 @@ function GM:PlayerSay(ply, text, teamChat)
 
 	return text
 end
+
+function GM:PlayerLoadout(ply)
+	ply:RemoveAllAmmo()
+	ply:Give("gmod_tool")
+	ply:Give("gmod_camera")
+	ply:Give("weapon_physgun")
+	ply:Give("weapon_physcannon")
+	ply:Give("weapon_empty_hands")
+	ply:SwitchToDefaultWeapon()
+	return true
+end
