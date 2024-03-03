@@ -18,6 +18,7 @@ function GM:PlayerSay(ply, text, teamChat)
 	return text
 end
 
+--[[
 function GM:PlayerLoadout(ply)
 	ply:RemoveAllAmmo()
 	ply:Give("gmod_tool")
@@ -28,3 +29,4 @@ function GM:PlayerLoadout(ply)
 	ply:SwitchToDefaultWeapon()
 	return true
 end
+]]
