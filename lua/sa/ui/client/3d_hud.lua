@@ -154,10 +154,11 @@ function SA.UI.PaintEnd()
 	cam.End2D()
 	render.PopRenderTarget()
 
-	local clamped_angle
+	local aim_angle = LocalPlayer():EyeAngles()
+	aim_angle.roll = 0
+	local clamped_angle = Angle(0, 0, 0)
+
 	if use_3d_bobbing:GetInt() ~= 0 then
-		local aim_angle = LocalPlayer():EyeAngles()
-		aim_angle.roll = 0
 		if hud_at_angle == nil then
 			hud_at_angle = aim_angle
 		end
@@ -176,11 +177,9 @@ function SA.UI.PaintEnd()
 		clamped_angle:Normalize()
 		clamped_angle.pitch = math.Clamp(clamped_angle.pitch, -fov_allowed_rot, fov_allowed_rot)
 		clamped_angle.yaw = math.Clamp(clamped_angle.yaw, -fov_allowed_rot, fov_allowed_rot)
-
-		hud_at_angle = aim_angle - clamped_angle
-	else
-		clamped_angle = Angle(0, 0, 0)
 	end
+
+	hud_at_angle = aim_angle - clamped_angle
 
 	cam.Start3D(Vector(-screen_dist,0,0), clamped_angle, screen_fov)
 		render.SetMaterial(SA_HUD_RT_MAT)
