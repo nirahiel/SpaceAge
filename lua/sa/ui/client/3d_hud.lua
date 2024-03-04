@@ -120,6 +120,7 @@ UpdateHUDRT()
 hook.Add("OnScreenSizeChanged", "SA_3DHUD_ScreenSizeChanged", UpdateHUDRT)
 
 local use_3d_hud = CreateClientConVar("cl_sa_use_3dhud", 1, true, false)
+local use_3d_bobbing = CreateClientConVar("cl_sa_use_3dhud_bobbing", 1, true, false)
 local hud_at_angle = nil
 local old_clipping = nil
 
@@ -153,28 +154,33 @@ function SA.UI.PaintEnd()
 	cam.End2D()
 	render.PopRenderTarget()
 
-	local aim_angle = LocalPlayer():EyeAngles()
-	aim_angle.roll = 0
-	if hud_at_angle == nil then
-		hud_at_angle = aim_angle
+	local clamped_angle
+	if use_3d_bobbing:GetInt() ~= 0 then
+		local aim_angle = LocalPlayer():EyeAngles()
+		aim_angle.roll = 0
+		if hud_at_angle == nil then
+			hud_at_angle = aim_angle
+		end
+
+		local angle_diff = aim_angle - hud_at_angle
+		angle_diff:Normalize()
+
+		local max_angle_vel_pitch = hud_max_angle_vel * math.Clamp(math.abs(angle_diff.pitch) / fov_allowed_rot, 0.01, 1)
+		local max_angle_vel_yaw = hud_max_angle_vel * math.Clamp(math.abs(angle_diff.yaw) / fov_allowed_rot, 0.01, 1)
+		local max_angle_vel_frame = FrameTime() * math.max(max_angle_vel_pitch, max_angle_vel_yaw)
+
+		hud_at_angle.pitch = hud_at_angle.pitch + math.Clamp(angle_diff.pitch, -max_angle_vel_frame, max_angle_vel_frame)
+		hud_at_angle.yaw = hud_at_angle.yaw + math.Clamp(angle_diff.yaw, -max_angle_vel_frame, max_angle_vel_frame)
+
+		clamped_angle = aim_angle - hud_at_angle
+		clamped_angle:Normalize()
+		clamped_angle.pitch = math.Clamp(clamped_angle.pitch, -fov_allowed_rot, fov_allowed_rot)
+		clamped_angle.yaw = math.Clamp(clamped_angle.yaw, -fov_allowed_rot, fov_allowed_rot)
+
+		hud_at_angle = aim_angle - clamped_angle
+	else
+		clamped_angle = Angle(0, 0, 0)
 	end
-
-	local angle_diff = aim_angle - hud_at_angle
-	angle_diff:Normalize()
-
-	local max_angle_vel_pitch = hud_max_angle_vel * math.Clamp(math.abs(angle_diff.pitch) / fov_allowed_rot, 0.01, 1)
-	local max_angle_vel_yaw = hud_max_angle_vel * math.Clamp(math.abs(angle_diff.yaw) / fov_allowed_rot, 0.01, 1)
-	local max_angle_vel_frame = FrameTime() * math.max(max_angle_vel_pitch, max_angle_vel_yaw)
-
-	hud_at_angle.pitch = hud_at_angle.pitch + math.Clamp(angle_diff.pitch, -max_angle_vel_frame, max_angle_vel_frame)
-	hud_at_angle.yaw = hud_at_angle.yaw + math.Clamp(angle_diff.yaw, -max_angle_vel_frame, max_angle_vel_frame)
-
-	local clamped_angle = aim_angle - hud_at_angle
-	clamped_angle:Normalize()
-	clamped_angle.pitch = math.Clamp(clamped_angle.pitch, -fov_allowed_rot, fov_allowed_rot)
-	clamped_angle.yaw = math.Clamp(clamped_angle.yaw, -fov_allowed_rot, fov_allowed_rot)
-
-	hud_at_angle = aim_angle - clamped_angle
 
 	cam.Start3D(Vector(-screen_dist,0,0), clamped_angle, screen_fov)
 		render.SetMaterial(SA_HUD_RT_MAT)
