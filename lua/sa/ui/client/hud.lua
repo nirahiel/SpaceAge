@@ -104,16 +104,17 @@ local WeaponMaxAmmo = {
 	weapon_crowbar = 0,
 	weapon_stunstick = 0,
 	weapon_physcannon = 0,
-	weapon_physgun = 0
+	weapon_physgun = 0,
+	weapon_empty_hands = 0
 }
 
 local function GetMaxAmmo(SWEP)
+	local MAmmo = WeaponMaxAmmo[SWEP:GetClass()]
+	if MAmmo then return MAmmo end
+
 	if SWEP.Primary and SWEP.Primary.ClipSize then
 		return SWEP.Primary.ClipSize
 	end
-
-	local MAmmo = WeaponMaxAmmo[SWEP:GetClass()]
-	if MAmmo then return MAmmo end
 
 	return SWEP:Clip1()
 end
@@ -395,8 +396,13 @@ local function SA_CustomHUDPaint()
 		ammoHeightMult = 174
 		ammoInset = 56
 	end
+
 	local primAmmoX = SWEP:Clip1()
-	if primMaxAmmo > 0 and primAmmoX > 0 then
+	if primAmmoX > primMaxAmmo then
+		primAmmoX = primMaxAmmo
+	end
+
+	if primAmmoX > 0 then
 		local OneAmmoH = (ammoHeightMult / primMaxAmmo) - 3
 		surface.SetDrawColor(HUDAmmo1)
 		for i = 1, primAmmoX, 1 do
