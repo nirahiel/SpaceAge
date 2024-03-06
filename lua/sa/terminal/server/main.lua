@@ -231,9 +231,11 @@ local function SA_GetTempStorage(ply)
 	return TempStorage[uid]
 end
 
-function SA.Terminal.AddTempStorage(ply, res, amount)
-	local uid = ply:UniqueID()
-	local storage = SA_GetTempStorage(ply)
+function SA.Terminal.AddTempStorage(ply_or_uid, res, amount)
+	if type(ply_or_uid) ~= "string" then
+		ply_or_uid = ply_or_uid:UniqueID()
+	end
+	local storage = SA_GetTempStorage(ply_or_uid)
 	local count = storage[res] or 0
 	storage[res] = count + amount
 end

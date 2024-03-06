@@ -43,6 +43,8 @@ end
 
 function ENT:Receive(res, amount, temperature)
 	if not IsValid(self.otherpump) then return end
-	SA.Terminal.AddTempStorage(self.otherpump:CPPIGetOwner(), res, amount)
+	local _, ownerId = self.otherpump:CPPIGetOwner()
+	if not ownerId then return end
+	SA.Terminal.AddTempStorage(ownerId, res, amount)
 	return 0
 end
