@@ -21,6 +21,7 @@ function ENT:Initialize()
 
 	self.SkipSBChecks = true
 
+	self:SetModel("models/ce_ls3additional/resource_pump/resource_pump.mdl")
 	self:PhysicsInit(SOLID_NONE)
 	self:SetMoveType(MOVETYPE_NONE)
 	self:SetSolid(SOLID_NONE)
