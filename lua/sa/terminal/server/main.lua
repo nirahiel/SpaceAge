@@ -93,7 +93,7 @@ local function UpdateCapacity(ply)
 end
 
 function SA.Terminal.SetupStorage(ply)
-	local uid = ply:UniqueID()
+	local uid = ply:SteamID()
 	if not TempStorage[uid] then
 		TempStorage[uid] = {}
 	end
@@ -220,7 +220,7 @@ end
 
 local function SA_GetTempStorage(ply_or_uid)
 	if type(ply_or_uid) ~= "string" then
-		ply_or_uid = ply_or_uid:UniqueID()
+		ply_or_uid = ply_or_uid:SteamID()
 	end
 	if not TempStorage[ply_or_uid] then
 		TempStorage[ply_or_uid] = {}
@@ -325,7 +325,7 @@ local function SA_RefineOre(ply, cmd, args)
 	if ply.IsAFK then return end
 	local CHECK = args[1]
 	if CHECK ~= HASH then return end
-	local uid = ply:UniqueID()
+	local uid = ply:SteamID()
 	local ShipOre, netid = SA_GetResource(ply, "ore")
 	local TempOre = TempStorage[uid].ore or 0
 	local orecount = ShipOre + TempOre
@@ -353,7 +353,7 @@ local function SA_MarketSell(ply, cmd, args)
 	if #args < 2 then return end
 	local CHECK = args[3]
 	if CHECK ~= HASH then return end
-	local uid = ply:UniqueID()
+	local uid = ply:SteamID()
 	local num = tonumber(args[2])
 	if num <= 0 then return end
 
@@ -397,7 +397,7 @@ local function SA_MarketBuy(ply, cmd, args)
 	if #args < 2 then return end
 	local CHECK = args[3]
 	if CHECK ~= HASH then return end
-	local uid = ply:UniqueID()
+	local uid = ply:SteamID()
 	local num = tonumber(args[2])
 	if num <= 0 then return end
 
@@ -443,7 +443,7 @@ local function SA_MoveResource(ply, cmd, args)
 	if not ply.AtTerminal then return end
 	if ply.IsAFK then return end
 	if #args < 4 then return end
-	local uid = ply:UniqueID()
+	local uid = ply:SteamID()
 	local from = string.lower(args[1])
 	local to = string.lower(args[2])
 	local res = args[3]

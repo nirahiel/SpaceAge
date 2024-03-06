@@ -8,7 +8,7 @@ local lastMoneyFunc = {}
 local moneyResults = {}
 
 local function callMoneyFunc(ply)
-	local plyID = ply:UniqueID()
+	local plyID = ply:SteamID()
 	local theTime = CurTime()
 	if (not lastMoneyFunc[plyID]) or lastMoneyFunc[plyID] < (theTime - 2) then
 		lastMoneyFunc[plyID] = theTime
