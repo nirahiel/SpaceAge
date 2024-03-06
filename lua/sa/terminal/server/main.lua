@@ -220,12 +220,22 @@ end
 
 local function SA_GetTempStorage(ply)
 	local uid = ply:UniqueID()
+	if not TempStorage[uid] then
+		TempStorage[uid] = {}
+	end
 	for k, v in pairs(TempStorage[uid]) do
 		if v <= 0 then
 			TempStorage[uid][k] = nil
 		end
 	end
 	return TempStorage[uid]
+end
+
+function SA.Terminal.AddTempStorage(ply, res, amount)
+	local uid = ply:UniqueID()
+	local storage = SA_GetTempStorage(ply)
+	local count = storage[res] or 0
+	storage[res] = count + amount
 end
 
 function SA.Terminal.SetVisible(ply, status)
@@ -237,9 +247,6 @@ end
 function SA.Terminal.Open(ply, ent)
 	if ply.AtTerminal then
 		return
-	end
-	if not ply.TempStorage then
-		ply.TempStorage = {}
 	end
 	ply.AtTerminal = true
 	ply.AtTerminalEnt = ent
