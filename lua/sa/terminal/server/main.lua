@@ -218,23 +218,22 @@ local function SA_GetShipResources(ply)
 	return {}
 end
 
-local function SA_GetTempStorage(ply)
-	local uid = ply:UniqueID()
-	if not TempStorage[uid] then
-		TempStorage[uid] = {}
-	end
-	for k, v in pairs(TempStorage[uid]) do
-		if v <= 0 then
-			TempStorage[uid][k] = nil
-		end
-	end
-	return TempStorage[uid]
-end
-
-function SA.Terminal.AddTempStorage(ply_or_uid, res, amount)
+local function SA_GetTempStorage(ply_or_uid)
 	if type(ply_or_uid) ~= "string" then
 		ply_or_uid = ply_or_uid:UniqueID()
 	end
+	if not TempStorage[ply_or_uid] then
+		TempStorage[ply_or_uid] = {}
+	end
+	for k, v in pairs(TempStorage[ply_or_uid]) do
+		if v <= 0 then
+			TempStorage[ply_or_uid][k] = nil
+		end
+	end
+	return TempStorage[ply_or_uid]
+end
+
+function SA.Terminal.AddTempStorage(ply_or_uid, res, amount)
 	local storage = SA_GetTempStorage(ply_or_uid)
 	local count = storage[res] or 0
 	storage[res] = count + amount
