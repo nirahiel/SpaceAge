@@ -462,5 +462,32 @@
     "model": "models/props_c17/fence01a.mdl",
     "yaw": 85.1371,
     "rol": -0.0194
+  },
+  "1": {
+    "pit": 0,
+    "x": -502.18,
+    "z": 4660,
+    "class": "sa_terminal_pump",
+    "y": 458.182,
+    "yaw": 105,
+    "rol": 0
+  },
+  "2": {
+    "pit": 0,
+    "x": -299.112,
+    "z": 4660,
+    "class": "sa_terminal_pump",
+    "y": 512.545,
+    "yaw": 105,
+    "rol": 0
+  },
+  "3": {
+    "pit": 0,
+    "x": -98.5154,
+    "z": 4660,
+    "class": "sa_terminal_pump",
+    "y": 566.292,
+    "yaw": 105,
+    "rol": 0
   }
 }
