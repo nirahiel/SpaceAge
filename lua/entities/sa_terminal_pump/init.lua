@@ -4,6 +4,7 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 local RD = CAF.GetAddon("Resource Distribution")
+DEFINE_BASECLASS("rd_pump")
 
 function ENT:SpawnFunction(ply, tr)
 	if not tr.Hit then return end
@@ -16,6 +17,7 @@ end
 
 function ENT:Initialize()
 	if self:KillIfSpawned() then return end
+	BaseClass.Initialize(self)
 
 	self.SkipSBChecks = true
 
@@ -31,6 +33,8 @@ function ENT:Initialize()
 		phys:EnableMotion(false)
 		phys:SetMass(50000)
 	end
+
+	self:SetPumpName(nil, "SA_Terminal_" .. tostring(self:EntIndex()))
 end
 
 function ENT:AutospawnDone()
