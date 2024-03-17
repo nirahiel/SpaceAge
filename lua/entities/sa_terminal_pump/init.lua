@@ -3,7 +3,6 @@ AddCSLuaFile("shared.lua")
 
 include("shared.lua")
 
-local RD = CAF.GetAddon("Resource Distribution")
 DEFINE_BASECLASS("rd_pump")
 
 function ENT:SpawnFunction(ply, tr)

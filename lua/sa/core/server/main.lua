@@ -31,7 +31,6 @@ function PlayerMeta:AssignFaction(name, cb)
 
 	if self.sa_data.faction_name ~= old_name then
 		self.sa_data.is_faction_leader = false
-		local steamId = self:SteamID()
 		SA.SaveUser(self)
 	end
 end
