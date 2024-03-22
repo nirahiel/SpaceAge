@@ -110,6 +110,10 @@ local function LoadRes(ply, body, code)
 	end
 	ply.sa_data.available = true
 
+	if not ply.sa_data.loaded then
+		ply:ChatPrint("Warning! Your profile has failed to load! Progress will not be saved!")
+	end
+
 	if ply.sa_data.is_banned then
 		ply:Kick("Banned: " .. ply.sa_data.ban_reason or "N/A")
 		return
