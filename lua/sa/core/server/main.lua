@@ -93,20 +93,22 @@ end
 
 local function LoadRes(ply, body, code)
 	print("Loaded:", ply:Name(), code)
-	if code == 404 then
-		SA_AddSAData(ply)
-		ply.sa_data.faction_name = SA.Factions.GetDefault().name
-		ply.sa_data.loaded = true
-		SA.Terminal.SetupStorage(ply)
-		ply:AssignFaction()
-		SA.SaveUser(ply)
-	elseif code == 200 then
+	if code == 200 then
 		ply.sa_data = body
 		SA_AddSAData(ply)
 		ply.sa_data.loaded = true
 		SA.Terminal.SetupStorage(ply)
 		ply:AssignFaction()
+	else
+		ply.sa_data = {}
+		SA_AddSAData(ply)
+		ply.sa_data.faction_name = SA.Factions.GetDefault().name
+		ply.sa_data.loaded = code == 404
+		SA.Terminal.SetupStorage(ply)
+		ply:AssignFaction()
+		SA.SaveUser(ply)
 	end
+	ply.sa_data.available = true
 
 	if ply.sa_data.is_banned then
 		ply:Kick("Banned: " .. ply.sa_data.ban_reason or "N/A")
@@ -116,7 +118,7 @@ local function LoadRes(ply, body, code)
 	ply:SetNWBool("isleader", ply.sa_data.is_faction_leader)
 
 	ply:SetNWBool("isloaded", true)
-	if ply.sa_data.loaded and ply.HasAlreadySpawned then
+	if ply.sa_data.available and ply.HasAlreadySpawned then
 		ply:Spawn()
 		SA.Teleporter.TriggerOnJoin(ply)
 	end
@@ -154,7 +156,7 @@ hook.Add("PlayerAuthed", "SA_LoadPlayer", SA_InitSpawn)
 
 local function SA_PlayerFullLoad(ply)
 	ply.MayBePoked = true
-	if ply.sa_data and ply.sa_data.loaded then
+	if ply.sa_data and ply.sa_data.available then
 		SA.SendBasicInfo(ply)
 		SA.Teleporter.TriggerOnJoin(ply)
 	end
@@ -182,7 +184,7 @@ end)
 
 timer.Create("SA_PlayTimeTracker", 1, 0, function()
 	for _, ply in pairs(player.GetHumans()) do
-		if ply.sa_data and ply.sa_data.loaded then
+		if ply.sa_data and ply.sa_data.available then
 			ply.sa_data.playtime = ply.sa_data.playtime + 1
 		end
 	end
