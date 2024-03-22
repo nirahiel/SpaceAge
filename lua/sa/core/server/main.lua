@@ -178,7 +178,19 @@ local function SA_MapCleanInitialize()
 	end
 end
 
+local function SA_AddMapResources()
+	local mapResources = SA.Config.Load("resources")
+	if not mapResources then
+		return
+	end
+
+	for _, res in pairs(mapResources) do
+		resource.AddFile(res)
+	end
+end
+
 hook.Add("Initialize", "SA_MapCleanInitialize", function()
+	SA_AddMapResources()
 	timer.Simple(5, SA_MapCleanInitialize)
 end)
 

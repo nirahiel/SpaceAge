@@ -1,7 +1,0 @@
-resource.AddFile("materials/de_train/train_metalceiling_02.vtf")
-resource.AddFile("materials/de_train/train_metalceiling_02.vmt")
-resource.AddFile("materials/de_tides/blend_concrete_dirt.vmt")
-resource.AddFile("materials/de_tides/tides_concretefloor.vmt")
-resource.AddFile("materials/de_tides/tides_concretefloor.vtf")
-resource.AddFile("materials/de_tides/tides_dirt.vmt")
-resource.AddFile("materials/de_tides/tides_dirt.vtf")
