@@ -196,7 +196,13 @@ end)
 
 function SA.SaveUser(ply, dontsaverd)
 	local sid = ply:SteamID()
-	if not ply.sa_data or not ply.sa_data.loaded or not SA_IsValidSteamID(sid) then
+	if not ply.sa_data then or not SA_IsValidSteamID(sid) then
+		return false
+	end
+	if not ply.sa_data.loaded then
+		if ply.sa_data.available then
+			ply:ChatPrint("Warning! Your profile has failed to load! Progress will not be saved!")
+		end
 		return false
 	end
 
