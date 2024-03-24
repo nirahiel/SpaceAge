@@ -49,7 +49,7 @@ function TOOL:RightClick(tr)
 	if CLIENT then return end
 	local owner = self:GetOwner()
 	if not owner:IsSuperAdmin() then owner:ChatPrint("You are not authorized to use this.") return false end
-	if not file.IsDir("autospawn2_tmp") then
+	if not file.IsDir("autospawn2_tmp", "DATA") then
 		file.CreateDir("autospawn2_tmp")
 	end
 	local mapname = game.GetMap():lower()
