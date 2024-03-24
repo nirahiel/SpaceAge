@@ -4,10 +4,18 @@ TOOL.Name = "Contraption Analyzer"
 TOOL.Command = nil
 TOOL.ConfigName = ""
 
-if (CLIENT) then
+TOOL.Information = {
+	{ name = "left" },
+	{ name = "right" },
+	{ name = "reload" }
+}
+
+if CLIENT then
 	language.Add("tool.contraption_analyzer.name", "Contraption Analyzer")
 	language.Add("tool.contraption_analyzer.desc", "Tells you about freezing/parenting status of props")
-	language.Add("tool.contraption_analyzer.0", "Left Click: Analyze Contraption. Right Click: Detailed Analyze Contraption. Reload: Analyze all people's stuff")
+	language.Add("tool.contraption_analyzer.left", "Analyze Contraption")
+	language.Add("tool.contraption_analyzer.right", "Detailed Analyze Contraption")
+	language.Add("tool.contraption_analyzer.reload", "Analyze all people's stuff")
 end
 
 local function RunToolBase(tool, tr, categorizer, finder)

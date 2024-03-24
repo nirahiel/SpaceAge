@@ -1,13 +1,21 @@
 TOOL.Tab = "Utilities"
 TOOL.Category = "Admin"
-TOOL.Name = "Prop Autospawn Special"
+TOOL.Name = "Autospawn"
 TOOL.Command = nil
 TOOL.ConfigName = ""
 
+TOOL.Information = {
+	{ name = "left" },
+	{ name = "right" },
+	{ name = "reload" }
+}
+
 if (CLIENT) then
-	language.Add("tool.autospawn2.name", "Autospawn Special")
-	language.Add("tool.autospawn2.desc", "ASK DORIDIAN TO USE")
-	language.Add("tool.autospawn2.0", "Wut")
+	language.Add("tool.autospawn.name", "Autospawn Special")
+	language.Add("tool.autospawn.desc", "ASK DORIDIAN TO USE")
+	language.Add("tool.autospawn.left", "Select entity")
+	language.Add("tool.autospawn.right", "Add entities to autospawn")
+	language.Add("tool.autospawn.reload", "Clear selection")
 end
 function TOOL:LeftClick(tr)
 	if CLIENT then return end
@@ -18,7 +26,7 @@ function TOOL:LeftClick(tr)
 	end
 		if tr.Entity then
 			local ent = tr.Entity
-			if ent:IsValid() and not ent.Autospawned and not ent.Autospawn2Selected then
+			if ent:IsValid() and not ent.Autospawned and not ent.AutospawnSelected then
 				local data = {
 					x = ent:GetPos().x,
 					y = ent:GetPos().y,
@@ -32,13 +40,13 @@ function TOOL:LeftClick(tr)
 
 				owner.Autospawner2List[ent:EntIndex()] = data
 				ent:SetColor(Color(0, 255, 0, 150))
-				ent.Autospawn2Selected = true
+				ent.AutospawnSelected = true
 				owner:ChatPrint("Selected")
 				return true
 			else
 				owner.Autospawner2List[ent:EntIndex()] = nil
 				ent:SetColor(color_white)
-				ent.Autospawn2Selected = false
+				ent.AutospawnSelected = false
 				owner:ChatPrint("Deselected")
 				return true
 			end
@@ -49,18 +57,18 @@ function TOOL:RightClick(tr)
 	if CLIENT then return end
 	local owner = self:GetOwner()
 	if not owner:IsSuperAdmin() then owner:ChatPrint("You are not authorized to use this.") return false end
-	if not file.IsDir("autospawn2_tmp", "DATA") then
-		file.CreateDir("autospawn2_tmp")
+	if not file.IsDir("autospawn_tmp", "DATA") then
+		file.CreateDir("autospawn_tmp")
 	end
 	local mapname = game.GetMap():lower()
-	local filename = "autospawn2_tmp/" .. mapname .. ".txt"
+	local filename = "autospawn_tmp/" .. mapname .. ".txt"
 
 	local oldConfig = nil
 	if file.Exists(filename, "DATA") then
 		local oldfile = file.Read(filename, "DATA")
 		oldConfig = util.JSONToTable(oldfile)
 	else
-		oldConfig = SA.Config.Load("autospawn2")
+		oldConfig = SA.Config.Load("autospawn")
 	end
 	if oldConfig then
 		for _, v in pairs(oldConfig) do

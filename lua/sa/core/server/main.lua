@@ -259,10 +259,10 @@ local function SA_Autospawner(ply)
 		end
 	end
 
-	local autospawn2 = SA.Config.Load("autospawn2")
+	local autospawn = SA.Config.Load("autospawn")
 
-	if autospawn2 then
-		for k, v in pairs(autospawn2) do
+	if autospawn then
+		for k, v in pairs(autospawn) do
 			local spawn = ents.Create(v.class)
 			if not IsValid(spawn) then
 				print("Could not create: " .. v.class)

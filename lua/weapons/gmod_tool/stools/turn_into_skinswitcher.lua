@@ -4,10 +4,14 @@ TOOL.Name			= "#TurnToSkinSwitcher"
 TOOL.Command 		= nil
 TOOL.ConfigName 	= ""
 
-if (CLIENT) then
+TOOL.Information = {
+	{ name = "left" }
+}
+
+if CLIENT then
 	language.Add("tool.turn_into_skinswitcher.name" , "Make-A-Skin-Switcher Tool")
 	language.Add("tool.turn_into_skinswitcher.desc" , "Easily turn props into skin switchers.")
-	language.Add("tool.turn_into_skinswitcher.0", "Left click a prop to turn it into a skin switcher.")
+	language.Add("tool.turn_into_skinswitcher.left", "Turn prop into a skin switcher.")
 	language.Add("undone_Skin Switcher", "Undone Skin Switcher")
 	language.Add("TurnToSkinSwitcher", "Make-A-Skin-Switcher")
 end
