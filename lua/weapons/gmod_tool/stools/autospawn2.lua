@@ -55,7 +55,7 @@ function TOOL:RightClick(tr)
 	local mapname = game.GetMap():lower()
 	local filename = "autospawn2_tmp/" .. mapname .. ".txt"
 	if file.Exists(filename, "DATA") then
-		local oldfile = file.Read(filename)
+		local oldfile = file.Read(filename, "DATA")
 		local olddata = util.JSONToTable(oldfile)
 		for _, v in pairs(olddata) do
 			table.insert(owner.Autospawner2List, v)
