@@ -10,13 +10,14 @@ TOOL.Information = {
 	{ name = "reload" }
 }
 
-if (CLIENT) then
+if CLIENT then
 	language.Add("tool.autospawn.name", "Autospawn Special")
 	language.Add("tool.autospawn.desc", "ASK DORIDIAN TO USE")
 	language.Add("tool.autospawn.left", "Select entity")
 	language.Add("tool.autospawn.right", "Add entities to autospawn")
 	language.Add("tool.autospawn.reload", "Clear selection")
 end
+
 function TOOL:LeftClick(tr)
 	if CLIENT then return end
 	local owner = self:GetOwner()
