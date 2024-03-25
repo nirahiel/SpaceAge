@@ -74,5 +74,18 @@ TOOL.Devices = {
 				legacy = false,
 			}
 		}
+	},
+	sa_storage_pyrothium = {
+		Name = "Pyrothium Storage",
+		class = "sa_storage_pyrothium",
+		type = "sa_storage_pyrothium",
+		devices = {
+			standard = {
+				Name = "Standard",
+				model = "models/spacebuild/emount4_fighter.mdl",
+				skin = 0,
+				legacy = false
+			}
+		}
 	}
 }

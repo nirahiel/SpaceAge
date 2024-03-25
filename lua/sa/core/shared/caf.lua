@@ -38,6 +38,8 @@ function SA.CAFInit()
 		AddValuableResource("glare crust", "Glare Crust")
 		AddValuableResource("gelidus", "Gelidus")
 		AddValuableResource("krystallos", "Krystallos")
+
+		AddValuableResource("pyrothium", "Pyrothium")
 	end)
 
 	hook.Run("SA_CAFInitComplete")
