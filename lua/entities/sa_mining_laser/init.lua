@@ -95,7 +95,7 @@ end
 function ENT:Think()
 	BaseClass.Think(self)
 
-	if self.Active == 1 then
+	if self.Active == 1 and self.consume and self.yield then
 		if self:ConsumeResource("energy", self.consume) < self.consume then
 			self:TurnOff()
 			Wire_TriggerOutput(self, "Output", 0)
