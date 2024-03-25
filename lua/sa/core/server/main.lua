@@ -259,10 +259,10 @@ local function SA_Autospawner(ply)
 		end
 	end
 
-	local autospawn2 = SA.Config.Load("autospawn2")
+	local autospawn = SA.Config.Load("autospawn")
 
-	if autospawn2 then
-		for k, v in pairs(autospawn2) do
+	if autospawn then
+		for k, v in pairs(autospawn) do
 			local spawn = ents.Create(v.class)
 			if not IsValid(spawn) then
 				print("Could not create: " .. v.class)
@@ -306,15 +306,3 @@ local function SA_Autospawner(ply)
 end
 timer.Simple(1, SA_Autospawner)
 concommand.Add("sa_autospawn_run", function(ply) if ply:IsSuperAdmin() then SA_Autospawner(ply) end end)
-
-local SA_Don_Toollist = SA.Config.Load("donator_tools", true)
-
-local function SA_DonatorCanTool(ply, tr, mode)
-	for k, v in pairs(SA_Don_Toollist) do
-		if mode == v and not ply.sa_data.IsDonator then
-			ply:AddHint("This is a donator-only tool, a reward for contributing to the community.", NOTIFY_CLEANUP, 10)
-			return false
-		end
-	end
-end
-hook.Add("CanTool", "SA_DonatorCanTool", SA_DonatorCanTool)
