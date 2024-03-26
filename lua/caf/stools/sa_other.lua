@@ -87,5 +87,16 @@ TOOL.Devices = {
 				legacy = false
 			}
 		}
+	},
+	sa_pyrothium_injector = {
+		Name = "Pyrothium Injector",
+		class = "sa_pyrothium_injector",
+		type = "sa_pyrothium_injector",
+		devices = {
+			standard = {
+				Name = "Standard",
+				model = "models/slyfo/warhead.mdl"
+			}
+		}
 	}
 }

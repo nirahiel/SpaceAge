@@ -9,3 +9,5 @@ ENT.Instructions = ""
 ENT.Spawnable = false
 ENT.AdminSpawnable = true
 ENT.DoNotDuplicate = true
+
+ENT.IsCrystalTower = true

@@ -4,6 +4,9 @@ include("shared.lua")
 
 DEFINE_BASECLASS("sa_base_rd3_entity")
 
+-- Temp debug
+local RD = CAF.GetAddon("Resource Distribution")
+
 function ENT:Initialize()
 	BaseClass.Initialize(self)
 
@@ -24,4 +27,9 @@ end
 
 function ENT:UpdateWireOutput()
 	self:DoUpdateWireOutput("Pyrothium", "pyrothium")
+end
+
+function ENT:Think()
+	BaseClass.Think(self)
+	RD.SupplyResource(self, "pyrothium", 10, 250)
 end

@@ -142,3 +142,8 @@ function ENT:SpawnCrystal(auto)
 
 	self.crystalCount = self.crystalCount + 1
 end
+
+function ENT:BoostResource()
+	SA.Pyrothium.FlagAsBoosted(self)
+	return true
+end

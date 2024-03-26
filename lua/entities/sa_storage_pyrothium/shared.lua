@@ -1,6 +1,7 @@
 ENT.Type = "anim"
-ENT.Base = "base_rd3_entity"
+ENT.Base = "sa_base_rd3_entity"
 ENT.PrintName = "Pyrothium Storage"
+ENT.Author = "Nirahiel"
 
 ENT.Spawnable = false
 ENT.AdminSpawnable = false
