@@ -13,6 +13,7 @@ local function sa_info_msg_credsc()
 	ply.sa_data.credits = tonumber(c)
 	ply.sa_data.score = tonumber(sc)
 	ply.sa_data.playtime = net.ReadUInt(32)
+	ply.sa_data.prestige_level = net.ReadUInt(32)
 
 	ply.sa_data.formatted_credits = SA.AddCommasToInt(c)
 	ply.sa_data.formatted_score = SA.AddCommasToInt(sc)

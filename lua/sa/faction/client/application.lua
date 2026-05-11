@@ -37,6 +37,9 @@ local function SA_RefreshApplications()
 		SA.API.ListFactionApplications(faction_name, function(body, code)
 			if code == 404 then
 				body = {}
+			elseif code ~= 200 or not body then
+				print("Failed to list applications: " .. code)
+				return
 			end
 			SA.Application.Table = body
 			SA.Application.Refresh()
@@ -45,6 +48,9 @@ local function SA_RefreshApplications()
 		SA.API.GetPlayerApplication(ply, function(body, code)
 			if code == 404 then
 				body = {}
+			elseif code ~= 200 or not body then
+				print("Failed to get application: " .. code)
+				return
 			end
 			SA.Application.Me = body
 			InitSelfApplication()

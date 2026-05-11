@@ -7,6 +7,7 @@ function SA.SendBasicInfo(ply)
 	net.Start("SA_SendBasicInfo")
 		net.WriteString(ply.sa_data.credits)
 		net.WriteUInt(ply.sa_data.playtime, 32)
+		net.WriteUInt(ply.sa_data.prestige_level, 32)
 	net.Send(ply)
 end
 

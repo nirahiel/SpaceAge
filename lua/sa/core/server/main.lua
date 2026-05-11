@@ -1,16 +1,8 @@
 SA.REQUIRE("config")
 SA.REQUIRE("faction.main")
 
-local function SetupConvars(name, default, flags)
-	if not ConVarExists(name) then
-		return CreateConVar(name, default, flags)
-	end
-	return GetConVar(name)
-end
-local autoSaveTimeCVar = SetupConvars("sa_autosave_time", "0")
-local autoSpanwerEnabled = SetupConvars("sa_autospawner", "1")
-SetupConvars("sa_friendlyfire", "0")
-SetupConvars("sa_pirating", "1", { FCVAR_NOTIFY, FCVAR_REPLICATED })
+local autoSaveTimeCVar = CreateConVar("sa_autosave_time", "0")
+local autoSpanwerEnabled = CreateConVar("sa_autospawner", "1")
 
 local PlayerMeta = FindMetaTable("Player")
 function PlayerMeta:AssignFaction(name, cb)
@@ -33,6 +25,13 @@ function PlayerMeta:AssignFaction(name, cb)
 		self.sa_data.is_faction_leader = false
 		SA.SaveUser(self)
 	end
+end
+
+function PlayerMeta:RewardCredits(creds)
+	self.sa_data.credits = self.sa_data.credits + creds
+	self.sa_data.score = self.sa_data.score + creds
+
+	SA.SendBasicInfo(self)
 end
 
 local function SA_AddSAData(ply)
@@ -79,8 +78,11 @@ local function SA_AddSAData(ply)
 		data.is_banned = nil
 	end
 	SA.Research.InitPlayer(ply)
-	if data.advancement_level == nil or data.advancement_level <= 0 then
+	if data.advancement_level == nil or data.advancement_level < 1 then
 		data.advancement_level = 1
+	end
+	if data.prestige_level == nil or data.prestige_level < 0 then
+		data.prestige_level = 0
 	end
 end
 
@@ -214,6 +216,7 @@ function SA.SaveUser(ply, dontsaverd)
 		return false
 	end
 
+	ply.sa_data.discord_user_id = nil
 	ply.sa_data.name = ply:Nick()
 	ply.sa_data.station_storage.contents = SA.Terminal.GetPermStorage(ply)
 	SA.API.UpsertPlayer(ply)

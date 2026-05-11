@@ -23,7 +23,7 @@ local function CommonUserAgent(side, id)
 end
 
 local apiConfig = SA.Config.Load("api", true) or {}
-apiConfig.url = apiConfig.url or "https://api.spaceage.doridian.net/v2"
+apiConfig.url = apiConfig.url or "https://api.spaceage.mp/v2"
 
 if SERVER then
 	MakeUserAgent = function()
@@ -68,7 +68,6 @@ local requestInProgress = nil
 local failureCount = 0
 local backoffTimings = {1, 5, 10, 15, 30}
 local httpTimeout = 30
-local backoffMax = backoffTimings[#backoffTimings]
 
 local processNextRequest
 local setRequestParams
@@ -95,7 +94,14 @@ local function requeueRequest(request)
 
 	failureCount = failureCount + 1
 
-	local timing = backoffTimings[failureCount] or backoffMax
+	local timing = backoffTimings[failureCount] or 0
+	if timing <= 0 then -- this means we no longer want to retry
+		if request.callback then
+			request.callback(nil, 599)
+		end
+		processNextRequest()
+		return
+	end
 
 	local newRequest = {
 		http = request.http,
@@ -330,7 +336,10 @@ if SERVER then
 	end
 
 	local function SA_API_MakePlayerTokenCMD(ply)
-		SA_API_MakePlayerJWT(ply, function (data)
+		SA_API_MakePlayerJWT(ply, function (data, code)
+			if code ~= 200 or not data then
+				return
+			end
 			net.Start("SA_PlayerJWT")
 				net.WriteString(data.token)
 				net.WriteInt(data.expiry, 32)

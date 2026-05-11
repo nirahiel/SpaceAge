@@ -229,7 +229,6 @@ local function CreateTerminalGUI()
 	MarkBuy:AddColumn("Resource")
 	MarkBuy:AddColumn("Price")
 
-
 	SA_Term_MarketBuy = MarkBuy
 	SA_Term_MarketBuyTbl = {}
 
@@ -353,9 +352,11 @@ local function CreateTerminalGUI()
 	local UpgradeLevelButton = vgui.Create("DButton", ResearchTab)
 	UpgradeLevelButton:SetPos(155, 555)
 	UpgradeLevelButton:SetSize(500, 30)
-	UpgradeLevelButton:SetText("Upgrade Level")
+	UpgradeLevelButton:SetText("Advance Level")
 	UpgradeLevelButton:SetDisabled(true)
-	UpgradeLevelButton.DoClick = function() Derma_Query("Do you really want to upgrade? You will lose all your current researches!", "Confirm", "Yes", function() RunConsoleCommand("sa_advance_level", HASH) end, "No", function() end) end
+	UpgradeLevelButton.DoClickUpgrade = function() Derma_Query("Do you really want to advance? You will lose all your current researches!", "Confirm", "Yes", function() RunConsoleCommand("sa_advance_level", HASH) end, "No", function() end) end
+	UpgradeLevelButton.DoClickPrestige = function() Derma_Query("Do you really want to prestige? You will lose all your credits, researches, storage and props ...oh and your life (score and playtime stay).", "Confirm", "Yes", function() RunConsoleCommand("sa_prestige_level", HASH) end, "No", function() end) end
+	UpgradeLevelButton.DoClick = UpgradeLevelButton.DoClickUpgrade
 	SA_UpgradeLevelButton = UpgradeLevelButton
 
 	local SubResearchTab = vgui.Create("DPropertySheet", ResearchTab)
@@ -491,11 +492,15 @@ local function sa_term_update(_, tbl)
 	local ShipStorage = tbl[5]
 	local BuyPriceTable = tbl[6]
 
-	if lv >= 5 then canReset = false end
-
 	if SA_UpgradeLevelButton then
 		SA_UpgradeLevelButton:SetDisabled(not canReset)
-		SA_UpgradeLevelButton:SetText("Advance Level (current: " .. tostring(lv) .. " / 5) [Price: " .. SA.AddCommasToInt(5000000000 * (lv * lv)) .. "]")
+		if lv >= 5 then
+			SA_UpgradeLevelButton:SetText("Prestige")
+			SA_UpgradeLevelButton.DoClick = SA_UpgradeLevelButton.DoClickPrestige
+		else
+			SA_UpgradeLevelButton:SetText("Advance Level (current: " .. tostring(lv) .. " / 5) [Price: " .. SA.AddCommasToInt(5000000000 * (lv * lv)) .. "]")
+			SA_UpgradeLevelButton.DoClick = SA_UpgradeLevelButton.DoClickUpgrade
+		end
 	end
 
 	SA_Term_TempStorage:Clear()
@@ -539,11 +544,10 @@ local function sa_term_update(_, tbl)
 	SA_Term_MarketBuy:Clear()
 	SA_Term_MarketBuyTbl = {}
 
-	for k, v in pairs(BuyPriceTable) do
-		local name = SA.RD.GetProperResourceName(v[1])
-		local price = v[2]
+	for id, price in pairs(BuyPriceTable) do
+		local name = SA.RD.GetProperResourceName(id)
 		local line = SA_Term_MarketBuy:AddLine(name, price)
-		SA_Term_MarketBuyTbl[line] = v[1]
+		SA_Term_MarketBuyTbl[line] = id
 	end
 
 	for _, v in pairs(ResearchPanels) do
